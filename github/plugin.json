@@ -1,0 +1,12 @@
+{
+    "id" : "github",
+    "version" : "0.0.1",
+    "meta" : {
+        "label": "Github plugin",
+        "description" : "This plugin includes connectors to retrieve data about Github repositories",
+        "author" : "Dataiku",
+        "tags" : ["official", "api"],
+        "url" : "https://www.dataiku.com/community/plugins/github",
+        "licenseInfo": "Apache Software License"
+    }
+}

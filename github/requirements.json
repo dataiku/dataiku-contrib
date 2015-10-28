@@ -1,0 +1,5 @@
+{
+	"python" : [
+		{"name": "PyGithub", "version" : ">=1.25.0"}
+	]
+}

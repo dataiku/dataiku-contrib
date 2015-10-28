@@ -1,0 +1,25 @@
+{
+	"meta" : {
+		"label" : "Github issues",
+		"description" : "Fetches the issues for a single Github repository"
+	},
+	"strictSchema" : true,
+	"params" : [
+		{
+			"name" : "login",
+			"type" : "STRING",
+			"mandatory" : true
+		},
+		{
+			"name" : "password",
+			"type" : "PASSWORD",
+			"mandatory" : true
+		},
+
+		{
+			"name" : "repos",
+			"type" : "STRING",
+			"mandatory" : true
+		}
+	]
+}
