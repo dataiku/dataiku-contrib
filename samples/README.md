@@ -7,22 +7,22 @@ but that serve as samples of how to create your own plugins
 
 ## A Python recipe
 
-* (samples/py-recipe-dataset-audit)
+* [samples/py-recipe-dataset-audit](/samples/py-recipe-dataset-audit)
 
 ## A R recipe
 
-* samples/r-recipe-dataset-sort
+* [samples/r-recipe-dataset-sort](/samples/r-recipe-dataset-sort)
 
 ## A Python connector
 
 ### With a fixed schema
 
-* github/
+* [github](/github)
 
 ### With a variable schema
 
-* algoliasearch/
+* [algoliasearch](/algoliasearch)
 
 ### Writable
 
-* algoliasearch/
+* [algoliasearch](/algoliasearch)
