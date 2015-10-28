@@ -1,0 +1,16 @@
+{
+	"id" : "dataset-audit",
+
+	"version" : "0.0.1",
+
+	"meta" : {
+		"label" : "Audit a dataset",
+
+		"description" : "Performs audit of data in a dataset. This is able to perform audits on SQL or HDFS datasets",
+		"author" : "Dataiku",
+		"icon" : "icon-search",
+		"licenseInfo" : "Apache Software License",
+		"url" : "https://www.dataiku.com/community/extensions/dataset-audit",
+		"tags" : ["data", "audit", "quality"]
+	}
+}

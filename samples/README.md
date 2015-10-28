@@ -25,8 +25,6 @@ but that serve as samples of how to create your own plugins
 
 * [algoliasearch](/algoliasearch)
 
-
-
 ## A Python recipe
 
 * [samples/py-recipe-dataset-audit](/samples/py-recipe-dataset-audit)
@@ -38,6 +36,18 @@ Not yet ...
 ### With multiple input/output roles
 
 Not yet ...
+
+### With configuration parameters
+
+* (dataset-audit/)(/dataset-audit)
+
+### That performs SQL queries
+
+* (dataset-audit/)(/dataset-audit)
+
+### That performs Hive queries
+
+* (dataset-audit/)(/dataset-audit)
 
 
 ## A R recipe

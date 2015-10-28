@@ -1,0 +1,41 @@
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Audit the content of a dataset",
+        "author" : "Dataiku",
+        "tags" : ["recipe", "data", "audit"]
+    },
+
+    "kind" : "PYTHON",
+
+    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+    // or more dataset to each input and output role, depending on the role characteristics.
+
+    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+    // or at most one ('UNARY'). The "required" field indicates whether the user will be allowed to not
+    // associate at least one dataset with the role.
+
+    "inputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "compute_most_frequent",
+            "label" : "Compute most frequent values",
+            "type": "BOOLEAN"
+        }
+    ]
+}
