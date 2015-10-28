@@ -4,11 +4,23 @@ This repository contains the source code for
 some of the plugins for [Data Science Studio](https://www.dataiku.com/dss)
 by [Dataiku](https://www.dataiku.com)
 
-# How to create a plugin ?
+## How can I create a plugin ?
 
 [Follow our Howto](https://learn.dataiku.com/howto/code/plugins/writing-your-first-dss-plugin.html)
 
-# License
+## How can I share my plugin ?
+
+Once you have written your DSS plugin, you can package it to share it with the world
+
+* You can choose to contribute your plugin to this repository by opening a pull request.
+  Make sure you review the [Contributing section](#contributing)
+
+* You can also host your plugin on any repository of your choosing.
+
+If you want your plugin to be available in the "Store" section of DSS, please [get in touch with us](https://www.dataiku.com/dss/contact)
+
+
+## License
 
 All plugins in this repository are:
 
@@ -26,7 +38,7 @@ All plugins in this repository are:
    See the License for the specific language governing permissions and
    limitations under the License.
 
-# Contributing
+## Contributing
 
 When you contribute code, you affirm that the contribution is your original work
 and that you license the work to the project under the project's open source license.
