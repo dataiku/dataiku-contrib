@@ -19,6 +19,15 @@ Once you have written your DSS plugin, you can package it to share it with the w
 
 If you want your plugin to be available in the "Store" section of DSS, please [get in touch with us](https://www.dataiku.com/dss/contact)
 
+## Any question ?
+
+If you have any issue while creating your plugin, please don't hesitate to get in touch:
+
+* Via our [community questions and answers](http://answers.dataiku.com)
+* By having a look at our [learn section](https://www.dataiku.com/learn)
+* By opening a [support ticket](https://support.dataiku.com)
+
+If your issue is with one of the existing plugins, please [file an issue here](https://github.com/dataiku/dataiku-contrib/issues)
 
 ## License
 
