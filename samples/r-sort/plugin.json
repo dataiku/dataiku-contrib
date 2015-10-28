@@ -1,0 +1,10 @@
+{
+
+	"id" : "r-sort",
+	"version": "0.0.1",
+
+	"meta" : {
+		"label" : "Sort (R)",
+		"tags": ["recipe"]
+	}
+}
