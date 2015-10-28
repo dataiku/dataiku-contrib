@@ -1,0 +1,10 @@
+{
+	"kind" :"PYTHON",
+	"params" : [
+		{
+			"name" : "computeStdDev",
+			"label" : "Compute standard deviation",
+			"type" : "BOOLEAN"
+		}
+	]
+}
