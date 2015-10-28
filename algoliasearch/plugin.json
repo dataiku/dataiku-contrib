@@ -1,0 +1,13 @@
+{
+    "id" : "algoliasearch",
+    "version" : "0.0.1",
+    "meta" : {
+        "label": "Algolia Search API plugin",
+        "description" : "A read-and-write connector for the Algolia search API",
+        "author" : "Dataiku",
+        "icon" : "icon-search",
+        "tags" : ["search", "api", "saas", "connector"],
+        "licenseInfo" : "Apache Software License version 2",
+        "url" : "https://www.dataiku.com/community/plugins/algoliasearch"
+    }
+}

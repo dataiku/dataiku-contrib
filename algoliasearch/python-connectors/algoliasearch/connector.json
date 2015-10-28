@@ -1,0 +1,28 @@
+{
+	"meta" : {
+		"label" : "Algolia index",
+		"description" : "Reads and writes data from an Algolia index"
+	},
+	"readable" : true,
+	"writable" : true,
+	"partitioningMode" : "USER_DEFINED",
+	"codeDefinesSchema" : false,
+	"params" : [
+		{
+			"name" : "applicationId",
+			"type" : "STRING",
+			"mandatory" : true
+		},
+		{
+			"name" : "apiKey",
+			"type" : "STRING",
+			"mandatory" : true
+		},
+
+		{
+			"name" : "index",
+			"type" : "STRING",
+			"mandatory" : true
+		}
+	]
+}

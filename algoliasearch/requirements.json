@@ -1,0 +1,5 @@
+{
+	"python" : [
+		{"name": "algoliasearch", "version" : ">=1.5.0"}
+	]
+}
