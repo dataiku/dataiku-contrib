@@ -1,0 +1,35 @@
+{
+
+	"meta" : {
+		"label" : "Hipchat Room History",
+		"author" : "Dataiku (Clément Stenac)",
+		"tags" : ["chat"]
+	},
+
+    "icon" : "icon-group",
+
+	"readable" : true,
+	"writable" : false,
+
+  	"params": [
+    	{
+      		"name": "api_endpoint",
+      		"label" : "Hipchat API endpoint",
+      		"type": "STRING",
+      		"description":"Usually https://COMPANY.hipchat.com"
+    	},
+    	{
+      		"name": "room_name",
+      		"label" :"Room name or id",
+      		"type": "STRING"
+    	},
+    	{
+      		"name": "auth_token",
+      		"label" :"Auth. tokens",
+      		"type": "STRING",
+      		"description": "See Hipchat documentation"
+    	}
+	],
+
+	"partitioningMode" : "CODE_DEFINED_UNLISTABLE"
+}

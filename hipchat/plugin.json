@@ -1,0 +1,20 @@
+{
+	"id" : "hipchat",
+
+	"version" : "0.0.1",
+
+	"meta" : {
+		"label" : "Hipchat",
+
+		"description" : "Retrieves history from Hipchat chat rooms",
+		"author" : "Datiaku (Clément Stenac)",
+
+		"icon" : "icon-group",
+
+		"licenseInfo" : "Apache Software License",
+
+		"url" : "https://www.dataiku.com",
+
+		"tags" : ["chat", "dataset"]
+	}
+}
