@@ -1,0 +1,29 @@
+{
+	// Meta data for display purposes
+	"meta" : {
+		"label" : "Project Gutemberg Book",
+		"description" : "Each row of the dataset is a line of the book",
+		"author" : "Dataiku (Hanna Julienne)",
+		"tags" : ["NLP", "Public data"]
+	},
+
+	"readable" : true,
+	"writable" : false,
+
+  	"params": [
+    	{
+      	    "name": "mirror",
+		    "label":"Mirror from which we donwload the book",
+      	    "type": "STRING",
+		    "defaultValue" : "http://www.gutenberg.myebook.bg"
+    	},
+    	{
+      	    "name": "book_id",
+	    	"label":"Book identifier",
+      	    "type": "STRING",
+	    	"defaultValue": "84"
+    	}
+	],
+
+	"partitioningMode" : "NOT_PARTITIONABLE"
+}

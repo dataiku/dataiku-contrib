@@ -1,0 +1,20 @@
+{
+	"id" : "gutemberg",
+
+	"version" : "0.0.1",
+
+	"meta" : {
+		"label" : "Project Gutemberg",
+
+	    "description" : "This plugin provides a dataset to download any english book from Project gutemberg (https://www.gutenberg.org)",
+		"author" : "Dataiku (Hanna Julienne)",
+
+		"icon" : "icon-book",
+
+		"licenseInfo" : "Apache Software License",
+
+		"url" : "https://www.dataiku.com/community/plugins/info/gutemberg.html",
+
+	    "tags" : ["Public data","NLP"]
+	}
+}
