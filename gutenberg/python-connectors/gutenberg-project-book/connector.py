@@ -2,7 +2,7 @@ from dataiku.connector import Connector
 import urllib2 as url2
 from BeautifulSoup import UnicodeDammit
 
-class GutembergConnector(Connector):
+class GutenbergConnector(Connector):
 
     def __init__(self, config):
         """
@@ -17,10 +17,10 @@ class GutembergConnector(Connector):
 
     def get_read_schema(self):
         """
-        Returns the schema for the Gutemberg connector.
+        Returns the schema for the Gutenberg connector.
         """
 
-        # The Gutemberg connector does not specify a schema,
+        # The Gutenberg connector does not specify a schema,
         # so DSS will infer the schema
         # from the columns actually returned by the generate_rows method
         return None

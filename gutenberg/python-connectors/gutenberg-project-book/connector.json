@@ -1,7 +1,7 @@
 {
 	"meta" : {
-		"label" : "Project Gutemberg Book",
-		"description" : "Downloads books from the Gutemberg Project. Each row of the dataset is a line of the book"
+		"label" : "Project Gutenberg Book",
+		"description" : "Downloads books from the Gutenberg Project. Each row of the dataset is a line of the book"
 	},
 
 	"readable" : true,
@@ -10,7 +10,7 @@
   	"params": [
     	{
       	    "name": "mirror",
-		    "label":"Mirror from which we donwload the book",
+		    "label":"Mirror from which we download the book",
       	    "type": "STRING",
 		    "defaultValue" : "http://www.gutenberg.myebook.bg"
     	},
