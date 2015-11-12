@@ -1,10 +1,7 @@
 {
-	// Meta data for display purposes
 	"meta" : {
 		"label" : "Project Gutemberg Book",
-		"description" : "Each row of the dataset is a line of the book",
-		"author" : "Dataiku (Hanna Julienne)",
-		"tags" : ["NLP", "Public data"]
+		"description" : "Downloads books from the Gutemberg Project. Each row of the dataset is a line of the book"
 	},
 
 	"readable" : true,
