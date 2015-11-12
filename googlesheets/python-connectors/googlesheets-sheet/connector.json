@@ -1,7 +1,7 @@
 {
     "meta" : {
         "label" : "Google Sheets document",
-        "description" : "A simple connector to read a sheet from a Google Sheets document",
+        "description" : "A simple connector to read a sheet from a Google Sheets document"
     },
 
     "readable" : true,
