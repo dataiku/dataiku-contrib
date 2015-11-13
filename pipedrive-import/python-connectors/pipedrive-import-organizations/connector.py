@@ -67,30 +67,3 @@ class MyConnector(Connector):
                         row[column_name] = value
             yield row
         
-
-
-    def get_writer(self, dataset_schema=None, dataset_partitioning=None,
-                         partition_id=None):
-
-        raise Exception("Unimplemented")
-
-
-    def get_partitioning(self):
-
-        raise Exception("Unimplemented")
-
-    def get_records_count(self, partition_id=None):
-
-        raise Exception("unimplemented")
-
-
-class CustomDatasetWriter(object):
-    def __init__(self):
-        pass
-
-    def write_row(self, row):
-
-        raise Exception("unimplemented")
-
-    def close(self):
-        pass
