@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.9.0
+PLUGIN_VERSION=0.9.1
 PLUGIN_ID=pipedrive-import
 
 plugin:

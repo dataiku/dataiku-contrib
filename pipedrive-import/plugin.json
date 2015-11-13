@@ -1,6 +1,6 @@
 {
 	"id" : "pipedrive-import",
-	"version" : "0.9.0",
+	"version" : "0.9.1",
 	"meta" : {
 		"label" : "Pipedrive-Import plugin",
 		"description" : "Connectors to read data from Pipedrive, a SaaS Sales CRM.",

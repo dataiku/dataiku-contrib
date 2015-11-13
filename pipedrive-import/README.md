@@ -7,9 +7,13 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 * Get a Pipedrive API key.
 * Install python dependencies with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html): `data_dir/bin/pip install --upgrade requests awesome-slugify`
 * Install the plugin in DSS.
-* Create a new dataset with this connector. 
+* Create a new dataset with this connector. Fill the API key field and click on the “Test & Get schema“ button. Then, “save“ and “explore“.
 
 ## Changelog
+
+**Version 0.9.1 "beta" (2015-11-13)**
+
+* Small fixes and cleaning -> ready for DSS 2.2.0
 
 **Version 0.9.0 "beta" (2015-11-06)**
 
@@ -23,4 +27,6 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 
 ## Need help?
 
-Ask your question on [answers.dataiku.com](https://answers.dataiku.com).
+Find out more on the [plugin page](https://www.dataiku.com/community/plugins/info/pipedrive.html) on Dataiku's website.
+
+Ask your question on [answers.dataiku.com](https://answers.dataiku.com). Or, [open an issue](https://github.com/dataiku/dataiku-contrib/issues).
