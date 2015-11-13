@@ -1,13 +1,12 @@
 {
     "meta" : {
         "label" : "Pipedrive organizations",
-        "author" : "Dataiku",
-        "tags" : ["pipedrive", "organizations"]
+        "description" : "A simple connector to list organizations from a Pipedrive account"
     },
-    "strictSchema" : false,
+
     "readable" : true,
     "writable" : false,
-    "partitioningMode" : "NON_PARTITIONABLE",
+
     "params": [
         {
             "name": "api_key",

@@ -1,29 +1,15 @@
 # This file is the actual code for the custom Python dataset deals
 
-# import the base class for the custom dataset
 from dataiku.connector import Connector
 import json
 from pipedriveapi import *
 
 
-"""
-A custom Python dataset is a subclass of Connector.
-
-The parameters it expects and some flags to control its handling by DSS are
-specified in the connector.json file.
-
-Note: the name of the class itself is not relevant
-"""
 class MyConnector(Connector):
 
     def __init__(self, config):
-        """
-        The configuration parameters set up by the user in the settings tab of the
-        dataset are passed as a json object 'config' to the constructor
-        """
-        Connector.__init__(self, config)  # pass the parameters to the base class
+        Connector.__init__(self, config)
 
-        # perform some more initialization
         self.CONFIG_API = {
             'API_BASE_URL': 'https://api.pipedrive.com/v1/',
             'API_KEY': self.config.get("api_key"),
@@ -34,15 +20,6 @@ class MyConnector(Connector):
 
 
     def get_read_schema(self):
-        """
-        Returns the schema that this connector generates when returning rows.
-
-        The returned schema may be None if the schema is not known in advance.
-        In that case, the dataset schema will be infered from the first rows.
-
-        Whether additional columns returned by the generate_rows are kept is configured
-        in the connector.json with the "strictSchema" field
-        """
 
         if self.RESULT_FORMAT == 'json':
             return {
@@ -55,14 +32,6 @@ class MyConnector(Connector):
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
                             partition_id=None, records_limit = -1):
-        """
-        The main reading method.
-
-        Returns a generator over the rows of the dataset (or partition)
-        Each yielded row must be a dictionary, indexed by column name.
-
-        The dataset schema and partitioning are given for information purpose.
-        """
 
         deals = make_api_call_all_pages(self.CONFIG_API, 'deals') #TODO: should not get all deals when not needed (previews, small sample...)
         fields = make_api_call_all_pages(self.CONFIG_API, 'dealFields')
@@ -103,29 +72,16 @@ class MyConnector(Connector):
 
     def get_writer(self, dataset_schema=None, dataset_partitioning=None,
                          partition_id=None):
-        """
-        Returns a write object to write in the dataset (or in a partition)
 
-        The dataset_schema given here will match the the rows passed in to the writer.
-
-        Note: the writer is responsible for clearing the partition, if relevant
-        """
         raise Exception("Unimplemented")
 
 
     def get_partitioning(self):
-        """
-        Return the partitioning schema that the connector defines.
-        """
+
         raise Exception("Unimplemented")
 
     def get_records_count(self, partition_id=None):
-        """
-        Returns the count of records for the dataset (or a partition).
 
-        Implementation is only required if the field "canCountRecords" is set to
-        true in the connector.json
-        """
         raise Exception("unimplemented")
 
 
@@ -134,10 +90,7 @@ class CustomDatasetWriter(object):
         pass
 
     def write_row(self, row):
-        """
-        Row is a tuple with N + 1 elements matching the schema passed to get_writer.
-        The last element is a dict of columns not found in the schema
-        """
+
         raise Exception("unimplemented")
 
     def close(self):

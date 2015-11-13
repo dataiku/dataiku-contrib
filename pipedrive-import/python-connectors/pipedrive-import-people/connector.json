@@ -1,13 +1,12 @@
 {
     "meta" : {
         "label" : "Pipedrive people",
-        "author" : "Dataiku",
-        "tags" : ["pipedrive", "people"]
+        "description" : "A simple connector to list people from a Pipedrive account"
     },
-    "strictSchema" : false,
+
     "readable" : true,
     "writable" : false,
-    "partitioningMode" : "NON_PARTITIONABLE",
+
     "params": [
         {
             "name": "api_key",

@@ -1,13 +1,12 @@
 {
     "meta" : {
         "label" : "Pipedrive deals",
-        "author" : "Dataiku",
-        "tags" : ["pipedrive", "deals"]
+        "description" : "A simple connector to list deals from a Pipedrive account"
     },
-    "strictSchema" : false,
+
     "readable" : true,
     "writable" : false,
-    "partitioningMode" : "NON_PARTITIONABLE",
+
     "params": [
         {
             "name": "api_key",
