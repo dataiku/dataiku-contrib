@@ -1,0 +1,36 @@
+{
+    "meta" : {
+        "label" : "Pipedrive deals",
+        "author" : "Dataiku",
+        "tags" : ["pipedrive", "deals"]
+    },
+    "strictSchema" : false,
+    "readable" : true,
+    "writable" : false,
+    "partitioningMode" : "NON_PARTITIONABLE",
+    "params": [
+        {
+            "name": "api_key",
+            "label": "Pipedrive API key",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "result_format",
+            "label": "One deal per row is display. Choose the format:",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "readable",
+                    "label": "Readable with columns"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        }
+    ]
+}

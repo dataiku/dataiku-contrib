@@ -1,0 +1,13 @@
+{
+	"id" : "pipedrive-import",
+	"version" : "0.9.0",
+	"meta" : {
+		"label" : "Pipedrive-Import plugin",
+		"description" : "Connectors to read data from the Pipedrive, a SaaS Sales CRM.",
+		"author" : "Jeremy Greze (Dataiku)",
+		"icon" : "icon-dollar",
+		"licenseInfo" : "Apache Software License version 2",
+		"url" : "https://github.com/jereze/dataiku-dss-plugin-pipedrive-import",
+		"tags" : ["pipedrive", "sales", "crm", "import"]
+	}
+}
