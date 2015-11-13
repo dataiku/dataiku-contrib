@@ -1,0 +1,12 @@
+{
+    "id" : "freshdesk",
+    "version" : "0.0.1",
+    "meta" : {
+        "label": "Freshdesk",
+        "description" : "Connectors to read data from the Freshdesk helpdesk tool",
+        "author" : "Dataiku (Clément Stenac)",
+        "tags" : ["API", "Productivity", "SaaS"],
+        "licenseInfo" : "Apache Software License version 2",
+        "url" : "https://www.dataiku.com/community/plugins/info/freshdesk.html"
+    }
+}

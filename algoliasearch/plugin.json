@@ -4,10 +4,10 @@
     "meta" : {
         "label": "Algolia Search API plugin",
         "description" : "A read-and-write connector for the Algolia search API",
-        "author" : "Dataiku",
+        "author" : "Dataiku (Clément Stenac)",
         "icon" : "icon-search",
-        "tags" : ["search", "api", "saas", "connector"],
+        "tags" : ["SaaS", "API", "Connector"],
         "licenseInfo" : "Apache Software License version 2",
-        "url" : "https://www.dataiku.com/community/plugins/algoliasearch"
+        "url" : "https://www.dataiku.com/community/plugins/info/algoliasearch.html"
     }
 }

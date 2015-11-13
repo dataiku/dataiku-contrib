@@ -6,3 +6,5 @@ all:
 	rm -rf dist
 	mkdir dist
 	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json custom-recipes
+
+include ../Makefile.inc
