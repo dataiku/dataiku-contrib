@@ -1,0 +1,125 @@
+// This file is the descriptor for the Custom code recipe compute_log_mail_sent
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Send Mail for each row",
+        "author" : "Florian Douetteau",
+        "icon" : "icon-mail-forward",
+        "tags" : ["mail"]
+    },
+
+    "kind" : "PYTHON",
+
+    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+    // or more dataset to each input and output role, depending on the role characteristics.
+
+    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+    // or at most one ('UNARY'). The "required" field indicates whether the user will be allowed to not
+    // associate at least one dataset with the role.
+
+    "inputRoles" : [
+        {
+            "name": "input",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        { 
+            "name" : "attachment", 
+            "arity" : "NARY", 
+            "required" : true, 
+            "acceptsDataset" : true
+        }
+        // ...
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+        // ...
+    ],
+
+    // The field "params" holds a list of all the params
+    // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+    // The available parameter types are :
+    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS
+
+    "params": [
+        {
+            "name": "recipient_column",
+            "type": "COLUMN", 
+            "columnRole" : "input",
+            "description" : "Recipient of the email (from a column)"
+        },
+        {
+            "name": "recipient_value",
+            "type": "STRING",
+            "description" : "Recipient of the  email (provide value inline)"
+        },
+          {
+            "name": "sender_column",
+            "type": "COLUMN", 
+            "columnRole" : "input",
+            "description" : "Sender of the email (from a column)"
+        },
+        {
+            "name": "sender_value",
+            "type": "STRING",
+            "description" : "Sender of the  email (provide value inline)"
+        },
+          {
+            "name": "subject_column",
+            "type": "COLUMN", 
+            "columnRole" : "input",
+            "description" : "Subject of the email (from a column)"
+        },
+        {
+            "name": "subject_value",
+            "type": "STRING",
+            "description" : "Subject of the  email (provide value inline)"
+        },
+          {
+            "name": "body_column",
+            "type": "COLUMN", 
+            "columnRole" : "input",
+            "description" : "Body of the email (from a column)"
+        },
+        {
+            "name": "body_value",
+            "type": "STRING",
+            "description" : "Body of the  email (provide value inline)"
+        },
+        {
+            "name": "attachment_type",
+            "type": "SELECT",
+            "description" : "Convert Attachment To;  Excel requires xslxwriter python module",
+            "selectChoices" : [
+                {"value":  "excel" , label:"Excel"},
+                {"value":  "csv" , label:"CSV"}
+            ]
+        },
+        {
+            "name": "smtp_host",
+            "type": "STRING",
+            "description" : "SMTP Host"
+        },
+        {
+            "name": "smtp_port",
+            "type": "INT",
+            "description" : "SMTP Port"
+        }
+        // The type 'COLUMN' is a string, whose value should be a column from an input schema. To specify the
+        // schema, the "columnRole" field need to be set in the json. Then the column names will come from the
+        // schema of the first dataset associated to that role.
+
+        // The type 'COLUMNS' is a list of strings, whose values should be columns from an input schema. Like
+        // for the 'COLUMN' type, the "columnRole" field needs to be set in the json, to specify which column
+        // names are valid.
+    ]
+
+}
