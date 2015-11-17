@@ -12,7 +12,7 @@ output_name = get_output_names_for_role('main')[0]
 dataset = dataiku.Dataset(input_name)
 output = dataiku.Dataset(output_name)
 
-dataset_config = dataset.read_config()
+dataset_config = dataset.get_config()
 dss_settings = dataiku.get_dss_settings()
 recipe_config = get_recipe_config()
 
@@ -173,5 +173,4 @@ try:
 except Exception, e:
     pass
 
-
-output.write_with_schema(pd.DataFrame(out, columns = columns))
+output.write_with_schema(df)

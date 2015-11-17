@@ -1,8 +1,8 @@
 {
     "id" : "algoliasearch",
-    "version" : "0.0.1",
+    "version" : "0.0.2",
     "meta" : {
-        "label": "Algolia Search API plugin",
+        "label": "Algolia Search Connector",
         "description" : "A read-and-write connector for the Algolia search API",
         "author" : "Dataiku (Clément Stenac)",
         "icon" : "icon-search",
