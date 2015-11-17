@@ -1,5 +1,5 @@
 from dataiku.connector import Connector
-import json
+import json, os
 
 ipgfiles = """http://storage.googleapis.com/patents/grant_full_text/2015/ipg150106.zip
 http://storage.googleapis.com/patents/grant_full_text/2015/ipg150113.zip
@@ -639,15 +639,15 @@ class USPTOConnector(Connector):
         for f in ipgfiles.split('\n'):
             p = re.findall('/(\d\d\d\d)/', f)
             if len(p) == 0:
-            	continue
+                continue
             filename = os.path.basename(f)
             if not filename:
                 continue
 
             # Zap unselected years if needed
             if not self.all_years and partition_id != p[0]:
-            	print "Skipping", f, p
-            	continue
+                print "Skipping", f, p
+                continue
 
             yield (f, filename, p)
 
@@ -663,10 +663,17 @@ class USPTOConnector(Connector):
 
     def get_filename(self, url, filename):
         import os.path
+
+        if not os.path.isdir(self.cache_folder):
+            os.makedirs(self.cache_folder)
+
         p = os.path.join(self.cache_folder, filename)
-        if os.path.exists(p) and os.path.isfile(p) and os.path.getsize(p) > 0: 
+        if os.path.exists(p) and os.path.isfile(p) and os.path.getsize(p) > 0:
+            print "  Cache hit"
             return p
+        print "  Downloading"
         k  = self.download(url, p)
+        print "  Downloaded"
         if k:
             return p
         else:
@@ -685,11 +692,11 @@ class USPTOConnector(Connector):
         """
         limit_mode = False
         if records_limit != -1 or self.test_mode:
-        	limit_mode = True
+            limit_mode = True
         ### We hard force limit to 100 because of the time required for parsing ...
 
-       	if not self.all_years and partition_id not in self.list_partitions(None):
-       		raise ValueError("Unexpected partition id: '%s' - expected one of %s" % (partition_id, ",".join(self.list_partitions(None))))
+        if not self.all_years and partition_id not in self.list_partitions(None):
+            raise ValueError("Unexpected partition id: '%s' - expected one of %s" % (partition_id, ",".join(self.list_partitions(None))))
 
         count = 0
         for (url, filename, year) in self.files(partition_id):
@@ -715,24 +722,24 @@ class USPTOConnector(Connector):
 
 
     def get_partitioning(self):
-    	if self.all_years:
-    		return None
-    	else:
-    		return {
-    			"dimensions": [
-	                {
-	                    "name" : "year",
-	                    "type" : "time",
-	                    "params" : {
-	                        "period" : "YEAR"
-	                    }
+        if self.all_years:
+            return None
+        else:
+            return {
+                "dimensions": [
+                    {
+                        "name" : "year",
+                        "type" : "time",
+                        "params" : {
+                            "period" : "YEAR"
+                        }
 
-	                }
-	            ]
-        	}
+                    }
+                ]
+            }
 
     def list_partitions(self, dataset_partitioning):
-    	if self.all_years:
-    		return []
-    	else:
-    		return [str(x) for x in xrange(2005, 2016)]
+        if self.all_years:
+            return []
+        else:
+            return [str(x) for x in xrange(2005, 2016)]

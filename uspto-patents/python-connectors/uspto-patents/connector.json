@@ -12,12 +12,6 @@
 
   	"params": [
     	{
-      		"name": "cache_folder",
-            "label" : "Cache folder to store files between runs",
-            "defaultValue" : "${dip.home}/tmp/uspto-connector",
-      		"type": "STRING"
-    	},
-    	{
     		"name": "test_mode",
             "label" :"Test mode, forces strict limit to 1000 rows",
     		"type": "BOOLEAN"
@@ -28,7 +22,13 @@
             "type" : "BOOLEAN",
             "defaultValue" : true,
             "description": "If false, dataset is partitioned by year"
-    	}
+    	},
+        {
+            "name": "cache_folder",
+            "label" : "Cache folder to store files between runs",
+            "defaultValue" : "${dip.home}/tmp/uspto-connector",
+            "type": "STRING"
+        }
 	],
 
 	"strictSchema" : true,
