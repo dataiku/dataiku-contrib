@@ -1,5 +1,5 @@
+PLUGIN_ID=uspto-patents
 PLUGIN_VERSION=0.0.1
-PLUGIN_ID=USPTOPatents
 
 all:
 	cat plugin.json|json_pp > /dev/null

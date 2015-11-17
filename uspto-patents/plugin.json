@@ -22,7 +22,7 @@
 		"licenseInfo" : "Apache Software License",
 
 		// URL where the user can learn more about the plugin
-		"url" : "https://www.dataiku.com",
+		"url" : "https://www.dataiku.com/community/plugins/info/uspto-patents.html",
 
 		// List of tags for filtering the list of plugins
 		"tags" : ["Public Data"]
