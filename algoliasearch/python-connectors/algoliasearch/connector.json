@@ -1,28 +1,43 @@
 {
 	"meta" : {
 		"label" : "Algolia index",
-		"description" : "Reads and writes data from an Algolia index"
+		"description" : "Reads and writes data from an Algolia index. Optionally partitioned. Note: partitioning is incompatible with having a query"
 	},
 	"readable" : true,
 	"writable" : true,
-	"partitioningMode" : "USER_DEFINED",
+	"partitioningMode" : "USER_DEFINED_LISTABLE",
 	"codeDefinesSchema" : false,
 	"params" : [
 		{
 			"name" : "applicationId",
+			"label" : "Application ID",
 			"type" : "STRING",
 			"mandatory" : true
 		},
 		{
 			"name" : "apiKey",
+			"label" : "API Key",
 			"type" : "STRING",
 			"mandatory" : true
 		},
 
 		{
 			"name" : "index",
+			"label" : "Index name",
 			"type" : "STRING",
 			"mandatory" : true
+		},
+		{
+			"name":"searchQuery",
+			"label" : "Search query",
+			"type" : "STRING",
+			"description" : "Optional. Search the whole index by default."
+		},
+		{
+			"name": "searchSettings",
+			"label" :"Search settings",
+			"type":"TEXTAREA",
+			"description" : "Optional - As a JSON dict - See Algolia doc"
 		}
 	]
 }
