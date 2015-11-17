@@ -7,17 +7,17 @@
 	// Version. It is highly recommended to use Semantic Versioning
 	"version" : "0.0.1",
 
-
 	// Meta data for display purposes
 	"meta" : {
 		// Name of this plugin that will appear in the interface.
-		"label" : "Plugin to connect to USPTO Data",
+		"label" : "USPTO (patents) Data connector",
 
-		"description" : "Provide data sources for USPTO XML Bulk files (Patent)",
-		"author" : "Dataiku",
+		"description" : "Provides a connector for USPTO patents XML Bulk files",
+
+		"author" : "Dataiku (Florian Douetteau)",
 
 		// The icon of a plugin must be one of the FontAwesome 3.1 icons
-		"icon" : "icon-puzzle-piece",
+		"icon" : "icon-legal",
 
 		"licenseInfo" : "Apache Software License",
 
@@ -25,6 +25,6 @@
 		"url" : "https://www.dataiku.com",
 
 		// List of tags for filtering the list of plugins
-		"tags" : ["nicedataset", "dev"]
+		"tags" : ["Public Data"]
 	}
 }

@@ -1,12 +1,5 @@
-# This file is the actual code for the custom Python dataset USPTO Patents
-
-# import the base class for the custom dataset
 from dataiku.connector import Connector
-
-try: 
-	import simplejson as json
-except ImportError:
-	import json
+import json
 
 ipgfiles = """http://storage.googleapis.com/patents/grant_full_text/2015/ipg150106.zip
 http://storage.googleapis.com/patents/grant_full_text/2015/ipg150113.zip
@@ -544,7 +537,7 @@ http://storage.googleapis.com/patents/grant_full_text/2005/ipg051227.zip
 """
 
 
-import re 
+import re
 def extract_xml_strings(filename):
     """
     Given a string [filename], opens the file and returns a generator
@@ -586,7 +579,7 @@ def iterNodes(node, parentDict):
         pass
     if node.text != None:
         nodeDict['text'] = node.text
-    
+
     for i in node.iterchildren():
         childDict = {}
         newDict = {}
@@ -608,15 +601,11 @@ def iterNodes(node, parentDict):
         parentDict[namespace] = nodeDict['text']
     return parentDict
 
-"""
-A custom Python dataset is a subclass of Connector.
 
-The parameters it expects and some flags to control its handling by DSS are
-specified in the connector.json file.
-
-Note: the name of the class itself is not relevant
 """
-class MyConnector(Connector):
+Ths custom connector itself
+"""
+class USPTOConnector(Connector):
 
     def __init__(self, config):
         """
@@ -626,19 +615,10 @@ class MyConnector(Connector):
         Connector.__init__(self, config)  # pass the parameters to the base class
 
         self.cache_folder = self.config.get("cache_folder")
-        self.test_mode = self.config.get("test_mode", "false")
-	if self.test_mode == 'true':
-		self.test_mode = True
-	else:
-		self.test_mode = False
+        self.test_mode = self.config["test_mode"]
+        self.all_years = self.config["all_years"]
 
-
-        self.which_years = self.config.get("which_years", "all")
-
-        print 'Running Patent Connector', self.cache_folder, self.test_mode, self.which_years
-
-        # perform some more initialization
-        #self.filename = self.config.get("filename")
+        print 'Running Patent Connector cache=%s test=%s all=%s' % (self.cache_folder, self.test_mode, self.all_years)
 
     def get_read_schema(self):
         """
@@ -650,12 +630,8 @@ class MyConnector(Connector):
         Whether additional columns returned by the generate_rows are kept is configured
         in the connector.json with the "strictSchema" field
         """
-
-        # In this example, we don't specify a schema here, so DSS will infer the schema
-        # from the columns actually returned by the generate_rows method
         return {"columns":[{"name":"patent", "type": "string"}]}
-	#return [{"name":"patent", "type": "string"}]
-        #return None
+
 
     def files(self, partition_id):
         import re
@@ -666,16 +642,18 @@ class MyConnector(Connector):
             	continue
             filename = os.path.basename(f)
             if not filename:
-                continue 
-            # zap unselected years. 
-            if self.which_years != 'all' and self.which_years != p[0]:
+                continue
+
+            # Zap unselected years if needed
+            if not self.all_years and partition_id != p[0]:
             	print "Skipping", f, p
             	continue
+
             yield (f, filename, p)
 
     def download(self, url, filename):
         import urllib
-        try:     
+        try:
             urllib.urlretrieve(url, filename)
             return filename
         except IOError as e:
@@ -687,7 +665,7 @@ class MyConnector(Connector):
         import os.path
         p = os.path.join(self.cache_folder, filename)
         if os.path.exists(p) and os.path.isfile(p) and os.path.getsize(p) > 0: 
-            return p 
+            return p
         k  = self.download(url, p)
         if k:
             return p
@@ -708,8 +686,12 @@ class MyConnector(Connector):
         limit_mode = False
         if records_limit != -1 or self.test_mode:
         	limit_mode = True
-        ### We hard foce limit to 100 because of the time required for parsing ... 
-        count = 0 
+        ### We hard force limit to 100 because of the time required for parsing ...
+
+       	if not self.all_years and partition_id not in self.list_partitions(None):
+       		raise ValueError("Unexpected partition id: '%s' - expected one of %s" % (partition_id, ",".join(self.list_partitions(None))))
+
+        count = 0
         for (url, filename, year) in self.files(partition_id):
             print filename
             fullname = self.get_filename(url, filename)
@@ -719,7 +701,7 @@ class MyConnector(Connector):
                 break 
             for doc in extract_xml_strings(fullname):
                 count = count + 1
-                if count % 1000 == 0: 
+                if count % 1000 == 0:
                     print "Patents : parsed", count, " lines"
                 if limit_mode and count > 100:
                     break 
@@ -729,51 +711,28 @@ class MyConnector(Connector):
                 o = objectify.parse(StringIO(doc))
                 iterNodes(o.getroot(), emptyDict)
                 s = json.dumps(emptyDict)
-#		try:
-#			json.loads(s)
-#		except Exception as e:
-#			print e
-#			continue
-                yield { "patent" : s}
-
-    def get_writer(self, dataset_schema=None, dataset_partitioning=None,
-                         partition_id=None):
-        """
-        Returns a write object to write in the dataset (or in a partition)
-
-        The dataset_schema given here will match the the rows passed in to the writer.
-
-        Note: the writer is responsible for clearing the partition, if relevant
-        """
-        raise Exception("Unimplemented")
+                yield { "patent" : s, "year" : year[0], "filename" : filename}
 
 
     def get_partitioning(self):
-        """
-        Return the partitioning schema that the connector defines.
-        """
-        raise Exception("Unimplemented")
+    	if self.all_years:
+    		return None
+    	else:
+    		return {
+    			"dimensions": [
+	                {
+	                    "name" : "year",
+	                    "type" : "time",
+	                    "params" : {
+	                        "period" : "YEAR"
+	                    }
 
-    def get_records_count(self, partition_id=None):
-        """
-        Returns the count of records for the dataset (or a partition).
+	                }
+	            ]
+        	}
 
-        Implementation is only required if the field "canCountRecords" is set to
-        true in the connector.json
-        """
-        raise Exception("unimplemented")
-
-
-class CustomDatasetWriter(object):
-    def __init__(self):
-        pass
-
-    def write_row(self, row):
-        """
-        Row is a tuple with N + 1 elements matching the schema passed to get_writer.
-        The last element is a dict of columns not found in the schema
-        """
-        raise Exception("unimplemented")
-
-    def close(self):
-        pass
+    def list_partitions(self, dataset_partitioning):
+    	if self.all_years:
+    		return []
+    	else:
+    		return [str(x) for x in xrange(2005, 2016)]

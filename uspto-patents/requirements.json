@@ -1,7 +1,5 @@
 {
     "python" : [
         {"name":"lxml", "version":"3.3.4"}
-    ],
-    "R" : [
     ]
 }

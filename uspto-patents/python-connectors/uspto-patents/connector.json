@@ -1,10 +1,6 @@
-// This file is the descriptor for the Custom python dataset USPTO Patents
 {
-	// Meta data for display purposes
 	"meta" : {
-		"label" : "USPTO Patents",
-		"author" : "Florian Douetteau",
-		"tags" : ["patents", "open data"]
+		"label" : "USPTO Patents"
 	},
 
 	// Can this connector read data ?
@@ -13,62 +9,29 @@
 	"writable" : false,
 
 
-	// The field "params" holds a list of all the params
-	// for wich the user will be prompted for values:
-
-	// The available parameter types are :
-	// STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP
 
   	"params": [
     	{
       		"name": "cache_folder",
+            "label" : "Cache folder to store files between runs",
+            "defaultValue" : "${dip.home}/tmp/uspto-connector",
       		"type": "STRING"
     	},
     	{
     		"name": "test_mode",
+            "label" :"Test mode, forces strict limit to 1000 rows",
     		"type": "BOOLEAN"
-    	}, 
-    	{
-    		"name": "which_years",
-    		"type" : "SELECT", 
-    		"selectChoices": [ 
-    			{ "value": "all", "label": "2005-2015"},
-    			{ "value": "2005", "label": "2005"},
-    			{ "value": "2006", "label": "2006"},
-    			{ "value": "2007", "label": "2007"},
-    			{ "value": "2008", "label": "2008"},
-    			{ "value": "2009", "label": "2009"},
-    			{ "value": "2010", "label": "2010"},
-    			{ "value": "2011", "label": "2011"},
-    			{ "value": "2012", "label": "2012"},
-    			{ "value": "2013", "label": "2013"},
-    			{ "value": "2014", "label": "2014"},
-    			{ "value": "2015", "label": "2015"}
-    		]
-    	}
-    	/*{
-      		"name": "parameter2",
-      		"type": "INT"
     	},
-
-    	// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
-	    {
-	      	"name": "parameter8",
-	      	"type": "SELECT",
-	      	"selectChoices": [
-		        {
-	          		"value": "val_x",
-	          		"label": "display name for val_x"
-	        	},
-	        	{
-	          		"value": "val_y",
-	          		"label": "display name for val_y"
-	        	},
-	      	]
-	    }*/
+    	{
+    		"name": "all_years",
+            "label" : "Fetch all years at once",
+            "type" : "BOOLEAN",
+            "defaultValue" : true,
+            "description": "If false, dataset is partitioned by year"
+    	}
 	],
 
-	"strictSchema" : true, 
+	"strictSchema" : true,
 
-	"partitioningMode" : "NON_PARTITIONABLE"
+	"partitioningMode" : "CODE_DEFINED_LISTABLE"
 }
