@@ -5,9 +5,9 @@ This plugin provides a read (and soon write) connector to interact with [Google 
 ## How to set-up
 
 * Install python dependencies with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html): `data_dir/bin/pip install --upgrade gspread oauth2client PyOpenSSL awesome-slugify`
-* Get a JSON file containing a “Service account” from the [Google Developers Console](https://console.developers.google.com/project) with the “Drive API“ enabled.
+* Get a JSON file containing a `Service account` from the [Google Developers Console](https://console.developers.google.com/project) with the `Drive API` enabled.
 * Install the plugin in DSS.
-* Create a new dataset with this connector. Fill the 4 parameters and click on the “Test & Get schema“ button. Then, “save“ and “explore“.
+* Create a new dataset with this connector. Fill the 4 parameters and click on the `Test & Get schema` button. Then, `save` and `explore`.
 * Remember to share the spreadsheet with the email of the service account (`536772...-fezerf...@developer.gserviceaccount.com`).
 
 ## Improvement ideas
