@@ -16,7 +16,7 @@
         },
         {
             "name": "result_format",
-            "label": "One deal per row is display. Choose the format:",
+            "label": "One deal per row is retrieved. Choose the format:",
             "type": "SELECT",
             "selectChoices": [
                 {
