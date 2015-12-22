@@ -1,6 +1,6 @@
 {
     "id" : "freshdesk",
-    "version" : "0.0.2",
+    "version" : "0.0.3",
     "meta" : {
         "label": "Freshdesk",
         "description" : "Connectors to read data from the Freshdesk helpdesk tool",

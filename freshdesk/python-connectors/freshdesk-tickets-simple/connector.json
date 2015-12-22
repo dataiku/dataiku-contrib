@@ -1,6 +1,6 @@
 {
 	"meta" : {
-		"label" : "Freshdesk tickets",
+		"label" : "Tickets",
 		"description" : "A simple non-partitioned connector for Freshdesk tickets.\nBeware: Freshdesk API is very slow. We highly recommend that you sync your Freshdesk dataset in a regular DSS dataset and keep working from here"
 	},
 	"params" : [
@@ -14,7 +14,7 @@
 		{
 			"name" : "apiKey",
 			"label" : "Freshdesk API Key",
-			"description" : "Found in your account settings",
+			"description" : "Found in your profile settings",
 			"type" : "STRING",
 			"mandatory" : true
 		}
