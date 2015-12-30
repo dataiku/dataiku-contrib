@@ -1,0 +1,29 @@
+{
+	"meta" : {
+		"label" : "Tickets custom view",
+		"description" : "A simple non-partitioned connector for Freshdesk tickets.\nBeware: Freshdesk API is very slow. We highly recommend that you sync your Freshdesk dataset in a regular DSS dataset and keep working from here"
+	},
+	"params" : [
+		{
+			"name" : "endpoint",
+			"label" : "Freshdesk API endpoint",
+			"description" :"Generally https://yourcompany.freshdesk.com",
+			"type" : "STRING",
+			"mandatory" : true
+		},
+		{
+			"name" : "apiKey",
+			"label" : "Freshdesk API Key",
+			"description" : "Found in your profile settings",
+			"type" : "STRING",
+			"mandatory" : true
+		},
+		{
+			"name" : "view",
+			"label" : "Custom view for tickets filtering",
+			"description" :"a number ex: 100024367",
+			"type" : "STRING",
+			"mandatory" : true
+		}
+	]
+}
