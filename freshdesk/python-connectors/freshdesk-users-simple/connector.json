@@ -15,12 +15,12 @@
     },
     {
       "name" : "apiKey",
-  	  "label" : "Freshdesk API Key",
+      "label" : "Freshdesk API Key",
       "description" : "Found in your profile settings",
       "type" : "STRING",
       "mandatory" : true
     }
-	],
+  ],
   "partitioningMode" : "NOT_PARTITIONABLE"
 }
 
