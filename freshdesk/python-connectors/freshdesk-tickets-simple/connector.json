@@ -5,20 +5,6 @@
   },
   "params" : [
     {
-      "name" : "endpoint",
-      "label" : "Freshdesk API endpoint",
-      "description" :"Generally https://yourcompany.freshdesk.com",
-      "type" : "STRING",
-      "mandatory" : true
-    },
-    {
-      "name" : "apiKey",
-      "label" : "Freshdesk API Key",
-      "description" : "Found in your profile settings",
-      "type" : "STRING",
-      "mandatory" : true
-    },
-    {
       "name" : "view",
       "label" : "(optional) Custom view for tickets filtering. Default is all tickets.",
       "description" :"A number, eg 1000424242.",

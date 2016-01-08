@@ -5,22 +5,7 @@
   },
   "readable" : true,
   "writable" : false,
-  "params" : [
-    {
-      "name" : "endpoint",
-      "label" : "Freshdesk API endpoint",
-      "description" :"Generally https://yourcompany.freshdesk.com",
-      "type" : "STRING",
-      "mandatory" : true
-    },
-    {
-      "name" : "apiKey",
-      "label" : "Freshdesk API Key",
-      "description" : "Found in your profile settings",
-      "type" : "STRING",
-      "mandatory" : true
-    }
-  ],
+  "params" : [],
   "partitioningMode" : "NOT_PARTITIONABLE"
 }
 

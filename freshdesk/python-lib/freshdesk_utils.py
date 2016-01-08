@@ -1,9 +1,9 @@
 import json, datetime, logging, json, requests, base64
 
 class FreshdeskConnector():
-    def __init__(self, config):
-        self.endpoint = config["endpoint"]
-        self.key = config["apiKey"]
+    def __init__(self, config, plugin_config):
+        self.endpoint = plugin_config["endpoint"]
+        self.key = plugin_config["api_key"]
 
     def fetch_page(self, page):
         logging.info("Freshdesk: fetching page %s" % page)
