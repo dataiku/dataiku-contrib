@@ -41,7 +41,9 @@ for row in input_dataset.iter_rows(log_every=10):
         results_notFound.append({'': title, 'error': '(on id '+id_tmdb+')' + e})
         continue
     movie['title_queried'] = title
-    results.append(movie)
+    results.append({
+        k: json.dumps(v) if type(v) == list else v
+        for k,v in movie.items()})
 
 output_dataset   = dataiku.Dataset(get_output_names_for_role('output_dataset'  )[0])
 output_dataset.write_with_schema(pd.DataFrame(results))
