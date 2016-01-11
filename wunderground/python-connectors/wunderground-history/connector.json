@@ -1,0 +1,47 @@
+{
+    "meta" : {
+        "label" : "Wunderground history",
+        "description" : "Get histotrical weather data from Wunderground API"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "api_key",
+            "label": "Wunderground API key",
+            "type": "STRING",
+            "description": "",
+            "mandatory" : true
+        },
+        {
+            "name": "location",
+            "label": "Wunderground location (city, station)",
+            "type": "STRING",
+            "description": "",
+            "mandatory" : true
+        },
+        {
+            "name": "from_date",
+            "label": "Starting date",
+            "type": "STRING",
+            "description": "YYYY-MM-DD format",
+            "mandatory" : true
+        },
+        {
+            "name": "to_date",
+            "label": "End date",
+            "type": "STRING",
+            "description": "YYYY-MM-DD format",
+            "mandatory" : true
+        },
+        {
+            "name": "cache_folder",
+            "label": "Cache folder",
+            "type": "STRING",
+            "defaultValue": "${dip.home}/tmp/wunderground",
+            "description": "To store files between runs"
+        }
+    ]
+}
