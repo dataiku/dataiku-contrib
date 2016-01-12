@@ -25,6 +25,10 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 
 * Initial release: deals dataset
 
+## Credits
+
+This plugin uses the [awesome-slugify](https://github.com/dimka665/awesome-slugify) library from Dmitry Voronin.
+
 ## Need help?
 
 Find out more on the [plugin page](https://www.dataiku.com/community/plugins/info/pipedrive.html) on Dataiku's website.

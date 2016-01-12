@@ -1,6 +1,5 @@
 {
     "python" : [
-        {"name": "requests", "version" : ">=2.4.0"},
-        {"name": "awesome-slugify", "version" : ">=1.6.5"}
+        {"name": "requests", "version" : ">=2.4.0"}
     ]
 }
