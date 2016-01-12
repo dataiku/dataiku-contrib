@@ -31,7 +31,11 @@ def make_api_call(conf, action, params = {}, method = 'get', data = {}):
     if ((r.status_code == 200 and method == 'get') or (r.status_code == 201 and method == 'post')) and r.json().get('success') == True:
         return r.json()
     else:
-        raise ValueError('API error when calling ' + r.url)
+        if 'error' in r.json():
+            raise IOError('API error ("%s") when calling: %s' % (r.json().get('error'), r.url) )
+        else:
+            raise IOError('API error (unknown) when calling: %s' % r.url )
+        
 
 def make_api_call_all_pages(conf, action, params = {}):
     """
