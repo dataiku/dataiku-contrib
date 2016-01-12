@@ -1,7 +1,8 @@
 {
     "meta" : {
         "label" : "Pipedrive people",
-        "description" : "A simple connector to list people from a Pipedrive account"
+        "description" : "A simple connector to list people from a Pipedrive account",
+        "icon" : "icon-group"
     },
 
     "readable" : true,
