@@ -50,12 +50,15 @@ class MyConnector(Connector):
                     column_type = field['field_type']
                     value = deal[column_key] if column_key in deal else None;
                     #print "%s -> %s (%s) : %s" % (column_key, column_name, column_type, value)
+
                     if column_key == 'pipeline':
                         row[column_name] = deal['pipeline_id']
                     elif value is None:
                         row[column_name] = ''
-                    elif column_type in ['varchar', 'varchar_auto', 'double', 'int', 'text', 'date', 'time', 'monetary', 'stage', 'phone']:
+                    elif column_type in ['varchar', 'varchar_auto', 'double', 'int', 'text', 'time', 'monetary', 'stage', 'phone']:
                         row[column_name] = value
+                    elif column_type in ['date', 'daterange']:
+                        row[column_name] = parse_date(value)
                     elif column_type in ['org', 'people', 'user']:
                         row[column_name] = value['name'] if isinstance(value,dict) else value
                         #note: inline if because sometimes person_id is not a dict... bug in the API?

@@ -55,8 +55,10 @@ class MyConnector(Connector):
                         row[column_name] = ''
                     elif column_key in ['email', 'phone', 'im']:
                         row[column_name] = value[0]['value']
-                    elif column_type in ['varchar', 'varchar_auto', 'double', 'int', 'text', 'date', 'time', 'monetary', 'stage', 'phone']:
+                    elif column_type in ['varchar', 'varchar_auto', 'double', 'int', 'text', 'time', 'monetary', 'stage', 'phone']:
                         row[column_name] = value
+                    elif column_type in ['date', 'daterange']:
+                        row[column_name] = parse_date(value)
                     elif column_type in ['org', 'people', 'user', 'json']:
                         row[column_name] = value['name'] if isinstance(value,dict) else value
                         #note: inline if because sometimes person_id is not a dict... bug in the API?
