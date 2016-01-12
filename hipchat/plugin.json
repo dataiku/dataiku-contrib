@@ -5,16 +5,11 @@
 
 	"meta" : {
 		"label" : "Hipchat",
-
 		"description" : "Retrieves history from Hipchat chat rooms",
-		"author" : "Datiaku (Clément Stenac)",
-
+		"author" : "Dataiku (Clément Stenac)",
 		"icon" : "icon-group",
-
 		"licenseInfo" : "Apache Software License",
-
 		"url" : "https://www.dataiku.com",
-
-		"tags" : ["chat", "dataset"]
+		"tags" : ["Chat", "Dataset", "Productivity"]
 	}
 }
