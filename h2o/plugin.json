@@ -25,7 +25,6 @@
         },
         {
             "name":"hdfs_models_path",
-            "name":"HDFS models path",
             "label":"HDFS path to store models",
             "type": "STRING",
             "description":"Only needed when H2O is running on Hadoop. E.g. /user/dataiku/dss_h2o_connector/models/",
