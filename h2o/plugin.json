@@ -1,0 +1,35 @@
+{
+    "id" : "h2o",
+    "version" : "0.0.3",
+    "meta" : {
+        "label" : "H2O Machine Learning",
+        "description" : "Train models and perform predictions using the H2O distributed ML library",
+        "author" : "Dataiku (Jean-Baptiste Rouquier)",
+        "icon" : "icon-tint",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com/community/plugins/info/h2o.html",
+        "tags" : ["API", "ML"]
+    },
+    "params": [
+        {
+            "name":"h2o_server_ip",
+            "label":"H2O server host",
+            "type": "STRING",
+            "defaultValue" : "localhost"
+        },
+        {
+            "name":"h2o_server_port",
+            "label":"H2O server port",
+            "type": "INT",
+            "defaultValue" : 54321
+        },
+        {
+            "name":"hdfs_models_path",
+            "name":"HDFS models path",
+            "label":"HDFS path to store models",
+            "type": "STRING",
+            "description":"Only needed when H2O is running on Hadoop. E.g. /user/dataiku/dss_h2o_connector/models/",
+            "mandatory":true
+        }
+    ]
+}
