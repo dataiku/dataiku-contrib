@@ -1,0 +1,90 @@
+{
+    "meta" : {
+        "label" : "Export to TDE and upload to Tableau Server",
+        "description": "This recipe will export a Data Science Studio as a Tableau .tde file automatically. The resulting files (TDE extract and log files) will be stored in a Folder, then exported to a Tableau Server. Beware, exporting a large dataset to a TDE file may take long. If your dataset contains several millions records, you may want for instance to have DSS write into a SQL database usable by Tableau."
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [
+        {
+            "name": "input",
+            "label": "Input dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_folder",
+            "label": "Output folder",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": false,
+            "acceptsManagedFolder": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "tde_file_name",
+            "label":"TDE file name",
+            "type": "STRING",
+            "mandatory": false,
+            "description": "Name of the resulting TDE file",
+            "defaultValue": "output.tde"
+        },
+        {
+            "name": "server_url",
+            "label":"Tableau Server URL",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "username",
+            "label":"Username",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "password",
+            "label":"Password",
+            "type": "PASSWORD",
+            "mandatory": true
+        },
+        {
+            "name": "site_id",
+            "label":"Site ID",
+            "type": "STRING",
+            "description":"optional, default is empty"
+        },
+        {
+            "name": "project",
+            "label":"Project",
+            "type": "STRING",
+            "defaultValue": "default",
+            "description":"Upload the TDE file to this project."
+        },
+        {
+            "name": "output_table",
+            "label":"Output table",
+            "type": "STRING",
+            "defaultValue": "DSS_extract"
+        },
+        {
+            "name": "proxy_username",
+            "label":"Proxy username",
+            "type": "STRING",
+            "description":"optional"
+        },
+        {
+            "name": "proxy_password",
+            "label":"Proxy password",
+            "type": "PASSWORD",
+            "description":"optional"
+        }
+    ]
+
+}

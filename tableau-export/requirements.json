@@ -1,0 +1,6 @@
+{
+    "python" : [
+        {"name":"TableauSDK", "version":">=9100.15.828.1711"}
+    ],
+    "R" : []
+}
