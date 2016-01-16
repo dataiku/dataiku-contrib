@@ -54,6 +54,6 @@ class FreshdeskConnector():
                             row["custom_field_%s" %k ] = v
                         del row["custom_field"]
 
-                    yield row
+                    yield {k: json.dumps(v) if type(v) in [list,dict] else v for k,v in row.items()}
                     nb +=1
             page += 1

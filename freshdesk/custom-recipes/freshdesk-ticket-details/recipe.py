@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import dataiku, base64, logging, requests, time
+import dataiku, base64, logging, requests, time, json
 import pandas as pd
 from dataiku.customrecipe import *
 
@@ -28,8 +28,8 @@ def fetch_ticket(id):
     raise
 
 details = tickets.display_id.apply(lambda i: pd.Series(fetch_ticket(i)['helpdesk_ticket']))
-new_columns = [c for c in details.columns if c not in tickets.columns]
-result = pd.concat([tickets, details[new_columns]], axis=1)
+for c in [c for c in details.columns if c not in tickets.columns]:
+    tickets[c] = details[c].map(lambda v:json.dumps(v) if type(v) in [list,dict] else v)
 
 output_name  = get_output_names_for_role('output_dataset')[0]
-dataiku.Dataset(output_name).write_with_schema(result)
+dataiku.Dataset(output_name).write_with_schema(tickets)
