@@ -11,7 +11,7 @@ import re
 import dns.resolver #http://www.dnspython.org
 
 logging.basicConfig(level=logging.INFO, format='email-tester-locally plugin - %(levelname)s - %(message)s')
-
+#logging.basicConfig(level=logging.DEBUG, format='email-tester-locally plugin - %(levelname)s - %(message)s')
 
 # Plugin version
 PLUGIN_VERSION = '0.0.0'
@@ -27,7 +27,6 @@ email_column = config.get('email_column', None)
 cache_folder = config.get('cache_folder', None)
 verification_level = int(config.get('verification_level', 1))
 
-logging.info('config: %s' % str(config))
 logging.info('verification_level: %i' % verification_level)
 
 # Verification existing inputs
@@ -56,13 +55,23 @@ if not os.path.isdir(cache_folder):
 filename = 'email-tester-locally-cache'
 cache_file = os.path.join(cache_folder, filename)
 cache = shelve.open(cache_file, writeback = True)
-#cache_plugin_version = cache['plugin_version'] if 'version' in cache else None
+cache_plugin_version = cache['plugin_version'] if 'plugin_version' in cache else None
+logging.info('cache file: %s' % cache_file)
+logging.debug('cache: %s' % str(cache))
+
+# Function to compare version numbers
+def versiontuple(v):
+    return tuple(map(int, (v.split("."))))
+
+# Cleaning cache if old version
+if cache_plugin_version and versiontuple(cache_plugin_version) < versiontuple(PLUGIN_VERSION):
+    logging.info('clearing cache')
+    cache["domains"] = {}
+
+# Preparing cache
 cache['plugin_version'] = PLUGIN_VERSION
 if "domains" not in cache.keys():
     cache["domains"] = {}
-
-logging.info('cache file: %s' % cache_file)
-logging.info('cache: %s' % str(cache))
 
 # Getting disposable email domains from https://github.com/ivolo/disposable-email-domains
 if verification_level > 1:
@@ -97,10 +106,13 @@ def email_test_mx_record(email):
 
     if not email or len(email) == 0:
         return False
+
+    email = str(email)
     domain = email.split("@")[-1]
 
     # if cache, returns cache result
     if domain in cache["domains"].keys():
+        logging.debug("Domain already in cache: %s -> %s" % (domain, cache["domains"][domain]))
         return cache["domains"][domain]
 
     try:
@@ -140,8 +152,9 @@ for contact in contacts.iter_rows():
         contact['email_error'] = ''
 
     writer.write_row_dict(contact)
-    logging.info("%i: %s -> validity: %s (%s)" % (i, email, contact['email_is_valid'], contact['email_error']))
+    logging.debug("%i: %s -> validity: %s (%s)" % (i, email, contact['email_is_valid'], contact['email_error']))
 
+logging.debug('cache: %s' % str(cache))
 
 writer.close()
 cache.close()
