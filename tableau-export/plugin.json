@@ -1,0 +1,13 @@
+{
+  "id" : "tableau-export",
+  "version" : "0.0.7",
+  "meta" : {
+    "label" : "Tableau export",
+    "description" : "Export DSS datasets to Tableau Server (TDE files)",
+    "author" : "Dataiku (Jean-Baptiste Rouquier)",
+    "icon" : "icon-signin",
+    "licenseInfo" : "Apache Software License",
+    "url" : "https://www.dataiku.com/community/plugins/info/tableau.html",
+    "tags" : ["API", "Vizualisation"]
+  }
+}

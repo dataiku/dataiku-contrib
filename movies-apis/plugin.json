@@ -2,13 +2,13 @@
   "id" : "movies-apis",
   "version" : "0.0.1",
   "meta" : {
-    "label" : "Movies APIs",
-    "description" : "Enrich movies datasets with data from the Open Movie Database and The Movies DB",
+    "label" : "Enrich from Movies APIs",
+    "description" : "Enrich datasets with data about movies (ratings, runlength, IMDb id...) from the Open Movie Database and The Movie DB",
     "author" : "Dataiku (Jean-Baptiste Rouquier)",
     "icon" : "icon-film",
     "licenseInfo" : "Apache Software License",
     "url" : "https://www.dataiku.com/community/plugins/info/movies-apis.html",
-    "tags" : ["API"]
+    "tags" : ["Enrich", "Open Data", "API"]
   },
   "params": [
       {

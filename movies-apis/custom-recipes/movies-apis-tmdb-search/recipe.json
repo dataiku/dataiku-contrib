@@ -1,6 +1,6 @@
 {
     "meta" : {
-        "label" : "Enrich with TMDb search",
+        "label" : "Search title on TMDb",
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
         "tags" : ["movies", "API"]
     },
