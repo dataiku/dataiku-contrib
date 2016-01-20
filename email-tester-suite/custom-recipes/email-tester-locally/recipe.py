@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format='email-tester-locally plugin - %(
 #logging.basicConfig(level=logging.DEBUG, format='email-tester-locally plugin - %(levelname)s - %(message)s')
 
 # Plugin version
-PLUGIN_VERSION = '0.0.0'
+PLUGIN_VERSION = '0.0.1'
 logging.info('version: %s' % PLUGIN_VERSION)
 
 # Get handles on datasets
