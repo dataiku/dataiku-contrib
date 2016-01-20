@@ -34,7 +34,8 @@ Three different tests are available for email validation:<br>
             "label": "Email (column)",
             "type": "COLUMN",
             "columnRole": "contacts",
-            "description": "The dataset must contain one mail per row in a column."
+            "description": "The dataset must contain one mail per row in a column.",
+            "required": true
         },
         {
             "name": "verification_level",
@@ -46,14 +47,16 @@ Three different tests are available for email validation:<br>
                 {"value": "1", "label": "Format validation"},
                 {"value": "2", "label": "Format validation + Disposable domain detection"},
                 {"value": "3", "label": "Format validation + Disposable domain detection + MX record domain detection"}
-            ]
+            ],
+            "required": true
         },
         {
             "name": "cache_folder",
             "label": "Cache folder",
             "type": "STRING",
             "defaultValue": "${dip.home}/tmp/email-tester-plugin",
-            "description": "To store files between runs"
+            "description": "To store files between runs",
+            "required": true
         }
     ]
 }
