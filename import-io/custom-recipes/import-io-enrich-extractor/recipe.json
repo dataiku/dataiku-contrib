@@ -1,6 +1,6 @@
 {
     "meta" : {
-        "label" : "Enrich using Extractor / Magic (Bulk extract / Chain)",
+        "label" : "Enrich using Extractor (A.K.A. Bulk extract / Chain APIs)",
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
         "tags" : ["API", "Enrichment"]
     },
