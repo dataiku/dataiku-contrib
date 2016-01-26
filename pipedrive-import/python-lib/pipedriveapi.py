@@ -5,8 +5,12 @@ This files contains kind of "wrapper functions" for Pipedrive API and an utility
 import requests
 import json
 from slugify import slugify
+import re
 
 list_unique_slugs = []
+
+date_reg = re.compile('^\d{4}-\d{2}-\d{2}$')
+datetime_reg = re.compile('^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})$')
 
 def make_api_call(conf, action, params = {}, method = 'get', data = {}):
     """
@@ -31,7 +35,11 @@ def make_api_call(conf, action, params = {}, method = 'get', data = {}):
     if ((r.status_code == 200 and method == 'get') or (r.status_code == 201 and method == 'post')) and r.json().get('success') == True:
         return r.json()
     else:
-        raise ValueError('API error when calling ' + r.url)
+        if 'error' in r.json():
+            raise IOError('API error ("%s") when calling: %s' % (r.json().get('error'), r.url) )
+        else:
+            raise IOError('API error (unknown) when calling: %s' % r.url )
+        
 
 def make_api_call_all_pages(conf, action, params = {}):
     """
@@ -67,3 +75,18 @@ def get_unique_slug(string):
         test_string = string + '_' + str(i)
     list_unique_slugs.append(test_string)
     return test_string
+
+def parse_date(string):
+    """
+    Parses a date/datetime given by Pipedrive and returns a ISO 8601 datetime.
+    """
+
+    if date_reg.match(string):
+        return "%sT00:00:00Z" % string
+
+    m = datetime_reg.match(string)
+    if m:
+        return "%sT%sZ" % (m.group(1), m.group(2))
+    
+    print "Not able to parse date: %s" % string
+    return string

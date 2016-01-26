@@ -11,6 +11,12 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 
 ## Changelog
 
+**Version 1.0.0 (2016-01-12)**
+
+* Easier installation (awesome-slugify dependency now packaged in the plugin)
+* Dates are automatically parsed
+* Display the Pipedrive API error if there is one
+
 **Version 0.9.1 "beta" (2015-11-13)**
 
 * Small fixes and cleaning -> ready for DSS 2.2.0
@@ -24,6 +30,10 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 **Version 0.0.1 "alpha" (2015-10-02)**
 
 * Initial release: deals dataset
+
+## Credits
+
+This plugin uses the [awesome-slugify](https://github.com/dimka665/awesome-slugify) library from Dmitry Voronin.
 
 ## Need help?
 
