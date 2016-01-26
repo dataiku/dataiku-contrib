@@ -3,6 +3,7 @@ from dataiku.connector import Connector
 COLUMNS= [
         ("number", "int"),
         ("title", "string"),
+        ("nb_comments", "int"),
         ("state", "string"),
         ("assignee", "string"),
         ("created_at", "date"),
@@ -10,7 +11,8 @@ COLUMNS= [
         ("closed_at", "date"),
         ("user", "string"),
         ("labels", "string"),
-        ("milestone", "string") #, "query_date"
+        ("milestone", "string"), #, "query_date"
+        ("body", "string"),
     ]
 
 class GithubIssuesConnector(Connector):
@@ -21,7 +23,13 @@ class GithubIssuesConnector(Connector):
 
 
     def get_read_schema(self):
-        return { "columns" : map(lambda x : {"name" : x[0], "type" : x[1]}, COLUMNS) }
+        result = { "columns" : map(lambda x : {"name" : x[0], "type" : x[1]}, COLUMNS) }
+        if self.config.get('fetch_comments', False):
+            result['columns'].append({
+                'name':'comments_bodies',
+                "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+                "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 5000}})
+        return result
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
                             partition_id=None, records_limit = -1):
@@ -37,7 +45,7 @@ class GithubIssuesConnector(Connector):
         nb = 0
 
         for issue in itertools.chain(self.repos.get_issues(), self.repos.get_issues(state="closed")):
-            issue = GithubIssuesConnector.get_issue(issue)
+            issue = self.get_issue(issue)
             issue["query_date"] = str(query_date)
 
             if records_limit >= 0 and nb >= records_limit:
@@ -48,11 +56,12 @@ class GithubIssuesConnector(Connector):
             if nb % 100 == 0:
                 logging.info("Read %s issues" % nb)
 
-    @staticmethod
-    def get_issue(issue):
+    def get_issue(self,issue):
         ret = {}
         ret["number"] = issue.number
         ret["title"] = issue.title
+        ret["body"] = issue.body
+        ret["nb_comments"] = issue.comments
         ret["state"] = issue.state
         if issue.assignee is not None:
             ret["assignee"] = issue.assignee.login
@@ -74,5 +83,10 @@ class GithubIssuesConnector(Connector):
         milestone = issue.milestone
         if milestone is not None:
             ret["milestone"] = (issue.milestone.title)
+        if self.config.get('fetch_comments', False):
+            comments_bodies =  []
+            if issue.comments > 0:
+                for comment in issue.get_comments():
+                    comments_bodies.append(comment.body)
+            ret['comments_bodies'] = json.dumps(comments_bodies)
         return ret
-
