@@ -58,7 +58,6 @@ def run(build_query):
         if 'error' in json:
             print "response: ", json
             raise Exception(json['error'])
-        print "Response is %s" % json
         for result_line in json['results']:
             if not output_schema: # and not get_recipe_config()['Do not automatically update output schema']:
                 print "Setting schema"
@@ -68,7 +67,8 @@ def run(build_query):
                     if col['name'] in input_schema_names:
                         print "Warning: input col "+col['name']+" will be overwritten by output col with same name."
                         input_cols_to_drop.append(col['name'])
-                    output_schema.append(col)
+                    else:
+                        output_schema.append(col)
                 output.write_schema(output_schema)
                 sys.stdout.flush()
             out_row = {k:v for k,v in in_row.items() if k not in input_cols_to_drop}

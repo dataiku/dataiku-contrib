@@ -7,7 +7,7 @@
         "author" : "Dataiku",
         "icon" : "icon-github",
         "tags" : ["official", "api"],
-        "url" : "https://www.dataiku.com/community/plugins/github",
+        "url" : "https://www.dataiku.com/community/plugins/info/github.html",
         "licenseInfo": "Apache Software License"
     }
 }

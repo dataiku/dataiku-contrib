@@ -1,6 +1,6 @@
 {
     "meta" : {
-        "label" : "Enrich with OMDB details",
+        "label" : "Fetch OMDb details",
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
         "tags" : ["movies", "API"]
     },

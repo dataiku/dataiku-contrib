@@ -48,14 +48,26 @@ def write_output_schema(sample_line):
         {'name':'tomatoUserMeter',   'type':'bigint'},
         {'name':'tomatoUserRating',  'type':'double'},
         {'name':'tomatoUserReviews', 'type':'bigint'},
-        {'name':'Actors',            'type':'string'},
-        {'name':'Director',          'type':'string'},
-        {'name':'Writer',            'type':'string'},
+        {'name':'Actors',
+            "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+            "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 1000}},
+        {'name':'Director',
+            "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+            "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 1000}},
+        {'name':'Writer',
+            "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+            "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 1000}},
         {'name':'Awards',            'type':'string'},
         {'name':'BoxOffice',         'type':'string'},
-        {'name':'Country',           'type':'string'},
-        {'name':'Genre',             'type':'string'},
-        {'name':'Language',          'type':'string'},
+        {'name':'Country',
+            "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+            "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 1000}},
+        {'name':'Genre',
+            "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+            "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 1000}},
+        {'name':'Language',
+            "type":"array", "timestampNoTzAsDate": False, "maxLength": -1,
+            "arrayContent": {"type": "string", "timestampNoTzAsDate": False, "maxLength": 1000}},
         {'name':'Plot',              'type':'string'},
         {'name':'Poster',            'type':'string'},
         {'name':'Production',        'type':'string'},
@@ -84,11 +96,11 @@ for row in input_dataset.iter_rows(log_every=10):
         # some obvious cleaning:
         del movie['Response']
         movie['imdbVotes'] = movie['imdbVotes'].replace(',','')
-        for col in ['Actors', 'Country', 'Genre', 'Language', 'Writer']:
-            movie[col] = '[' + movie[col].replace(', ',',') + ']'
+        for col in ['Actors', 'Country', 'Director', 'Genre', 'Language', 'Writer']:
+            movie[col] = '["' + movie[col].replace(', ','","') + '"]'
         if movie['Runtime'].endswith(' min'):
             movie['Runtime'] = movie['Runtime'][:-len(' min')]
-        for col in ['Poster','Website', 'tomatoConsensus','tomatoImage']:
+        for col in ['Poster', 'Website', 'tomatoConsensus', 'tomatoImage']:
             if movie[col] == 'N/A': del movie[col]
         for col in ['Metascore', 'Runtime', 'Year', 'imdbVotes',
                     'tomatoFresh', 'tomatoMeter', 'tomatoReviews', 'tomatoRotten',
