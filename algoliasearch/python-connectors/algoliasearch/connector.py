@@ -123,6 +123,16 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
             #logging.info("Write %s for %s" % (val, col))
             if len(unicode(val)) > 5000:
                 val = unicode(val)[0:5000]
+            if col['type'] in ['tinyint', 'smallint', 'int', 'bigint']:
+                try:
+                    val = int(val)
+                except:
+                    print "Warning: could not parse as int:", val
+            if col['type'] in ['array', 'object', 'map']:
+                try:
+                    val = json.loads(val)
+                except:
+                    print "Warning: could not parse:", val
             obj[col["name"]] = val
             if col["name"] =="id":
                 logging.info("Set ObjectID")
