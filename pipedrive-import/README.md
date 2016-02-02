@@ -10,9 +10,9 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 
 ## Changelog
 
-**Version 1.0.1 (2016-01-28)**
+**Version 1.0.1 (2016-02-02)**
 
-* Change dependency (awesome-slugify replaced by unicode-slugify)
+* Change dependency (unidecode is an optional dependency, no more dependency)
 
 **Version 1.0.0 (2016-01-12)**
 
@@ -34,9 +34,13 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 
 * Initial release: deals dataset
 
-## Credits
+## Non-Roman characters
 
-This plugin uses the [unidecode](https://pypi.python.org/pypi/Unidecode) library from Tomaz Solc, and an adapted version of the [unicode-slugify](https://pypi.python.org/pypi/unicode-slugify) from Jeff Balogh, Dave Dash.
+This plugin optionnaly uses the [unidecode](https://pypi.python.org/pypi/Unidecode) library from Tomaz Solc for the transliteration of non-Roman characters.
+
+You can install this package if required with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html):
+
+`data_dir/bin/pip install --upgrade unidecode`
 
 ## Need help?
 

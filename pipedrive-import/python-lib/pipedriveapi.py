@@ -6,7 +6,12 @@ import requests
 import json
 import re
 import unicodedata
-from unidecode import unidecode
+
+try:
+    from unidecode import unidecode
+    unidecode_available = True
+except ImportError:
+    unidecode_available = False
 
 list_unique_slugs = []
 
@@ -62,11 +67,40 @@ def make_api_call_all_pages(conf, action, params = {}):
             looping = False
     return results
 
+def slugify(s, lower=True):
+    """
+    Creates a slug (ascii) for a given unicode string.
+    If the unidecode package is available, an ascii transliteration is done.
+    """
+
+    normalized =  unicodedata.normalize("NFD", s)
+    cleaned = ''.join([c for c in normalized if unicodedata.category(c) != 'Mn'])
+    slugified_ascii =  re.sub(r"[^A-Za-z0-9_-]", '_', cleaned)
+
+    if unidecode_available:
+        slugified_ascii = re.sub(r"[^A-Za-z0-9_-]", '_', unidecode(cleaned))
+
+    slugified_ascii = re.sub(r"_{2,}", '_', slugified_ascii)
+
+    if lower:
+        slugified_ascii = slugified_ascii.lower()
+
+    ### If you prefer to work with a unicode slug, use instead the following:
+    # slugified_unicode = u""
+    # for c in cleaned:
+    #   cat = unicodedata.category(c)
+    #   if cat.startswith("L") or cat.startswith("N"):
+    #       slugified_unicode += c
+    #   else:
+    #       slugified_unicode += "_"
+
+    return slugified_ascii
+
 def get_unique_slug(string):
     """
     Gives a unique slugified string from a string.
     """
-    string = slugify(string, lower=True, space_replacement="_", only_ascii=True)
+    string = slugify(string)
     if string == '':
         string = 'none'
     test_string = string
@@ -91,61 +125,3 @@ def parse_date(string):
     
     print "Not able to parse date: %s" % string
     return string
-
-# Adapted from https://github.com/mozilla/unicode-slugify/blob/master/slugify/__init__.py
-SLUG_OK = '-_'
-def slugify(s, ok=SLUG_OK, lower=True, spaces=False, only_ascii=False, space_replacement='_'):
-    """
-    Creates a unicode slug for given string with several options.
-    L and N signify letter/number.
-    http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
-    :param s: Your unicode string.
-    :param ok: Extra characters outside of alphanumerics to be allowed.
-               Default is '-_~'
-    :param lower: Lower the output string. 
-                  Default is True
-    :param spaces: True allows spaces, False replaces a space with the "space_replacement" param
-    :param only_ascii: True to replace non-ASCII unicode characters with 
-                       their ASCII representations.
-    :param space_replacement: Char used to replace spaces if "spaces" is False. 
-                              Default is dash ("-") or first char in ok if dash not allowed
-    :type s: String
-    :type ok: String
-    :type lower: Bool
-    :type spaces: Bool
-    :type only_ascii: Bool
-    :type space_replacement: String
-    :return: Slugified unicode string
-    """
-
-    if only_ascii and ok != SLUG_OK and hasattr(ok, 'decode'):
-        try:
-            ok.decode('ascii')
-        except UnicodeEncodeError:
-            raise ValueError(('You can not use "only_ascii=True" with '
-                              'a non ascii available chars in "ok" ("%s" given)') % ok)
-
-    rv = []
-
-    if not isinstance(s, unicode):
-        # should handle that, but normally ok with Pipedrive API
-        raise ValueError("The slugify function requires a unicode string.")
-
-    for c in unicodedata.normalize('NFKC', s):
-        cat = unicodedata.category(c)[0]
-        if cat in 'LN' or c in ok:
-            rv.append(c)
-        elif cat == 'Z':  # space
-            rv.append(' ')
-    new = ''.join(rv).strip()
-
-    if only_ascii:
-        new = unidecode(new)
-    if not spaces:
-        if space_replacement and space_replacement not in ok:
-            space_replacement = ok[0] if ok else ''
-        new = re.sub('[%s\s]+' % space_replacement, space_replacement, new)
-    if lower:
-        new = new.lower()
-
-    return new
