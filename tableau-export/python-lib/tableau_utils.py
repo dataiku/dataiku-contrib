@@ -30,18 +30,18 @@ def convert_type(type):
     return typeMap.get(type,Type.UNICODE_STRING)
 
 fieldSetterMap = {
-    'boolean':  lambda row, colNo, value: row.setBoolean(col, val),
-    'tinyint':  lambda row, colNo, value: row.setInteger(col, int(val)),
-    'smallint': lambda row, colNo, value: row.setInteger(col, int(val)),
-    'int':      lambda row, colNo, value: row.setInteger(col, int(val)),
-    'bigint':   lambda row, colNo, value: row.setInteger(col, int(val)),
-    'float':    lambda row, colNo, value: row.setDouble (col, float(val)),
-    'double':   lambda row, colNo, value: row.setDouble (col, float(val)),
-    'date':     lambda row, colNo, value: row.setDateTime(col, val.year, val.month, val.day, val.hour, val.minute, val.second, val.microsecond),
-    'string':   lambda row, colNo, value: row.setString(col, val),
-    'array':    lambda row, colNo, value: row.setString(col, val),
-    'map':      lambda row, colNo, value: row.setString(col, val),
-    'object':   lambda row, colNo, value: row.setString(col, val),
+    'boolean':  lambda row, col, val: row.setBoolean(col, val),
+    'tinyint':  lambda row, col, val: row.setInteger(col, int(val)),
+    'smallint': lambda row, col, val: row.setInteger(col, int(val)),
+    'int':      lambda row, col, val: row.setInteger(col, int(val)),
+    'bigint':   lambda row, col, val: row.setInteger(col, int(val)),
+    'float':    lambda row, col, val: row.setDouble (col, float(val)),
+    'double':   lambda row, col, val: row.setDouble (col, float(val)),
+    'date':     lambda row, col, val: row.setDateTime(col, val.year, val.month, val.day, val.hour, val.minute, val.second, val.microsecond),
+    'string':   lambda row, col, val: row.setString(col, val),
+    'array':    lambda row, col, val: row.setString(col, val),
+    'map':      lambda row, col, val: row.setString(col, val),
+    'object':   lambda row, col, val: row.setString(col, val),
 }
 
 def makeTableDefinition(schema):
@@ -61,8 +61,11 @@ def insertData(dataset_in, table_out):
         output_row = Row(tableDef)
         for colNo in range(nbCol):
             data = input_row[schema[colNo]['name']]
-            try: fieldSetterMap[schema[colNo]['type']](output_row, colNo, data)
-            except: pass
+            try:
+                fieldSetterMap[schema[colNo]['type']](output_row, colNo, data)
+            except Exception, e:
+                print "Failed setting field %s to value %s: %s" % (schema[colNo]["name"], data, e)
+                pass
         table_out.insert(output_row)
 
 def output_filename():
