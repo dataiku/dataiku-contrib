@@ -4,8 +4,14 @@ This files contains kind of "wrapper functions" for Pipedrive API and an utility
 
 import requests
 import json
-from slugify import slugify
 import re
+import unicodedata
+
+try:
+    from unidecode import unidecode
+    unidecode_available = True
+except ImportError:
+    unidecode_available = False
 
 list_unique_slugs = []
 
@@ -61,15 +67,44 @@ def make_api_call_all_pages(conf, action, params = {}):
             looping = False
     return results
 
+def slugify(s, lower=True):
+    """
+    Creates a slug (ascii) for a given unicode string.
+    If the unidecode package is available, an ascii transliteration is done.
+    """
+
+    normalized =  unicodedata.normalize("NFD", s)
+    cleaned = ''.join([c for c in normalized if unicodedata.category(c) != 'Mn'])
+    slugified_ascii =  re.sub(r"[^A-Za-z0-9_-]", '_', cleaned)
+
+    if unidecode_available:
+        slugified_ascii = re.sub(r"[^A-Za-z0-9_-]", '_', unidecode(cleaned))
+
+    slugified_ascii = re.sub(r"_{2,}", '_', slugified_ascii)
+
+    if lower:
+        slugified_ascii = slugified_ascii.lower()
+
+    ### If you prefer to work with a unicode slug, use instead the following:
+    # slugified_unicode = u""
+    # for c in cleaned:
+    #   cat = unicodedata.category(c)
+    #   if cat.startswith("L") or cat.startswith("N"):
+    #       slugified_unicode += c
+    #   else:
+    #       slugified_unicode += "_"
+
+    return slugified_ascii
+
 def get_unique_slug(string):
     """
     Gives a unique slugified string from a string.
     """
-    string = slugify(string, to_lower=True, max_length=25, separator="_", capitalize=True)
+    string = slugify(string)
     if string == '':
         string = 'none'
     test_string = string
-    i = 0
+    i = 1
     while test_string in list_unique_slugs:
         i += 1
         test_string = string + '_' + str(i)

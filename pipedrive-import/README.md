@@ -5,11 +5,14 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 ## How to set-up
 
 * Get a Pipedrive API key.
-* Install python dependencies with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html): `data_dir/bin/pip install --upgrade requests awesome-slugify`
 * Install the plugin in DSS.
 * Create a new dataset with this connector. Fill the API key field and click on the “Test & Get schema“ button. Then, “save“ and “explore“.
 
 ## Changelog
+
+**Version 1.0.1 (2016-02-02)**
+
+* Change dependency (unidecode is an optional dependency, no more dependency)
 
 **Version 1.0.0 (2016-01-12)**
 
@@ -31,9 +34,13 @@ This plugin provides a read connector to interact with [Pipedrive CRM](https://w
 
 * Initial release: deals dataset
 
-## Credits
+## Non-Roman characters
 
-This plugin uses the [awesome-slugify](https://github.com/dimka665/awesome-slugify) library from Dmitry Voronin.
+This plugin optionnaly uses the [unidecode](https://pypi.python.org/pypi/Unidecode) library from Tomaz Solc for the transliteration of non-Roman characters.
+
+You can install this package if required with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html):
+
+`data_dir/bin/pip install --upgrade unidecode`
 
 ## Need help?
 
