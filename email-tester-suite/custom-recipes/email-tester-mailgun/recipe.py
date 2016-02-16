@@ -31,8 +31,8 @@ if not email_column or not cache_folder or not api_key:
 
 # Prepare schema
 output_schema = list(contacts.read_schema())
-output_schema.append({'name':'email_is_valid', 'type':'STRING'})
-output_schema.append({'name':'email_mailgun_details', 'type':'STRING'})
+output_schema.append({'name':'email_is_valid', 'type':'string'})
+output_schema.append({'name':'email_mailgun_details', 'type':'string'})
 output.write_schema(output_schema)
 
 # Verification of the email column
