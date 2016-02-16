@@ -1,9 +1,7 @@
 {
     "meta": {
         "label": "Email validation via Mailgun API",
-        "description": "The recipe takes as input a dataset of contacts, with one email address per row, and verify the validity of the emails addresses.<br>
-The validation is done via the <a href=\"https://documentation.mailgun.com/api-email-validation.html#email-validation\" target=\"_blank\">Mailgun API</a>. An API key is required (free to get).<br> 
-Two columns are added in the output dataset: one boolean for email validation, and one containing the JSON answer from the API."
+        "description": "The recipe takes as input a dataset of contacts, with one email address per row, and verify the validity of the emails addresses.<br>\nThe validation is done via the <a href=\"https://documentation.mailgun.com/api-email-validation.html#email-validation\" target=\"_blank\">Mailgun API</a>. An API key is required (free to get).<br>\nTwo columns are added in the output dataset: one boolean for email validation, and one containing the JSON answer from the API."
     },
 
     "kind": "PYTHON",

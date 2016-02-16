@@ -1,12 +1,7 @@
 {
     "meta": {
         "label": "Email address tester",
-        "description": "The recipe takes as input a dataset of contacts, with one email address per row, and verify the validity of the emails addresses.<br>
-Two columns are added in the output dataset: one boolean for email validation, and one giving the reason if an email is not valid.<br>
-Three different tests are available for email validation:<br>
-- Format validation<br>
-- Disposable domain detection<br>
-- MX record domain detection"
+        "description": "The recipe takes as input a dataset of contacts, with one email address per row, and verify the validity of the emails addresses.<br>\nTwo columns are added in the output dataset: one boolean for email validation, and one giving the reason if an email is not valid.<br>\nThree different tests are available for email validation:<br>\n- Format validation<br>\n- Disposable domain detection<br>\n- MX record domain detection"
     },
 
     "kind": "PYTHON",
