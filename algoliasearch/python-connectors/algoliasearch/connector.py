@@ -117,7 +117,6 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
             self.index.clear_index()
 
     def write_row(self, row):
-        logging.info("Algolia Write dataset_partitioning=%s" % self.dataset_partitioning)
         obj = {}
         for (col, val) in zip(self.dataset_schema["columns"], row):
             #logging.info("Write %s for %s" % (val, col))
@@ -126,13 +125,13 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
             if col['type'] in ['tinyint', 'smallint', 'int', 'bigint']:
                 try:
                     val = int(val)
-                except:
-                    print "Warning: could not parse as int:", val
+                except Exception, e:
+                    logging.warning("Failed to parse data as int col=%s val=%s err=%s" % (col["name"], val, e))
             if col['type'] in ['array', 'object', 'map']:
                 try:
                     val = json.loads(val)
-                except:
-                    print "Warning: could not parse:", val
+                except Exception, e:
+                    logging.warning("Failed to parse data as JSON col=%s val=%s err=%s" % (col["name"], val, e))
             obj[col["name"]] = val
             if col["name"] =="id":
                 logging.info("Set ObjectID")
