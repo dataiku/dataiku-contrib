@@ -7,7 +7,7 @@
 		"author" : "Dataiku (Jérémy Grèze)",
 		"icon" : "icon-envelope",
 		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/",
+		"url" : "https://www.dataiku.com/community/plugins/info/email-tester-suite.html",
 		"tags" : ["Email", "Validation", "Productivity", "Marketing"]
 	}
 }
