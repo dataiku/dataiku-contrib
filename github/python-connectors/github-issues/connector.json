@@ -11,11 +11,14 @@
 			"mandatory" : true
 		},
 		{
+			"label": "Password or token",
 			"name" : "password",
 			"type" : "PASSWORD",
-			"mandatory" : true
+			"mandatory" : true,
+			"description": "You can generate a token on https://github.com/settings/tokens"
 		},
 		{
+			"label": "Repository",
 			"name" : "repos",
 			"type" : "STRING",
 			"mandatory" : true
