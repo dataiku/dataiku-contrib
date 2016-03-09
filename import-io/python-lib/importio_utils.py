@@ -32,6 +32,9 @@ def convert_schema(import_io_schema):
     return result
 
 def run(build_query):
+    """Used by recipes (see them for example use).
+    Do one API call per line of input dataset, write results to output dataset.
+    Overwrite output schema."""
     input  = dataiku.Dataset(get_input_names_for_role ('input_dataset')[0])
     output = dataiku.Dataset(get_output_names_for_role('output_dataset')[0])
     output_writer = output.get_writer()
@@ -59,7 +62,7 @@ def run(build_query):
             print "response: ", json
             raise Exception(json['error'])
         for result_line in json['results']:
-            if not output_schema: # and not get_recipe_config()['Do not automatically update output schema']:
+            if not output_schema:
                 print "Setting schema"
                 input_schema_names = frozenset([e['name'] for e in input.read_schema()])
                 output_schema = input.read_schema()
@@ -71,6 +74,7 @@ def run(build_query):
                         output_schema.append(col)
                 output.write_schema(output_schema)
                 sys.stdout.flush()
+            # Write downloaded data to output
             out_row = {k:v for k,v in in_row.items() if k not in input_cols_to_drop}
             out_row.update(result_line)
             output_writer.write_row_dict(out_row)
