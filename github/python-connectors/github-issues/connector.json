@@ -7,16 +7,19 @@
 	"params" : [
 		{
 			"name" : "login",
+            "label" : "Login",
 			"type" : "STRING",
 			"mandatory" : true
 		},
 		{
 			"name" : "password",
+            "label" : "Password or Personal Access Token",
 			"type" : "PASSWORD",
 			"mandatory" : true
 		},
 		{
 			"name" : "repos",
+            "label" : "Repository (in the form user/repos)",
 			"type" : "STRING",
 			"mandatory" : true
 		},
