@@ -7,12 +7,14 @@
 	"params" : [
 		{
 			"name" : "login",
+            "label" : "Login",
 			"type" : "STRING",
 			"mandatory" : true
 		},
 		{
 			"label": "Password or token",
 			"name" : "password",
+            "label" : "Password or Personal Access Token",
 			"type" : "PASSWORD",
 			"mandatory" : true,
 			"description": "You can generate a token on https://github.com/settings/tokens"
@@ -20,6 +22,7 @@
 		{
 			"label": "Repository",
 			"name" : "repos",
+            "label" : "Repository (in the form user/repos)",
 			"type" : "STRING",
 			"mandatory" : true
 		},
