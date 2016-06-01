@@ -1,0 +1,14 @@
+{
+    "meta" : {
+        "label" : "KML"
+    },
+    "canBeDatasetFormat" : true,
+    "canRead" : true,
+    "canWrite" : false,
+    "canExtractSchema" : false,
+    
+    "formatClass" : "com.dataiku.dss.formats.kml.KMLFormat",
+        
+    "params": [
+    ]
+}
