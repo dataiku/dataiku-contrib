@@ -6,6 +6,8 @@
 
     "kind" : "PYTHON",
 
+    "selectableFromDataset" : "main",
+
     "inputRoles" : [
         {
             "name": "main",
