@@ -11,7 +11,7 @@
         {
             "name": "credentials",
             "label": "Service Account JSON (file provided by Google)",
-            "type": "STRING",
+            "type": "TEXTAREA",
             "mandatory" : true
         },
         {

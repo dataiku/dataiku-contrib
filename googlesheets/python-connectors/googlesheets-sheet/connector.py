@@ -1,7 +1,8 @@
 from dataiku.connector import Connector
 import json
 import gspread
-from oauth2client.client import SignedJwtAssertionCredentials
+import oauth2client
+from oauth2client.service_account import ServiceAccountCredentials
 from slugify import slugify
 
 """
@@ -22,14 +23,20 @@ class MyConnector(Connector):
         Connector.__init__(self, config)  # pass the parameters to the base class
 
         # perform some more initialization
-        credentials = json.loads(self.config.get("credentials"))
-        self.client_email = credentials["client_email"]
-        self.private_key = credentials["private_key"]
+        self.credentials = json.loads(self.config.get("credentials"))
         self.doc_id = self.config.get("doc_id")
         self.tab_id = self.config.get("tab_id")
         self.result_format = self.config.get("result_format")
         self.list_unique_slugs = []
 
+
+    def get_spreadsheet(self):
+
+        scope = ['https://spreadsheets.google.com/feeds']
+        credentials = ServiceAccountCredentials.from_json_keyfile_dict(self.credentials, scope)
+        gc = gspread.authorize(credentials)
+
+        return gc.open_by_key(self.doc_id).worksheet(self.tab_id)
 
     def get_unique_slug(self, string):
         string = slugify(string, to_lower=False,max_length=25,separator="_",capitalize=False)
@@ -43,12 +50,14 @@ class MyConnector(Connector):
         self.list_unique_slugs.append(test_string)
         return test_string
 
+
     def get_read_schema(self):
         # The Google Spreadsheets connector does not have a fixed schema, since each
         # sheet has its own (varying) schema.
         #
         # Better let DSS handle this
         return None
+
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
                             partition_id=None, records_limit = -1):
@@ -60,13 +69,7 @@ class MyConnector(Connector):
 
         The dataset schema and partitioning are given for information purpose.
         """
-
-        scope = ['https://spreadsheets.google.com/feeds']
-        credentials = SignedJwtAssertionCredentials(self.client_email, self.private_key, scope)
-        gc = gspread.authorize(credentials)
-
-        ws = gc.open_by_key(self.doc_id).worksheet(self.tab_id)
-
+        ws = self.get_spreadsheet()
         rows = ws.get_all_values()
         columns = rows[0]
         columns_slug = map(self.get_unique_slug, columns)
