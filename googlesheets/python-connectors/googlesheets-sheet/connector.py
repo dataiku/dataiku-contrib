@@ -1,4 +1,4 @@
-from dataiku.connector import Connector
+from dataiku.connector import Connector, CustomDatasetWriter
 import json
 import gspread
 import oauth2client
@@ -92,3 +92,95 @@ class MyConnector(Connector):
         else:
 
             raise Exception("Unimplemented")
+
+
+    def get_writer(self, dataset_schema=None, dataset_partitioning=None,
+                         partition_id=None):
+
+        return MyCustomDatasetWriter(self.config, self, dataset_schema, dataset_partitioning, partition_id)
+
+
+    def get_records_count(self, partitioning=None, partition_id=None):
+        """
+        Returns the count of records for the dataset (or a partition).
+
+        Implementation is only required if the corresponding flag is set to True
+        in the connector definition
+        """
+        raise Exception("unimplemented")
+
+
+
+class MyCustomDatasetWriter(CustomDatasetWriter):
+    def __init__(self, config, parent, dataset_schema, dataset_partitioning, partition_id):
+        CustomDatasetWriter.__init__(self)
+        self.parent = parent
+        self.config = config
+        self.dataset_schema = dataset_schema
+        self.dataset_partitioning = dataset_partitioning
+        self.partition_id = partition_id
+
+        self.buffer = []
+
+        LIMIT_COLUMNS = 256
+        LIMIT_CELLS = 400000
+        LIMIT_LINES = 2000 #this is not an official limit
+
+        columns = [col["name"] for col in dataset_schema["columns"]]
+
+        if len(columns) > 256:
+            raise Exception("A spreadsheet cannot contain more than 256 columns.")
+
+        # Example of dataset_schema: {u'userModified': False, u'columns': [{u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'condition', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'weather', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'double', u'name': u'temperature', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'bigint', u'name': u'humidity', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_update', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_add', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'ville', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'source', u'maxLength': -1}]}
+
+        # TODO:
+        # - Verify the size of the spreadsheet
+        # - Implement the flush
+        # - Clean outside of what is written
+        # - Implement the limit on number of rows
+
+        self.buffer.append(columns)
+
+
+    def numberToLetters(self, q):
+        # Helper function to convert 1->A, 2->B, ...
+        q = q - 1
+        result = ''
+        while q >= 0:
+            remain = q % 26
+            result = chr(remain+65) + result;
+            q = q//26 - 1
+        return result
+
+    def write_row(self, row):
+
+        # for (col, val) in zip(self.dataset_schema["columns"], row):
+        #     print (col, val)
+
+        self.buffer.append(row)
+
+        # if len(self.buffer) > 50:
+        #     self.flush()
+
+
+    def flush(self):
+        ws = self.parent.get_spreadsheet()
+
+        num_columns = len(self.buffer[0])
+        num_lines = len(self.buffer)
+
+        cell_list = ws.range('A1:'+self.numberToLetters(num_columns)+str(num_lines))
+        for cell in cell_list:
+            val = self.buffer[cell.row-1][cell.col-1]
+            # if type(val) is str:
+            #     val = val.decode('utf-8')
+            cell.value = val
+        ws.update_cells(cell_list)
+
+        self.buffer = []
+
+    def close(self):
+        self.flush()
+        pass
+        
+

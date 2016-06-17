@@ -5,18 +5,20 @@
     },
 
     "readable" : true,
-    "writable" : false,
+    "writable" : true,
 
     "params": [
         {
             "name": "credentials",
-            "label": "Service Account JSON (file provided by Google)",
+            "label": "Service Account JSON",
+            "description": "File provided by Google. Read more here: http://gspread.readthedocs.io/en/latest/oauth2.html",
             "type": "TEXTAREA",
             "mandatory" : true
         },
         {
             "name": "doc_id",
-            "label": "Document id (which can be extracted from the spreadsheet's URL)",
+            "label": "Document id",
+            "description": "Can be extracted from the spreadsheet's URL",
             "type": "STRING",
             "mandatory" : true
         },
@@ -28,7 +30,7 @@
         },
         {
             "name": "result_format",
-            "label": "Choose the format",
+            "label": "When importing, choose the format",
             "type": "SELECT",
             "selectChoices": [
                 {
