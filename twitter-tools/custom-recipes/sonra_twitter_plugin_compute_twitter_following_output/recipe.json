@@ -1,0 +1,112 @@
+// This file is the descriptor for the Custom code recipe sonra_twitter_plugin_compute_twitter_following_output
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "`Follow` recipe",
+        "author" : "Me",
+        "tags" : ["myrecipe", "dev"]
+    },
+
+    "kind" : "PYTHON",
+
+    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+    // or more dataset to each input and output role.
+
+    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+    // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
+    // associate no dataset with the role.
+
+    "inputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    // The field "params" holds a list of all the params
+    // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+    // The available parameter types are:
+    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
+
+    "params": [
+        {
+            "name": "input_column",
+            "label" : "Input dataset's users column",
+            "type": "COLUMN",
+            "columnRole":"main",
+            "mandatory" : true
+        },
+        {
+            "name": "following_interval",
+            "type": "INT",
+            "defaultValue" : 120,
+            "label" : "Min interval between API calls",
+            "mandatory" : true
+            /* Note that standard json parsing will return it as a double in Python (instead of an int), so you need to write
+               int(get_recipe_config()['parameter2'])
+            */
+        },
+         
+/*         
+        {
+            "name": "consumer_key",
+            "label" : "Twitter API consumer key",
+            "type": "STRING",
+            "mandatory" : true
+        },
+                
+        {
+            "name": "consumer_secret",
+            "label" : "Twitter API consumer secret",
+            "type": "PASSWORD",
+            "mandatory" : true
+        },
+                
+        {
+            "name": "access_token",
+            "label" : "Twitter API access token",
+            "type": "STRING",
+            "mandatory" : true
+        },
+                
+        {
+            "name": "access_token_secret",
+            "label" : "Twitter API access token secret",
+            "type": "PASSWORD",
+            "mandatory" : true
+        }
+*/
+        {
+            "name": "dataiku_token",
+            "label" : "Dataiku API Key",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "connection_name",
+            "label" : "Twitter Connection Name",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "dataiku_url",
+            "label" : "Dataiku URL",
+            "description" : "By default http://host_name:dataiku_port",
+            "type": "STRING",
+            "mandatory" : false
+        }
+    ]
+
+}
