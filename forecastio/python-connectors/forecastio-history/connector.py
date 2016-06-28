@@ -43,8 +43,9 @@ class MyConnector(Connector):
         return {
                 "columns" : [
                     { "name" : "day", "type" : "string" },
-                    { "name" : "daily", "type" : "object" },
-                    { "name" : "hourly", "type" : "object" },
+                    { "name" : "day_date", "type" : "date" },
+                    { "name" : "daily_data", "type" : "object" },
+                    { "name" : "hourly_data", "type" : "object" },
                     { "name" : "full_json", "type" : "object" }
                 ]
             }
@@ -138,9 +139,10 @@ class MyConnector(Connector):
         for day in list_datetimes:
                 result = self.get_weather(day)
                 yield {
-                        'day': day.strftime("%d/%m/%Y"),
-                        'daily': json.dumps(result['daily']['data'][0]) if 'daily' in result and 'data' in result['daily'] else '',
-                        'hourly': json.dumps(result.get('hourly', '')),
+                        'day': day.strftime("%Y-%m-%d"),
+                        'day_date' : day.strftime("%Y-%m-%dT00:00:00.000Z"),
+                        'daily_data': json.dumps(result['daily']['data'][0]) if 'daily' in result and 'data' in result['daily'] else '',
+                        'hourly_data': json.dumps(result.get('hourly', '')),
                         'full_json': json.dumps(result)
                     }
 
