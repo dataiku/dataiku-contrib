@@ -1,15 +1,24 @@
 {
     "meta" : {
-        "label" : "Get followers info",
-        "description" : "Fetches information about your Twitter followers. This recipe does not have any input"
+        "label" : "Follow users",
+        "description" : "This recipe allows you to follow users specified in an input dataset"
     },
 
     "kind" : "PYTHON",
+    "selectableFromDataset" : "main",
+
+    "inputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
 
     "outputRoles" : [
         {
             "name": "main",
-            "label" : "Output",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": true
@@ -17,6 +26,13 @@
     ],
 
     "params": [
+        {
+            "name": "input_column",
+            "label" : "Input dataset's users column",
+            "type": "COLUMN",
+            "columnRole":"main",
+            "mandatory" : true
+        },
         {
             "name": "dataiku_token",
             "label" : "DSS API Key",
@@ -42,7 +58,7 @@
         {
             "name": "default_interval",
             "type": "INT",
-            "defaultValue" : 6,
+            "defaultValue" : 120,
             "label" : "Min interval between API calls",
             "description" : "Delay to be added between each Twitter API call",
             "mandatory" : true
@@ -51,5 +67,4 @@
             */
         }
     ]
-
 }

@@ -1,87 +1,26 @@
-# Code for custom code recipe sonra_twitter_plugin_compute_following_info (imported from a Python recipe)
-
-# To finish creating your custom recipe from your original PySpark recipe, you need to:
-#  - Declare the input and output roles in recipe.json
-#  - Replace the dataset names by roles access in your code
-#  - Declare, if any, the params of your custom recipe in recipe.json
-#  - Replace the hardcoded params values by acccess to the configuration map
-
-# See sample code below for how to do that.
-# The code of your original recipe is included afterwards for convenience.
-# Please also see the "recipe.json" file for more information.
-
-# import the classes for accessing DSS objects from the recipe
-import dataiku
-# Import the helpers for custom recipes
-from dataiku.customrecipe import *
-
-# For outputs, the process is the same:
-output_dataset_name = get_output_names_for_role('main')[0]
-
-#############################
-# Your original recipe
-#############################
-
+# -*- coding: utf-8 -*-
 # !!!
 # Get all of the attributes of Twitter followers and store in DSS dataset.
 
-# -*- coding: utf-8 -*-
 import dataiku
+from dataiku.customrecipe import *
 import pandas as pd, numpy as np
 from dataiku import pandasutils as pdu
 import time
-import datetime 
+import datetime
 import json
 import os
 import socket
 import dataikuapi
 # twitter client
 from birdy.twitter import UserClient,TwitterApiError,ApiResponse
+from common import get_client, calc_interval, get_userinfo
 
-def getAPIUrl():
-    if "dataiku_url" not in get_recipe_config():
-        dku_port = os.environ['DKU_BASE_PORT']
-        host = socket.gethostname()
-        return 'http://'+host+':'+dku_port
-    else:
-        return get_recipe_config()['dataiku_url']
-
-def getConnection(name,key):
-    APIUrl = getAPIUrl()
-    print "API URL: "+APIUrl
-    client = dataikuapi.dssclient.DSSClient(APIUrl,key)
-    return client.list_connections()[name]['params']
-
-twitter = getConnection(get_recipe_config()['connection_name'],get_recipe_config()['dataiku_token'])
-
-# Twitter API keys
-#CONSUMER_KEY=get_recipe_config()['consumer_key']
-CONSUMER_KEY=twitter['api_key']
-#CONSUMER_SECRET=get_recipe_config()['consumer_secret']
-CONSUMER_SECRET=twitter['api_secret']
-# User Access Keys
-#ACCESS_TOKEN=get_recipe_config()['access_token']
-ACCESS_TOKEN=twitter['token_key']
-#ACCESS_TOKEN_SECRET=get_recipe_config()['access_token_secret']
-ACCESS_TOKEN_SECRET=twitter['token_secret']
-
-
-# Interval in seconds
+output_dataset_name = get_output_names_for_role('main')[0]
+client = get_client()
 DEFAULT_INTERVAL=int(get_recipe_config()['default_interval'])
 
-# init API client
-client = UserClient(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
-
-
-def calc_interval(headers):
-    interval = DEFAULT_INTERVAL
-    # if we hit the limit, wait for resetting time
-    if 'x-rate-limit-remaining' in headers and headers['x-rate-limit-remaining'] <= 0:
-        current_timestamp = int(time.time())
-        interval += int(headers['x-rate-limit-reset']) - current_timestamp
-    return interval
-
-def get_followers():  
+def get_followers():
     # get followers
     followers_ids = []
 
@@ -113,23 +52,12 @@ def get_followers():
             time.sleep(interval)
     return followers_ids
 
-def get_userinfo(user):
-    try:
-        print "Get user's info: "+str(user)
-        response = client.api.users.show.get( user_id=user )
-        return response
-    except TwitterApiError, e:
-        print "Exception: "+e._msg
-        
-        # set interval to 60 in case of error
-        interval = 60
-        print "Sleep "+str(interval)+" s"
-        time.sleep(interval)
-    return False
-        
-
 followers = get_followers()
 results = []
+
+print "Found %s followers" % len(followers)
+nb_done = 0
+
 for user in followers:
     # get userdata
     response = get_userinfo(user)
@@ -172,9 +100,13 @@ for user in followers:
         interval = calc_interval(response.headers)
     else:
         interval = DEFAULT_INTERVAL
+
+    nb_done = nb_done + 1
+    #if nb_done == 1:
+    #    break
+
     print "Sleep "+str(interval)+" s"
     time.sleep(interval)
-    
 
 odf = pd.DataFrame(results)
 

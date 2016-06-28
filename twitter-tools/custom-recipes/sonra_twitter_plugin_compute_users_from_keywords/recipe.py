@@ -1,64 +1,6 @@
-# Code for custom code recipe sonra_twitter_plugin_compute_users_from_keywords (imported from a Python recipe)
-
-# To finish creating your custom recipe from your original PySpark recipe, you need to:
-#  - Declare the input and output roles in recipe.json
-#  - Replace the dataset names by roles access in your code
-#  - Declare, if any, the params of your custom recipe in recipe.json
-#  - Replace the hardcoded params values by acccess to the configuration map
-
-# See sample code below for how to do that.
-# The code of your original recipe is included afterwards for convenience.
-# Please also see the "recipe.json" file for more information.
-
-# import the classes for accessing DSS objects from the recipe
-import dataiku
-# Import the helpers for custom recipes
-from dataiku.customrecipe import *
-
-# Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
-# or more dataset to each input and output role.
-# Roles need to be defined in recipe.json, in the inputRoles and outputRoles fields.
-
-# To  retrieve the datasets of an input role named 'input_A' as an array of dataset names:
-#input_A_names = get_input_names_for_role('input_A_role')
-# The dataset objects themselves can then be created like this:
-#input_A_datasets = [dataiku.Dataset(name) for name in input_A_names]
-
-# For outputs, the process is the same:
-#output_A_names = get_output_names_for_role('main_output')
-#output_A_datasets = [dataiku.Dataset(name) for name in output_A_names]
-
-
-# The configuration consists of the parameters set up by the user in the recipe Settings tab.
-
-# Parameters must be added to the recipe.json file so that DSS can prompt the user for values in
-# the Settings tab of the recipe. The field "params" holds a list of all the params for wich the
-# user will be prompted for values.
-
-# The configuration is simply a map of parameters, and retrieving the value of one of them is simply:
-#my_variable = get_recipe_config()['parameter_name']
-
-# For optional parameters, you should provide a default value in case the parameter is not present:
-#my_variable = get_recipe_config().get('parameter_name', None)
-
-# Note about typing:
-# The configuration of the recipe is passed through a JSON object
-# As such, INT parameters of the recipe are received in the get_recipe_config() dict as a Python float.
-# If you absolutely require a Python int, use int(get_recipe_config()["my_int_param"])
-
-# To  retrieve the datasets of an input role named 'input_A' as an array of dataset names:
-input_dataset_name = get_input_names_for_role('main')[0]
-
-# For outputs, the process is the same:
-output_dataset_name = get_output_names_for_role('main')[0]
-
-
-#############################
-# Your original recipe
-#############################
-
 # -*- coding: utf-8 -*-
 import dataiku
+from dataiku.customrecipe import *
 import pandas as pd, numpy as np
 from dataiku import pandasutils as pdu
 import datetime 
@@ -71,51 +13,15 @@ import dataikuapi
 
 # twitter client
 from birdy.twitter import UserClient,TwitterApiError,ApiResponse
+from common import get_client, calc_interval
 
-def getAPIUrl():
-    if "dataiku_url" not in get_recipe_config():
-        dku_port = os.environ['DKU_BASE_PORT']
-        host = socket.gethostname()
-        return 'http://'+host+':'+dku_port
-    else:
-        return get_recipe_config()['dataiku_url']
+input_dataset_name = get_input_names_for_role('main')[0]
+output_dataset_name = get_output_names_for_role('main')[0]
 
-def getConnection(name,key):
-    APIUrl = getAPIUrl()
-    print "API URL: "+APIUrl
-    client = dataikuapi.dssclient.DSSClient(APIUrl,key)
-    return client.list_connections()[name]['params']
-
-twitter = getConnection(get_recipe_config()['connection_name'],get_recipe_config()['dataiku_token'])
-
-# Twitter API keys
-#CONSUMER_KEY=get_recipe_config()['consumer_key']
-CONSUMER_KEY=twitter['api_key']
-#CONSUMER_SECRET=get_recipe_config()['consumer_secret']
-CONSUMER_SECRET=twitter['api_secret']
-# User Access Keys
-#ACCESS_TOKEN=get_recipe_config()['access_token']
-ACCESS_TOKEN=twitter['token_key']
-#ACCESS_TOKEN_SECRET=get_recipe_config()['access_token_secret']
-ACCESS_TOKEN_SECRET=twitter['token_secret']
-
-# Interval in seconds
-DEFAULT_INTERVAL=int(get_recipe_config()['default_interval'])
+client = get_client()
 
 # input dataset's column
 INPUT_COLUMN=get_recipe_config()['input_column']
-
-def calc_interval(headers):
-    interval = DEFAULT_INTERVAL
-    # if we hit the limit, wait for resetting time
-    if headers['x-rate-limit-remaining'] <= 0:
-        current_timestamp = int(time.time())
-        interval += int(headers['x-rate-limit-reset']) - current_timestamp
-    return interval
-
-# init API client
-client = UserClient(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
-
 
 # Recipe inputs
 users_keywords = dataiku.Dataset(input_dataset_name)
@@ -125,8 +31,11 @@ results = []
 
 # for each user
 for record in users_keywords.iter_rows():
-    print "Searching: "+record[INPUT_COLUMN]
-    interval = DEFAULT_INTERVAL 
+    kw = record.get(INPUT_COLUMN, None)
+    if kw is None or len(kw) == 0:
+        print "Empty keyword, ignoring"
+        continue
+    print "Searching: %s" % kw
     prev_response = [];
     # search for user
     try:
@@ -134,8 +43,8 @@ for record in users_keywords.iter_rows():
         cur_page=1
         do_break = False
         while True:
-            print "Current page: "+str(cur_page)
-            response = client.api.users.search.get(count=20,q=record[INPUT_COLUMN],page=cur_page)
+            print "Fetching page: "+str(cur_page)
+            response = client.api.users.search.get(count=20,q=kw,page=cur_page)
 
             if len(response.data) == 0:
                 print "Results: 0"
@@ -196,6 +105,9 @@ for record in users_keywords.iter_rows():
 
             # exit
             if do_break:
+                break
+            if cur_page == 2:
+                print "Breaking on too many pages"
                 break
             prev_response = response
             
