@@ -47,33 +47,46 @@ def run(build_query):
         request_url = urlparse.urlunparse((
             parsed_api_url.scheme, parsed_api_url.netloc, parsed_api_url.path, parsed_api_url.params,
             query, parsed_api_url.fragment))
-        try:
-            response = requests.get(request_url)
-            json = response.json()
-        except Exception as e:
-            print 'request to import.io failed'
-            print e
-            print 'response was:\n',response
-            raise
-        if 'error' in json:
-            print "response: ", json
-            raise Exception(json['error'])
-        for result_line in json['results']:
-            if not output_schema: # and not get_recipe_config()['Do not automatically update output schema']:
-                print "Setting schema"
-                input_schema_names = frozenset([e['name'] for e in input.read_schema()])
-                output_schema = input.read_schema()
-                for col in convert_schema(json['outputProperties']):
-                    if col['name'] in input_schema_names:
-                        print "Warning: input col "+col['name']+" will be overwritten by output col with same name."
-                        input_cols_to_drop.append(col['name'])
+        while True:
+            try:
+                print request_url
+                response = requests.get(request_url)
+                json = response.json()
+                if 'error' in json:
+                    print "response: ", json
+                    # skips if hits NotFoundException, no reason to re-run it
+                    if json['errorType'] == "NotFoundException":
+                        raise NotFoundException(json['error'])
                     else:
-                        output_schema.append(col)
-                output.write_schema(output_schema)
-                sys.stdout.flush()
-            out_row = {k:v for k,v in in_row.items() if k not in input_cols_to_drop}
-            out_row.update(result_line)
-            output_writer.write_row_dict(out_row)
-        time.sleep(delay_between_calls)
+                        raise Exception(json['error'])
+                for result_line in json['results']:
+                    if not output_schema: # and not get_recipe_config()['Do not automatically update output schema']:
+                        print "Setting schema"
+                        input_schema_names = frozenset([e['name'] for e in input.read_schema()])
+                        output_schema = input.read_schema()
+                        for col in convert_schema(json['outputProperties']):
+                            if col['name'] in input_schema_names:
+                                print "Warning: input col "+col['name']+" will be overwritten by output col with same name."
+                                input_cols_to_drop.append(col['name'])
+                            else:
+                                output_schema.append(col)
+                        output.write_schema(output_schema)
+                        sys.stdout.flush()
+                    out_row = {k:v for k,v in in_row.items() if k not in input_cols_to_drop}
+                    out_row.update(result_line)
+                    output_writer.write_row_dict(out_row)
+                time.sleep(delay_between_calls)
+            except NotFoundException as e:
+                # breaks (skips) if page is not found
+                print e
+                break
+            except Exception as e:
+                # retries if hits unexpected error
+                print 'request to import.io failed'
+                print e
+                print 'response was:\n',response
+                continue
+            # breaks `while(True)` if no error
+            break
 
     output_writer.close()
