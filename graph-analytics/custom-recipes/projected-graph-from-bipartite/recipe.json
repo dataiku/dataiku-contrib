@@ -1,0 +1,37 @@
+{
+  "meta" : {
+    "label" : "Create a projected graph from a bipartite graph",
+    "description": "This recipe creates a projected graph from a bipartite graph. For instance, if you start from a list of customer - products pairs (bipartite graph), this recipe creates the projected products graph (product A - product B edge list)."
+  },
+  "kind" : "PYTHON",
+  "inputRoles" : [
+    {
+      "name": "Input Dataset",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true
+    }
+  ],
+  "outputRoles" : [
+    {
+      "name": "Output Dataset",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true
+    }
+  ],
+  "params": [
+    {
+      "name": "create_graph_of",
+      "label": "Create graph of",
+      "type": "COLUMN",
+      "columnRole":"Input Dataset"
+    },
+    {
+      "name": "linked_by",
+      "label": "Linked by",
+      "type": "COLUMN",
+      "columnRole":"Input Dataset"
+    }
+  ]
+}

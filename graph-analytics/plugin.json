@@ -1,0 +1,13 @@
+{
+	"id" : "graph-analytics",
+  "version" : "0.0.1",
+  "meta" : {
+    "label" : "Graph analytics",
+    "description" : "This plugin offers several recipes to extract node statistics from different types of graphs (edges list, bipartite...)",
+    "author" : "Dataiku (Thomas Cabrol)",
+    "icon" : "icon-link",
+		"licenseInfo" : "Apache Software License",
+		"url" : "https://www.dataiku.com",
+		"tags" : ["Graph"]
+	}
+}
