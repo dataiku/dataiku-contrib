@@ -5,6 +5,7 @@
     },
 
     "kind" : "PYTHON",
+    "selectableFromDataset" : "Input Dataset",
 
     "inputRoles" : [
         {

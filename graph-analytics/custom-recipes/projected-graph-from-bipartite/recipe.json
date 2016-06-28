@@ -4,6 +4,7 @@
     "description": "This recipe creates a projected graph from a bipartite graph. For instance, if you start from a list of customer - products pairs (bipartite graph), this recipe creates the projected products graph (product A - product B edge list)."
   },
   "kind" : "PYTHON",
+  "selectableFromDataset" : "Input Dataset",
   "inputRoles" : [
     {
       "name": "Input Dataset",
