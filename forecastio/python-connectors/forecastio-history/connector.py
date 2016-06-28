@@ -21,7 +21,7 @@ class MyConnector(Connector):
         self.api_limit = int(self.config.get("api_limit", -1))
 
         # Cache file path
-        filename = "cache-wunderground-history-%s.json" % base64.urlsafe_b64encode(str(self.latitude) + '-' + str(self.longitude))
+        filename = "cache-forecastio-history-%s.json" % base64.urlsafe_b64encode(str(self.latitude) + '-' + str(self.longitude))
         self.cache_file = os.path.join(self.cache_folder, filename)
 
         # Cache directory
@@ -75,8 +75,8 @@ class MyConnector(Connector):
 
             # checking limits
             if self.api_limit > -1 and self.api_calls >= self.api_limit:
-                print  "Forecast.io plugin - Limit reached, no call for %s" % day_key
-                return "Limit reached. No call."
+                print  "Forecast.io plugin - Limit reached, no call for %s (cur=%d lim=%d)" % (day_key, self.api_calls, self.api_limit)
+                return {"result" : "Limit reached. No call." }
 
             # request
             headers = {
@@ -100,6 +100,11 @@ class MyConnector(Connector):
             result = r.json()
             self.api_calls = r.headers.get('X-Forecast-API-Calls')
             print "Forecast.io plugin - X-Forecast-API-Calls: %s" % self.api_calls
+
+            if self.api_calls is not None:
+                self.api_calls = int(self.api_calls)
+            else:
+                self.api_calls = -1
 
             # writing json cache
             cache[day_key] = result
