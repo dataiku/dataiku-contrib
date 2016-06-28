@@ -60,7 +60,7 @@ nb_done = 0
 
 for user in followers:
     # get userdata
-    response = get_userinfo(user)
+    response = get_userinfo(client, user)
     
     if response != False :
         # save to output dataset

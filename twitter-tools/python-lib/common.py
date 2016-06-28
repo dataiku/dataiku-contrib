@@ -1,7 +1,6 @@
 import dataiku
 from dataiku.customrecipe import *
-import os
-import socket
+import os, socket, time
 import dataikuapi
 # twitter client
 from birdy.twitter import UserClient,TwitterApiError,ApiResponse
@@ -38,14 +37,14 @@ def get_client():
 	return UserClient(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
 
 
-def get_userinfo(user):
+def get_userinfo(client, user):
     try:
         print "Get user's info: "+str(user)
         response = client.api.users.show.get( user_id=user )
         return response
     except TwitterApiError, e:
         print "Exception: "+e._msg
-        
+
         # set interval to 60 in case of error
         interval = 60
         print "Sleep "+str(interval)+" s"

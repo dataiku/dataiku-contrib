@@ -62,7 +62,7 @@ nb_done = 0
 results = []
 for user in following:
     # get userdata
-    response = get_userinfo(user)
+    response = get_userinfo(client, user)
 
     if response != False :
         # save to output dataset
