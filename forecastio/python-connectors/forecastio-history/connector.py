@@ -142,7 +142,7 @@ class MyConnector(Connector):
                         'day': day.strftime("%Y-%m-%d"),
                         'day_date' : day.strftime("%Y-%m-%dT00:00:00.000Z"),
                         'daily_data': json.dumps(result['daily']['data'][0]) if 'daily' in result and 'data' in result['daily'] else '',
-                        'hourly_data': json.dumps(result.get('hourly', '')),
+                        'hourly_data': json.dumps(result.get('hourly', '')) if 'hourly' in result else '',
                         'full_json': json.dumps(result)
                     }
 
