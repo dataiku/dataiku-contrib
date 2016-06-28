@@ -1,6 +1,6 @@
 {
     "id" : "algoliasearch",
-    "version" : "0.0.3",
+    "version" : "0.0.4",
     "meta" : {
         "label": "Algolia Search Connector",
         "description" : "A read-and-write connector for the Algolia search API",
