@@ -1,7 +1,9 @@
 {
     "meta" : {
         "label": "Build model",
-        "description": "Build an H2O model and save it in a folder"
+        "description": "Build an H2O model and save it in a folder",
+        "author" : "Dataiku (Jean-Baptiste Rouquier)",
+        "tags" : ["API", "ML"]
     },
 
     "kind" : "PYTHON",

@@ -1,6 +1,6 @@
 {
   "id" : "import-io",
-  "version" : "0.0.2",
+  "version" : "1.0.0",
   "meta" : {
     "label" : "import.io",
     "description" : "Downloads data from import.io's API & enriches datasets",
