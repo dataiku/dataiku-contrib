@@ -62,9 +62,8 @@
             "label" : "Min interval between API calls",
             "description" : "Delay to be added between each Twitter API call",
             "mandatory" : true
-            /* Note that standard json parsing will return it as a double in Python (instead of an int), so you need to write
-               int(get_recipe_config()['parameter2'])
-            */
+            // Note that standard json parsing will return it as a double in Python (instead of an int), so you need to write
+            //  int(get_recipe_config()['parameter2'])
         }
     ]
 }
