@@ -16,7 +16,7 @@
 		},
 		{
 			"name" : "apiKey",
-			"label" : "API Key",
+			"label" : "Admin API Key",
 			"type" : "STRING",
 			"mandatory" : true
 		},
