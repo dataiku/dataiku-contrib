@@ -15,7 +15,8 @@
 			"name" : "password",
             "label" : "Password or Personal Access Token",
 			"type" : "PASSWORD",
-			"mandatory" : true
+			"mandatory" : true,
+			"description": "You can generate a token on https://github.com/settings/tokens"
 		},
 		{
 			"name" : "repos",
@@ -29,7 +30,7 @@
 			"type" : "BOOLEAN",
 			"mandatory" : true,
 			"defaultValue": false,
-			"description":"(Makes downloading 10x slower and prone to hit rate limit)"
+			"description":"(Makes downloading 10x slower and prone to hit rate limit. See https://github.com/PyGithub/PyGithub/pull/378)"
 		}
 	]
 }

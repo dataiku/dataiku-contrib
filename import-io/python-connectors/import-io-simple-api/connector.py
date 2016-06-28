@@ -5,9 +5,11 @@ import importio_utils
 class ImportIOConnector(Connector):
 
     def __init__(self, config):
+        """Make the only API call, which downloads the data"""
         Connector.__init__(self, config)
         if not self.config['api_url'].startswith('https://api.import.io/'):
-            raise Exception('It looks like this URL is not an API URL. URLs to call the API (and get a json response) start with "api.import.io" .')
+            raise Exception(
+                'It looks like this URL is not an API URL. URLs to call the API (and get a json response) start with "https://api.import.io" .')
         print '[import.io connector] calling API...'
         response = requests.get(self.config['api_url'])
         print '[import.io connector] got response'
