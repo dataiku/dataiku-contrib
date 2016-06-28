@@ -7,7 +7,7 @@
 		"author" : "Dataiku (Jérémy Grèze)",
 		"icon" : "icon-cloud",
 		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/",
-		"tags" : ["Forecast", "weather", "API"]
+		"url" : "https://www.dataiku.com/dss/plugins/info/forecastio.html",
+		"tags" : ["API", "Geospatial"]
 	}
 }
