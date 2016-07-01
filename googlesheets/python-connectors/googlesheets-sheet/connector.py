@@ -122,14 +122,14 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
 
         self.buffer = []
 
-        LIMIT_COLUMNS = 256
-        LIMIT_CELLS = 400000
-        LIMIT_LINES = 2000 #this is not an official limit
+        self.LIMIT_COLUMNS = 256
+        self.LIMIT_CELLS = 400000
+        self.LIMIT_LINES = 2000 #this is not an official limit
 
         columns = [col["name"] for col in dataset_schema["columns"]]
 
-        if len(columns) > 256:
-            raise Exception("A spreadsheet cannot contain more than 256 columns.")
+        if len(columns) > self.LIMIT_COLUMNS:
+            raise Exception("A spreadsheet cannot contain more than %i columns." % self.LIMIT_COLUMNS)
 
         # Example of dataset_schema: {u'userModified': False, u'columns': [{u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'condition', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'weather', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'double', u'name': u'temperature', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'bigint', u'name': u'humidity', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_update', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_add', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'ville', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'source', u'maxLength': -1}]}
 
@@ -141,16 +141,6 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
 
         self.buffer.append(columns)
 
-
-    def numberToLetters(self, q):
-        # Helper function to convert 1->A, 2->B, ...
-        q = q - 1
-        result = ''
-        while q >= 0:
-            remain = q % 26
-            result = chr(remain+65) + result;
-            q = q//26 - 1
-        return result
 
     def write_row(self, row):
 
@@ -169,7 +159,15 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
         num_columns = len(self.buffer[0])
         num_lines = len(self.buffer)
 
-        cell_list = ws.range('A1:'+self.numberToLetters(num_columns)+str(num_lines))
+        if num_lines > self.LIMIT_LINES:
+            raise Exception("A spreadsheet cannot contain more than %i lines." % self.LIMIT_LINES)
+
+        if num_lines * num_columns > self.LIMIT_CELLS:
+            raise Exception("A spreadsheet cannot contain more than %i cells." % self.LIMIT_CELLS)
+
+        ws.resize(rows=num_lines, cols=num_columns)
+
+        cell_list = ws.range( 'A1:%s' % ws.get_addr_int(num_lines, num_columns) )
         for cell in cell_list:
             val = self.buffer[cell.row-1][cell.col-1]
             # if type(val) is str:
