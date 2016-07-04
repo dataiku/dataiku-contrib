@@ -82,12 +82,7 @@ class MyConnector(Connector):
         elif self.result_format == 'no-header':
 
             for row in rows:
-                yield dict(zip(range(1, len(columns) + 1),row)) 
-
-        elif self.result_format == 'array':
-
-            for row in rows:
-                yield {'array': json.dumps(row)} 
+                yield dict(zip(range(1, len(columns) + 1),row))
 
         else:
 
@@ -107,7 +102,20 @@ class MyConnector(Connector):
         Implementation is only required if the corresponding flag is set to True
         in the connector definition
         """
-        raise Exception("unimplemented")
+        ws = self.get_spreadsheet()
+
+        if self.result_format == 'first-row-header':
+
+            return ws.row_count - 1
+
+        elif self.result_format == 'no-header':
+
+            return ws.row_count
+
+        else:
+
+            return 0
+
 
 
 
@@ -139,7 +147,9 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
         # - Clean outside of what is written
         # - Implement the limit on number of rows
 
-        self.buffer.append(columns)
+        if parent.result_format == 'first-row-header':
+
+            self.buffer.append(columns)
 
 
     def write_row(self, row):
