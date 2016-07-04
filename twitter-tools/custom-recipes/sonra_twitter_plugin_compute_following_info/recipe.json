@@ -31,7 +31,7 @@
             "type": "STRING",
             "mandatory" : true
         },
-        { "type" : "SEPARATOR", "label" : "Advanced" },
+        //{ "type" : "SEPARATOR", "label" : "Advanced" },
         {
             "name": "dataiku_url",
             "label" : "DSS URL",
