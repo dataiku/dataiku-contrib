@@ -1,5 +1,5 @@
-PLUGIN_VERSION=0.0.1
-PLUGIN_ID=github
+PLUGIN_VERSION=0.1.0
+PLUGIN_ID=googlesheets
 
 plugin:
 	cat plugin.json|json_pp > /dev/null

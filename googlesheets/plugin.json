@@ -1,6 +1,6 @@
 {
 	"id" : "googlesheets",
-	"version" : "0.0.1",
+	"version" : "0.1.0",
 	"meta" : {
 		"label" : "Google Sheets connector",
 		"description" : "Connector to spreadsheets hosted by Google Sheets",
