@@ -16,13 +16,7 @@ Note: the name of the class itself is not relevant
 class MyConnector(Connector):
 
     def __init__(self, config):
-        """
-        The configuration parameters set up by the user in the settings tab of the
-        dataset are passed as a json object 'config' to the constructor
-        """
         Connector.__init__(self, config)  # pass the parameters to the base class
-
-        # perform some more initialization
         self.credentials = json.loads(self.config.get("credentials"))
         self.doc_id = self.config.get("doc_id")
         self.tab_id = self.config.get("tab_id")
@@ -77,7 +71,7 @@ class MyConnector(Connector):
         if self.result_format == 'first-row-header':
 
             for row in rows[1:]:
-                yield dict(zip(columns_slug,row)) 
+                yield dict(zip(columns_slug,row))
 
         elif self.result_format == 'no-header':
 
@@ -139,21 +133,18 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
         if len(columns) > self.LIMIT_COLUMNS:
             raise Exception("A spreadsheet cannot contain more than %i columns." % self.LIMIT_COLUMNS)
 
-        # Example of dataset_schema: {u'userModified': False, u'columns': [{u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'condition', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'weather', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'double', u'name': u'temperature', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'bigint', u'name': u'humidity', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_update', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_add', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'ville', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'source', u'maxLength': -1}]}
+        if parent.result_format == 'first-row-header':
+            self.buffer.append(columns)
 
         # TODO:
-        # - Verify the size of the spreadsheet
-        # - Implement the flush
-        # - Clean outside of what is written
-        # - Implement the limit on number of rows
-
-        if parent.result_format == 'first-row-header':
-
-            self.buffer.append(columns)
+        # - Implement the flush (but how to handle resizing? check the LIMIT_LINES?)
+        # - Try to increase the limits
+        # - Handle types?
 
 
     def write_row(self, row):
 
+        # Example of dataset_schema: {u'userModified': False, u'columns': [{u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'condition', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'weather', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'double', u'name': u'temperature', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'bigint', u'name': u'humidity', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_update', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'date', u'name': u'date_add', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'ville', u'maxLength': -1}, {u'timestampNoTzAsDate': False, u'type': u'string', u'name': u'source', u'maxLength': -1}]}
         # for (col, val) in zip(self.dataset_schema["columns"], row):
         #     print (col, val)
 
