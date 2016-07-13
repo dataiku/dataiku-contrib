@@ -1,0 +1,13 @@
+{
+  "id" : "tableau-export-v2",
+  "version" : "0.0.1",
+  "meta" : {
+    "label" : "Tableau export (v2)",
+    "description" : "Export DSS datasets to Tableau (TDE and Server)",
+    "author" : "Dataiku",
+    "icon" : "icon-tableau",
+    "licenseInfo" : "Apache Software License",
+    "url" : "https://www.dataiku.com/community/plugins/info/tableau-export-v2.html",
+    "tags" : ["Vizualisation"]
+  }
+}
