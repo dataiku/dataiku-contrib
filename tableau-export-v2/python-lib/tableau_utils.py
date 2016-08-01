@@ -77,6 +77,9 @@ class TDEExport(object):
         ExtractAPI.cleanup()
 
     def insert_array_row(self, input_row):
+        # Work around bug in DSS 3.1.0 API for single-column datasets
+        if len(input_row) == 0 and len(self.input_schema) == 1:
+            input_row = [u'']
         nb_cols = len(self.input_schema)
         output_row = Row(self.table_def)
         for col_no in range(nb_cols):
