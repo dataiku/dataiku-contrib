@@ -1,6 +1,6 @@
 {
   "id":"anonymizer",
-  "version":"0.0.1",
+  "version":"0.0.2",
   "meta":{
     "label": "Data anonymizer",
     "description":"This plugin provides a preparation processor for anonymizing data",
