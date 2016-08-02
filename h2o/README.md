@@ -1,3 +1,6 @@
+## New ML engine in DSS
+This plugin is superseeded by http://doc.dataiku.com/dss/latest/machine_learning/sparkling_water.html
+
 ## H2O plugin
 
 This plugins provides H2O connectivity:

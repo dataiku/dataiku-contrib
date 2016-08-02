@@ -3,7 +3,7 @@
     "version" : "0.0.3",
     "meta" : {
         "label" : "H2O Machine Learning",
-        "description" : "Train models and perform predictions using the H2O distributed ML library",
+        "description" : "This plugin is superseeded by http://doc.dataiku.com/dss/latest/machine_learning/sparkling_water.html",
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
         "icon" : "icon-tint",
         "licenseInfo" : "Apache Software License",
