@@ -3,7 +3,7 @@
   "version" : "0.0.8",
   "meta" : {
     "label" : "Tableau export",
-    "description" : "Export DSS datasets to Tableau Server (TDE files)",
+    "description" : "This plugin is superseeded by Tableau export (v2)",
     "author" : "Dataiku (Jean-Baptiste Rouquier)",
     "icon" : "icon-signin",
     "licenseInfo" : "Apache Software License",

@@ -1,7 +1,15 @@
+New better integrated version
+---
+
+This plugin is superseeded by Tableau export v2, which provides a custom exporter from the dataset page (action → export → custom).
+
+
 Installation
 ---
 
-Normally, you don't need to run any manual installation procedure.
+An automated installation procedure is provided from within the plugn store.
+
+Here are the old instructions, which should not be needed:
 
 - Download the SDK for Python from http://onlinehelp.tableau.com/current/api/sdk/en-us/help.htm#SDK/tableau_sdk_installing.htm
 - Extract it, open a command prompt, and navigate to the directory that contains setup.py.
