@@ -15,8 +15,10 @@ config = get_recipe_config()
 column_name = config['text_column']
 keep_all_cols = config['keep_all_cols']
 agg_mean = config['agg_mean']
-modelname = "word2vec_model"
+modelname = config["model_name"]
 modelfile = model_repository_path + '/' + modelname
+
+modelformat = config["model_format"]
 
 def makeFeatureVec(words, model, num_features):
     featureVec = np.zeros((num_features,),dtype="float32")
@@ -29,7 +31,14 @@ def makeFeatureVec(words, model, num_features):
         featureVec = np.divide(featureVec,nwords)
     return featureVec
 
-model = gensim.models.Word2Vec.load(modelfile)
+if modelformat == "gensim":
+    model = gensim.models.Word2Vec.load(modelfile)
+elif modelformat == "word2vec-text":
+    model = gensim.models.Word2Vec.load_word2vec_format(modelfile, binary=False)
+elif modelformat == "word2vec-binary":
+    model = gensim.models.Word2Vec.load_word2vec_format(modelfile, binary=True)
+else:
+    raise Exception("Unknown model format: %s" % modelformat)
 index2word_set = set(model.index2word)
 word2vecdim = model.vector_size
 
