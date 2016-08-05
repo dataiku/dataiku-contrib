@@ -1,0 +1,66 @@
+
+{
+    "meta" : {
+        "label" : "Apply word2vec",
+        "author" : "dataiku(Pierre Gutierrez)",
+        "tags" : ["NLP","ML"]
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [
+        {
+            "name": "input_text_dataset",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": true ,
+            "acceptsManagedFolder": false
+        },
+        {
+            "name": "model_repository",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": false ,
+            "acceptsManagedFolder": true            
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_text_dataset",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": true ,
+            "acceptsManagedFolder": false
+        }
+    ],
+
+    "params": [
+        {
+            "name": "text_column",
+            "description": "column to be transformed (word or sentence)",
+            "label" : "input column",
+            "type": "COLUMN",
+            "columnRole":"input_text_dataset",
+            "mandatory" : true
+        },
+        {
+            "name": "keep_all_cols",
+            "description":"wether to rewrite all columns from input",
+            "label":"keep all columns",
+            "type": "BOOLEAN",
+            "mandatory" : true,
+            "defaultValue" : true
+        },
+        {
+            "name": "agg_mean",
+            "label":"use mean",
+            "description":"use mean aggregation instead of sum for sentences",
+            "type": "BOOLEAN",
+            "mandatory" : true,
+            "defaultValue" : false
+        }        
+
+    ]
+
+}

@@ -1,0 +1,5 @@
+{
+    "python" : [
+        {"name":"gensim", "version":">=0.12.4"}
+    ]
+}
