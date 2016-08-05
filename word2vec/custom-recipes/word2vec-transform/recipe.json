@@ -1,9 +1,6 @@
-
 {
     "meta" : {
-        "label" : "Apply word2vec",
-        "author" : "dataiku(Pierre Gutierrez)",
-        "tags" : ["NLP","ML"]
+        "label" : "Apply word2vec transformation"
     },
 
     "kind" : "PYTHON",
@@ -11,6 +8,7 @@
     "inputRoles" : [
         {
             "name": "input_text_dataset",
+            "label" : "Dataset to transform",
             "arity": "UNARY",
             "required": true ,
             "acceptsDataset": true ,
@@ -18,10 +16,11 @@
         },
         {
             "name": "model_repository",
+            "label" : "Folder containing model",
             "arity": "UNARY",
             "required": true ,
             "acceptsDataset": false ,
-            "acceptsManagedFolder": true            
+            "acceptsManagedFolder": true
         }
     ],
 
@@ -35,32 +34,32 @@
         }
     ],
 
+    "selectableFromDataset" : "input_text_dataset",
+
     "params": [
         {
             "name": "text_column",
-            "description": "column to be transformed (word or sentence)",
-            "label" : "input column",
+            "label" : "Text column",
+            "description": "Column to be transformed (word or sentence)",
             "type": "COLUMN",
             "columnRole":"input_text_dataset",
             "mandatory" : true
         },
         {
             "name": "keep_all_cols",
-            "description":"wether to rewrite all columns from input",
-            "label":"keep all columns",
+            "description":"Whether to rewrite all columns from input",
+            "label":"Keep all columns",
             "type": "BOOLEAN",
             "mandatory" : true,
             "defaultValue" : true
         },
         {
             "name": "agg_mean",
-            "label":"use mean",
-            "description":"use mean aggregation instead of sum for sentences",
+            "label":"Use mean aggregation",
+            "description":"Use mean aggregation instead of sum for sentences",
             "type": "BOOLEAN",
             "mandatory" : true,
             "defaultValue" : false
-        }        
-
+        }
     ]
-
 }

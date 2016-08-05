@@ -14,4 +14,8 @@ This plugin uses the word2vec implementation available in gensim. For more infor
 
 The "Train word2vec" recipe takes a dataset with a text column as input and train a word2vec model on it. The output is a word2vec model in a managed folder.
 
-The "Apply word2vec" recipes applies a learnt word2vec transformation on a column of words or sentence. It takes a folder with a trained word2vec model and a text dataset as input. Note that it is possible to use a model trained outside DSS by changing the "model name" parameter (for example <a href="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing">this one</a>, see <a href="https://code.google.com/p/word2vec/">here</a> for more).
+The "Apply word2vec" recipes applies a learnt word2vec transformation on a column of words or sentence. It takes a folder with a trained word2vec model and a text dataset as input.
+
+Note that it is possible to use a model trained outside DSS:
+
+ *  by changing the "model name" parameter (for example <a href="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing">this one</a>, see <a href="https://code.google.com/p/word2vec/">here</a> for more).

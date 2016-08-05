@@ -1,9 +1,6 @@
 {
-    // Meta data for display purposes
     "meta" : {
-        "label" : "Train word2vec",
-        "author" : "dataiku(Pierre Gutierrez)",
-        "tags" : ["NLP","ML"]
+        "label" : "Train word2vec model"
     },
 
     "kind" : "PYTHON",
@@ -11,6 +8,7 @@
     "inputRoles" : [
         {
             "name": "input_text_dataset",
+            "label" : "Dataset to train on",
             "arity": "UNARY",
             "required": true ,
             "acceptsDataset": true ,
@@ -24,15 +22,18 @@
             "arity": "UNARY",
             "required": true ,
             "acceptsDataset": false ,
-            "acceptsManagedFolder": true            
+            "acceptsManagedFolder": true
         }
-       
     ],
 
+    "selectableFromDataset" : "input_text_dataset",
+
     "params": [
-        // very usefull
+        // very useful
         {
             "name": "text_column",
+            "label" : "Text column",
+            "description" : "Column containing the text to use for training",
             "type": "COLUMN",
             "columnRole":"input_text_dataset",
             "mandatory" : true
@@ -40,6 +41,7 @@
         },
         {
             "name": "algorithm",
+            "label" : "Algorithm",
             "type": "SELECT",
             "selectChoices": [
                 {
@@ -54,7 +56,7 @@
             ],
             "defaultValue":"cbow",
             "mandatory" : true
-        }, 
+        },
         {
             "name": "size",
             "label" : "Dimensionality",
@@ -82,7 +84,7 @@
             "name": "min_count",
             "label" : "Minimum count",
             "type": "INT",
-            "description":"ignore all words with total frequency lower than this",
+            "description":"Ignore all words with total frequency lower than this",
             "defaultValue":5,
             "mandatory" : true
         },
@@ -91,14 +93,14 @@
             "name": "max_vocab_size",
             "label" : "Maximum size of vocabulary",
             "type": "INT",
-            "description":"infrequent words will be pruned. 0 is off.",
+            "description":"Infrequent words will be pruned. 0 is off.",
             "mandatory" : false
         },
         {
             "name": "window",
-            "label" : "Window",
+            "label" : "Window size",
             "type": "INT",
-            "description":" maximum distance between the current and predicted word within a sentence",
+            "description":"Maximum distance between the current and predicted word within a sentence",
             "defaultValue":5,
             "mandatory" : true
         },
@@ -106,16 +108,18 @@
             "name": "sample",
             "label" : "Sample",
             "type": "DOUBLE",
-            "description":"threshold for configuring which higher-frequency words are randomly downsampled. default is 0 (off), useful value is 1e-5",
+            "description":"Threshold for configuring which higher-frequency words are randomly downsampled. default is 0 (off), useful value is 1e-5",
             "defaultValue":0,
             "mandatory" : true
         },
-        // less usefull
+
+        // less useful
+        {   "type" : "SEPARATOR", "label" : "Advanced" },
         {
             "name": "negative",
             "label" : "Negative sampling",
             "type": "INT",
-            "description":"if >0, specifies how many “noise words” should be drawn (usually between 5-20)",
+            "description":"If >0, specifies how many “noise words” should be drawn (usually between 5-20)",
             "defaultValue":0,
             "mandatory" : true
         },
@@ -130,7 +134,7 @@
             "name": "alpha",
             "label" : "Learning rate",
             "type": "DOUBLE",
-            "description":"initial learning rate (will linearly drop to zero as training progresses)",
+            "description":"Initial learning rate (will linearly drop to zero as training progresses)",
             "defaultValue":0.025,
             "mandatory" : true
         },
@@ -149,8 +153,5 @@
             "defaultValue":0,
             "mandatory" : true
         }
-        
-
     ]
-
 }
