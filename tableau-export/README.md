@@ -1,3 +1,5 @@
+NOTE: This plugin is generally deprecated. Please use the "Tableau Export v2" plugin
+
 Installation
 ---
 
@@ -23,6 +25,10 @@ TDE does not support partitioning anyways and requires the result to be one sing
 
 Changelog
 ---
+
+* 0.0.9 - August 1st, 2016
+
+    * Mark as deprecated
 
 * 0.0.8 - February 16th, 2016
 
