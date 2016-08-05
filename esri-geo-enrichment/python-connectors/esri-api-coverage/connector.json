@@ -1,0 +1,11 @@
+/* This file is the descriptor for the Custom python dataset ESRI-coverage */
+{
+    "meta" : {
+        "label" : "ESRI(r) - Utils - Show Enrichment API coverage",
+        "author" : "Dataiku (Nicolas GAKRELIDZ)",
+        "tags" : ["ESRI","API", "content"]
+    },
+    "readable" : true,
+    "writable" : false,
+    "partitioningMode" : "NOT_PARTITIONABLE"
+}

@@ -1,0 +1,181 @@
+{
+    "meta" : {
+        "label" : "ESRI(r) - World geocoder - Single line address",
+        "description" : "Use this recipe to geocode (transform an address to coordinates), if the whole address is in a single field"
+    },
+
+    "kind" : "PYTHON",
+    "selectableFromDataset" : "input",
+
+    "inputRoles" : [
+        {
+            "name" : "input",
+            "label": "Input",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name" : "results",
+            "label": "Geocoding results",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name" : "log",
+            "label": "Geocoding log",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+      	{
+           "name": "username",
+           "label" : "Login:",
+           "type": "STRING",
+           "description":"Your ESRI(r) Arcgis online login (mandatory)",
+           "mandatory" : true
+        }
+      	,
+      	{
+            "name": "password",
+            "label" : "Password:",
+            "type": "PASSWORD",
+            "description":"Your ESRI(r) Arcgis online password (mandatory)",
+            "mandatory" : true
+        },
+         {
+            "name" : "_input",
+            "label" : "Input",
+            "type" : "SEPARATOR"
+        },
+        {
+           "name": "column_object_id",
+           "label" : "Object_id column:",
+           "type": "COLUMN",
+           "columnRole" : "input",
+           "description":"Select the column corresponding to en unique ID in your input dataset (object_id is a unique integer identifier for joining later your data) (mandatory)",
+           "mandatory" : true
+        },
+        {
+           "name": "column_adress",
+           "label" : "Address column:",
+           "type": "COLUMN",
+           "columnRole" : "input",
+           "description":"Select the column corresponding to the Address in your input dataset (this plugin version supports the SingleLine mode) (mandatory)",
+           "mandatory" : true
+        },
+        {
+           "name": "column_country",
+           "label" : "Country column:",
+           "type": "COLUMN",
+           "columnRole" : "input",
+           "description":"Country column in your input dataset. This will increase the API precision and speedness. Supported type: Country name, ISO2, ISO3 (mandatory even if empty)",
+           "mandatory" : false
+        },
+
+        {
+            "name" : "_output",
+            "label" : "Output",
+            "type" : "SEPARATOR"
+        },
+        {
+           "name": "category",
+           "label" : "Category:",
+           "type": "STRING",
+           "description":"(Advanced) Indicate a category you want to focus. Ex: if your input dataset contains only airport, set this parameter with airport",
+           "mandatory" : false
+        },
+
+        {
+            "name" : "_advanced",
+            "label" : "Advanced",
+            "type" : "SEPARATOR"
+        },
+        {
+           "name": "out_sr",
+           "label" : "Out EPSG (Wkid):",
+           "type": "INT",
+           "defaultValue": 4326,
+           "description":"(Advanced) Set a specific EPSG value for X,Y in output. The default value is 4326, which is the standard (mandatory)",
+           "mandatory" : true
+        },
+        {
+           "name": "api_throttle",
+           "label" : "API call throttle:",
+           "type": "INT",
+           "defaultValue": 0,
+           "description":"Define the pause in seconds between each Batch (mandatory)",
+           "mandatory" : true
+        }
+        ,
+        {
+           "name": "sample",
+           "label" : "Try on a sample per batch:",
+           "type": "INT",
+           "defaultValue": 0,
+           "description":"0 means No Limit. This options uses the first N records per batch of your dataset. Try X first line to check the result. (mandatory)",
+           "mandatory" : true
+        },
+        {
+           "name": "token_expiration",
+           "label" : "Token expiration:",
+           "type": "INT",
+           "defaultValue": 360,
+           "description":"Define the token expiration in minutes (mandatory)",
+           "mandatory" : true
+        },
+        {
+           "name": "batch_size_unit",
+           "label" : "batch size:",
+           "type": "SELECT",
+           "defaultValue": "50",
+           "description":"Number of simultaneous addresses sent to the API (When increasing this value you may check with the log that all addresses sent are taken into account",
+           "mandatory" : true,
+           "selectChoices": [
+                {
+                    "value": 1,
+                    "label": "1"
+                },
+                {
+                    "value": 10,
+                    "label": "10"
+                },
+                {
+                    "value": 50,
+                    "label": "50"
+                },
+                {
+                    "value": 100,
+                    "label": "100"
+                },
+                {
+                    "value": 500,
+                    "label": "500"
+                },
+                {
+                    "value": 1000,
+                    "label": "1000"
+                },
+                {
+                    "value": 1500,
+                    "label": "1500"
+                },
+                {
+                    "value": 2000,
+                    "label": "2000"
+                },
+                {
+                    "value": 3000,
+                    "label": "3000 (Max)"
+                }
+            ]
+        }
+    ]
+}
