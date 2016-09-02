@@ -10,6 +10,9 @@ import os
 from dataiku.customrecipe import *
 from datetime import datetime
 
+import numpy as np
+import pandas as pd
+
 typeMap = {
     'tinyint': Type.INTEGER,
     'smallint':Type.INTEGER,
@@ -25,39 +28,54 @@ typeMap = {
     'object':  Type.UNICODE_STRING
     }
 
+def set_int(row, col, val):
+    row.setInteger(col, int(val))
+
+def set_str(row, col, val):
+    if isinstance(val, float):
+        if np.isnan(val):
+            return
+        else:
+            row.setString(col, unicode(val)),
+    else:
+        row.setString(col, unicode(val))
+
+def set_date(row, col, val):
+    if pd.isnull(val):
+        return
+    row.setDateTime(col, val.year, val.month, val.day, val.hour, val.minute, val.second, val.microsecond)
+
 fieldSetterMap = {
     'boolean':  lambda row, col, val: row.setBoolean(col, val),
-    'tinyint':  lambda row, col, val: row.setInteger(col, int(val)),
-    'smallint': lambda row, col, val: row.setInteger(col, int(val)),
-    'int':      lambda row, col, val: row.setInteger(col, int(val)),
-    'bigint':   lambda row, col, val: row.setInteger(col, int(val)),
+    'tinyint':  set_int,
+    'smallint': set_int,
+    'int':      set_int,
+    'bigint':   set_int,
     'float':    lambda row, col, val: row.setDouble (col, float(val)),
     'double':   lambda row, col, val: row.setDouble (col, float(val)),
-    'date':     lambda row, col, val: row.setDateTime(col, val.year, val.month, val.day, val.hour, val.minute, val.second, val.microsecond),
-    'string':   lambda row, col, val: row.setString(col, val),
-    'array':    lambda row, col, val: row.setString(col, val),
-    'map':      lambda row, col, val: row.setString(col, val),
-    'object':   lambda row, col, val: row.setString(col, val),
+    'date':     set_date,
+    'string':   set_str, #,lambda row, col, val: row.setString(col, unicode(val)),
+    'array':    set_str,
+    'map':      set_str,
+    'object':   set_str
 }
 
 class TDEExport(object):
-
-    @staticmethod
-    def convert_type(type):
-        return typeMap.get(type,Type.UNICODE_STRING)
-
     @staticmethod
     def make_table_definition(schema):
         table_def = TableDefinition()
         table_def.setDefaultCollation(Collation.EN_GB)
         for col in schema:
-            table_def.addColumn(col['name'], TDEExport.convert_type(col['type']))
+            table_def.addColumn(col['name'], typeMap.get(type,Type.UNICODE_STRING))
         return table_def
 
     def __init__(self, tde_file_path, input_schema):
         self.tde_file_path = tde_file_path
         self.output_path = os.path.dirname(self.tde_file_path)
         self.input_schema = input_schema
+
+        self.errors = 0
+        self.nrows = 0
 
         print "Writing TDE file: %s" % self.tde_file_path
         ExtractAPI.initialize()
@@ -75,6 +93,8 @@ class TDEExport(object):
     def close(self):
         self.extract.close()
         ExtractAPI.cleanup()
+        if self.errors > 0:
+            print "Encountered %d errors" % self.errors
 
     def insert_array_row(self, input_row):
         # Work around bug in DSS 3.1.0 API for single-column datasets
@@ -88,9 +108,15 @@ class TDEExport(object):
             try:
                 fieldSetterMap[col['type']](output_row, col_no, data)
             except Exception, e:
-                print "Failed setting field %s to value %s: %s" % (col["name"], data, e)
-                pass
+                self.errors += 1
+                if self.errors < 100 or (self.errors < 10000 and self.errors % 100 == 0) or (self.errors % 1000 ==0):
+                    print "[err #%s] Failed setting: col=%s type=%s val=%s  err=%s" % (self.errors, col["name"],  col["type"], data, e)
+                raise
         self.table.insert(output_row)
+        self.nrows += 1
+        if self.nrows % 1000 == 0:
+            print "TDE: Exported %d rows" % self.nrows
+
 
 def upload_tde_file(tde_file, config):
     print "Start upload to Tableau server"

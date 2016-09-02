@@ -12,4 +12,5 @@ class TableauExporter(Exporter):
         self.e.insert_array_row(row)
 
     def close(self):
+        print "TDE: Exported %d rows" % self.e.nrows
         self.e.close()
