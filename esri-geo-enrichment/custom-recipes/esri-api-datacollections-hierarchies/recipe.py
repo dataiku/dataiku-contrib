@@ -92,7 +92,7 @@ for c in country_list:
     t = {'collection_id':[], 'country':[],'collection_hierarchie':[] ,'collection_long_description':[],'collection_keywords':[] }
     for i in range(0,len(api_result[u'DataCollections'])):
         collection_id = api_result[u'DataCollections'][i][u'dataCollectionID']
-        collection_hierarchie = api_result[u'DataCollections'][i]['metadata'][u'hierarchies'].split(',')[0]
+        collection_hierarchie = api_result[u'DataCollections'][i]['metadata'][u'hierarchies'] #.split(',')[0]
 
         t['collection_id'].append(collection_id)
         t['country'].append(c)
