@@ -122,8 +122,11 @@ class TDEExport(object):
             except Exception, e:
                 self.errors += 1
                 if self.errors < 100 or (self.errors < 10000 and self.errors % 100 == 0) or (self.errors % 1000 ==0):
-                    print "[err #%s] Failed setting: col=%s type=%s val=%s  err=%s" % (self.errors, col["name"],  col["type"], data, e)
-                raise
+                    try:
+                        print "[err #%s] Failed setting: col=%s type=%s val=%s  err=%s" % (self.errors, col["name"],  col["type"], data, e)
+                    except Exception, e2:
+                        print "[err #%s] Failed setting: col=%s type=%s val=NON_PRINTED  err=%s" % (self.errors, col["name"],  col["type"],e)
+                #raise
         self.table.insert(output_row)
         self.nrows += 1
         if self.nrows % 1000 == 0:
