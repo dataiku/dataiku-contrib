@@ -133,7 +133,7 @@ class TDEExport(object):
                 #raise
         self.table.insert(output_row)
         self.nrows += 1
-        if self.nrows % 1000 == 0:
+        if self.nrows % 5000 == 0:
             print "TDE: Exported %d rows" % self.nrows
 
 
