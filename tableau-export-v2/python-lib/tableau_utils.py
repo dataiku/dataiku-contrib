@@ -28,8 +28,18 @@ typeMap = {
     'object':  Type.UNICODE_STRING
     }
 
+
 def set_int(row, col, val):
     row.setInteger(col, int(val))
+
+
+def set_long(row, col, val):
+    row.setLongInteger(col, int(val))
+
+
+def set_double(row, col, val):
+    row.setDouble(col, float(val))
+
 
 def set_str(row, col, val):
     if isinstance(val, float):
@@ -39,6 +49,7 @@ def set_str(row, col, val):
             row.setString(col, unicode(val)),
     else:
         row.setString(col, unicode(val))
+
 
 def set_date(row, col, val):
     if pd.isnull(val):
@@ -50,15 +61,16 @@ fieldSetterMap = {
     'tinyint':  set_int,
     'smallint': set_int,
     'int':      set_int,
-    'bigint':   set_int,
-    'float':    lambda row, col, val: row.setDouble (col, float(val)),
-    'double':   lambda row, col, val: row.setDouble (col, float(val)),
+    'bigint':   set_long,
+    'float':    set_double,
+    'double':   set_double,
     'date':     set_date,
-    'string':   set_str, #,lambda row, col, val: row.setString(col, unicode(val)),
+    'string':   set_str,
     'array':    set_str,
     'map':      set_str,
     'object':   set_str
 }
+
 
 class TDEExport(object):
     @staticmethod
