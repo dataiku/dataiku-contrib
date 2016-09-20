@@ -38,6 +38,8 @@ def set_long(row, col, val):
 
 
 def set_double(row, col, val):
+    if isinstance(val, float) and np.isnan(val):
+        return
     row.setDouble(col, float(val))
 
 
@@ -47,6 +49,8 @@ def set_str(row, col, val):
             return
         else:
             row.setString(col, unicode(val)),
+    elif isinstance(val, str):
+        row.setString(col, val.decode("utf8"))
     else:
         row.setString(col, unicode(val))
 
@@ -78,7 +82,7 @@ class TDEExport(object):
         table_def = TableDefinition()
         table_def.setDefaultCollation(Collation.EN_GB)
         for col in schema:
-            table_def.addColumn(col['name'], typeMap.get(type,Type.UNICODE_STRING))
+            table_def.addColumn(col['name'], typeMap.get(col["type"],Type.UNICODE_STRING))
         return table_def
 
     def __init__(self, tde_file_path, input_schema):
