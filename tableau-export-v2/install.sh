@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 echo "Starting Tableau plugin installation procedure"
 
@@ -9,7 +9,7 @@ then
 fi
 
 detectedDistrib=$($DKUINSTALLDIR/scripts/_find-distrib.sh)
-read distrib distribVersion <<< "$detectedDistrib"
+distrib=`echo "$detectedDistrib"|cut -d ' ' -f 1`
 
 TMPDIR=`mktemp -d $DIP_HOME/tmp/tableau-install-XXXXXX`
 cd $TMPDIR
