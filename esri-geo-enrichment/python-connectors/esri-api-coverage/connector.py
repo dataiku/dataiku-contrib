@@ -18,6 +18,9 @@ class MyConnector(Connector):
                                  , {"name" :"isocode3", "type" : "string"}
                                  , {"name" :"isocode2", "type" : "string"}
                                  , {"name" :"generic_datacollections", "type" : "string"}
+                                 , {"name" :"landscape_collections", "type" : "string"}
+                                 , {"name" :"local_collections", "type" : "string"}
+                                 , {"name" :"dataset_created_by_user_at", "type" : "string"}
                             ]}
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
