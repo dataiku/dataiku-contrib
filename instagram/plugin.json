@@ -1,0 +1,15 @@
+{
+    "id" : "instagram",
+    "version" : "0.9",
+    "meta" : {
+        "label" : "Instagram",
+        "description" : "A set of DSS functions allowing to interact with the Instagram public API",
+        "author" : "Dataiku",
+        // The icon of a plugin must be one of the FontAwesome 3.1 icons
+        "icon" : "icon-instagram",
+        "licenseInfo" : "Apache Software License",
+        // URL where the user can learn more about the plugin
+        "url" : "https://www.dataiku.com",
+        "tags" : ["instagram", "social-media", "api"]
+    }
+}

@@ -1,0 +1,53 @@
+<link href="/plugins/instagram/resource/instagram.css" rel="stylesheet" type="text/css">
+
+<div id="main-container">
+    
+    <h3>Instagram</h3>
+    <hr/>
+    <div>
+        Given one or more Instagram accounts, this plugin will retrieve their recent post and
+        associated metadata, available from the Instagram API (for instance, name, number of likes...). 
+        The plugin requires a valid access token to authenticate the API calls. 
+    </div>
+    <br/>
+    
+    <div ng-controller="UsersMediaController">
+        
+        <strong>How many accounts to you plan to fetch?</strong>
+        <br/>
+        <select ng-model="config.mode">
+            <option value="collect-one">Just one account</option>
+            <option value="collect-few">A few accounts</option>
+        </select>
+        <br/>
+           
+        <div>
+            
+            <div class="settings" ng-if="config.mode=='collect-one'">
+                <div>
+                    <label>Account ID</label>
+                    <input type="text" ng-model="config.account_id" placeholder="Instagram account ID">
+                </div>
+                <div>
+                    <label>Access token</label>
+                    <input type="text" ng-model="config.access_token" placeholder="Valid access token">
+                </div>
+                <div>
+                    <label>Number of media</label>
+                    <input type="text" ng-model="config.count" placeholder="20">
+                </div>
+            </div>
+            
+            <div class="settings" ng-if="config.mode=='collect-few'">
+                <div>
+                    <label>Number of media</label>
+                    <input type="text" ng-model="config.count" placeholder="20">
+                </div>
+                <br/>
+                ​<textarea class="accounts" ng-model="config.account_list" rows="15" cols="80" placeholder="Account ID<TAB>Access token"></textarea>
+            </div>
+            
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,12 @@
+{
+    "meta" : {
+        "label" : "Get data for recent media of Instagram account",
+        "author" : "Dataiku (Thomas Cabrol)",
+        "tags" : ["instagram", "social-media", "api"],
+        "description" : "Collecting recent media for one or more Instagram accounts."
+    },
+    "readable" : true,
+    "writable" : false,
+    "paramsTemplate": "instagram-users-media.html",
+    "paramsModule" : "instagram.module"
+}
