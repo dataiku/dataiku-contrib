@@ -1,0 +1,109 @@
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label": "Geocode with BAN",
+        "author": "Ministère de l’intérieur — EIG 2017",
+        "tags": ["geocoding", "dev"]
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [{
+        "name": "input",
+        "label": "Dataset to geocode",
+        "description": "what input A means",
+        "arity": "UNARY",
+        "required": true,
+        "acceptsDataset": true
+    }],
+    "selectableFromDataset": "input",
+    "outputRoles" : [{
+        "name": "output",
+        "label": "Output dataset",
+        "description": "what main output means",
+        "arity": "UNARY",
+        "required": true,
+        "acceptsDataset": true
+    }],
+
+    "params": [
+        {
+            "name": "server_address",
+            "label": "Server hosting Addok",
+            "type": "STRING",
+            "description": "Full url with http://. Do not include the path /search",
+            "mandatory": true,
+            "defaultValue": "http://api-adresse.data.gouv.fr"
+        },
+        {
+            "name": "columns",
+            "label": "Address columns",
+            "type": "COLUMNS",
+            "columnRole": "input",
+            "description": "Multiple columns will be concatenated",
+            "mandatory": true
+        },
+        {
+            "name": "post_code",
+            "label": "Column of the postcode",
+            "type": "COLUMN",
+            "columnRole": "input",
+            "description": "Optional: only results of that postcode will be returned",
+            "mandatory": false
+        },
+        {
+            "name": "city_code",
+            "label": "Column of the city code",
+            "type": "COLUMN",
+            "columnRole": "input",
+            "description": "Optional: only results of that city code will be return. Do not confuse it with postcodes (despite its ressemblance in France)",
+            "mandatory": false
+        },
+        {
+            "name": "lines_per_request",
+            "label": "Lines per request",
+            "type": "INT",
+            "defaultValue": 1000,
+            "mandatory": true,
+            "description": "Multiple lines per request saves time, but never exceed 8Mb per request"
+        },
+        {
+            "name": "concurent_requests",
+            "label": "Concurrent requests",
+            "type": "INT",
+            "defaultValue": 1,
+            "mandatory": true,
+            "description": "Use more than 1 only if you host your own instance. You might otherwise get banned"
+        },
+        {
+            "name": "http_proxy",
+            "label": "HTTP proxy",
+            "type": "STRING",
+            "mandatory": false,
+            "description": "If you don’t have an internet access and have to use a web proxy. Use the full form with http://"
+        },
+        {
+            "name": "timeout",
+            "label": "Timeout",
+            "type": "INT",
+            "defaultValue": 1000,
+            "mandatory": true,
+            "description": "Of the http request, in milliseconds"
+        },
+        {
+            "name": "prefix",
+            "label": "Result columns prefix",
+            "type": "STRING",
+            "defaultValue": "result_",
+            "mandatory": true,
+            "description": "Renames the columns returned by the geocoder"
+        },
+        {
+            "name": "error_col",
+            "label": "Column with error message",
+            "type": "STRING",
+            "mandatory": false,
+            "description": "Optional. The column name will be prefixed"
+        }
+    ]
+}
