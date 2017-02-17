@@ -1,0 +1,44 @@
+{
+    "meta" : {
+        "label" : "Predict",
+        "description": "Apply a prediction model to a dataset and return the scores",
+        "author" : "Dataiku (Jean-Baptiste Rouquier)",
+        "tags" : ["API", "ML"]
+    },
+    "kind" : "PYTHON",
+    "inputRoles" : [
+        {
+            "name": "dataset_to_score",
+            "label": "Dataset to score",
+            "arity": "UNARY",
+            "required": true
+        },
+        {
+            "name": "input_folder_containing_model",
+            "label": "Input folder containing model",
+            "arity": "NARY",
+            "required": true,
+            "acceptsDataset": false,
+            "acceptsManagedFolder": true
+        }
+    ],
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+    "params": [
+        {
+            "name": "columns_to_copy_to_output",
+            "label": "Columns to copy to output",
+            "type": "COLUMNS",
+            "description": "Warning: H2O does not handle columns where there is a “,” in the data.",
+            "columnRole":"dataset_to_score",
+            "mandatory":true
+        }
+    ]
+}

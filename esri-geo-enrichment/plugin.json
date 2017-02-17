@@ -1,0 +1,20 @@
+{
+	"id" : "esri-geo-enrichment",
+	"version" : "0.1.1",
+
+	"meta" : {
+
+		"label" : "ESRI geo enrichment",
+
+        "description" : "This plugin enriches data via the ESRI(r) Acrgis.com(r) API. This plugin covers the following ESRI(r)'s API features:\n\n* World Geocoding (single line and detailed address)\n* Enrich from XY coordinates\n* Enrich from Layer (like postcode).\n\nIn this plugin you will access to the Enrichment with your ArcGis online(r) login password",
+		"author" : "Dataiku (Nicolas GAKRELIDZ)",
+
+		"icon" : "icon-globe",
+
+		"licenseInfo" : "Apache Software License",
+
+		"url" : "https://www.dataiku.com/dss/plugins/info/esri-geo-enrichment.html",
+
+		"tags" : ["Geospatial","API", "Enrichment","Geocoding"]
+	}
+}

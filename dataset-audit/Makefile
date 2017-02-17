@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.1
+PLUGIN_VERSION=0.0.2
 PLUGIN_ID=dataset-audit
 
 all:
@@ -6,3 +6,5 @@ all:
 	rm -rf dist
 	mkdir dist
 	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json custom-recipes
+
+include ../Makefile.inc

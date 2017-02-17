@@ -1,0 +1,11 @@
+{
+  "meta" : {
+    "label" : "Users",
+    "description" : "A simple non-partitioned connector for Freshdesk users.\nBeware: Freshdesk API is very slow. We highly recommend that you sync your Freshdesk dataset in a regular DSS dataset and keep working from here."
+  },
+  "readable" : true,
+  "writable" : false,
+  "params" : [],
+  "partitioningMode" : "NOT_PARTITIONABLE"
+}
+

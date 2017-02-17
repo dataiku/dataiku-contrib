@@ -1,0 +1,65 @@
+{
+    "meta" : {
+        "label" : "Fetch OMDb details",
+        "author" : "Dataiku (Jean-Baptiste Rouquier)",
+        "tags" : ["movies", "API"]
+    },
+    "kind" : "PYTHON",
+    "inputRoles" : [
+        {
+            "name": "input_dataset",
+            "label": "Input dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "movies_not_found",
+            "label": "Movies not found",
+            "description": "(optional) Dataset to write movies that were not found",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+    "params": [
+        {
+            "name": "title_col",
+            "label" : "Column containing titles",
+            "type": "COLUMN",
+            "description":"Specify either this param or the next one",
+            "columnRole":"input_dataset",
+            "mandatory" : false
+        },
+        {
+            "name": "imdb_id_col",
+            "label": "IMDb id col",
+            "label" : "Column containing IMDb ids",
+            "type": "COLUMN",
+            "columnRole":"input_dataset",
+            "mandatory" : false
+        },
+        {
+            "name": "type",
+            "label": "Type",
+            "type": "SELECT",
+            "defaultValue" : "movie",
+            "selectChoices": [
+                {"value": "all"    , "label":"all"},
+                {"value": "movie"  , "label":"movie"},
+                {"value": "series" , "label":"series"},
+                {"value": "episode", "label":"episode"}
+            ],
+            "mandatory" : true
+        }
+    ]
+}

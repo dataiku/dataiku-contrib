@@ -1,0 +1,13 @@
+{
+	"id" : "email-tester-suite",
+	"version" : "0.0.1",
+	"meta" : {
+		"label" : "Email Tester Suite",
+		"description" : "Suite of recipes to test the emails you have in your datasets.",
+		"author" : "Dataiku (Jérémy Grèze)",
+		"icon" : "icon-envelope",
+		"licenseInfo" : "Apache Software License version 2",
+		"url" : "https://www.dataiku.com/community/plugins/info/email-tester-suite.html",
+		"tags" : ["Email", "Validation", "Productivity", "Marketing"]
+	}
+}

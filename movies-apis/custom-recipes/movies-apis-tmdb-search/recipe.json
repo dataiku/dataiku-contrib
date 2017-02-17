@@ -1,0 +1,51 @@
+{
+    "meta" : {
+        "label" : "Search title on TMDb",
+        "author" : "Dataiku (Jean-Baptiste Rouquier)",
+        "tags" : ["movies", "API"]
+    },
+    "kind" : "PYTHON",
+    "inputRoles" : [
+        {
+            "name": "input_dataset",
+            "label": "Input dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "movies_not_found",
+            "label": "Movies not found",
+            "description": "(optional) Dataset to write movies that were not found",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+    "params": [
+        {
+            "name": "title_col",
+            "label" : "Column containing titles",
+            "type": "COLUMN",
+            "columnRole":"input_dataset",
+            "mandatory" : true
+        },
+        {
+            "name": "release_date_col",
+            "label" : "Column containing release date",
+            "description":"to choose the right movie in case of multiple matches. Does not need the exact date, the year is often enough.",
+            "type": "COLUMN",
+            "columnRole":"input_dataset",
+            "mandatory" : false
+        }
+    ]
+}

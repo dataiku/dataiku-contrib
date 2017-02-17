@@ -1,0 +1,12 @@
+{
+    "meta" : {
+        "label" : "Get data for Instagram accounts",
+        "author" : "Dataiku (Thomas Cabrol)",
+        "tags" : ["instagram", "social-media", "api"],
+        "description" : "Collecting Instagram accounts metadata for one or a few accounts."
+    },
+    "readable" : true,
+    "writable" : false,
+    "paramsTemplate": "instagram-users.html",
+    "paramsModule" : "instagram.module"
+}

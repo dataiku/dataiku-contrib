@@ -1,0 +1,13 @@
+{
+	"id" : "forecastio",
+	"version" : "0.1.0",
+	"meta" : {
+		"label" : "Forecast.io",
+		"description" : "Connect to Forecast.io API and get weather data.",
+		"author" : "Dataiku (Jérémy Grèze)",
+		"icon" : "icon-cloud",
+		"licenseInfo" : "Apache Software License version 2",
+		"url" : "https://www.dataiku.com/dss/plugins/info/forecastio.html",
+		"tags" : ["API", "Geospatial"]
+	}
+}

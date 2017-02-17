@@ -1,0 +1,15 @@
+{
+  "meta" : {
+    "label" : "Tickets",
+    "description" : "A simple non-partitioned connector for Freshdesk tickets.\nBeware: Freshdesk API is very slow. We highly recommend that you sync your Freshdesk dataset in a regular DSS dataset and keep working from here"
+  },
+  "params" : [
+    {
+      "name" : "view",
+      "label" : "(optional) Custom view for tickets filtering. Default is all tickets.",
+      "description" :"A number, eg 1000424242.",
+      "type" : "STRING",
+      "mandatory" : false
+    }
+  ]
+}

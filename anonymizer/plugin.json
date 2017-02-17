@@ -1,0 +1,24 @@
+{
+  "id":"anonymizer",
+  "version":"0.0.2",
+  "meta":{
+    "label": "Data anonymizer",
+    "description":"This plugin provides a preparation processor for anonymizing data",
+    "author":"Dataiku (Clément Stenac)",
+    "licenseInfo":"Apache Software License",
+    "icon" :"icon-globe",
+    "tags":["web","official"],
+    "url":"https://www.dataiku.com/community/plugins/info/anonymizer.html"
+  },
+  "javaPreparationProcessors":[
+    {
+      "id":"anonymizer",
+      "meta":{
+        "label":"Anonymizer",
+        "description":"This processor anonymizes data",
+        "icon":"icon-globe"
+      }
+    }
+  ],
+  "entryPoint":"com.dataiku.dip.plugins.anonymizer.Plugin"
+}

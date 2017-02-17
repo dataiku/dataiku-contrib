@@ -1,0 +1,57 @@
+{
+    "meta": {
+        "label": "Email address tester",
+        "description": "The recipe takes as input a dataset of contacts, with one email address per row, and verify the validity of the emails addresses.<br>\nTwo columns are added in the output dataset: one boolean for email validation, and one giving the reason if an email is not valid.<br>\nThree different tests are available for email validation:<br>\n- Format validation<br>\n- Disposable domain detection<br>\n- MX record domain detection"
+    },
+
+    "kind": "PYTHON",
+
+    "inputRoles": [
+        {
+            "name": "contacts",
+            "arity": "UNARY",
+            "required": true
+        }
+    ],
+
+    "outputRoles": [
+        {
+            "name": "output",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "email_column",
+            "label": "Email (column)",
+            "type": "COLUMN",
+            "columnRole": "contacts",
+            "description": "The dataset must contain one mail per row in a column.",
+            "required": true
+        },
+        {
+            "name": "verification_level",
+            "label": "How to test the email",
+            "type": "SELECT",
+            "defaultValue": "2",
+            "description": "",
+            "selectChoices": [
+                {"value": "1", "label": "Format validation"},
+                {"value": "2", "label": "Format validation + Disposable domain detection"},
+                {"value": "3", "label": "Format validation + Disposable domain detection + MX record domain detection"}
+            ],
+            "required": true
+        },
+        {
+            "name": "cache_folder",
+            "label": "Cache folder",
+            "type": "STRING",
+            "defaultValue": "${dip.home}/tmp/email-tester-plugin",
+            "description": "To store files between runs",
+            "required": true
+        }
+    ]
+}

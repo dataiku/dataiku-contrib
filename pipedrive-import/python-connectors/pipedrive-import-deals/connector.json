@@ -1,0 +1,35 @@
+{
+    "meta" : {
+        "label" : "Pipedrive deals",
+        "description" : "A simple connector to list deals from a Pipedrive account"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "api_key",
+            "label": "Pipedrive API key",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "result_format",
+            "label": "One deal per row is retrieved. Choose the format:",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "readable",
+                    "label": "Readable with columns"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        }
+    ]
+}

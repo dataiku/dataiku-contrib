@@ -1,19 +1,12 @@
 {
-    // Meta data for display purposes
     "meta" : {
         "label" : "Audit the content of a dataset",
-        "author" : "Dataiku",
-        "tags" : ["recipe", "data", "audit"]
+        "description" :"This recipe performs an audit of data in a dataset and outputs a summary dataset. This is able to perform audits on SQL or HDFS datasets. The summary contains basic info about each column and basic descriptive statistics"
     },
 
     "kind" : "PYTHON",
 
-    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
-    // or more dataset to each input and output role, depending on the role characteristics.
-
-    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
-    // or at most one ('UNARY'). The "required" field indicates whether the user will be allowed to not
-    // associate at least one dataset with the role.
+    "selectableFromDataset" : "main",
 
     "inputRoles" : [
         {
@@ -36,6 +29,18 @@
             "name": "compute_most_frequent",
             "label" : "Compute most frequent values",
             "type": "BOOLEAN"
+        },
+        {
+            "name": "compute_distinct",
+            "label" : "Compute number of distinct values",
+            "type": "BOOLEAN",
+            "defaultValue"  : true
+        },
+        {
+            "name" :"use_impala",
+            "label" : "Use Impala if possible",
+            "description": "Faster but does not support counting distinct values",
+            "type" : "BOOLEAN"
         }
     ]
 }

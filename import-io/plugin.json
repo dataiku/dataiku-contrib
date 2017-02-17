@@ -1,0 +1,13 @@
+{
+  "id" : "import-io",
+  "version" : "1.0.0",
+  "meta" : {
+    "label" : "import.io",
+    "description" : "Downloads data from import.io's API & enriches datasets",
+    "author" : "Dataiku (Jean-Baptiste Rouquier)",
+    "icon" : "icon-circle",
+    "licenseInfo" : "Apache Software License",
+    "url" : "https://www.dataiku.com/community/plugins/info/import-io.html",
+    "tags" : ["API", "Enrichment"]
+  }
+}

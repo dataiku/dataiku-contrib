@@ -1,0 +1,96 @@
+{
+    "meta" : {
+        "label" : "Apply word2vec transformation"
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [
+        {
+            "name": "input_text_dataset",
+            "label" : "Dataset to transform",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": true ,
+            "acceptsManagedFolder": false
+        },
+        {
+            "name": "model_repository",
+            "label" : "Folder containing model",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": false ,
+            "acceptsManagedFolder": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_text_dataset",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": true ,
+            "acceptsManagedFolder": false
+        }
+    ],
+
+    "selectableFromDataset" : "input_text_dataset",
+
+    "params": [
+        {
+            "name": "text_column",
+            "label" : "Text column",
+            "description": "Column to be transformed (word or sentence)",
+            "type": "COLUMN",
+            "columnRole":"input_text_dataset",
+            "mandatory" : true
+        },
+        {
+            "name": "model_name",
+            "label" : "Word2Vec model name",
+            "description": "Model to use from the input folder. This should be a file name in the folder",
+            "type": "STRING",
+            "defaultValue" : "word2vec_model",
+            "mandatory" : true
+        },
+        {
+            "name": "model_format",
+            "label" : "Model file format",
+            "description": "File format for the model. Leave the default value of Gensim if the model was trained using this plugin",
+            "defaultValue" : "gensim",
+            "type": "SELECT",
+            "mandatory" : true,
+            "selectChoices": [
+                {
+                    "value": "gensim",
+                    "label": "Gensim"
+                },
+                {
+                    "value": "word2vec-text",
+                    "label": "Word2Vec C format (text)"
+                },
+                {
+                    "value": "word2vec-binary",
+                    "label": "Word2Vec C format (binary)"
+                }
+
+            ]
+        },
+        {
+            "name": "keep_all_cols",
+            "description":"Whether to rewrite all columns from input",
+            "label":"Keep all columns",
+            "type": "BOOLEAN",
+            "mandatory" : true,
+            "defaultValue" : true
+        },
+        {
+            "name": "agg_mean",
+            "label":"Use mean aggregation",
+            "description":"Use mean aggregation instead of sum for sentences",
+            "type": "BOOLEAN",
+            "mandatory" : true,
+            "defaultValue" : false
+        }
+    ]
+}

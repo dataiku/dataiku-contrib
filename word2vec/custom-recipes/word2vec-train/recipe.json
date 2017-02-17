@@ -1,0 +1,157 @@
+{
+    "meta" : {
+        "label" : "Train word2vec model"
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [
+        {
+            "name": "input_text_dataset",
+            "label" : "Dataset to train on",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": true ,
+            "acceptsManagedFolder": false
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "model_repository",
+            "arity": "UNARY",
+            "required": true ,
+            "acceptsDataset": false ,
+            "acceptsManagedFolder": true
+        }
+    ],
+
+    "selectableFromDataset" : "input_text_dataset",
+
+    "params": [
+        // very useful
+        {
+            "name": "text_column",
+            "label" : "Text column",
+            "description" : "Column containing the text to use for training",
+            "type": "COLUMN",
+            "columnRole":"input_text_dataset",
+            "mandatory" : true
+
+        },
+        {
+            "name": "algorithm",
+            "label" : "Algorithm",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "cbow",
+                    "label": "cbow"
+                },
+                {
+                    "value": "skip-gram",
+                    "label": "skip-gram"
+                }
+
+            ],
+            "defaultValue":"cbow",
+            "mandatory" : true
+        },
+        {
+            "name": "size",
+            "label" : "Dimensionality",
+            "type": "INT",
+            "description":"Dimensionality of the feature vectors",
+            "defaultValue":300,
+            "mandatory" : true
+        },
+        {
+            "name": "iter",
+            "label" : "Number of epochs",
+            "type": "INT",
+            "defaultValue":1,
+            "mandatory" : true
+        },
+        {
+            "name": "workers",
+            "label" : "Number of workers",
+            "type": "INT",
+            "description":"Number of cores to use",
+            "defaultValue":1,
+            "mandatory" : true
+        },
+        {
+            "name": "min_count",
+            "label" : "Minimum count",
+            "type": "INT",
+            "description":"Ignore all words with total frequency lower than this",
+            "defaultValue":5,
+            "mandatory" : true
+        },
+
+        {
+            "name": "max_vocab_size",
+            "label" : "Maximum size of vocabulary",
+            "type": "INT",
+            "description":"Infrequent words will be pruned. 0 is off.",
+            "mandatory" : false
+        },
+        {
+            "name": "window",
+            "label" : "Window size",
+            "type": "INT",
+            "description":"Maximum distance between the current and predicted word within a sentence",
+            "defaultValue":5,
+            "mandatory" : true
+        },
+        {
+            "name": "sample",
+            "label" : "Sample",
+            "type": "DOUBLE",
+            "description":"Threshold for configuring which higher-frequency words are randomly downsampled. default is 0 (off), useful value is 1e-5",
+            "defaultValue":0,
+            "mandatory" : true
+        },
+
+        // less useful
+        {   "type" : "SEPARATOR", "label" : "Advanced" },
+        {
+            "name": "negative",
+            "label" : "Negative sampling",
+            "type": "INT",
+            "description":"If >0, specifies how many “noise words” should be drawn (usually between 5-20)",
+            "defaultValue":0,
+            "mandatory" : true
+        },
+        {
+            "name": "hs",
+            "type": "BOOLEAN",
+            "description":"Use hierarchical sampling",
+            "defaultValue":false,
+            "mandatory" : false
+        },
+        {
+            "name": "alpha",
+            "label" : "Learning rate",
+            "type": "DOUBLE",
+            "description":"Initial learning rate (will linearly drop to zero as training progresses)",
+            "defaultValue":0.025,
+            "mandatory" : true
+        },
+        {
+            "name": "cbow_mean",
+            "label": "use cbow mean",
+            "type":"BOOLEAN",
+            "defaultValue":false,
+            "description": "Only applies when cbow is used.",
+            "mandatory" : false
+        },
+        {
+            "name": "seed",
+            "label" : "seed",
+            "type": "INT",
+            "defaultValue":0,
+            "mandatory" : true
+        }
+    ]
+}

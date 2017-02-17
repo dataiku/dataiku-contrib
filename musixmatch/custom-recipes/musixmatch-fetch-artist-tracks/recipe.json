@@ -1,0 +1,46 @@
+{
+    "meta" : {
+        "label" : "Fetch Musixmatch tracks",
+        "description" : "To find the artist id for a given artist, you can use the 'artist.search' Musixmatch API method"
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [
+        {
+            "name": "artist_list",
+            "label": "Artists to fetch",
+            "description": "This dataset must include a column containing the Musixmatch artist id",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "artists_tracks",
+            "label":"Output dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "api_key",
+            "label" : "Musixmatch API Key",
+            "type": "STRING",
+            "description":"Required API Key for Musixmatch",
+            "mandatory" : true
+        },
+        {
+            "name": "artist_ids",
+            "label": "Artists ids column",
+            "description" : "Column in source dataset",
+            "type": "COLUMN",
+            "columnRole":"artist_list"
+        }
+    ]
+}

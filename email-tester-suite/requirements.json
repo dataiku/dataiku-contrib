@@ -1,0 +1,6 @@
+{
+    "python" : [
+        {"name": "requests", "version" : ">=2.4.0"},
+        {"name": "dnspython", "version" : ">=1.12.0"}
+    ]
+}

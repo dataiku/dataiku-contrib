@@ -1,0 +1,29 @@
+{
+    "id" : "freshdesk",
+    "version" : "0.0.3",
+    "meta" : {
+        "label": "Freshdesk",
+        "description" : "Connectors to read data from the Freshdesk helpdesk tool",
+        "author" : "Dataiku (Clément Stenac)",
+        "icon" : "icon-headphones",
+        "tags" : ["API", "Productivity", "SaaS"],
+        "licenseInfo" : "Apache Software License version 2",
+        "url" : "https://www.dataiku.com/community/plugins/info/freshdesk.html"
+    },
+    "params" : [
+        {
+            "name" : "endpoint",
+            "label" : "Freshdesk API endpoint",
+            "description" :"Generally https://yourcompany.freshdesk.com",
+            "type" : "STRING",
+            "mandatory" : true
+        },
+        {
+            "name" : "api_key",
+            "label" : "Freshdesk API Key",
+            "description" : "Found in your profile settings",
+            "type" : "STRING",
+            "mandatory" : true
+        }
+    ]
+}

@@ -1,0 +1,77 @@
+{
+    "meta" : {
+        "label" : "To Tableau server",
+        "description": "This exporter uploads data to a Tableau server. Beware, exporting a large dataset to Tableau server may take long. If your dataset contains several millions records, you may want for instance to have DSS write into a SQL database usable by Tableau."
+    },
+    "exportBehavior" : "MANAGES_OUTPUT",
+
+    "exportOptions": [
+        {
+            "label" : "Upload to Tableau Server"
+        }
+    ],
+
+    "params": [
+        {
+            "label":"Tableau Server",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "server_url",
+            "label":"URL",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "username",
+            "label":"Username",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "password",
+            "label":"Password",
+            "type": "PASSWORD",
+            "mandatory": true
+        },
+        {
+            "label":"Destination",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "project",
+            "label":"Project",
+            "type": "TEXTAREA",
+            "defaultValue": "default",
+            "description":"Upload the TDE file to this project."
+        },
+        {
+            "name": "output_table",
+            "label":"Output table",
+            "type": "STRING",
+            "defaultValue": "DSS_extract"
+        },
+        {
+            "label":"Advanced",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "site_id",
+            "label":"Site ID",
+            "type": "STRING",
+            "description":"optional, default is empty"
+        },
+        {
+            "name": "proxy_username",
+            "label":"Proxy username",
+            "type": "STRING",
+            "description":"optional"
+        },
+        {
+            "name": "proxy_password",
+            "label":"Proxy password",
+            "type": "PASSWORD",
+            "description":"optional"
+        }
+    ]
+}

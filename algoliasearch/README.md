@@ -10,6 +10,13 @@ With this plugin, you can:
 You could thus use a DSS [Flow](http://doc.dataiku.com/dss/latest/flow/index.html) to prepare your 
 Algolia search index.
 
+# Changelog
+
+## Version 0.0.4 (2016/06/28)
+
+* Truncate to 8K chars instead of 5K
+* Minor wording fixes
+
 # Improvement ideas
 
 * Add ability to put a query to restrict what is being fetched
