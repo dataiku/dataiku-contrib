@@ -1,0 +1,42 @@
+{
+    "meta" : {
+        "label" : "Salesforce - SOQL query",
+        "description" : "A connector to results of a specified SOQL query"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "token",
+            "label": "JSON token",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "query",
+            "label": "SOQL query",
+            "description": "Example: SELECT Name, Account.Name, Amount, CloseDate, Account.Id, AccountId, Owner.Id, OwnerId FROM Opportunity ORDER BY Name ASC",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "result_format",
+            "label": "Choose the output format:",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "readable",
+                    "label": "Readable with columns"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        }
+    ]
+}

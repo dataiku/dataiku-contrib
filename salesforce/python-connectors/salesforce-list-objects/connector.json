@@ -1,0 +1,35 @@
+{
+    "meta" : {
+        "label" : "Salesforce - List objects",
+        "description" : "A simple connector to list available objects"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "token",
+            "label": "JSON token",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "result_format",
+            "label": "One object per row is retrieved. Choose the format:",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "readable",
+                    "label": "Readable with columns"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        }
+    ]
+}
