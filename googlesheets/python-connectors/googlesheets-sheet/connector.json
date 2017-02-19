@@ -1,22 +1,25 @@
 {
     "meta" : {
         "label" : "Google Sheets document",
-        "description" : "A simple connector to read a sheet from a Google Sheets document"
+        "description" : "A simple read/write connector to a sheet from a Google Sheets document"
     },
 
     "readable" : true,
-    "writable" : false,
+    "writable" : true,
+    "canCountRecords" : true,
 
     "params": [
         {
             "name": "credentials",
-            "label": "Service Account JSON (file provided by Google)",
-            "type": "STRING",
+            "label": "Service Account JSON",
+            "description": "File provided by Google. Read more here: http://gspread.readthedocs.io/en/latest/oauth2.html",
+            "type": "TEXTAREA",
             "mandatory" : true
         },
         {
             "name": "doc_id",
-            "label": "Document id (which can be extracted from the spreadsheet's URL)",
+            "label": "Document id",
+            "description": "Can be extracted from the spreadsheet's URL",
             "type": "STRING",
             "mandatory" : true
         },
@@ -28,7 +31,7 @@
         },
         {
             "name": "result_format",
-            "label": "Choose the format",
+            "label": "Format of the sheet",
             "type": "SELECT",
             "selectChoices": [
                 {
@@ -37,11 +40,7 @@
                 },
                 {
                     "value": "no-header",
-                    "label": "Generate columns with no names"
-                },
-                {
-                    "value": "array",
-                    "label": "A single column with an array of columns per row"
+                    "label": "First row contains data (not recommended)"
                 }
             ],
             "mandatory": true,
