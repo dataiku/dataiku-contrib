@@ -38,6 +38,17 @@ It is a bug in DSS 2.1.x. Upgrade to DSS 2.2.0 or later.
 
 Try to delete all the columns in `Settings>Schema` then click on `Test & Get schema` again in `Settings>Connector` to regenerate a new schema.
 
+## Changelog
+
+* 0.1.0 - February 20th, 2017
+
+	- Add write support
+	- Add support for oauth2client >= 2.0.0
+
+* 0.0.1 - November 5th, 2015
+
+	Initial release
+
 ## Need help?
 
 Find out more on the [plugin page](https://www.dataiku.com/community/plugins/info/googlesheets.html) on Dataiku's website.
