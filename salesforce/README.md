@@ -90,7 +90,6 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 ## Roadmap
 
 * Debugging! Please submit feedbacks.
-* Dataset for records of a list view
 * Way to refresh the token
 * Write connector?
 
