@@ -1,6 +1,6 @@
 {
     "meta" : {
-        "label" : "Salesforce - List objects",
+        "label" : "Salesforce - Objects list",
         "description" : "A simple connector to list available objects"
     },
 

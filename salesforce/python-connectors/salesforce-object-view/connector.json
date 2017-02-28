@@ -1,7 +1,7 @@
 {
     "meta" : {
-        "label" : "Salesforce - SOQL query",
-        "description" : "A connector to get the results of a specified SOQL query"
+        "label" : "Salesforce - List View records",
+        "description" : "A connector to get the records of a List View"
     },
 
     "readable" : true,
@@ -15,9 +15,16 @@
             "mandatory" : true
         },
         {
-            "name": "query",
-            "label": "SOQL query",
-            "description": "Example: SELECT Name, Account.Name, Amount, CloseDate, Account.Id, AccountId, Owner.Id, OwnerId FROM Opportunity ORDER BY Name ASC",
+            "name": "object",
+            "label": "Object name",
+            "description": "Examples: 'Lead', 'OpportunityContactRole' ",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "listview",
+            "label": "List View id (or developerName)",
+            "description": "Example: '00B0Y000004Fdd1UAC' or 'ClosingNextMonth'",
             "type": "STRING",
             "mandatory" : true
         },
