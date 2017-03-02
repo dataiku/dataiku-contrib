@@ -73,7 +73,7 @@
             },
             "installScriptActions": [{
                 "name": "[concat('dss-install-', parameters('applicationName'))]",
-                "uri": "http://downloads.dataiku.com/public/hdi-app/20170301/hdinsight-dss-install.sh",
+                "uri": "https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/microsoft/solution-templates/hdinsight/scripts/hdinsight-dss-install.sh",
                 "parameters": "[concat('-version \"', parameters('dssVersion'), '\" -port ', variables('dssPort'))]",
                 "roles": ["edgenode"]
             }],

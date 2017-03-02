@@ -1,6 +1,6 @@
 # Dataiku DSS on a HDInsight edge node
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FThomasCabrol%2Fdataiku%2Fmaster%2Fpartners%2Fmicrosoft%2Fhdinsights%2Fdataiku-dss%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdataiku%2Fdataiku-contrib%2Fmaster%2Fmicrosoft%2Fsolution-templates%2Fhdinsight%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -27,3 +27,6 @@ Dataiku DSS is the perfect companion of your HDInsight cluster, thanks to the fo
 In any case, Dataiku DSS will leverage the underlying HDInsight cluster as much as possible to ensure maximum scalability and performance. 
 
 Want to know more? Feel free to <a href="http://www.dataiku.com/">visit our website</a> or to <a href="mailto:contact@dataiku.com">send us an email.</a>. 
+
+### Important note
+If you clone this repo and make modifications, do not forget to change the installScriptActions hard coded uri in the azuredeploy.json template, as well as the href of the button of this README. 
