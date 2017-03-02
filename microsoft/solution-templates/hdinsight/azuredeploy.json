@@ -1,0 +1,94 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing HDInsight cluster where Dataiku DSS will be installed."
+            }
+        },
+        "galleryPackageIdentity": {
+            "type": "string",
+            "metadata": {
+                "description" : "Any non-empty value is accepted. After the package is published, this parameter will be used to link the application install to the details about the application in the marketplace."
+            },
+            "defaultValue": "Dataiku DSS"
+        },
+        "edgeNodeSize": {
+            "type": "string",
+            "metadata": {
+                "description": "Size of the edge node that will host Dataiku DSS. Please be sure to select a VM with enough capacity if you plan to process your datasets in memory, using Python or R."
+            },
+            "defaultValue": "Standard_D12_v2",
+            "allowedValues": [
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2",
+                "Standard_D13_v2",
+                "Standard_D14_v2"
+            ]
+        },
+        "applicationName": {
+            "type": "string",
+            "metadata": {
+                "description": "The Dataiku DSS application name. Defaults to 'dss'."
+            },
+            "defaultValue": "dss"
+        },
+        "subdomainSuffix": {
+            "type": "string",
+            "metadata": {
+                "description": "The Dataiku DSS URL subdomain suffix (three chars only). Defaults to 'dss'."
+            },
+            "defaultValue": "dss"
+        },
+        "dssVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "The Dataiku DSS version to install. Defaults to 'latest' (otherwise '3.1.4' for instance)."
+            },
+            "defaultValue": "latest"
+        }
+    },
+    "variables": {
+        "dssPort": 20000
+    },
+    "resources": [{
+        "type": "Microsoft.HDInsight/clusters/applications",
+        "name": "[concat(parameters('clusterName'), '/', parameters('applicationName'))]",
+        "apiVersion": "2015-03-01-preview",
+        "properties": {
+            "marketPlaceIdentifier": "[parameters('galleryPackageIdentity')]",
+            "computeProfile": {
+                "roles": [{
+                    "name": "edgenode",
+                    "targetInstanceCount": 1,
+                    "hardwareProfile": {
+                        "vmSize": "[parameters('edgeNodeSize')]"
+                    }
+                }]
+            },
+            "installScriptActions": [{
+                "name": "[concat('dss-install-', parameters('applicationName'))]",
+                "uri": "http://downloads.dataiku.com/public/hdi-app/20170301/hdinsight-dss-install.sh",
+                "parameters": "[concat('-version \"', parameters('dssVersion'), '\" -port ', variables('dssPort'))]",
+                "roles": ["edgenode"]
+            }],
+            "httpsEndpoints": [{
+                "subDomainSuffix": "[parameters('subdomainSuffix')]",
+                "destinationPort": "[variables('dssPort')]",
+                "accessModes": ["WebPage"]
+            }],
+            "applicationType": "CustomApplication"
+        }
+    }],
+    "outputs": {
+        "application": {
+            "type": "object",
+            "value": "[reference(resourceId('Microsoft.HDInsight/clusters/applications/', parameters('clusterName'), parameters('applicationName')))]"
+        }
+    }
+}

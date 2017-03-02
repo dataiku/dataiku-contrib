@@ -1,0 +1,7 @@
+{
+    "itemDisplayName": "Dataiku DSS on HDInsight",
+    "description": "Adds an edge node to an existing HDInsight cluster and installs DSS on it.",
+    "githubUsername": "ThomasCabrol",
+    "summary": "Adds an edge node to an existing HDInsight cluster and installs DSS on it.",
+    "dateUpdated": "2017-03-01"
+}
