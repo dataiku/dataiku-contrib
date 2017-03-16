@@ -1,0 +1,12 @@
+{
+    "meta" : {
+        "label" : "US Census states resources",
+        "author" : "Dataiku (Nicolas GAKRELIDZ)",
+        "description":"Reference for US Census states codification",
+        "tags" : ["census", "usa","states"]
+    },
+
+    "readable" : true,
+    "writable" : false
+
+}

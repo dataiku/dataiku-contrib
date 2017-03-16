@@ -1,0 +1,80 @@
+{
+    "meta" : {
+        "label" : "From Dataset - get US census block_id from lat lon",
+        "author" : "Dataiku (Nicolas GAKRELIDZ)",
+        "description":"From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon",
+        "tags" : ["us census", "block", "API"]
+    },
+
+    "kind" : "PYTHON",
+    "selectableFromDataset" : "input",
+
+     
+    "inputRoles" : [
+        {
+            "label": "lat lon Dataset",
+            "name": "input",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+ 
+    
+    "outputRoles" : [
+        {
+            "label": "output block dataset",
+            "name": "output",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    
+
+    "params": [
+
+        {
+           "name": "p_col_lat",
+           "label" : "Column LATITUDE:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to LATITUDE in your input dataset",
+           "mandatory" : false
+        }
+     
+      ,
+        {
+           "name": "p_col_lon",
+           "label" : "Column LONGITUDE:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to LONGITUDE in your input dataset",
+           "mandatory" : false
+        },
+        {
+            "name" : "_options",
+            "label" : "Options",
+            "type" : "SEPARATOR"
+        },
+        {
+           "name": "param_api_throttle",
+           "label" : "API call throttle:",
+           "type": "INT",
+           "defaultValue": 1,
+           "description":"Define the pause in seconds between each API call",
+           "mandatory" : true
+        },
+        {
+           "name": "param_batch_size",
+           "label" : "Input Dataset split:",
+           "type": "INT",
+           "defaultValue": 50000,
+           "description":"For handling large datasets",
+           "mandatory" : true
+        }
+              
+    ]
+
+}

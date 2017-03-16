@@ -1,0 +1,7 @@
+{
+  "python" : [
+      {"name":"bs4"}
+      ,{"name":"requests"}
+    
+  ]
+}
