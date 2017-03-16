@@ -3,24 +3,15 @@
 
 	"id" : "get-us-census-block",
 
-
 	"version" : "0.0.6",
 
-
-
 	"meta" : {
-
 		"label" : "Get US census block",
-
 		"description" : "Get an US Census block_id from the fcc.gov API",
 		"author" : "Dataiku (Nicolas GAKRELIDZ)",
-
 		"icon" : "icon-location-arrow",
-
 		"licenseInfo" : "Apache Software License",
-
-		"url" : "https://www.dataiku.com",
-
+		"url" : "https://www.dataiku.com/dss/plugins/info/get-us-block.html",
 		"tags" : ["us census", "block", "API"]
 	}
 }
