@@ -58,7 +58,8 @@ def set_str(row, col, val):
 def set_date(row, col, val):
     if pd.isnull(val):
         return
-    row.setDateTime(col, val.year, val.month, val.day, val.hour, val.minute, val.second, val.microsecond)
+        # For some weird reason, the fractional second must be given in 1/10000 second
+    row.setDateTime(col, val.year, val.month, val.day, val.hour, val.minute, val.second, val.microsecond / 100)
 
 fieldSetterMap = {
     'boolean':  lambda row, col, val: row.setBoolean(col, val),
