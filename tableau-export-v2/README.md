@@ -26,6 +26,10 @@ You can also use the "Export" recipe to automatically recreate TDE files.
 
 ## Changelog
 
+* 0.0.3 - March 26th, 2016
+  
+   - Fix export of dates with non-zero fractional part
+
 * 0.0.2 - September 19th, 2016
 
 	- Update for DSS 3.1.3 with improved performance

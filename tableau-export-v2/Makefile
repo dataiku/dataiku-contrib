@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.2
+PLUGIN_VERSION=0.0.3
 PLUGIN_ID=tableau-export-v2
 
 plugin:
