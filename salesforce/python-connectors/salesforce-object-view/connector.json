@@ -9,10 +9,22 @@
 
     "params": [
         {
+            "name": "sep1",
+            "label": "Authentication",
+            "type": "SEPARATOR"
+        },
+        {
             "name": "token",
             "label": "JSON token",
+            "description": "JSON, or path to a file containing the JSON",
             "type": "STRING",
-            "mandatory" : true
+            "mandatory" : true,
+            "defaultValue": "${dip.home}/SalesforceToken.json"
+        },
+        {
+            "name": "sep2",
+            "label": "Parameters",
+            "type": "SEPARATOR"
         },
         {
             "name": "object",

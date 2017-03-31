@@ -8,13 +8,12 @@ class MyConnector(Connector):
     def __init__(self, config):
         Connector.__init__(self, config)
 
-        token = self.config.get("token")
+        token = salesforce.get_json(self.config.get("token"))
         try:
-            token = json.loads(token)
             salesforce.API_BASE_URL = token.get('instance_url')
             salesforce.ACCESS_TOKEN = token.get('access_token')
         except Exception as e:
-            raise ValueError("Unvalid JSON token")
+            raise ValueError("JSON token must contain access_token and instance_url")
 
         self.OBJECT = self.config.get("object", "")
         self.LIST = self.config.get("listview", "")

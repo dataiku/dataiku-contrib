@@ -7,8 +7,9 @@ import datetime
 import requests
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+import os.path
 
-# Basinc logging
+# Basic logging
 def log(*args):
     for thing in args:
         if type(thing) is dict:
@@ -48,6 +49,27 @@ def make_api_call(action, parameters = {}, method = 'get', data = {}):
     else:
         raise ValueError('API error when calling %s : %s' % (r.url, r.content))
 
+
+def get_json(input):
+    """
+    In the UI, the input can be a JSON object or a file path to a JSON object.
+    This function takes any, and return the object.
+    """
+
+    if os.path.isfile(input):
+        try:
+            with open(input, 'r') as f:
+                obj = json.load(f)
+                f.close()
+        except Exception as e:
+            raise ValueError("Unable to read the JSON file: %s" % input)
+    else:
+        try:
+            obj = json.loads(input)
+        except Exception as e:
+            raise ValueError("Unable to read the JSON: %s" % input)
+
+    return obj
 
 def iterate_dict(d, parents=[]):
     """
