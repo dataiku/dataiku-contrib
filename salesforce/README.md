@@ -21,36 +21,25 @@ Basically, you should go in "Setup", do a "Quick Find", search for "App Manager"
 
 ![Preview](https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/salesforce/images/connectedapp2.png)
 
-2) Get a JSON token with the [Username-Password OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_username_password_oauth_flow.htm)
+2) Install the plugin in your Dataiku DSS instance.
 
-Python code to get it:
+3) In Dataiku DSS, create a recipe "Salesforce - Refresh the JSON token".
 
-```
-import requests
-params = {
-    "grant_type": "password",
-    "client_id": "XXX.YYY",
-    "client_secret": "0000000000000000",
-    "username": "my@email.com",
-    "password": "MyPasswordMySecurityToken"
-}
-r = requests.post("https://login.salesforce.com/services/oauth2/token", params=params)
-print r.text
-```
+This recipe will get and save in a file a JSON token from Salesforce API. This token is required to use any dataset of this plugin. A token expires after 1 hour, so you will probably have to run this recipe regularly.
 
-Note that you need to append your security token to your password.
+In the recipe, you will need to provide:
 
-The client_id is the "Consumer Key" and the client_secret is the "Consumer Secret" that you got at step 1.
+* the Consumer Key and the Consumer Secret you previously got
+* the Email you use to connect to the Salesforce instance
+* the Password and the Security Token appended (`MyPasswordMySecurityToken`)
 
-You should get a JSON object like this:
+For the other fields, keep the default values.
 
-```
-{"access_token":"XXXX","instance_url":"https://XXXX.salesforce.com","id":"https://login.salesforce.com/id/XXX","token_type":"Bearer","issued_at":"1487324604890","signature":"XXX"}
-```
+![Preview of the DSS recipe](https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/salesforce/images/dssrecipe.png)
 
-3) Install the plugin in DSS.
+Run the recipe. Check the output dataset. The status code should be `200`.
 
-4) Create a new dataset with this connector. Enter the JSON you got in step 3 in the "JSON token" field and define the other fields if present. Click on the “Test & Get schema“ button. Then, “save“ and “explore“.
+4) Create a new dataset with this connector. Define the fields if necessary. Click on the “Test & Get schema“ button. Then, “save“ and “explore“.
 
 ## Datasets available with the plugin
 
@@ -77,6 +66,11 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 
 ## Changelog
 
+**Version 0.1.0 "beta 1" (2017-03-31)**
+
+* New: Recipe to refresh the token
+* New: The token can be stored in a file. This way, it can be shared by all datasets.
+
 **Version 0.0.2 "alpha 2" (2017-02-28)**
 
 * New dataset available: `List View records` and `SOQL query`
@@ -90,7 +84,7 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 ## Roadmap
 
 * Debugging! Please submit feedbacks.
-* Way to refresh the token
+* Support of another OAuth Authentication Flow (with a refresh token)
 * Write connector?
 
 ## Debug
@@ -105,3 +99,30 @@ cat /path/to/DATA_DIR/run/backend.log | grep -i "salesforce"
 * [Plugin page](https://www.dataiku.com/community/plugins/info/salesforce.html) on Dataiku's website
 * Our Q&A: [answers.dataiku.com](https://answers.dataiku.com)
 * [Github issues](https://github.com/dataiku/dataiku-contrib/issues) of the repo
+
+## Alternative configuration
+
+You can obtain the JSON token outside of Dataiku DSS (step 3 of the set-up). Basically, you need to authenticate with the [Username-Password OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_username_password_oauth_flow.htm). You store the JSON in a file and your reference this file in the datasets settings.
+
+For example, you can run the following Python code in a cron task.
+
+```
+import requests
+params = {
+    "grant_type": "password",
+    "client_id": "XXX.YYY",
+    "client_secret": "0000000000000000",
+    "username": "my@email.com",
+    "password": "MyPasswordMySecurityToken"
+}
+r = requests.post("https://login.salesforce.com/services/oauth2/token", params=params)
+with open('/path/for/my/SalesforceToken.json', 'w') as f:
+    f.write(r.text)
+    f.close()
+```
+
+You should get a JSON object like this:
+
+```
+{"access_token":"XXXX","instance_url":"https://XXXX.salesforce.com","id":"https://login.salesforce.com/id/XXX","token_type":"Bearer","issued_at":"1487324604890","signature":"XXX"}
+```
