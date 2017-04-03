@@ -87,19 +87,6 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 * Support of another OAuth Authentication Flow (with a refresh token)
 * Write connector?
 
-## Debug
-
-```
-cat /path/to/DATA_DIR/run/backend.log | grep -i "salesforce"
-```
-
-## Resources
-
-* [Force.com REST API documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm)
-* [Plugin page](https://www.dataiku.com/community/plugins/info/salesforce.html) on Dataiku's website
-* Our Q&A: [answers.dataiku.com](https://answers.dataiku.com)
-* [Github issues](https://github.com/dataiku/dataiku-contrib/issues) of the repo
-
 ## Alternative configuration
 
 You can obtain the JSON token outside of Dataiku DSS (step 3 of the set-up). Basically, you need to authenticate with the [Username-Password OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_username_password_oauth_flow.htm). You store the JSON in a file and your reference this file in the datasets settings.
@@ -126,3 +113,31 @@ You should get a JSON object like this:
 ```
 {"access_token":"XXXX","instance_url":"https://XXXX.salesforce.com","id":"https://login.salesforce.com/id/XXX","token_type":"Bearer","issued_at":"1487324604890","signature":"XXX"}
 ```
+
+## Troubleshooting
+
+**How to get logs?**
+
+Have a look at DSS logs: `backend.log`
+
+You might want to filter:
+
+```
+cat /path/to/DATA_DIR/run/backend.log | grep -i "salesforce"
+```
+
+**When trying to authenticate, I get `{"error":"invalid_grant","error_description":"authentication failure"}`**
+
+Make sure that:
+
+* Your Security Token is still valid.
+* IP restrictions are disabled (or not blocking your IP).
+* Permitted Users is set to "All users may self-authorize".
+* You're not using a TLS 1.0 or below. You can debug this with Python script: `requests.get("https://www.howsmyssl.com/a/check").text`
+
+## Resources
+
+* [Force.com REST API documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm)
+* [Plugin page](https://www.dataiku.com/community/plugins/info/salesforce.html) on Dataiku's website
+* Our Q&A: [answers.dataiku.com](https://answers.dataiku.com)
+* [Github issues](https://github.com/dataiku/dataiku-contrib/issues) of the repo
