@@ -95,6 +95,6 @@ def transform_json_to_dss_columns(row_obj):
     """
     row = {}
     for keys, value in iterate_dict(row_obj):
-        row[".".join(keys)] = value
+        row[".".join(keys)] = value if value is not None else ''
     return row
 
