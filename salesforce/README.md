@@ -73,10 +73,12 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 
 ## Changelog
 
-**Version 0.1.0 "beta 1" (2017-03-31)**
+**Version 0.1.0 "beta 1" (2017-04-03)**
 
 * New: Recipe to refresh the token
 * New: The token can be stored in a file. This way, it can be shared by all datasets.
+* New: Dataset to get records of an Object
+* Enhanced: Clean null values when output format is 'Readable with columns'
 
 **Version 0.0.2 "alpha 2" (2017-02-28)**
 
