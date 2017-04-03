@@ -6,9 +6,10 @@ This plugin provides a read connector to interact with [Salesforce](https://www.
 
 It connects with Salesforce via the [Force.com REST API](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm).
 
-This plugin offers two way to retrieve data:
+This plugin offers three way to retrieve data:
 
 * records of a List View
+* records of an Object
 * results of a [SOQL query](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql.htm) you define
 
 ## How to set-up
@@ -50,6 +51,12 @@ This is mainly to debug and find the objects you can access via the API. Start w
 **Salesforce - SOQL query**
 
 Get the results of a defined SOQL query.
+
+**Salesforce - Object records**
+
+Get the records of an Object.
+
+An SOQL query is built to query all fields of the object.
 
 **Salesforce - List View records**
 
