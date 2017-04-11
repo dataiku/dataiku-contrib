@@ -39,14 +39,14 @@ P_BATCH_SIZE_UNIT = int(get_recipe_config()['param_batch_size'])
 if P_BATCH_SIZE_UNIT is None:
     P_BATCH_SIZE_UNIT = 50000
 
-b=-1  
+b=-1 
 for df in dataiku.Dataset(input_name).iter_dataframes(chunksize= P_BATCH_SIZE_UNIT ):
-    
+
 
     b = b +1
     n_b = b * P_BATCH_SIZE_UNIT 
-    
-    
+
+
     df = df[abs(df[P_LAT]>0) | abs(df[P_LON]>0)]
 
     dfu = df.groupby([P_LAT,P_LON]).count().reset_index()
@@ -70,22 +70,26 @@ for df in dataiku.Dataset(input_name).iter_dataframes(chunksize= P_BATCH_SIZE_UN
         })
         data = call.json()
 
-        
-        v = data['Block']['FIPS']
+        try:
+            v = data['Block']['FIPS']
 
 
-        block_id = v
-        block_group = v[:12]
-        tract_id = v[:11]
-        county_id = data['County']['FIPS']
-        county_name = data['County']['name']
-        state_id = data['State']['FIPS']
-        state_code = data['State']['code']
-        state_name = data['State']['name']
+            block_id = v
+            block_group = v[:12]
+            tract_id = v[:11]
+            county_id = data['County']['FIPS']
+            county_name = data['County']['name']
+            state_id = data['State']['FIPS']
+            state_code = data['State']['code']
+            state_name = data['State']['name']
 
-        d = [block_group,block_id,tract_id,county_id,county_name,lat,lon,state_code,state_id,state_name]
-            
-        writer.write_tuple(d)
+            d = [block_group,block_id,tract_id,county_id,county_name,lat,lon,state_code,state_id,state_name]
+
+            writer.write_tuple(d)
+
+        except:
+            print 'Unable to find these coordinates in the fcc api: lat:%s , lon:%s' % (lat,lon)
+
         time.sleep(P_PAUSE)
         
 writer.close()

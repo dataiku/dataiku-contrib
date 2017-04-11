@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.6
+PLUGIN_VERSION=0.0.3
 PLUGIN_ID=get-us-census-block
 
 plugin:
@@ -6,5 +6,3 @@ plugin:
 	rm -rf dist
 	mkdir dist
 	zip --exclude "*.pyc" -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json custom-recipes
-	
-include ../Makefile.inc

@@ -1,8 +1,10 @@
+// This file is the descriptor for the Custom code recipe compute_weather_histo_dataset
 {
+    // Meta data for display purposes
     "meta" : {
         "label" : "From Dataset - get US census block_id from lat lon",
         "author" : "Dataiku (Nicolas GAKRELIDZ)",
-        "description":"From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon",
+        "description":'From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon',
         "tags" : ["us census", "block", "API"]
     },
 
