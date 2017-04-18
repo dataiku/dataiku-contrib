@@ -78,3 +78,7 @@ if r.status_code == 200:
     file = open(path, 'w')
     file.write(r.text)
     file.close()
+
+# Raise error if API call not successful
+if r.status_code != 200:
+    raise Exception("Unable to refresh the JSON token. Error from Salesforce API.\n%s" % r.text)
