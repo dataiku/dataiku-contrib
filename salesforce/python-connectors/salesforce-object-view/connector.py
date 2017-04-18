@@ -25,7 +25,7 @@ class MyConnector(Connector):
         if self.RESULT_FORMAT == 'json':
             return {
                     "columns" : [
-                        { "name" : "json", "type" : "json" }
+                        { "name" : "json", "type" : "object" }
                     ]
                 }
 
