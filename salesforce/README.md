@@ -73,6 +73,11 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 
 ## Changelog
 
+**Version 0.1.1 "beta 2" (2017-04-18)**
+
+* Fixed: Schema of the ouput of datasets
+* Enhanced: DSS shows an error when not able to refresh the JSON token (recipe)
+
 **Version 0.1.0 "beta 1" (2017-04-03)**
 
 * New: Recipe to refresh the token
