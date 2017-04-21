@@ -1,4 +1,6 @@
+/* This file is the descriptor for the Custom python dataset census-us_us_census_custom_dataset */
 {
+    /* Meta data for display purposes */
     "meta" : {
         "label" : "US Census dataset",
         "description": "Build a US Census level from a list of states and fields.",
@@ -6,8 +8,18 @@
         "tags" : ["census","usa", "dataset"]
     },
 
+    /* Can this connector read data ? */
     "readable" : true,
+    /* Can this connector write data ? */
     "writable" : false,
+
+
+    /* The field "params" holds a list of all the params
+       for wich the user will be prompted for values:
+
+       The available parameter types are:
+       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
+    */
 
     "params": [
         
@@ -24,20 +36,20 @@
            "label" : "State format:",
            "type": "SELECT",
            "description":"2letters: ca, 2Digits: 06, Fullname:California",
-           "defaultValue": "state_2letters",
+           "defaultValue": 'state_2letters',
            "mandatory" : true,
            "selectChoices": [
                 {
-                    "value": "state_2letters",
-                    "label": "state_2letters"
+                    "value": 'state_2letters',
+                    "label": 'state_2letters'
                 },
                 {
-                    "value": "state_2digits",
-                    "label": "state 2 digits code"
+                    "value": 'state_2digits',
+                    "label": 'state 2 digits code'
                 },
                 {
-                    "value": "state_fullname_w1",
-                    "label": "state fullname (census)"
+                    "value": 'state_fullname_w1',
+                    "label": 'state fullname (census)'
                 }
             ]
         },
@@ -53,16 +65,16 @@
            "mandatory" : true,
            "selectChoices": [
                 {
-                    "value": "ACS5Y2015",
-                    "label": "ACS5Y2015"
+                    "value": 'ACS5Y2015',
+                    "label": 'ACS5Y2015'
                 },
                 {
-                    "value": "ACS5Y2014",
-                    "label": "ACS5Y2014"
+                    "value": 'ACS5Y2014',
+                    "label": 'ACS5Y2014'
                 },
                 {
-                    "value": "ACS5Y2013",
-                    "label": "ACS5Y2013"
+                    "value": 'ACS5Y2013',
+                    "label": 'ACS5Y2013'
                 }
             ]
         },
@@ -70,20 +82,20 @@
            "name": "param_census_level",
            "label" : "Census Level:",
            "type": "SELECT",
-           "defaultValue": "TRACT",
+           "defaultValue": 'TRACT',
            "mandatory" : true,
            "selectChoices": [
                 {
-                    "value": "COUNTY",
-                    "label": "COUNTY"
+                    "value": 'COUNTY',
+                    "label": 'COUNTY'
                 },
                 {
-                    "value": "TRACT",
-                    "label": "TRACT"
+                    "value": 'TRACT',
+                    "label": 'TRACT'
                 },
                 {
-                    "value": "BLOCK_GROUP",
-                    "label": "BLOCK_GROUP"
+                    "value": 'BLOCK_GROUP',
+                    "label": 'BLOCK_GROUP'
                 }
             ]
         },

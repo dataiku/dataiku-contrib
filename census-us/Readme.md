@@ -23,8 +23,10 @@ Enter manually the Census fields you would get (ex: B00001_001E,B08534_001E). He
 
 
 2/ BUILD CENSUS WITH FEATURE SELECTION:
-Important: the feature selection is done state by state and not for all the states submited at the same time. 
+Important: 
+1/the feature selection is done state by state and not for all the states submited at the same time. 
 If a feature is selected for one state, it's for all the states.
+2/the feature selection only deals with binary classification or regression , not multinomial classification. Make sure that no empty, Nan, etc... is in the target field !
 
 Nb max fields: the N top significants P-values. Default: -1 = All. Mind the volume of fields and the high correlated variables it'll generate.
 Fields per output file: The number of fields per file. if 600 features have been selected for a value of 200, 3 files will be generated into the output. With a simple python, R or Spark script, you can import these data in a DSS Dataset.
@@ -32,6 +34,7 @@ Fields per output file: The number of fields per file. if 600 features have been
 Imputation: 
 - since the US Census is built per state, all imputation is related to the state processed. 
 - imputation is only done for feature selection, all the output data are row data.
+
 
 3/ US CENSUS CUSTOM DATASETS 
 

@@ -1,9 +1,12 @@
+// This file is the descriptor for the DSS Plugin census-us
 {
+
     "id" : "census-us",
 
-    "version" : "0.2.0",
+    "version" : "0.2.1",
 
     "meta" : {
+
         "label" : "Census USA",
         "description" : "Build the US Census data",
         "author" : "Dataiku (Nicolas GAKRELIDZ)",
