@@ -31,3 +31,5 @@ Batch size :
 
 	* The request sent to the service cannot be greater than 10mb.
 	* Currently, a maximum of 100 features can be enriched with the service per request.
+    
+# IMPORTANT NOTICE:

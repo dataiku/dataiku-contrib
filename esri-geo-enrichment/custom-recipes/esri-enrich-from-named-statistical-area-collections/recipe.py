@@ -119,7 +119,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
             use_data = str({"country":isocode2})
 
             # For the moment, the list of datacollections is:
-            #   - generic_datacollecitons for the country if available
+            #   - generic_datacollections if available for the country
             #   - Else KeyGlobalFacts
             datacollection_list = []
 

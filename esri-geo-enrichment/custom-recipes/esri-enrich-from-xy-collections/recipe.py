@@ -100,7 +100,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
 
     df = df[(df[P_COLUMN_LAT].notnull() | df[P_COLUMN_LON].notnull())]
     df = df[-((df[P_COLUMN_LON]==0) & (df[P_COLUMN_LAT]==0))]
-    print "After removal of null lat/lon: %s rows remain" % (df.shape[0])
+    print "After removal of null lat/lon: %s rows remain for this batch" % (df.shape[0])
 
     if P_SAMPLE >0:
       df = df.head(P_SAMPLE)
@@ -115,7 +115,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
             isocode2 = dict_esri_coverage_structure[c]['attributes'][u'isocode2']
             is_country_ok = True
         except:
-            pass
+            is_country_ok = False
             ## be able to track if the issue came from an unsupported country; reported in log
            
         if is_country_ok is True:
@@ -179,42 +179,56 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
 
             r = requests.post('https://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment/enrich', params= custom_params)
 
+    
             if r.status_code==200 and not "error" in r.json():
                 api_result = r.json()
-                api_message = " / ".join(api_result.get("messages", []))
+                
+                try:
 
-                if not "results" in api_result or len(api_result["results"]) == 0:
-                    df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "No API result for these objects",
+                    api_message = " / ".join(api_result.get("messages", []))
+
+                    if not "results" in api_result or len(api_result["results"]) == 0:
+                        df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "No API result for these objects",
+                                    datacollections = datacollection_list,
+                                    country = isocode2)
+                    else:
+                        results_values = api_result['results'][0][u'value']
+                        n_result = len(results_values[u'FeatureSet'][0][u'features'])
+
+                        print "Have %s results in the batch" % (n_result)
+
+                        for ii in range(0,n_result):
+                            df_values = enrichment.append_item_features(df_values, results_values, ii, P_OPTION_DATA_AS_TRANSACTIONS)
+                            features = results_values[u'FeatureSet'][0][u'features'][ii]['attributes']
+
+                            if P_RETURN_GEOMETRY is True: #== 'true':
+                                UserObjectID = features['UserObjectID']
+
+                                geom = results_values[u'FeatureSet'][0][u'features'][ii][u'geometry'] 
+
+                                geom_list =[]
+                                for geom_type,v in geom.iteritems():
+                                    tupl = (UserObjectID,date,geom_type,P_AREA_TYPE,P_BUFFER_UNITS,[P_BUFFER_RADII],geom[geom_type])
+                                    geom_list.append(tupl)
+
+                                df_geometry_result_tmp = pd.DataFrame(geom_list)
+                                df_geometry_result_tmp.columns = ['UserObjectID','collected_at','geom_type','areaType','bufferUnits','bufferRadii','the_geom']
+                                df_geometry_result = pd.concat((df_geometry_result, df_geometry_result_tmp), axis=0)
+
+                        df_metadata = enrichment.update_batch_metadata(df_metadata, results_values, isocode2)
+                        df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "Done",
                                 datacollections = datacollection_list,
                                 country = isocode2)
-                else:
-                    results_values = api_result['results'][0][u'value']
-                    n_result = len(results_values[u'FeatureSet'][0][u'features'])
-
-                    print "Have %s results in the batch" % (n_result)
-
-                    for ii in range(0,n_result):
-                        df_values = enrichment.append_item_features(df_values, results_values, ii, P_OPTION_DATA_AS_TRANSACTIONS)
-                        features = results_values[u'FeatureSet'][0][u'features'][ii]['attributes']
-
-                        if P_RETURN_GEOMETRY is True: #== 'true':
-                            UserObjectID = features['UserObjectID']
-
-                            geom = results_values[u'FeatureSet'][0][u'features'][ii][u'geometry'] 
-
-                            geom_list =[]
-                            for geom_type,v in geom.iteritems():
-                                tupl = (UserObjectID,date,geom_type,P_AREA_TYPE,P_BUFFER_UNITS,[P_BUFFER_RADII],geom[geom_type])
-                                geom_list.append(tupl)
-
-                            df_geometry_result_tmp = pd.DataFrame(geom_list)
-                            df_geometry_result_tmp.columns = ['UserObjectID','collected_at','geom_type','areaType','bufferUnits','bufferRadii','the_geom']
-                            df_geometry_result = pd.concat((df_geometry_result, df_geometry_result_tmp), axis=0)
-
-                    df_metadata = enrichment.update_batch_metadata(df_metadata, results_values, isocode2)
-                    df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "Done",
+                        
+                except:
+                    message = api_result['messages'][0]['description']
+                    print message
+                    df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date,
+                            "Esri Datacollection changed",
                             datacollections = datacollection_list,
                             country = isocode2)
+                    
+        
             else:
                 print "ESRI API failure"
                 df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date,
@@ -222,7 +236,8 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
                             datacollections = datacollection_list,
                             country = isocode2)
         else:
-            df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "Country not supported by the API: %s") % (c)
+            error="Country: %s not supported by the API or Plugin content to be updated" % (c)
+            df_api_log = common.log_api_message(df_api_log, '', i, '', date, error) 
         time.sleep(P_PAUSE)
 
 enrichment.write_outputs(

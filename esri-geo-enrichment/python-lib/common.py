@@ -5,7 +5,7 @@ from dataiku.customrecipe import *
 # ESRI :If the data is being stored,
 # the terms of use for the GeoEnrichment service require that you specify the forStorage parameter to true.
 # Only set this to False for development purposes
-FOR_STORAGE = True
+FOR_STORAGE = False
 
 def read_common_params():
     P_USERNAME = get_recipe_config()['username']
@@ -23,11 +23,12 @@ def make_api_log_message(request_resp, batch_id, input_dict, query_at, dku_messa
     json_resp = {}
     try:
         json_resp = request_resp.json()
+        sc = request_resp.status_code
     except:
-        pass
+        sc =''
 
     dic = {
-        'http_code':  request_resp.status_code,
+        'http_code':  sc,
         'api_error' : json.dumps(json_resp.get("error", {"details" : "unknown"})),
         'dku_message' : dku_message,
         'batch_id' : batch_id,
