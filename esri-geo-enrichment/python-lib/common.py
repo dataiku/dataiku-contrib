@@ -5,7 +5,7 @@ from dataiku.customrecipe import *
 # ESRI :If the data is being stored,
 # the terms of use for the GeoEnrichment service require that you specify the forStorage parameter to true.
 # Only set this to False for development purposes
-FOR_STORAGE = False
+FOR_STORAGE = True
 
 def read_common_params():
     P_USERNAME = get_recipe_config()['username']

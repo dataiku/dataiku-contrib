@@ -33,3 +33,7 @@ Batch size :
 	* Currently, a maximum of 100 features can be enriched with the service per request.
     
 # IMPORTANT NOTICE:
+The data collections have been partially changed [official doc not updated: https://developers.arcgis.com/rest/geoenrichment/api-reference/data-collections.htm ] and the API doesn't provide a correspondance between the last datacollections name and the new ones, 
+In the current version, the plugin can't get the last name of the Esri's datacollections since the API doesn't provide this information directly  
+some countries may not be supported, check the log dataset.
+We'll find to get the last datacollection name in a next release.
