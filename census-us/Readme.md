@@ -62,7 +62,13 @@ https://censusreporter.org/data/table/?table=B00001&geo_ids=05000US10001,150|050
 > Dimensions must be Exactly the same, any doubt download the data from census reporter and check in excel (better...)
 
 
-
+Requirements note:
+This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
+=> ! Try it on a neutral environment [dev, sandbox] before any deployment in production !
+- idna<2.6,>=2.5
+- cryptography>=1.3.4
+- pyopenssl>=0.14
+=> These dependencies can be tricky to install on Mac OS and only due to pip, not the plugin. Mind: Mac OS not officially supported by Dataiku : https://doc.dataiku.com/dss/latest/installation/index.html
 
 
 

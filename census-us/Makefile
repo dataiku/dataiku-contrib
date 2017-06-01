@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.2.1
+PLUGIN_VERSION=0.2.2
 PLUGIN_ID=census-us
 
 plugin:

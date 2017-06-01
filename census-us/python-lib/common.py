@@ -6,7 +6,8 @@ from dataiku.customrecipe import *
 import datetime
 import census_resources
 import json
-import urllib2
+#import urllib2
+import requests
 import zipfile
 import os
 import shutil
@@ -100,10 +101,12 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
     if P_USE_PREVIOUS_SOURCES is False or os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) is False:
     
-        response = urllib2.urlopen( fields_definition_url_file )
+        #response = urllib2.urlopen( fields_definition_url_file )
+        response = requests.get(fields_definition_url_file)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) , 'wb') as f:
-            x = response.read()
-            f.write(x)
+            #x = response.read()
+            #f.write(x)
+            f.write(response.content)
         print '[+] downloaded: %s' % fields_definition_url_file
 
     base_fdir = path_datadir_tmp + FOLDER_NAME
@@ -123,10 +126,12 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
         lim_t = fields_definition_url_file_template[::-1].find('/')
         
-        response = urllib2.urlopen( fields_definition_url_file_template )
+        #response = urllib2.urlopen( fields_definition_url_file_template )
+        response = requests.get(fields_definition_url_file_template)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file_template[-lim_t:]) , 'wb') as f:
-            x = response.read()
-            f.write(x)
+            #x = response.read()
+            #f.write(x)
+            f.write(response.content)
         print '[+] downloaded: %s' % fields_definition_url_file_template
         
         
@@ -162,10 +167,12 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         lim = crosswalk_zcta_url_file[::-1].find('/')
         
         if not os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:] ):
-            response = urllib2.urlopen(crosswalk_zcta_url_file)
+            response = requests.get(crosswalk_zcta_url_file)
+            #response = urllib2.urlopen(crosswalk_zcta_url_file)
             with open(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:], 'wb') as fc:
-                x = response.read()
-                fc.write(x)
+                #x = response.read()
+                #fc.write(x)
+                fc.write(response.content)
             print '[+] ZCTA to ZIPCODE crosswalk downloaded'
         
     
@@ -174,11 +181,13 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
     print 'Calling Census API...'
     api_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels_code']
 
-    header = {'User-Agent': 'Mozilla/5.0'}
-       
-    req = urllib2.Request(api_url,headers=header)
-    g_d = urllib2.urlopen(req).read()
-    data_d = json.loads(g_d)  # result is now a dict
+    #header = {'User-Agent': 'Mozilla/5.0'}
+    #req = urllib2.Request(api_url,headers=header)
+    #g_d = urllib2.urlopen(req).read()
+    #data_d = json.loads(g_d)  # result is now a dict
+    
+    req = requests.get(api_url) 
+    data_d = req.json()
     geo_ref = pd.DataFrame(data_d['fips'])
     
         
@@ -224,12 +233,15 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
             data_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['data_by_state'] + filename
 
             print '[+] downloading: %s' % filename
+            print '--> from this url: %s' % (data_url)
 
             try:
-                response = urllib2.urlopen( data_url )
+                #response = urllib2.urlopen( data_url )
+                response = requests.get( data_url )
                 with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + filename) , 'wb') as f:
-                    x = response.read()
-                    f.write(x)
+                    #x = response.read()
+                    #f.write(x)
+                    f.write(response.content)
                 print '[+] downloaded: %s' % filename
             except:
                 print 'Process failed to download: %s' % filename

@@ -67,15 +67,15 @@ dict_pattern_files_ ={'ACS':{'v1':
 dict_vintage_ = {'ACS':{
      'ACS5Y2015':
      {
-        'fields_definition':{'url':'http://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
+        'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
                              ,'folder_name':'2015_5yr_Templates'
-                             ,'geo_header_template_url':'http://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
+                             ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'2015_5yr_Templates'
                             }
          ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2016.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
-         ,'data_by_state':'http://www2.census.gov/programs-surveys/acs/summary_file/2015/data/5_year_by_state/'
-         ,'variables_definitions':'http://api.census.gov/data/2015/acs5/variables.html'
-         , 'levels_code': 'http://api.census.gov/data/2015/acs5/geography.json'
+         ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/5_year_by_state/'
+         ,'variables_definitions':'https://api.census.gov/data/2015/acs5/variables.html'
+         , 'levels_code': 'https://api.census.gov/data/2015/acs5/geography.json'
          , 'vintage_pattern':'20155'
          , 'master_segment_file_pattern':'g'
          , 'segments_estimations_files_pattern':'e'
@@ -84,15 +84,15 @@ dict_vintage_ = {'ACS':{
     ,
     'ACS5Y2014':
      {
-        'fields_definition':{'url':'http://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
+        'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'folder_name':'seq'
-                             ,'geo_header_template_url':'http://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
+                             ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'seq'
                             }
          ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2016.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
-         ,'data_by_state':'http://www2.census.gov/programs-surveys/acs/summary_file/2014/data/5_year_by_state/'
-         ,'variables_definitions':'http://api.census.gov/data/2014/acs5/variables.html'
-         , 'levels_code': 'http://api.census.gov/data/2014/acs5/geography.json'
+         ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/5_year_by_state/'
+         ,'variables_definitions':'https://api.census.gov/data/2014/acs5/variables.html'
+         , 'levels_code': 'https://api.census.gov/data/2014/acs5/geography.json'
          , 'vintage_pattern':'20145'
          , 'master_segment_file_pattern':'g'
          , 'segments_estimations_files_pattern':'e'
@@ -100,15 +100,15 @@ dict_vintage_ = {'ACS':{
      }
     , 'ACS5Y2013':
      {
-        'fields_definition':{'url':'http://www2.census.gov/programs-surveys/acs/summary_file/2013/data/2013_5yr_Summary_FileTemplates.zip'
+        'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2013/data/2013_5yr_Summary_FileTemplates.zip'
                              ,'folder_name':''  
-                             ,'geo_header_template_url':'http://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
+                             ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'seq'
                             } 
          ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2015.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
-         ,'data_by_state':'http://www2.census.gov/programs-surveys/acs/summary_file/2013/data/5_year_by_state/'
-         ,'variables_definitions':'http://api.census.gov/data/2013/acs5/variables.html'
-         , 'levels_code': 'http://api.census.gov/data/2013/acs5/geography.json'
+         ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2013/data/5_year_by_state/'
+         ,'variables_definitions':'https://api.census.gov/data/2013/acs5/variables.html'
+         , 'levels_code': 'https://api.census.gov/data/2013/acs5/geography.json'
          , 'vintage_pattern':'20135'
          , 'master_segment_file_pattern':'g'
          , 'segments_estimations_files_pattern':'e'

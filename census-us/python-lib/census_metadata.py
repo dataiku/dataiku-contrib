@@ -11,7 +11,7 @@ def get_metadata_sources(url):
     string_to_find = '.'
     metadata_d = {'name':[],'label':[],'concept':[],'type':[] }
     try:
-        rv = requests.get(url)
+        rv = requests.get(url,verify=False)
         status = 'ok'
     
     except:

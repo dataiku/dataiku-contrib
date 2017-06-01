@@ -1,7 +1,10 @@
 {
   "python" : [
       {"name":"bs4"}
-      ,{"name":"requests"}
+      ,{"name": "idna", "version" : "<2.6,>=2.5"}
+      ,{"name": "cryptography", "version" : ">=1.3.4"}
+      ,{"name": "pyopenssl", "version" : "pyopenssl>=0.14"}
+      
     
   ]
 }
