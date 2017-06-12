@@ -30,7 +30,7 @@
             "name": "query",
             "label": "SOQL query",
             "description": "Example: SELECT Name, Account.Name, Amount, CloseDate, Account.Id, AccountId, Owner.Id, OwnerId FROM Opportunity ORDER BY Name ASC",
-            "type": "STRING",
+            "type": "TEXTAREA",
             "mandatory" : true
         },
         {
