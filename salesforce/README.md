@@ -73,6 +73,11 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 
 ## Changelog
 
+**Version 1.0.0 (2017-06-12)**
+
+* Enhanced: the SOQL query field is now multi-line
+* More consistency in the namming of the python-connectors
+
 **Version 0.1.1 "beta 2" (2017-04-18)**
 
 * Fixed: Schema of the ouput of datasets
