@@ -1,7 +1,7 @@
 {
     "meta" : {
-        "label" : "Salesforce - List View records",
-        "description" : "A connector to get the records of a List View"
+        "label" : "Salesforce - List View results",
+        "description" : "A connector to get the results of a List View"
     },
 
     "readable" : true,

@@ -4,12 +4,12 @@ This plugin provides a read connector to interact with [Salesforce](https://www.
 
 ## How it works
 
-It connects with Salesforce via the [Force.com REST API](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm).
+It connects to Salesforce via the [Force.com REST API](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm).
 
 This plugin offers three way to retrieve data:
 
-* records of a List View
-* records of an Object
+* records/items of an Object
+* resuluts of a List View
 * results of a [SOQL query](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql.htm) you define
 
 ## How to set-up
@@ -58,9 +58,9 @@ Get the records of an Object.
 
 An SOQL query is built to query all fields of the object.
 
-**Salesforce - List View records**
+**Salesforce - List View results**
 
-Get the records of a List View on an object.
+Get the results of a List View on an object.
 
 There are two parameters to define that you can find in the URL when you browse a List View on the portal.
 
@@ -103,7 +103,7 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 
 ## Alternative configuration
 
-You can obtain the JSON token outside of Dataiku DSS (step 3 of the set-up). Basically, you need to authenticate with the [Username-Password OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_username_password_oauth_flow.htm). You store the JSON in a file and your reference this file in the datasets settings.
+You can obtain the JSON token outside of Dataiku DSS (step 3 of the set-up). Basically, you need to authenticate with the [Username-Password OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_username_password_oauth_flow.htm). You store the JSON in a file and you reference this file in the datasets settings.
 
 For example, you can run the following Python code in a cron task.
 
