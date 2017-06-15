@@ -1,0 +1,61 @@
+{
+    "meta" : {
+        "label" : "Salesforce - List View results",
+        "description" : "A connector to get the results of a List View"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "sep1",
+            "label": "Authentication",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "token",
+            "label": "JSON token",
+            "description": "JSON, or path to a file containing the JSON",
+            "type": "STRING",
+            "mandatory" : true,
+            "defaultValue": "${dip.home}/SalesforceToken.json"
+        },
+        {
+            "name": "sep2",
+            "label": "Parameters",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "object",
+            "label": "Object name",
+            "description": "Examples: 'Lead', 'OpportunityContactRole' ",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "listview",
+            "label": "List View id (or developerName)",
+            "description": "Example: '00B0Y000004Fdd1UAC' or 'ClosingNextMonth'",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "result_format",
+            "label": "Choose the output format:",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "readable",
+                    "label": "Readable with columns"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        }
+    ]
+}

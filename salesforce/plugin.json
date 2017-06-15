@@ -1,0 +1,13 @@
+{
+	"id" : "salesforce",
+	"version" : "1.0.0",
+	"meta" : {
+		"label" : "Salesforce",
+		"description" : "Connectors to read data from Salesforce, a SaaS CRM.",
+		"author" : "Dataiku (Jérémy Grèze)",
+		"icon" : "icon-cloud",
+		"licenseInfo" : "Apache Software License version 2",
+		"url" : "https://www.dataiku.com/community/plugins/info/salesforce.html",
+		"tags" : ["CRM", "SaaS"]
+	}
+}
