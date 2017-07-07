@@ -5,6 +5,7 @@ from dataiku import pandasutils as pdu
 import requests 
 import time
 from dataiku.customrecipe import *
+import sys
 
 
 input_name = get_input_names_for_role('input')[0]
@@ -68,28 +69,36 @@ for df in dataiku.Dataset(input_name).iter_dataframes(chunksize= P_BATCH_SIZE_UN
                 'showall': 'true'
 
         })
-        data = call.json()
+        
+        if call.status_code == 200:
+        
+            data = call.json()
 
-        try:
-            v = data['Block']['FIPS']
+
+            try:
+                v = data['Block']['FIPS']
 
 
-            block_id = v
-            block_group = v[:12]
-            tract_id = v[:11]
-            county_id = data['County']['FIPS']
-            county_name = data['County']['name']
-            state_id = data['State']['FIPS']
-            state_code = data['State']['code']
-            state_name = data['State']['name']
+                block_id = v
+                block_group = v[:12]
+                tract_id = v[:11]
+                county_id = data['County']['FIPS']
+                county_name = data['County']['name']
+                state_id = data['State']['FIPS']
+                state_code = data['State']['code']
+                state_name = data['State']['name']
 
-            d = [block_group,block_id,tract_id,county_id,county_name,lat,lon,state_code,state_id,state_name]
+                d = [block_group,block_id,tract_id,county_id,county_name,lat,lon,state_code,state_id,state_name]
 
-            writer.write_tuple(d)
+                writer.write_tuple(d)
 
-        except:
-            print 'Unable to find these coordinates in the fcc api: lat:%s , lon:%s' % (lat,lon)
+            except:
+                print 'Unable to find these coordinates in the fcc api: lat:%s , lon:%s' % (lat,lon)
 
+        else:
+            print 'Failed. API status: %s' % (call.status_code) 
+            sys.exit(1)
+            
         time.sleep(P_PAUSE)
         
 writer.close()

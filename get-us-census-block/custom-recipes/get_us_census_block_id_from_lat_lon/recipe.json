@@ -4,7 +4,7 @@
     "meta" : {
         "label" : "From Dataset - get US census block_id from lat lon",
         "author" : "Dataiku (Nicolas GAKRELIDZ)",
-        "description":'From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon',
+        "description":'From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon. The inputed coordinates must be clean.',
         "tags" : ["us census", "block", "API"]
     },
 
