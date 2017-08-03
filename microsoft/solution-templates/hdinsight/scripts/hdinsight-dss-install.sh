@@ -34,9 +34,10 @@ dataDir="dss_data"
 
 # Retrieve DSS version if needed
 if [ -z "$version" -o "$version" = "latest" ]; then
-	echo "+ Retrieving latest DSS version from dataiku.com"
-	version=$(curl -sS https://downloads.dataiku.com/latest_studio.json |
-		python -c 'import json, sys;print json.load(sys.stdin)["version"]')
+	# echo "+ Retrieving latest DSS version from dataiku.com"
+	# version=$(curl -sS https://downloads.dataiku.com/latest_studio.json |
+	# 	python -c 'import json, sys;print json.load(sys.stdin)["version"]')
+	version=4.0.6 # Temporarily hardcoding the latest version
 	if [ -z "$version" ]; then
 		echo >&2 "* Error: could not retrieve latest DSS version"
 		exit 1
