@@ -1,0 +1,21 @@
+// This file is the descriptor for the DSS Plugin association-rules
+{
+    // The identifier of the plugin.
+    // This must be globally unique, and only contain A-Za-z0-9_-
+    "id" : "association-rules",
+
+    // Version. It is highly recommended to use Semantic Versioning
+    "version" : "0.0.1",
+
+
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Association rules ",
+        "description" : "This plugin contains several functions allowing to generate association rules (aka frequent item sets) and sequences",
+        "author" : "Arnaud d Esquerre",
+        "icon" : "icon-dku-nav_flow",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["Python", "apyori", "associations", "sequences", "frequent-item-sets"]
+    }
+}

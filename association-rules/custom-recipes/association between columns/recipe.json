@@ -1,0 +1,85 @@
+// This file is the descriptor for the Custom code recipe arnaud_plugin_wine_compute_wine_correlation
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Association rules between columns",
+        "description": "This recipe will let you use the Apriori algorithm to create association rules between the values of the columns of your dataset. This approach is unsupervised.",
+        "author" : "Arnaud d Esquerre",
+        "tags" : ["Python", "association-rules", "sequences", "apriori", "frequent-item-sets"],
+        "icon" : "icon-dku-nav_flow"
+    },
+
+    "kind" : "PYTHON",
+
+    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+    // or more dataset to each input and output role.
+
+    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+    // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
+    // associate no dataset with the role.
+
+    "inputRoles" : [
+        {
+            "name": "transactions",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+        // ...
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "rules",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+        // ...
+    ],
+
+    // The field "params" holds a list of all the params
+    // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+    // The available parameter types are:
+    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
+
+    "params": [
+        {
+          "name": "support",
+          "label": "Minimum support",
+          "type": "DOUBLE",
+          "defaultValue": 0.02,
+          "description": "The support value of an item set is defined as the proportion of transactions in the datset which contains this item set."
+        },
+        {
+          "name": "lift",
+          "label": "Minimum lift",
+          "type": "DOUBLE",
+          "defaultValue": 1,
+          "description": "If the lift is > 1, that lets us know the degree to which those two occurrences are dependent on one another.If the lift is equal to one it means that they are independent"
+        },
+        {
+          "name": "confidence",
+          "label": "Minimum confidence",
+          "type": "DOUBLE",
+          "defaultValue": 0.2,
+          "description": "The confidence value of a rule X => Y, is the proportion the transactions that contains X which also contains Y."
+        },
+        {
+          "name": "min_length",
+          "label": "Minimum rule length",
+          "type": "INT",
+          "defaultValue": 2,
+          "description": "Minimum number of items in the rule"
+        },
+        {
+          "name": "max_length",
+          "label": "Maximum rule length",
+          "type": "INT",
+          "defaultValue": 3,
+          "description": "Maximum number of items in the rule"
+        }
+    ]
+
+}
