@@ -1,0 +1,15 @@
+// This file is the descriptor for the DSS Plugin datarendezvous.com
+{
+    "id" : "datarendezvous",
+    "version" : "0.0.1",
+
+    "meta" : {
+        "label" : "DataRendezVous I/O",
+        "description" : "DataRendezVous Connector / Exporter.",
+        "author" : "DataRendezVous",
+        "icon" : "icon-heart",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.datarendezvous.com",
+        "tags" : ["drdv", "datarendezvous","collaborative","dataportal","export","connector"]
+    }
+}

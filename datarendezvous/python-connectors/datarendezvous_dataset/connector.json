@@ -1,0 +1,30 @@
+{
+
+    "meta" : {
+        "label" : "DataRendezVous Dataset",
+        "description" : "Work with your DataRendezVous Datasets",
+        "icon" : "icon-heart"
+    },
+
+  
+    "readable" : true,
+
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "api_key",
+            "label" : "API Key",
+            "type": "STRING",
+            "description": "DataRendezVous API Key available in your DataRendezVous profile",
+            "mandatory": true
+        },
+        {
+            "name": "dataset_id",
+            "label" : "Dataset ID",
+            "type": "STRING",
+            "description": "We will export data from this dataset",
+            "mandatory": true
+        }
+    ]
+}
