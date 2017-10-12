@@ -1,0 +1,30 @@
+{
+
+    "meta" : {
+        "label" : "From DataRendezVous",
+        "description" : "Work with your DataRendezVous Datasets",
+        "icon" : "icon-cloud-download"
+    },
+
+  
+    "readable" : true,
+
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "api_key",
+            "label" : "API Key",
+            "type": "STRING",
+            "description": "DataRendezVous API Key available in your DataRendezVous profile",
+            "mandatory": true
+        },
+        {
+            "name": "dataset_id",
+            "label" : "Dataset ID",
+            "type": "STRING",
+            "description": "DataRendezVous Dataset ID to which DSS will connect",
+            "mandatory": true
+        }
+    ]
+}
