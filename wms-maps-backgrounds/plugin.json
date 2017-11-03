@@ -1,0 +1,23 @@
+{
+    "id" : "wms-maps-backgrounds",
+    "version" : "0.0.1",
+    "meta" : {
+        "label" : "Web Map Service for maps backgrounds",
+        "description" : "This plugin enables to set up custom maps backgrounds provided by a Web Map Service",
+        "author" : "Dataiku",
+        "icon" : "icon-globe",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["wms", "chart", "map", "background", "layer"]
+    },
+    "params" : [
+        {
+            "name": "wms_res",
+            "type": "TEXTAREA",
+            "label": "WMS ressources",
+            "description": "List of WMS ressources to add (one ressource per line, defined by 'URL LayerId Name', note the spaces between the different fields)",
+            "mandatory": true
+        }
+    ],
+    "publicParams": true
+}
