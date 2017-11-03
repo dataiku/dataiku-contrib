@@ -7,13 +7,14 @@ import os
 import csv
 from cStringIO import StringIO
 import io
-import time
-import tempfile
+import concurrent.futures
 
 CREATE_DATASET = 'create_dataset'
 CREATE_VERSION = 'create_version'
 
 class DrdvExporter(Exporter):
+
+    ROW_BUFFER_SIZE = 1000
 
     def __init__(self, config, plugin_config):
         
@@ -21,7 +22,8 @@ class DrdvExporter(Exporter):
         self.plugin_config = plugin_config
         self.row_index = 0
         self.row_buffer = []
-        self.row_buffer_size = 1000;
+        self.executor = concurrent.futures.ThreadPoolExecutor()
+        self.futures = {}
         
         # Form data
         self.api_key = self.config.get("api_key", None)
@@ -62,9 +64,7 @@ class DrdvExporter(Exporter):
                 self.new_dataset_id = self.api.new_dataset_version(self.datapot_id, self.dataset_id, file_key)
             else:
                 raise Exception("Invalid export_type %s" % export_type)
-                
-            # /!\ To be fixed /!\
-            time.sleep(20)
+            
             
         else :
             row_obj = {}
@@ -72,8 +72,8 @@ class DrdvExporter(Exporter):
                 row_obj[col["name"]] = val
             self.row_buffer.append(row_obj)
             
-            if len(self.row_buffer) > self.row_buffer_size:
-                self.api.dataset_insert(self.new_dataset_id, self.row_buffer)
+            if len(self.row_buffer) == self.ROW_BUFFER_SIZE:
+                self.futures[self.executor.submit(self.api.dataset_insert, self.new_dataset_id, self.row_buffer)] = (self.row_index - self.ROW_BUFFER_SIZE + 1, self.row_index + 1)
                 self.row_buffer = []
             
         self.row_index += 1
@@ -82,5 +82,14 @@ class DrdvExporter(Exporter):
     def close(self):  
         
         if len(self.row_buffer) > 0:
-            self.api.dataset_insert(self.new_dataset_id, self.row_buffer)
+            self.futures[self.executor.submit(self.api.dataset_insert, self.new_dataset_id, self.row_buffer)] = (self.row_index - len(self.row_buffer), self.row_index)
             self.row_buffer = []
+
+
+        for future in concurrent.futures.as_completed(self.futures):
+            try:
+                future.result()
+            except Exception, e:
+                range = self.futures[future]
+                raise Exception("An exception occured while exporting a row between %d to %d. Please clean your data to match column types." % (range[0], range[1]))
+        
