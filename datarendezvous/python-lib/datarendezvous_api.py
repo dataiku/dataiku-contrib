@@ -75,7 +75,7 @@ class DrdvApi():
             time.sleep(1)
             status = self.dataset_status(dataset_id)
             retry += 1
-        if status == 'error' or retry == self.MAX_RETRY:
+        if status != 'complete':
             raise Exception('An error occured while initializing dataset %s' % dataset_id)
         return dataset_id
         
