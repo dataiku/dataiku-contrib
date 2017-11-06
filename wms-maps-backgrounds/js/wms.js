@@ -1,14 +1,14 @@
 (function() {
     const pluginSettings = window.dkuAppConfig.loadedPlugins.find(d => d.id === 'wms-maps-backgrounds').params;
 
-    var wmsRes = pluginSettings.wms_res;
+    var wmsResources = pluginSettings.wmsResources;
 
-    if (!wmsRes) {
+    if (!wmsResources) {
         console.info("WMS Plugin: no config, bailing out");
         return;
     }
 
-    var wmsList = wmsRes.split("\n").filter(x => x.length > 0).map(x => [x.split(" ")[0], x.split(" ")[1], x.split(" ")[2]]);
+    var wmsList = wmsResources.split("\n").filter(x => x.length > 0).map(x => [x.split(" ")[0], x.split(" ")[1], x.split(" ")[2]]);
 
     for (let i = 0; i < wmsList.length; i++) {
         dkuMapBackgrounds.addWMS(

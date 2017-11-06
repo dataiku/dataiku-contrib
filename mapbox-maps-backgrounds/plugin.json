@@ -31,7 +31,7 @@
         {
             "name" : "additionalStyles",
             "label" : "Additional styles",
-            "description" :"Mapbox style identifiers to add to the list. Add a line for each style with the style (or tileset) id, a space, and a label",
+            "description" :"Mapbox style identifiers to add to the list. Add a line for each style with the style (or tileset) id, a space, and a label. Note: you must refresh the DSS page after modifying this.",
             "type" : "TEXTAREA"
         }
     ],   
