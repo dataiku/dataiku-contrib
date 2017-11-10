@@ -39,8 +39,8 @@ elif modelformat == "word2vec-binary":
     model = gensim.models.Word2Vec.load_word2vec_format(modelfile, binary=True)
 else:
     raise Exception("Unknown model format: %s" % modelformat)
-index2word_set = set(model.index2word)
-word2vecdim = model.vector_size
+index2word_set = set(model.wv.vocab)
+word2vecdim = model.wv.syn0.shape[1]
 
 if keep_all_cols :
     myschema = [val for val in input_text_dataset.read_schema()]
