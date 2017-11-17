@@ -1,0 +1,32 @@
+{
+    "meta": {
+        "label": "Airtable table",
+        "description": "Read records from a Airtable table",
+        "icon": "icon-th-large"
+    },
+    "readable": true,
+    "writable": false,
+    "params": [
+        {
+            "name": "base",
+            "label": "Base ID",
+            "type": "STRING",
+            "description": "Alphanumeric starting with `app` that you can find in the API documentation of your base",
+            "mandatory": true
+        },
+        {
+            "name": "table",
+            "label": "Table name",
+            "type": "STRING",
+            "description": "Exact name of the table. Can include spaces.",
+            "mandatory": true
+        },
+        {
+            "name": "key",
+            "label": "API key",
+            "type": "STRING",
+            "description": "To get your API key, visit your account page",
+            "mandatory": true
+        }
+    ]
+}
