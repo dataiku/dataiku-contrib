@@ -1,5 +1,5 @@
 {
     "python" : [
-        {"name":"gensim", "version":">=0.12.4"}
+        {"name":"gensim", "version":">=3.1.0"}
     ]
 }

@@ -1,0 +1,14 @@
+{
+    "id" : "score-using-api-node",
+    "version" : "0.0.1",
+
+    "meta" : {
+        "label" : "Score a dataset using an API node",
+        "description" : "This plugin contains a recipe to send the content of a datset to an API node and parse the result",
+        "author" : "Dataiku (Thomas Labadie)",
+        "icon" : "icon-cloud-upload",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["API", "Enrichment"]
+    }
+}

@@ -1,0 +1,73 @@
+{
+    "meta" : {
+        "label" : "Score dataset",
+        "description" : "This recipe scores the selected dataset using a Dataiku API node"
+    },
+
+    "kind" : "PYTHON",
+    
+    "selectableFromDataset" : "main",
+
+    "inputRoles" : [
+        {
+            "name": "original_dataset",
+            "label": "Dataset to score",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "scored_dataset",
+            "label": "Output dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "api_uri",
+            "label" : "API URI",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "api_port",
+            "label" : "API port",
+            "type": "INT",
+            "mandatory" : true
+        },
+        {
+            "name": "api_service",
+            "label" : "API service",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "api_endpoint",
+            "label" : "API endpoint",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "chunksize",
+            "label" : "Chunk size",
+            "type": "INT",
+            "defaultValue" : 100,
+            "description": "Number of rows that will be sent per API call",
+            "mandatory" : true
+        },
+        {
+            "name": "should_flatten",
+            "type": "BOOLEAN",
+            "label": "Flattening probability output?",
+            "defaultValue" : true,
+            "mandatory" : true
+        }
+    ]
+
+}

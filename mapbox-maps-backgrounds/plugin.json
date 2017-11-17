@@ -1,0 +1,39 @@
+{
+    "id" : "mapbox-maps-backgrounds",
+    "version" : "0.0.1",
+
+    "meta" : {
+        "label" : "Mapbox map backgrounds",
+
+        "description" : "Makes Mapbox map backgrounds usable in charts",
+        "author" : "Dataiku",
+        "icon" : "icon-globe",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["charts", "geo"]
+    },
+  
+    
+    "params": [
+         {
+            "name" : "accessToken",
+            "label" : "Mapbox access token",
+            "description" :"Mapbox access token",
+            "type" : "STRING"
+        },
+        {
+            "name" : "addDefaultStyles",
+            "label" : "Add default styles",
+            "description" :"Add the default Mapbox styles to the list",
+            "type" : "BOOLEAN",
+            "defaultValue" : true
+        },
+        {
+            "name" : "additionalStyles",
+            "label" : "Additional styles",
+            "description" :"Mapbox style identifiers to add to the list. Add a line for each style with the style (or tileset) id, a space, and a label. Note: you must refresh the DSS page after modifying this.",
+            "type" : "TEXTAREA"
+        }
+    ],   
+    "publicParams": true
+}
