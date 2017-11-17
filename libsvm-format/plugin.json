@@ -1,0 +1,13 @@
+{
+    "id" : "libsvm-format",
+    "version" : "0.0.1",
+    "meta" : {
+        "label" : "LIBSVM format extractor",
+        "description" : "Reads LIBSVM files",
+        "author" : "Dataiku (Thomas Labadie)",
+        "icon" : "icon-rocket",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["format", "productivity"]
+    }
+}

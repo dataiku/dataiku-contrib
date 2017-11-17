@@ -1,0 +1,30 @@
+<project name="libsvm-format" default="jar">
+    <property name="build.dir" value="java-build" />
+    <property name="dist.dir" value="java-lib" />
+    <property environment="env"/>
+
+    <target name="clean">
+        <delete dir="${dist.dir}" />
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="jar">
+        <path id="lib.path.id">
+            <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/backend-run" />
+            <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/common-run" />
+            <fileset dir="${env.DKUINSTALLDIR}/lib/shadelib" />
+            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-core.jar" />
+            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-scoring.jar" />
+            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dip.jar" />
+        </path>
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <javac debug="true" destdir="${build.dir}" classpathref="lib.path.id" encoding="utf-8" includeantruntime="false">
+            <compilerarg value="-Xlint:all" />
+            <src>
+                <pathelement location="java-formats/libsvm" />
+            </src>
+        </javac>
+        <jar destfile="${dist.dir}/dss-plugin-libsvm-format.jar" basedir="${build.dir}" />
+    </target>
+</project>
