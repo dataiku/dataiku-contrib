@@ -20,26 +20,26 @@
     
     "params": [
         {
-            "name": "max_features",
-            "label" : "Maximum features to extract",
-            "type": "INT",
-            "description": "Default value: 2000 (only for multicolumn output)"
-        },
-        {
             "name": "output_type",
             "label" : "Features output",
             "type": "SELECT",
             "description": "Default value: multicolumn",
             "selectChoices": [
                 {
-                    "value": "multicolumn",
+                    "value": "multi_column",
                     "label": "Multi-column"
                 },
                 {
-                    "value": "singlecolumn",
+                    "value": "single_column_json",
                     "label": "Single-column (JSON)"
                 },
             ]
+        },
+        {
+            "name": "max_features",
+            "label" : "Maximum features to extract",
+            "type": "INT",
+            "description": "Default value: 2000 (for multicolumn output)"
         }
     ]
 }

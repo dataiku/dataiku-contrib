@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.dataiku.dip.coremodel.Schema;
 import com.dataiku.dip.coremodel.SchemaColumn;
@@ -23,21 +25,44 @@ import com.dataiku.dip.warnings.WarningsContext;
 import com.dataiku.dip.plugin.InputStreamWithFilename;
 import com.dataiku.dip.logging.LimitedLogContext;
 import com.dataiku.dip.logging.LimitedLogFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 
 public class LIBSVMFormat implements CustomFormat {
+    public static final Pattern TOKEN_PATTERN = Pattern.compile("^(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
+    public static final Pattern LABEL_PATTERN = Pattern.compile("^([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
+
+    private enum ExtractionMode {
+        MULTI_COLUMN,
+        SINGLE_COLUMN_JSON,
+        SINGLE_COLUMN_ARRAY;
+
+        public static ExtractionMode forName(String rep) {
+            if (StringUtils.isBlank(rep)) {
+                return ExtractionMode.MULTI_COLUMN;
+            } else {
+                for (ExtractionMode mode : values()) {
+                    if (mode.name().equalsIgnoreCase(rep)) {
+                        return mode;
+                    }
+                }
+            }
+            throw new IllegalArgumentException("Unsupported extraction mode: " + rep);
+        }
+    }
+    
     private int maxFeatures;
-    private String outputType;
+    private ExtractionMode outputType;
     
     /**
      * Create a new instance of the format
      */
     public LIBSVMFormat() {
         maxFeatures = 2000;
-        outputType = "multicolumn";
+        outputType = ExtractionMode.MULTI_COLUMN;
     }
     
     /**
@@ -52,7 +77,7 @@ public class LIBSVMFormat implements CustomFormat {
             
             tmpElt = config.get("output_type");
             if (tmpElt != null && tmpElt.isJsonPrimitive())
-                outputType = tmpElt.getAsString();
+                outputType = ExtractionMode.forName(tmpElt.getAsString());
         }
         
         return new LIBSVMFormatInput();
@@ -63,7 +88,7 @@ public class LIBSVMFormat implements CustomFormat {
      */
     @Override
     public CustomFormatOutput getWriter(JsonObject config, JsonObject pluginConfig) {
-        return new LIBSVMFormatOutput();
+        throw new UnsupportedOperationException("No output for this format.");
     }
     
     /**
@@ -71,7 +96,7 @@ public class LIBSVMFormat implements CustomFormat {
      */
     @Override
     public CustomFormatSchemaDetector getDetector(JsonObject config, JsonObject pluginConfig) {
-        return new LIBSVMFormatDetector();
+        throw new UnsupportedOperationException("No detector for this format.");
     }
 
     public class LIBSVMFormatInput implements CustomFormatInput {
@@ -88,40 +113,56 @@ public class LIBSVMFormat implements CustomFormat {
         
         private void parseIntoMultiColumn(ProcessorOutput out, ColumnFactory cf, RowFactory rf,
                                           BufferedReader bf, LimitedLogContext limitedLogger) throws Exception {
-            HashMap<Integer, Column> columns = new HashMap<>();
+            HashMap<String, Column> columns = new HashMap<>();
             Column labelColumn = cf.column("Label");
 
+            Matcher labelMatcher = LABEL_PATTERN.matcher("");
+            Matcher tokenMatcher = TOKEN_PATTERN.matcher("");
+
             String line;
+            int lineNumber = 0;
+
             while ((line = bf.readLine()) != null) {
-                String[] tokens = line.trim().split("\\s+");
+                lineNumber++;
+                labelMatcher.reset(line);
+                tokenMatcher.reset(line);
 
+                // If no label is found the line is considered as invalid and skipped
+                if (!labelMatcher.find()) {
+                    limitedLogger.logV("Line %d is invalid (no label detected): %s", lineNumber, line);
+                    continue;
+                }
                 Row row = rf.row();
-                
-                // First token is always the label
-                row.put(labelColumn, tokens[0]);
 
-                for (int i = 1; i < tokens.length; i++) {
-                    String[] pair = tokens[i].split(":");
-                    if (pair.length != 2) {
-                        limitedLogger.logV("Invalid token, skipping: %s %n", tokens[i]);
-                        continue;
-                    }
+                String label = labelMatcher.group(1);
+                row.put(labelColumn, label);
 
-                    int index = Integer.parseInt(pair[0]);
-                    double value = Double.parseDouble(pair[1]);
+                int start = labelMatcher.end();
+                tokenMatcher.region(start, line.length());
+
+                while (tokenMatcher.find()) {
+                    String index = tokenMatcher.group(1);
+                    String value = tokenMatcher.group(2);
 
                     Column column = columns.get(index);
                     // Creating the newly found column if possible
                     if (column == null) {
-                        if (columns.size() > maxFeatures)
-                            continue;
+                        if (columns.size() > maxFeatures) continue;
 
-                        column = cf.column(pair[0]);
+                        column = cf.column(index);
                         columns.put(index, column);
                     }
 
+                    start = tokenMatcher.end();
+                    tokenMatcher.region(start, line.length());
+
                     row.put(column, value);
                 }
+
+                if (!tokenMatcher.hitEnd()) {
+                    limitedLogger.logV("Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
+                }
+
                 out.emitRow(row);
             }
             out.lastRowEmitted();
@@ -132,36 +173,60 @@ public class LIBSVMFormat implements CustomFormat {
             Column labelColumn = cf.column("Label");
             Column featuresColumn = cf.column("Features");
 
-            String line;
-            while ((line = bf.readLine()) != null) {
-                String[] tokens = line.trim().split("\\s+");
+            StringBuilder features = new StringBuilder();
+            Matcher labelMatcher = LABEL_PATTERN.matcher("");
+            Matcher tokenMatcher = TOKEN_PATTERN.matcher("");
 
+            String line;
+            int lineNumber = 0;
+
+            while ((line = bf.readLine()) != null) {
+                lineNumber++;
+                labelMatcher.reset(line);
+                tokenMatcher.reset(line);
+
+                // If no label is found the line is considered as invalid and skipped
+                if (!labelMatcher.find()) {
+                    limitedLogger.logV("Line %d is invalid (no label detected): %s", lineNumber, line);
+                    continue;
+                }
                 Row row = rf.row();
-                row.put(labelColumn, tokens[0]);
-                
+
+                String label = labelMatcher.group(1);
+                row.put(labelColumn, label);
+
+                int start = labelMatcher.end();
+                tokenMatcher.region(start, line.length());
+
                 // Creating the JSON using StringBuilder as it's a simple object
-                StringBuilder features = new StringBuilder();
                 features.append("{");
 
-                for (int i = 1; i < tokens.length; i++) {
-                    String[] pair = tokens[i].split(":");
-                    if (pair.length != 2) {
-                        limitedLogger.logV("Invalid token, skipping: %s %n", tokens[i]);
-                        continue;
-                    }
+                while (tokenMatcher.find()) {
+                    String index = tokenMatcher.group(1);
+                    String value = tokenMatcher.group(2);
 
-                    int index = Integer.parseInt(pair[0]);
-                    double value = Double.parseDouble(pair[1]);
-                    
-                    // Adding a comma only if we're sure that another token has already been appended
-                    String comma = (features.length() > 3) ? "," : "";
-                    features.append(String.format(Locale.ROOT, "%s\"%d\":%f", comma, index, value));
+                    if (features.length() > 3)
+                        features.append(',');
+
+                    features.append('"')
+                            .append(index)
+                            .append("\":")
+                            .append(value);
+
+                    start = tokenMatcher.end();
+                    tokenMatcher.region(start, line.length());
                 }
-                
+
+                if (!tokenMatcher.hitEnd()) {
+                    limitedLogger.logV("Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
+                }
+
                 features.append("}");
 
                 row.put(featuresColumn, features.toString());
                 out.emitRow(row);
+
+                features.setLength(0);
             }
             out.lastRowEmitted();
         }
@@ -176,56 +241,15 @@ public class LIBSVMFormat implements CustomFormat {
                 LimitedLogContext limitedLogger = LimitedLogFactory.get(Logger.getLogger("dku.plugins"), "plugins.LIBSVMFormat", Level.WARN)) {
                      
                 switch (outputType) {
-                    case "singlecolumn":
+                    case SINGLE_COLUMN_JSON:
                         parseIntoSingleJSONColumn(out, cf, rf, bf, limitedLogger);
                         break;
-                    case "multicolumn":
+                    case MULTI_COLUMN:
                     default:
                         parseIntoMultiColumn(out, cf, rf, bf, limitedLogger);
                         break;
                 }
             }
-        }
-
-        @Override
-        public void close() throws IOException {
-        }
-    }
-
-    public static class LIBSVMFormatOutput implements CustomFormatOutput {
-        @Override
-        public void close() throws IOException {
-        }
-
-        @Override
-        public void header(ColumnFactory cf, OutputStream os) throws Exception {
-        }
-
-        @Override
-        public void format(Row row, ColumnFactory cf, OutputStream os) throws Exception {
-        }
-
-        @Override
-        public void footer(ColumnFactory cf, OutputStream os) throws Exception {
-        }
-
-        @Override
-        public void cancel(OutputStream os) throws Exception {
-        }
-
-        @Override
-        public void setOutputSchema(Schema schema) {
-        }
-
-        @Override
-        public void setWarningsContext(WarningsContext warningsContext) {
-        }
-    }
-
-    public static class LIBSVMFormatDetector implements CustomFormatSchemaDetector {
-        @Override
-        public Schema readSchema(InputStreamWithFilename in) throws Exception {
-            return null;
         }
 
         @Override
