@@ -38,6 +38,8 @@ public class LIBSVMFormat implements CustomFormat {
     // You can notice that strtod` is used to parse the label and value, while `strtol` is used for the index
     public static final Pattern TOKEN_PATTERN = Pattern.compile("^(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     public static final Pattern LABEL_PATTERN = Pattern.compile("^([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
+    private static final Logger logger = Logger.getLogger(LIBSVMFormat.class);
+    private int logCount;
 
     private enum ExtractionMode {
         MULTI_COLUMN,
@@ -60,11 +62,13 @@ public class LIBSVMFormat implements CustomFormat {
     
     private int maxFeatures;
     private ExtractionMode outputType;
+    private WarningsContext warnContext;
     
     /**
      * Create a new instance of the format
      */
     public LIBSVMFormat() {
+        logCount = 0;
         maxFeatures = 2000;
         outputType = ExtractionMode.MULTI_COLUMN;
     }
@@ -112,11 +116,19 @@ public class LIBSVMFormat implements CustomFormat {
         }
 
         @Override
-        public void setWarningsContext(WarningsContext warnContext) {
+        public void setWarningsContext(WarningsContext wc) {
+            warnContext = wc;
+        }
+
+        private void addWarning(WarningsContext.WarningType type, String message, Object... format) {
+            if (logCount < 100) {
+                warnContext.addWarning(type, String.format(message, format), logger);
+                logCount++;
+            }
         }
         
         private void parseIntoMultiColumn(ProcessorOutput out, ColumnFactory cf, RowFactory rf,
-                                          BufferedReader bf, LimitedLogContext limitedLogger) throws Exception {
+                                          BufferedReader bf) throws Exception {
             HashMap<String, Column> columns = new HashMap<>();
             Column labelColumn = cf.column("Label");
 
@@ -133,7 +145,8 @@ public class LIBSVMFormat implements CustomFormat {
 
                 // If no label is found the line is considered as invalid and skipped
                 if (!labelMatcher.find()) {
-                    limitedLogger.logV("Line %d is invalid (no label detected): %s", lineNumber, line);
+                    addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
+                            "Line %d is invalid (no label detected): %s", lineNumber, line);
                     continue;
                 }
                 Row row = rf.row();
@@ -164,7 +177,8 @@ public class LIBSVMFormat implements CustomFormat {
                 }
 
                 if (!tokenMatcher.hitEnd()) {
-                    limitedLogger.logV("Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
+                    addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
+                            "Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
                 }
 
                 out.emitRow(row);
@@ -173,7 +187,7 @@ public class LIBSVMFormat implements CustomFormat {
         }
 
         private void parseIntoSingleJSONColumn(ProcessorOutput out, ColumnFactory cf, RowFactory rf,
-                                               BufferedReader bf, LimitedLogContext limitedLogger) throws Exception {
+                                               BufferedReader bf) throws Exception {
             Column labelColumn = cf.column("Label");
             Column featuresColumn = cf.column("Features");
 
@@ -191,7 +205,8 @@ public class LIBSVMFormat implements CustomFormat {
 
                 // If no label is found the line is considered as invalid and skipped
                 if (!labelMatcher.find()) {
-                    limitedLogger.logV("Line %d is invalid (no label detected): %s", lineNumber, line);
+                    addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
+                            "Line %d is invalid (no label detected): %s", lineNumber, line);
                     continue;
                 }
                 Row row = rf.row();
@@ -222,8 +237,8 @@ public class LIBSVMFormat implements CustomFormat {
                 }
 
                 if (!tokenMatcher.hitEnd()) {
-                    limitedLogger.logV("Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
-                }
+                    addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
+                            "Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));                }
 
                 features.append("}");
 
@@ -241,16 +256,15 @@ public class LIBSVMFormat implements CustomFormat {
          */
         @Override
         public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
-            try (BufferedReader bf = new BufferedReader(new InputStreamReader(in.getInputStream())); 
-                LimitedLogContext limitedLogger = LimitedLogFactory.get(Logger.getLogger("dku.plugins"), "plugins.LIBSVMFormat", Level.WARN)) {
+            try (BufferedReader bf = new BufferedReader(new InputStreamReader(in.getInputStream()))) {
                      
                 switch (outputType) {
                     case SINGLE_COLUMN_JSON:
-                        parseIntoSingleJSONColumn(out, cf, rf, bf, limitedLogger);
+                        parseIntoSingleJSONColumn(out, cf, rf, bf);
                         break;
                     case MULTI_COLUMN:
                     default:
-                        parseIntoMultiColumn(out, cf, rf, bf, limitedLogger);
+                        parseIntoMultiColumn(out, cf, rf, bf);
                         break;
                 }
             }
