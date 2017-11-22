@@ -164,7 +164,9 @@ public class LIBSVMFormat implements CustomFormat {
                     Column column = columns.get(index);
                     // Creating the newly found column if possible
                     if (column == null) {
-                        if (columns.size() > maxFeatures) continue;
+                        if (columns.size() > maxFeatures) {
+                            continue;
+                        }
 
                         column = cf.column(index);
                         columns.put(index, column);
@@ -238,7 +240,8 @@ public class LIBSVMFormat implements CustomFormat {
 
                 if (!tokenMatcher.hitEnd()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
-                            "Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));                }
+                            "Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
+                }
 
                 features.append("}");
 
@@ -257,7 +260,6 @@ public class LIBSVMFormat implements CustomFormat {
         @Override
         public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
             try (BufferedReader bf = new BufferedReader(new InputStreamReader(in.getInputStream()))) {
-                     
                 switch (outputType) {
                     case SINGLE_COLUMN_JSON:
                         parseIntoSingleJSONColumn(out, cf, rf, bf);
