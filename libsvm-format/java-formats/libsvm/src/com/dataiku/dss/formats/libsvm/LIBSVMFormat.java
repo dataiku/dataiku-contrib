@@ -39,7 +39,6 @@ public class LIBSVMFormat implements CustomFormat {
     public static final Pattern TOKEN_PATTERN = Pattern.compile("^(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     public static final Pattern LABEL_PATTERN = Pattern.compile("^([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     private static final Logger logger = Logger.getLogger(LIBSVMFormat.class);
-    private int logCount;
 
     private enum ExtractionMode {
         MULTI_COLUMN,
@@ -68,7 +67,6 @@ public class LIBSVMFormat implements CustomFormat {
      * Create a new instance of the format
      */
     public LIBSVMFormat() {
-        logCount = 0;
         maxFeatures = 2000;
         outputType = ExtractionMode.MULTI_COLUMN;
     }
@@ -121,10 +119,7 @@ public class LIBSVMFormat implements CustomFormat {
         }
 
         private void addWarning(WarningsContext.WarningType type, String message, Object... format) {
-            if (logCount < 100) {
-                warnContext.addWarning(type, String.format(message, format), logger);
-                logCount++;
-            }
+            warnContext.addWarning(type, String.format(message, format), logger);
         }
         
         private void parseIntoMultiColumn(ProcessorOutput out, ColumnFactory cf, RowFactory rf,
