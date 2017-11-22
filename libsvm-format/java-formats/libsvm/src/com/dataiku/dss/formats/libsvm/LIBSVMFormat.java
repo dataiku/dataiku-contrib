@@ -32,6 +32,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 
 public class LIBSVMFormat implements CustomFormat {
+    // According to: https://github.com/cjlin1/libsvm/blob/master/README
+    // <label> can be any real number, <index> is an integer and <value> is a real number
+    // Also while digging in: https://github.com/cjlin1/libsvm/blob/master/svm-train.c
+    // You can notice that strtod` is used to parse the label and value, while `strtol` is used for the index
     public static final Pattern TOKEN_PATTERN = Pattern.compile("^(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     public static final Pattern LABEL_PATTERN = Pattern.compile("^([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
 
