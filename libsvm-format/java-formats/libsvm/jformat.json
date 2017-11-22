@@ -35,11 +35,12 @@
                 },
             ]
         },
-        {
+                {
             "name": "max_features",
             "label" : "Maximum features to extract",
             "type": "INT",
-            "description": "Default value: 2000 (for multicolumn output)"
+            "description": "Default value: 2000 (for multicolumn output)",
+            "visibilityCondition" : "model.output_type == 'multi_column'"
         }
     ]
 }
