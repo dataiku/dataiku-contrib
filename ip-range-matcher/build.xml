@@ -1,0 +1,26 @@
+<project name="ip-range-matcher" default="jar">
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="lib" />
+	<property name="src.dir" value="src" />
+	<property environment="env"/>
+
+	<target name="clean">
+		<delete dir="dist" />
+		<delete dir="build" />
+	</target>
+
+	<target name="jar">
+		<path id="lib.path.id">
+			<fileset dir="${env.DKUINSTALLDIR}/lib/ivy/backend-run" />
+			<fileset dir="${env.DKUINSTALLDIR}/lib/ivy/common-run" />
+			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-core.jar" />
+			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dctc.jar" />
+			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dip.jar" />
+		</path>
+		<mkdir dir="${build.dir}" />
+		<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.path.id" encoding="utf-8" includeantruntime="false">
+			<compilerarg value="-Xlint:all" />
+        </javac>
+        <jar destfile="${dist.dir}/dss-plugin-ip-range-matcher.jar" basedir="${build.dir}" />
+    </target>
+</project>
