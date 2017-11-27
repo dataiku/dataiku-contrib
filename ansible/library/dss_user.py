@@ -153,8 +153,9 @@ def run_module():
         if args.display_name is None and create_user:
             #module.fail_json(msg="The 'display_name' parameter is missing but is mandatory to create new user '{}'.".format(args.login))
             # TODO: shall we fail here or use a default to login ?
-            args.display_name = args.login
-            module.params["display_name"] = args.login
+            args.display_name = module.params["display_name"] = args.login
+        if args.groups is None and create_user:
+            args.groups = module.params["groups"] = ["readers"]
 
         # Build the new user definition
         # TODO: be careful that the key names changes between creation and edition
@@ -166,8 +167,7 @@ def run_module():
             new_user_def["password"] = args.password
 
         # Sort groups list before comparison as they should be considered sets
-        new_user_def.get("groups",['readers'] if create_user else []).sort()
-        new_user_def["groups"] = ["readers"]
+        new_user_def.get("groups",[]).sort()
         if user_exists:
             current_user.get("groups",[]).sort()
 
@@ -194,6 +194,7 @@ def run_module():
                     user.delete()
                 elif current_user != new_user_def:
                     result["message"] = str(user.set_definition(new_user_def))
+        result["message"] = str(new_user_def["groups"])
 
         module.exit_json(**result)
     except Exception as e:
