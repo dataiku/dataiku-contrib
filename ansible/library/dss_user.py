@@ -16,18 +16,10 @@ description:
     - "This module edits a complete user profile. If the user does not exist and is required to, it is created. If the user exists but is supposed not to, it deleted"
 
 options:
-    host:
+    credentials:
         description:
-            - The host when DSS is installed
-        required: true
-    port:
-        description:
-            - The port on which DSS listens
-        default: 80
-        required: false
-    api_key:
-        description:
-            - The API_KEY to authenticate onto the DSS API
+            - A dictionary containing all the required information to make API calls onto DSS.
+              The required keys are "host", "port" and "api_key"
         required: true
     login:
         description:
@@ -101,14 +93,12 @@ def run_module():
     # define the available arguments/parameters that a user can pass to
     # the module
     module_args = dict(
-        host=dict(type='str', required=False, default="localhost"),
-        port=dict(type='str', required=False, default="80"),
-        api_key=dict(type='str', required=True, no_log=True),
+        credentials=dict(type='dict', required=True, no_log=True),
         login=dict(type='str', required=True),
         password=dict(type='str', required=False, default=None, no_log=True),
         set_password_at_creation_only=dict(type='bool', required=False, default=True),
         email=dict(type='str', required=False, default=None),
-        display_name=dict(type='str', required=False, default=None),
+        display_name=dict(type='str', required=False, default="{{yaye}}"),
         groups=dict(type='list', required=False, default=None),
         profile=dict(type='str', required=False, default=None),
         state=dict(type='str', required=False, default="present"),
@@ -126,7 +116,7 @@ def run_module():
     result = dict(
         changed=False,
         original_message=args.login,
-        message='UNCHANGED'
+        message='UNCHANGED',
     )
 
     client = DSSClient("http://{}:{}".format(args.host, args.port),api_key=args.api_key)
@@ -194,7 +184,6 @@ def run_module():
                     user.delete()
                 elif current_user != new_user_def:
                     result["message"] = str(user.set_definition(new_user_def))
-        result["message"] = str(new_user_def["groups"])
 
         module.exit_json(**result)
     except Exception as e:
