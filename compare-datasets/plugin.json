@@ -1,7 +1,7 @@
 {
     "id" : "compare-datasets",
 
-    "version" : "0.0.1",
+    "version" : "0.0.2",
 
     "meta" : {
         "label" : "Compare two datasets",
