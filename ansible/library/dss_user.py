@@ -16,11 +16,24 @@ description:
     - "This module edits a complete user profile. If the user does not exist and is required to, it is created. If the user exists but is supposed not to, it deleted"
 
 options:
-    credentials:
+    connect_to:
         description:
-            - A dictionary containing all the required information to make API calls onto DSS.
-              The required keys are "host", "port" and "api_key"
+            - A dictionary containing "port" and "api_key". This parameter is a short hand to be used with dss_get_credentials
         required: true
+    host:
+        description:
+            - The host on which to make the requests.
+        required: false
+        default: localhost
+    port:
+        description:
+            - The port on which to make the requests.
+        required: false
+        default: 80
+    api_key:
+        description:
+            - The API Key to authenticate on the API. Mandatory if connect_to is not used
+        required: false
     login:
         description:
             - The login name of the user
@@ -93,7 +106,10 @@ def run_module():
     # define the available arguments/parameters that a user can pass to
     # the module
     module_args = dict(
-        credentials=dict(type='dict', required=True, no_log=True),
+        connect_to=dict(type='dict', required=False, default={}, no_log=True),
+        host=dict(type='str', required=False, default="127.0.0.1"),
+        port=dict(type='str', required=False, default=None),
+        api_key=dict(type='str', required=False, default=None),
         login=dict(type='str', required=True),
         password=dict(type='str', required=False, default=None, no_log=True),
         set_password_at_creation_only=dict(type='bool', required=False, default=True),
@@ -112,6 +128,11 @@ def run_module():
     args = MakeNamespace(module.params)
     if args.state not in ["present","absent"]:
         module.fail_json(msg="Invalid value '{}' for argument state : must be either 'present' or 'absent'".format(args.state))
+    api_key = args.api_key if args.api_key is not None else args.connect_to.get("api_key",None)
+    if api_key is None:
+        module.fail_json(msg="Missing an API Key, either from 'api_key' or 'connect_to' parameters".format(args.state))
+    port = args.port if args.port is not None else args.connect_to.get("port","80")
+    host = args.host
 
     result = dict(
         changed=False,
@@ -119,7 +140,7 @@ def run_module():
         message='UNCHANGED',
     )
 
-    client = DSSClient("http://{}:{}".format(args.host, args.port),api_key=args.api_key)
+    client = DSSClient("http://{}:{}".format(args.host, port),api_key=api_key)
     user = DSSUser(client, args.login)
     try:
         user_exists = True

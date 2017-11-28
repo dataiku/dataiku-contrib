@@ -13,7 +13,7 @@ module: dss_user
 short_description: Creates, edit or delete a Data Science Studio user 
 
 description:
-    - "This module edits a complete user profile. If the user does not exist and is required to, it is created. If the user exists but is supposed not to, it deleted"
+    - This module reads a datadir and returns the port on which the studio is exposed as well as an admin API Key.
 
 options:
     datadir:
@@ -22,7 +22,7 @@ options:
         required: true
     api_key_name:
         description:
-            - The name of the api key to look for.
+            - The name of the api key to look for. No effect for now.
         required: false
         default: "dss-ansible-admin"
 
@@ -34,20 +34,23 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-original_message:
-    description: The original login name
+port:
+    description: The port on which DSS is exposed
     type: str
-message:
-    description: CREATED, MODIFIED or DELETED 
+api_key:
+    description: An admin valid API Key
     type: str
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from dataikuapi import DSSClient
-from dataikuapi.dss.admin import DSSUser
-from dataikuapi.utils import DataikuException
 import copy
 import traceback
+import os
+import ConfigParser
+import imp
+import logging
+import subprocess
+import json
 
 # Tricj to expose dictionary as python args
 class MakeNamespace(object):
@@ -69,9 +72,48 @@ def run_module():
 
     args = MakeNamespace(module.params)
 
+
+    if not os.path.isdir(args.datadir):
+        module.fail_json(msg="Datadir '{}' not found.".format(args.datadir))
+    
+    current_uid = os.getuid()
+    current_datadir_uid = os.stat(args.datadir).st_uid
+    if current_uid != current_datadir_uid:
+        module.fail_json(msg="The dss_get_credentials MUST be ran as the owner of the datadir (ran as UID={}, datadir owned by UID={})".format(current_uid, current_datadir_uid))
+
+    # Setup the log
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', filename="{}/run/ansible.log".format(args.datadir),filemode="a")
+
+    # Read the port
+    config = ConfigParser.RawConfigParser()
+    config.read("{}/install.ini".format(args.datadir))
+    port =  str(config.getint("server","port")) 
+    logging.info("Reads port {} from install.ini".format(port))
+
+    # Create/Get the api key 
+    api_key = None
+    api_keys_list = json.loads(subprocess.check_output(["{}/bin/dsscli".format(args.datadir),"api-keys-list","--output","json"]))
+    for key in api_keys_list:
+        if key["label"] == args.api_key_name:
+            api_key = key["key"]
+            logging.info("Found existing API Key labeled \"{}\".".format(args.api_key_name))
+            break
+    if api_key is None:
+        api_keys_list = json.loads(subprocess.check_output([
+            "{}/bin/dsscli".format(args.datadir),
+            "api-key-create",
+            "--output","json",
+            "--admin","true",
+            "--label", args.api_key_name,
+            ]))
+        api_key = api_keys_list[0]["key"]
+        logging.info("Created new API Key labeled \"{}\".".format(args.api_key_name))
+    
+    # Build result
     result = dict(
         changed=False,
-        dss_credentilas={},
+        port=port,
+        api_key=api_key,
     )
 
     try:
