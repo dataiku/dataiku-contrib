@@ -1,0 +1,66 @@
+// This file is the descriptor for the Custom code recipe compute-difference
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Computes the difference of two datasets",
+        "description" : "This recipe compares selected columns in two datasets by joining common columns"
+    },
+
+    "kind" : "PYTHON",
+    
+    "selectableFromDataset" : "first_dataset",
+
+    "inputRoles" : [
+        {
+            "name": "first_dataset",
+            "label": "First dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "second_dataset",
+            "label": "Second dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "difference",
+            "label": "Output dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "key_columns",
+            "label": "Key columns",
+            "description": "Common columns between the two datasets (for example, customerId)",
+            "type" : "COLUMNS",
+            "mandatory": true,
+            "columnRole" : "first_dataset"
+        },
+        {
+            "name": "value_columns",
+            "label": "Value columns",
+            "description": "Columns to compare between the two datasets (for example, proba_churn)",
+            "type" : "COLUMNS",
+            "mandatory": true,
+            "columnRole" : "first_dataset"
+        },
+        {
+            "name": "tolerance",
+            "label": "Tolerance for value columns",
+            "type": "DOUBLE",
+            "mandatory": true,
+            "defaultValue": 1e-05
+        }
+      ]
+
+}
