@@ -58,7 +58,8 @@ public class IPRangeMatcher extends SingleRowProcessor implements Processor {
     }
 
     private final Parameter parameter;
-    private Column ipColumn, flagColumn;
+    private Column ipColumn;
+    private Column flagColumn;
     private ArrayList<Range> rangeList;
 
 
@@ -253,8 +254,9 @@ public class IPRangeMatcher extends SingleRowProcessor implements Processor {
                 row.put(flagColumn, matches);
                 break;
             case CREATE_FLAG_MATCH:
-                if (matches)
+                if (matches) {
                     row.put(flagColumn, matchingRange);
+                }
                 break;
             case KEEP_ROWS:
                 if (!matches) {
