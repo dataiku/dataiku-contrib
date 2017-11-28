@@ -32,10 +32,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 
 public class LIBSVMFormat implements CustomFormat {
-    // According to: https://github.com/cjlin1/libsvm/blob/master/README
-    // <label> can be any real number, <index> is an integer and <value> is a real number
-    // Also while digging in: https://github.com/cjlin1/libsvm/blob/master/svm-train.c
-    // You can notice that strtod` is used to parse the label and value, while `strtol` is used for the index
+    /**
+     * According to: https://github.com/cjlin1/libsvm/blob/master/README
+     * <label> can be any real number, <index> is an integer and <value> is a real number
+     * Also while digging in: https://github.com/cjlin1/libsvm/blob/master/svm-train.c
+     * You can notice that `strtod` is used to parse the label and value, while `strtol` is used for the index
+     */
     public static final Pattern TOKEN_PATTERN = Pattern.compile("^(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     public static final Pattern LABEL_PATTERN = Pattern.compile("^([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     private static final Logger logger = Logger.getLogger(LIBSVMFormat.class);
@@ -78,12 +80,14 @@ public class LIBSVMFormat implements CustomFormat {
     public CustomFormatInput getReader(JsonObject config, JsonObject pluginConfig) {
         if (config != null) {
             JsonElement tmpElt = config.get("max_features");
-            if (tmpElt != null && tmpElt.isJsonPrimitive())
+            if (tmpElt != null && tmpElt.isJsonPrimitive() && tmpElt.getAsInt() > 0) {
                 maxFeatures = tmpElt.getAsInt();
-            
+            }
+
             tmpElt = config.get("output_type");
-            if (tmpElt != null && tmpElt.isJsonPrimitive())
+            if (tmpElt != null && tmpElt.isJsonPrimitive()) {
                 outputType = ExtractionMode.forName(tmpElt.getAsString());
+            }
         }
         
         return new LIBSVMFormatInput();
@@ -141,7 +145,7 @@ public class LIBSVMFormat implements CustomFormat {
                 // If no label is found the line is considered as invalid and skipped
                 if (!labelMatcher.find()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
-                            "Line %d is invalid (no label detected): %s", lineNumber, line);
+                            "No label detected at line %d; skipping it: '%s'", lineNumber, line);
                     continue;
                 }
                 Row row = rf.row();
@@ -156,6 +160,9 @@ public class LIBSVMFormat implements CustomFormat {
                     String index = tokenMatcher.group(1);
                     String value = tokenMatcher.group(2);
 
+                    start = tokenMatcher.end();
+                    tokenMatcher.region(start, line.length());
+
                     Column column = columns.get(index);
                     // Creating the newly found column if possible
                     if (column == null) {
@@ -167,15 +174,12 @@ public class LIBSVMFormat implements CustomFormat {
                         columns.put(index, column);
                     }
 
-                    start = tokenMatcher.end();
-                    tokenMatcher.region(start, line.length());
-
                     row.put(column, value);
                 }
 
                 if (!tokenMatcher.hitEnd()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
-                            "Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
+                            "Invalid token at line %d, column %d; ignoring the rest of that line: '%s'", lineNumber, start, line.substring(start));
                 }
 
                 out.emitRow(row);
@@ -203,7 +207,7 @@ public class LIBSVMFormat implements CustomFormat {
                 // If no label is found the line is considered as invalid and skipped
                 if (!labelMatcher.find()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
-                            "Line %d is invalid (no label detected): %s", lineNumber, line);
+                            "No label detected at line %d; skipping it: '%s'", lineNumber, line);
                     continue;
                 }
                 Row row = rf.row();
@@ -221,21 +225,22 @@ public class LIBSVMFormat implements CustomFormat {
                     String index = tokenMatcher.group(1);
                     String value = tokenMatcher.group(2);
 
-                    if (features.length() > 3)
+                    start = tokenMatcher.end();
+                    tokenMatcher.region(start, line.length());
+
+                    if (features.length() > 3) {
                         features.append(',');
+                    }
 
                     features.append('"')
                             .append(index)
                             .append("\":")
                             .append(value);
-
-                    start = tokenMatcher.end();
-                    tokenMatcher.region(start, line.length());
                 }
 
                 if (!tokenMatcher.hitEnd()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
-                            "Invalid end-of-line at [%d,%d]: %s", lineNumber, start, line.substring(start));
+                            "Invalid token at line %d, column %d; ignoring the rest of that line: '%s'", lineNumber, start, line.substring(start));
                 }
 
                 features.append("}");
