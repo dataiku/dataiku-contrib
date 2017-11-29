@@ -4,8 +4,8 @@
     "version" : "0.0.1",
 
     "meta" : {
-        "label" : "Match IPs against network ranges",
-        "description" : "This plugin provides a preparation processor for checking whether IPs belong to specific network ranges.",
+        "label" : "Match IP addresses against network ranges",
+        "description" : "This plugin provides a preparation processor for checking whether IP addresses belong to specific network ranges.",
         "author" : "Dataiku (Thomas Labadie)",
         "icon" : "icon-tags",
         "licenseInfo" : "Apache Software License",
@@ -17,7 +17,7 @@
         "id":"iprange",
         "meta":{
           "label":"Matches IP addresses to network ranges",
-          "description":"This processor checks whether IPs belong to given network ranges",
+          "description":"This processor checks whether IP addresses belong to given network ranges",
           "icon":"icon-tags"
         }
       }
