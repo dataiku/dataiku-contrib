@@ -73,50 +73,54 @@ def run_module():
     args = MakeNamespace(module.params)
 
 
-    if not os.path.isdir(args.datadir):
-        module.fail_json(msg="Datadir '{}' not found.".format(args.datadir))
-    
-    current_uid = os.getuid()
-    current_datadir_uid = os.stat(args.datadir).st_uid
-    if current_uid != current_datadir_uid:
-        module.fail_json(msg="The dss_get_credentials MUST be ran as the owner of the datadir (ran as UID={}, datadir owned by UID={})".format(current_uid, current_datadir_uid))
-
-    # Setup the log
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', filename="{}/run/ansible.log".format(args.datadir),filemode="a")
-
-    # Read the port
-    config = ConfigParser.RawConfigParser()
-    config.read("{}/install.ini".format(args.datadir))
-    port =  str(config.getint("server","port")) 
-    logging.info("Reads port {} from install.ini".format(port))
-
-    # Create/Get the api key 
-    api_key = None
-    api_keys_list = json.loads(subprocess.check_output(["{}/bin/dsscli".format(args.datadir),"api-keys-list","--output","json"]))
-    for key in api_keys_list:
-        if key["label"] == args.api_key_name:
-            api_key = key["key"]
-            logging.info("Found existing API Key labeled \"{}\".".format(args.api_key_name))
-            break
-    if api_key is None:
-        api_keys_list = json.loads(subprocess.check_output([
-            "{}/bin/dsscli".format(args.datadir),
-            "api-key-create",
-            "--output","json",
-            "--admin","true",
-            "--label", args.api_key_name,
-            ]))
-        api_key = api_keys_list[0]["key"]
-        logging.info("Created new API Key labeled \"{}\".".format(args.api_key_name))
-    
-    # Build result
-    result = dict(
-        changed=False,
-        port=port,
-        api_key=api_key,
-    )
-
     try:
+        if not os.path.isdir(args.datadir):
+            module.fail_json(msg="Datadir '{}' not found.".format(args.datadir))
+        
+        current_uid = os.getuid()
+        current_datadir_uid = os.stat(args.datadir).st_uid
+        if current_uid != current_datadir_uid:
+            module.fail_json(msg="The dss_get_credentials MUST be ran as the owner of the datadir (ran as UID={}, datadir owned by UID={})".format(current_uid, current_datadir_uid))
+
+        # Setup the log
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', filename="{}/run/ansible.log".format(args.datadir),filemode="a")
+
+        # Read the port
+        config = ConfigParser.RawConfigParser()
+        config.read("{}/install.ini".format(args.datadir))
+        port =  str(config.getint("server","port")) 
+        logging.info("Reads port {} from install.ini".format(port))
+
+        # Create/Get the api key 
+        changed = False
+        api_key = None
+        api_keys_list = json.loads(subprocess.check_output(["{}/bin/dsscli".format(args.datadir),"api-keys-list","--output","json"]))
+        for key in api_keys_list:
+            if key["label"] == args.api_key_name:
+                api_key = key["key"]
+                if not module.check_mode:
+                    logging.info("Found existing API Key labeled \"{}\".".format(args.api_key_name))
+                break
+        if api_key is None:
+            if not module.check_mode:
+                api_keys_list = json.loads(subprocess.check_output([
+                    "{}/bin/dsscli".format(args.datadir),
+                    "api-key-create",
+                    "--output","json",
+                    "--admin","true",
+                    "--label", args.api_key_name,
+                    ]))
+                api_key = api_keys_list[0]["key"]
+                logging.info("Created new API Key labeled \"{}\".".format(args.api_key_name))
+            changed = True
+        
+        # Build result
+        result = dict(
+            changed=changed,
+            port=port,
+            api_key=api_key,
+        )
+
         module.exit_json(**result)
     except Exception as e:
         module.fail_json(msg=str(e))

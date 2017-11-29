@@ -97,7 +97,7 @@ from dataikuapi.utils import DataikuException
 import copy
 import traceback
 
-# Tricj to expose dictionary as python args
+# Trick to expose dictionary as python args
 class MakeNamespace(object):
     def __init__(self,values):
         self.__dict__.update(values)
