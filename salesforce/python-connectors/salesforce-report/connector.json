@@ -1,7 +1,7 @@
 {
     "meta" : {
         "label" : "Salesforce - Report",
-        "description" : "A connector to get the records of a Report"
+        "description" : "A connector to get the results of a Report"
     },
 
     "readable" : true,

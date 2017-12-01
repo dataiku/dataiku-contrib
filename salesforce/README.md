@@ -6,11 +6,12 @@ This plugin provides a read connector to interact with [Salesforce](https://www.
 
 It connects to Salesforce via the [Force.com REST API](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm).
 
-This plugin offers three way to retrieve data:
+This plugin offers four way to retrieve data:
 
 * records/items of an Object
-* resuluts of a List View
+* results of a List View
 * results of a [SOQL query](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql.htm) you define
+* results of a Report
 
 ## How to set-up
 
@@ -71,16 +72,24 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 
 ![Preview](https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/salesforce/images/listviewurl.png)
 
+**Salesforce - Report (BETA)**
+
+Get the results of a Report.
+
+According to [the documentation](https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/sforce_analytics_rest_api_getreportrundata.htm), the report is run immediately and returns the latest summary data for your level of access.
+
+Two restrictions: the report must be in TABULAR format and must be available with a synchronous API call.
+
 ## Changelog
 
 **Version 1.0.0 (2017-06-12)**
 
 * Enhanced: the SOQL query field is now multi-line
-* More consistency in the namming of the python-connectors
+* More consistency in the naming of the python-connectors
 
 **Version 0.1.1 "beta 2" (2017-04-18)**
 
-* Fixed: Schema of the ouput of datasets
+* Fixed: Schema of the output of datasets
 * Enhanced: DSS shows an error when not able to refresh the JSON token (recipe)
 
 **Version 0.1.0 "beta 1" (2017-04-03)**
@@ -105,6 +114,7 @@ Example: `https://eu11.lightning.force.com/one/one.app#/sObject/Opportunity/list
 * Debugging! Please submit feedbacks.
 * Support of another OAuth Authentication Flow (with a refresh token)
 * Write connector?
+* Report: support of other formats (summary and matrix reports) and asynchronous calls
 
 ## Alternative configuration
 
