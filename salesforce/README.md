@@ -82,6 +82,11 @@ Two restrictions: the report must be in TABULAR format and must be available wit
 
 ## Changelog
 
+**Version 1.1.0 (2017-12-01)**
+
+* Fixed: the number of rows returned by the plugin is now enforced (that fixes an issue with DSS 4.1.0)
+* New: Report dataset (beta)
+
 **Version 1.0.0 (2017-06-12)**
 
 * Enhanced: the SOQL query field is now multi-line
