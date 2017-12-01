@@ -34,7 +34,7 @@ class MyConnector(Connector):
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
                             partition_id=None, records_limit = -1):
 
-        results = salesforce.make_api_call("/services/data/v35.0/analytics/reports/%s" % self.REPORT, parameters={"includeDetails":True})
+        results = salesforce.make_api_call("/services/data/v39.0/analytics/reports/%s" % self.REPORT, parameters={"includeDetails":True})
 
         #salesforce.log(report)
 
