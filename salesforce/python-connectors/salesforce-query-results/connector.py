@@ -36,18 +36,33 @@ class MyConnector(Connector):
 
         results = salesforce.make_api_call('/services/data/v39.0/queryAll/', {'q': self.QUERY})
 
-        salesforce.log(results)
+        #salesforce.log(results)
+
+        salesforce.log("records_limit: %i" % records_limit)
+        salesforce.log("length initial request: %i" % len(results.get('records')))
+
+        n = 0
 
         for obj in results.get('records'):
-            yield self._format_row_for_dss(obj)
+            n = n + 1
+            if records_limit < 0 or n <= records_limit:
+                #salesforce.log("row %i" % n)
+                yield self._format_row_for_dss(obj)
 
         next = results.get('nextRecordsUrl', None)
+        if records_limit >= 0 and n >= records_limit:
+            next = None
 
         while next:
             results = salesforce.make_api_call(next)
             for obj in results.get('records'):
-                yield self._format_row_for_dss(obj)
+                n = n + 1
+                if records_limit < 0 or n <= records_limit:
+                    #salesforce.log("row %i" % n)
+                    yield self._format_row_for_dss(obj)
             next = results.get('nextRecordsUrl', None)
+            if records_limit >= 0 and n >= records_limit:
+                next = None
 
 
     def _format_row_for_dss(self, row):
