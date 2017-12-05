@@ -194,7 +194,16 @@ if s_found >0:
     dict_pattern_files= sources_collector[3]
 
 
-    geo_header_file_dir = fdef_dir + '/' + geo_header_file       
+    geo_header_file_dir = fdef_dir + '/' + geo_header_file 
+    
+    
+    ##debug
+    print '-------------- GEO HEADER -----------------'
+    print geo_header_file_dir
+    print '=='
+    print fdef_dir
+    print geo_header_file
+    
     geo_header = pd.read_excel(geo_header_file_dir, sheetname=0, header=0)
 
     
@@ -249,6 +258,26 @@ if s_found >0:
             master_segment_file = state_dir_level + '/'  + vint['master_segment_file_pattern']+ vint['vintage_pattern']+state+'.csv'
 
             geo_source_df = pd.read_csv(master_segment_file, sep =',', header = None, names = geo_header.columns)
+            
+            ## debug
+            NNN = geo_source_df.shape
+            
+            print '---------------------------------'
+            print master_segment_file
+            print geo_header_file_dir
+            
+            print '---------------------------------'
+            print geo_header.columns
+            
+            print '---------------------------------'
+            print sumlevel_val
+            
+            print '---------------------------------'
+            print NNN
+            
+            print '---------------------------------'
+            print geo_source_df.head(2)
+            
             geo_level_df = geo_source_df[geo_source_df['SUMLEVEL'].isin(sumlevel_val)].copy()
             geo_level_df['GEOID_DKU'] = geo_level_df['GEOID'].map(lambda x: x.split('US')[1])
 

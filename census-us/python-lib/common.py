@@ -6,7 +6,6 @@ from dataiku.customrecipe import *
 import datetime
 import census_resources
 import json
-#import urllib2
 import requests
 import zipfile
 import os
@@ -96,16 +95,15 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
     ##### collect the fields definitions
     fields_definition_url_file = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['fields_definition']['url']
     fields_definition_url_file_template = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['fields_definition']['geo_header_template_url']
+    geo_header_file = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['fields_definition']['geo_header_filename']
     
     lim = fields_definition_url_file[::-1].find('/')
         
     if P_USE_PREVIOUS_SOURCES is False or os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) is False:
     
-        #response = urllib2.urlopen( fields_definition_url_file )
         response = requests.get(fields_definition_url_file)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) , 'wb') as f:
-            #x = response.read()
-            #f.write(x)
+
             f.write(response.content)
         print '[+] downloaded: %s' % fields_definition_url_file
 
@@ -126,11 +124,8 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
         lim_t = fields_definition_url_file_template[::-1].find('/')
         
-        #response = urllib2.urlopen( fields_definition_url_file_template )
         response = requests.get(fields_definition_url_file_template)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file_template[-lim_t:]) , 'wb') as f:
-            #x = response.read()
-            #f.write(x)
             f.write(response.content)
         print '[+] downloaded: %s' % fields_definition_url_file_template
         
@@ -168,10 +163,8 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
         if not os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:] ):
             response = requests.get(crosswalk_zcta_url_file)
-            #response = urllib2.urlopen(crosswalk_zcta_url_file)
             with open(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:], 'wb') as fc:
-                #x = response.read()
-                #fc.write(x)
+
                 fc.write(response.content)
             print '[+] ZCTA to ZIPCODE crosswalk downloaded'
         
@@ -180,11 +173,6 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
     #### collect the geo referential from US Census API for finding the Level.
     print 'Calling Census API...'
     api_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels_code']
-
-    #header = {'User-Agent': 'Mozilla/5.0'}
-    #req = urllib2.Request(api_url,headers=header)
-    #g_d = urllib2.urlopen(req).read()
-    #data_d = json.loads(g_d)  # result is now a dict
     
     req = requests.get(api_url) 
     data_d = req.json()
@@ -236,11 +224,8 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
             print '--> from this url: %s' % (data_url)
 
             try:
-                #response = urllib2.urlopen( data_url )
                 response = requests.get( data_url )
                 with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + filename) , 'wb') as f:
-                    #x = response.read()
-                    #f.write(x)
                     f.write(response.content)
                 print '[+] downloaded: %s' % filename
             except:
@@ -260,15 +245,8 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         dico_sumlevel[data_d['fips'][i]['name']] =  data_d['fips'][i]['geoLevelId']
 
     level_api_name = census_resources.dict_level_corresp['v1'][P_CENSUS_LEVEL]['census_name']
-    sumlevel_val = [int(dico_sumlevel[level_api_name])]
+    sumlevel_val = [int(dico_sumlevel[level_api_name])]  #EXAMPLE : sumlevel_val=[150]
     
-    #sumlevel_val=[150]
-
-    ####### find the header for the master segment file
-    for fs in os.listdir(fdef_dir):
-        if fs.endswith('.xls'):
-            geo_header_file = fs
-
     
     
     return sumlevel_val,fdef_dir,geo_header_file,dict_pattern_files #,status

@@ -68,9 +68,12 @@ dict_vintage_ = {'ACS':{
      'ACS5Y2015':
      {
         'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
-                             ,'folder_name':'2015_5yr_Templates'
+                             #,'folder_name':'2015_5yr_Templates' ### This changed somewhere in 2017Q4
+                             ,'folder_name':''
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
-                             ,'geo_header_template_folder_name':'2015_5yr_Templates'
+                             #,'geo_header_template_folder_name':'2015_5yr_Templates' ### This changed somewhere in 2017Q4
+                             ,'geo_header_template_folder_name':''
+                             ,'geo_header_filename':'2015_SFGeoFileTemplate.xls'
                             }
          ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2016.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
          ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/5_year_by_state/'
@@ -88,6 +91,7 @@ dict_vintage_ = {'ACS':{
                              ,'folder_name':'seq'
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'seq'
+                             ,'geo_header_filename':'2014_SFGeoFileTemplate.xls'
                             }
          ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2016.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
          ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/5_year_by_state/'
@@ -104,6 +108,7 @@ dict_vintage_ = {'ACS':{
                              ,'folder_name':''  
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'seq'
+                             ,'geo_header_filename':'2014_SFGeoFileTemplate.xls'
                             } 
          ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2015.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
          ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2013/data/5_year_by_state/'
