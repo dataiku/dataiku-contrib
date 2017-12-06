@@ -1,6 +1,4 @@
-/* This file is the descriptor for the Custom python dataset census-us_us_census_custom_dataset */
 {
-    /* Meta data for display purposes */
     "meta" : {
         "label" : "US Census dataset",
         "description": "Build a US Census level from a list of states and fields.",
@@ -8,19 +6,10 @@
         "tags" : ["census","usa", "dataset"]
     },
 
-    /* Can this connector read data ? */
     "readable" : true,
-    /* Can this connector write data ? */
     "writable" : false,
 
-
-    /* The field "params" holds a list of all the params
-       for wich the user will be prompted for values:
-
-       The available parameter types are:
-       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
-    */
-
+    
     "params": [
         
         
