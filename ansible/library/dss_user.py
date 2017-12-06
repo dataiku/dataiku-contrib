@@ -68,6 +68,10 @@ options:
             - The profile type of the user. Mandatory if the user must be created
         default: READER
         required: false
+    source_type:
+        description:
+            - The source type of the user, either LOCAL or LDAP
+        required: false
     state:
         description:
             - Wether the user is supposed to exist or not. Possible values are "present" and "absent"
@@ -117,6 +121,7 @@ def run_module():
         display_name=dict(type='str', required=False, default="{{yaye}}"),
         groups=dict(type='list', required=False, default=None),
         profile=dict(type='str', required=False, default=None),
+        source_type=dict(type='str', required=False, default="LOCAL"),
         state=dict(type='str', required=False, default="present"),
         )
 
@@ -159,6 +164,8 @@ def run_module():
             raise
 
         # Manage errors
+        if args.source_type not in ["LOCAL","LDAP"]:
+            module.fail_json(msg="Invalid value '{}' for source_type : must be either 'LOCAL' or 'LDAP'".format(args.source_type))
         if args.password is None and create_user:
             module.fail_json(msg="The 'password' parameter is missing but is mandatory to create new user '{}'.".format(args.login))
         if args.display_name is None and create_user:
@@ -192,6 +199,10 @@ def run_module():
                     result["message"] = "DELETED"
                 elif current_user != new_user_def:
                     result["message"] = "MODIFIED"
+
+        # Can be useful to register info from a playbook and act on it
+        if args.state == "present":
+            result["dss_user"] = new_user_def
 
         if module.check_mode:
             module.exit_json(**result)
