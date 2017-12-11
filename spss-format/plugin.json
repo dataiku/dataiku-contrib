@@ -1,0 +1,14 @@
+{
+    "id" : "spss-format",
+    "version" : "0.0.1",
+
+    "meta" : {
+        "label" : "SPSS format",
+        "description" : "A longer string explaining what the plugin does",
+        "author" : "Dataiku (Thomas Labadie)",
+        "icon" : "icon-puzzle-piece",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["format", "productivity"]
+    }
+}
