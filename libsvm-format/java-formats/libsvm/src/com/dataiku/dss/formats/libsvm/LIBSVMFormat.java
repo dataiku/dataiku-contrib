@@ -166,7 +166,7 @@ public class LIBSVMFormat implements CustomFormat {
                     Column column = columns.get(index);
                     // Creating the newly found column if possible
                     if (column == null) {
-                        if (columns.size() > maxFeatures) {
+                        if (columns.size() >= maxFeatures) {
                             continue;
                         }
 
