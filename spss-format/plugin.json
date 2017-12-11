@@ -8,7 +8,7 @@
         "author" : "Dataiku (Thomas Labadie)",
         "icon" : "icon-gears",
         "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
+        "url" : "https://www.dataiku.com/dss/plugins/info/spss-format.html",
         "tags" : ["format", "productivity"]
     }
 }
