@@ -2,52 +2,16 @@
 {
     /* Meta data for display purposes */
     "meta" : {
-        "label" : "SPSS",
+        "label" : "SPSS format",
         "description" : "Format supporting .sav files from IBM SPSS",
-        "icon" : "icon-puzzle-piece"
+        "icon" : "icon-gears"
     },
 
-    /* whether the format can be selectable as a dataset format */
     "canBeDatasetFormat" : true,
-    
-    /* whether the format can be used to read files. If true, the get_format_extractor() must return an extractor */
     "canRead" : true,
-    
-    /* whether the format can be used to write files. If true, the get_output_formatter() must return a formatter */
     "canWrite" : false,
-    
-    /* whether the format can provide the schema without reading the data. If true, the FormatExtractor must implement read_schema() */
     "canExtractSchema" : false,
     
-    /* name of the class implementing the format */
     "formatClass" : "com.dataiku.dss.formats.spss.SPSSFormat",
-
-    "params": [
-        /* {
-            "name": "parameter1",
-            "label" : "User-readable name",
-            "type": "STRING",
-            "description":"Some documentation for parameter1",
-            "mandatory" : true
-        },
-        {
-            "name": "parameter2",
-            "type": "INT",
-            "defaultValue" : 42
-        },
-        {
-            "name": "Encoding",
-            "type": "SELECT",
-            "selectChoices": [
-                {
-                    "value": "val_x",
-                    "label": "display name for val_x"
-                },
-                {
-                    "value": "val_y",
-                    "label": "display name for val_y"
-                },
-            ]
-        } */
-    ]
+    "params": []
 }

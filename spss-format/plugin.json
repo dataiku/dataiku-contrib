@@ -4,9 +4,9 @@
 
     "meta" : {
         "label" : "SPSS format",
-        "description" : "A longer string explaining what the plugin does",
+        "description" : "Format supporting .sav files from IBM SPSS",
         "author" : "Dataiku (Thomas Labadie)",
-        "icon" : "icon-puzzle-piece",
+        "icon" : "icon-gears",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com",
         "tags" : ["format", "productivity"]
