@@ -38,8 +38,9 @@ public class LIBSVMFormat implements CustomFormat {
      * Also while digging in: https://github.com/cjlin1/libsvm/blob/master/svm-train.c
      * You can notice that `strtod` is used to parse the label and value, while `strtol` is used for the index
      */
-    public static final Pattern TOKEN_PATTERN = Pattern.compile("^(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     public static final Pattern LABEL_PATTERN = Pattern.compile("^([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
+    // \G allows to continue at the end of the previous match without updating the region
+    public static final Pattern TOKEN_PATTERN = Pattern.compile("\\G(\\d+):([+-]?\\d+[.]?\\d*(?:[eE][+-]?\\d+)?)\\s+");
     private static final Logger logger = Logger.getLogger(LIBSVMFormat.class);
 
     private enum ExtractionMode {
@@ -161,7 +162,6 @@ public class LIBSVMFormat implements CustomFormat {
                     String value = tokenMatcher.group(2);
 
                     start = tokenMatcher.end();
-                    tokenMatcher.region(start, line.length());
 
                     Column column = columns.get(index);
                     // Creating the newly found column if possible
@@ -177,7 +177,7 @@ public class LIBSVMFormat implements CustomFormat {
                     row.put(column, value);
                 }
 
-                if (!tokenMatcher.hitEnd()) {
+                if (start != line.length()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
                             "Invalid token at line %d, column %d; ignoring the rest of that line: '%s'", lineNumber, start, line.substring(start));
                 }
@@ -226,7 +226,6 @@ public class LIBSVMFormat implements CustomFormat {
                     String value = tokenMatcher.group(2);
 
                     start = tokenMatcher.end();
-                    tokenMatcher.region(start, line.length());
 
                     if (features.length() > 3) {
                         features.append(',');
@@ -238,7 +237,7 @@ public class LIBSVMFormat implements CustomFormat {
                             .append(value);
                 }
 
-                if (!tokenMatcher.hitEnd()) {
+                if (start != line.length()) {
                     addWarning(WarningsContext.WarningType.INPUT_DATA_LINE_DOES_NOT_PARSE,
                             "Invalid token at line %d, column %d; ignoring the rest of that line: '%s'", lineNumber, start, line.substring(start));
                 }
