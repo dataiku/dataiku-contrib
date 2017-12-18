@@ -1,0 +1,26 @@
+{
+    "id" : "ip-range-matcher",
+
+    "version" : "0.0.1",
+
+    "meta" : {
+        "label" : "Match IP addresses against network ranges",
+        "description" : "This plugin provides a preparation processor for checking whether IP addresses belong to specific network ranges.",
+        "author" : "Dataiku (Thomas Labadie)",
+        "icon" : "icon-tags",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["data quality"]
+    },
+    "javaPreparationProcessors":[
+      {
+        "id":"iprange",
+        "meta":{
+          "label":"Matches IP addresses to network ranges",
+          "description":"This processor checks whether IP addresses belong to given network ranges",
+          "icon":"icon-tags"
+        }
+      }
+    ],
+    "entryPoint":"com.dataiku.dip.plugins.iprangematcher.Plugin"
+}
