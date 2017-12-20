@@ -1,0 +1,20 @@
+{
+    "meta" : {
+        "label" : "SAS using Pandas"
+    },
+
+    "canBeDatasetFormat" : true,
+    "canRead" : true,
+    "canWrite" : false,
+    "canExtractSchema" : true,
+    
+    "params": [
+        {
+            "name": "chunksize",
+            "label" : "Chunk size while reading",
+            "type": "INT",
+            "defaultValue": 10000,
+            "mandatory" : true
+        }
+    ]
+}
