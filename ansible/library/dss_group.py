@@ -50,6 +50,66 @@ options:
             - Wether the user is supposed to exist or not. Possible values are "present" and "absent"
         default: present
         required: false
+    admin:
+        description:
+            - Tells if the group has administration credentials
+        default: false
+        required: false
+    ldap_group_names:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_create_authenticated_connections:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_create_code_envs:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_create_projects:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_develop_plugins:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_edit_lib_folders:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_manage_code_envs:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_manage_u_d_m:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_view_indexed_hive_connections:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_write_safe_code:
+        description:
+            - Desc
+        default: false
+        required: false
+    may_write_unsafe_code:
+        description:
+            - Desc
+        default: false
+        required: false
 
 author:
     - Jean-Bernard Jansen (jean-bernard.jansen@dataiku.com)
@@ -59,11 +119,14 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-original_message:
-    description: The original login name
-    type: str
+previous_group_def:
+    description: The previous values
+    type: dict
+group_def:
+    description: The current values is the group have not been deleted
+    type: dict
 message:
-    description: CREATED, MODIFIED or DELETED 
+    description: CREATED, MODIFIED, UNCHANGED or DELETED 
     type: str
 '''
 
@@ -73,6 +136,8 @@ from dataikuapi.dss.admin import DSSGroup
 from dataikuapi.utils import DataikuException
 import copy
 import traceback
+import re
+import time
 
 # Trick to expose dictionary as python args
 class MakeNamespace(object):
@@ -89,9 +154,21 @@ def run_module():
         api_key=dict(type='str', required=False, default=None),
         name=dict(type='str', required=True),
         description=dict(type='str', required=False, default=None),
-        source_type=dict(type='str', required=False, default="LOCAL"),
+        source_type=dict(type='str', required=False, default=None),
         state=dict(type='str', required=False, default="present"),
-        )
+        admin=dict(type='bool', required=False, default=None),
+        ldap_group_names=dict(type='list', required=False, default=None),
+        may_create_authenticated_connections=dict(type='bool', required=False, default=None),
+        may_create_code_envs=dict(type='bool', required=False, default=None),
+        may_create_projects=dict(type='bool', required=False, default=None),
+        may_develop_plugins=dict(type='bool', required=False, default=None),
+        may_edit_lib_folders=dict(type='bool', required=False, default=None),
+        may_manage_code_envs=dict(type='bool', required=False, default=None),
+        may_manage_u_d_m=dict(type='bool', required=False, default=None),
+        may_view_indexed_hive_connections=dict(type='bool', required=False, default=None),
+        may_write_safe_code=dict(type='bool', required=False, default=True),
+        may_write_unsafe_code=dict(type='bool', required=False, default=None),
+    )
 
     module = AnsibleModule(
         argument_spec=module_args,
@@ -101,7 +178,7 @@ def run_module():
     args = MakeNamespace(module.params)
     if args.state not in ["present","absent"]:
         module.fail_json(msg="Invalid value '{}' for argument state : must be either 'present' or 'absent'".format(args.source_type))
-    if args.source_type not in ["LOCAL","LDAP","SAAS"]:
+    if args.source_type not in [None,"LOCAL","LDAP","SAAS"]:
         module.fail_json(msg="Invalid value '{}' for source_type : must be either 'LOCAL', 'LDAP' or 'SAAS'".format(args.state))
     api_key = args.api_key if args.api_key is not None else args.connect_to.get("api_key",None)
     if api_key is None:
@@ -111,7 +188,6 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=args.name,
         message='UNCHANGED',
     )
 
@@ -133,22 +209,23 @@ def run_module():
         except:
             raise
 
-        result["group_def"] = current
-        module.exit_json(**result)
-
-        # Build the new user definition
-        # TODO: be careful that the key names changes between creation and edition
-        new_def = copy.deepcopy(current_user) if user_exists else {} # Used for modification
-        #for key, api_param in [("email","email"),("display_name","displayName"),("profile","userProfile"),("groups","groups")]:
-            #if module.params.get(key,None) is not None:
-                #new_user_def[key if create_user else api_param] = module.params[key]
-        #if user_exists and args.password is not None and not args.set_password_at_creation_only:
-            #new_user_def["password"] = args.password
 
         # Sort groups list before comparison as they should be considered sets
-        #new_user_def.get("groups",[]).sort()
-        #if user_exists:
-            #current_user.get("groups",[]).sort()
+        if exists:
+            current["ldapGroupNames"]= ",".join(sorted(current.get("ldapGroupNames","").split(",")))
+            result["previous_group_def"] = current
+        # Build the new user definition
+        new_def = copy.deepcopy(current) if exists else {} # Used for modification
+
+        # Transform to camel case
+        dict_args = {}
+        if args.ldap_group_names is not None:
+            dict_args["ldapGroupNames"] = ",".join(sorted(args.ldap_group_names))
+        for key, value in module.params.items():
+            if key not in ["connect_to","host","port","api_key","state","ldap_group_names"] and value is not None:
+                camelKey = re.sub(r'_[a-z]', lambda x : x.group()[1:].upper(), key)
+                dict_args[camelKey] = value
+        new_def.update(dict_args)
 
         # Prepare the result for dry-run mode
         result["changed"] = create or (exists and args.state == "absent") or (exists and current != new_def)
@@ -161,24 +238,30 @@ def run_module():
                 elif current != new_def:
                     result["message"] = "MODIFIED"
 
+        if args.state == "present":
+            result["group_def"] = new_def
+
         if module.check_mode:
             module.exit_json(**result)
 
         # Apply the changes
         if result["changed"]:
             if create:
-                client.create_group(args.login, args.name, description = new_def["description"], source_type=new_def["source_type"])
+                new_group = client.create_group(args.name, description = new_def.get("description",None), source_type=new_def.get("source_type","LOCAL"))
                 # 2nd request mandatory for capabilites TODO: fix the API
-                # group.set_definition(new_def)
+                if "mayWriteSafeCode" not in new_def.keys():
+                    new_def["mayWriteSafeCode"] = True
+                new_group.set_definition(new_def)
+                result["group_def"] = new_group.get_definition()
             elif exists:
                 if args.state == "absent":
                     group.delete()
-                elif current_user != new_user_def:
+                elif current != new_def:
                     result["message"] = str(group.set_definition(new_def))
 
         module.exit_json(**result)
     except Exception as e:
-        module.fail_json(msg=str(e))
+        module.fail_json(msg="{}: {}".format(type(e).__name__,str(e)))
 
 def main():
     run_module()

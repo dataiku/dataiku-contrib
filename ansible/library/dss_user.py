@@ -86,11 +86,14 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-original_message:
-    description: The original login name
-    type: str
+previous_user_def:
+    description: The previous values
+    type: dict
+user_def:
+    description: The current values is the group have not been deleted
+    type: dict
 message:
-    description: CREATED, MODIFIED or DELETED 
+    description: CREATED, MODIFIED, UNCHANGED or DELETED 
     type: str
 '''
 
@@ -178,6 +181,7 @@ def run_module():
         # Build the new user definition
         # TODO: be careful that the key names changes between creation and edition
         new_user_def = copy.deepcopy(current_user) if user_exists else {} # Used for modification
+        result["previous_user_def"] = new_user_def
         for key, api_param in [("email","email"),("display_name","displayName"),("profile","userProfile"),("groups","groups")]:
             if module.params.get(key,None) is not None:
                 new_user_def[key if create_user else api_param] = module.params[key]
@@ -202,7 +206,7 @@ def run_module():
 
         # Can be useful to register info from a playbook and act on it
         if args.state == "present":
-            result["dss_user"] = new_user_def
+            result["user_def"] = new_user_def
 
         if module.check_mode:
             module.exit_json(**result)
