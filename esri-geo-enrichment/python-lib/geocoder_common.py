@@ -107,7 +107,7 @@ def run_geocoding_recipe(is_detailed):
             nb_records_df_nn = df_nn.shape[0]
             print 'Processing data to geocode: %s adresses in this batch with a country value...' % (nb_records_df_nn)
 
-            df_nn = df_nn.sort([P_COLUMN_COUNTRY],ascending=[1])
+            df_nn = df_nn.sort_values([P_COLUMN_COUNTRY],ascending=[1])
 
             dicz = {k: list(v) for k,v in df_nn.groupby(P_COLUMN_COUNTRY)[P_COLUMN_OBJECT_ID]}
 
@@ -137,7 +137,7 @@ def run_geocoding_recipe(is_detailed):
             print 'Processing data to geocode: %s adresses in this batch without a country value...' % (nb_records_df_null)
 
             if nb_records_df_null > 0:
-                df_null = df_null.sort([P_COLUMN_COUNTRY],ascending=[1])
+                df_null = df_null.sort_values([P_COLUMN_COUNTRY],ascending=[1])
 
                 attributes_dict_list_null = []
                 for batch_record_null in df_null.to_dict('records'):

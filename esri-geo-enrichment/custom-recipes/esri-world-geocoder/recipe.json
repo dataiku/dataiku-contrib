@@ -1,6 +1,6 @@
 {
     "meta" : {
-        "label" : "ESRI(r) - World geocoder - Single line address",
+        "label" : "Esri(r) - World geocoder - Single line address",
         "description" : "Use this recipe to geocode (transform an address to coordinates), if the whole address is in a single field"
     },
 
