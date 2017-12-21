@@ -89,12 +89,14 @@ def run_module():
         config = ConfigParser.RawConfigParser()
         config.read("{}/install.ini".format(args.datadir))
         port =  str(config.getint("server","port")) 
+        nodetype = config.get("general","nodetype").strip()
         logging.info("Reads port {} from install.ini".format(port))
 
         # Create/Get the api key 
         changed = False
         api_key = None
-        api_keys_list = json.loads(subprocess.check_output(["{}/bin/dsscli".format(args.datadir),"api-keys-list","--output","json"]))
+        exec_name = "apinode-admin" if nodetype == "api" else "dsscli"
+        api_keys_list = json.loads(subprocess.check_output(["{}/bin/{}".format(args.datadir,exec_name),"admin-keys-list" if nodetype == "api" else "api-keys-list","--output","json"]))
         for key in api_keys_list:
             if key["label"] == args.api_key_name:
                 api_key = key["key"]
@@ -103,14 +105,19 @@ def run_module():
                 break
         if api_key is None:
             if not module.check_mode:
-                api_keys_list = json.loads(subprocess.check_output([
-                    "{}/bin/dsscli".format(args.datadir),
-                    "api-key-create",
+                command = [
+                    "{}/bin/{}".format(args.datadir,exec_name),
+                    "admin-key-create" if nodetype == "api" else "api-key-create",
                     "--output","json",
-                    "--admin","true",
                     "--label", args.api_key_name,
-                    ]))
-                api_key = api_keys_list[0]["key"]
+                ]
+                if nodetype != "api":
+                    command += ["--admin","true"]
+                api_keys_list = json.loads(subprocess.check_output(command))
+                if nodetype == "api":
+                    api_key = api_keys_list["key"]
+                else:
+                    api_key = api_keys_list[0]["key"]
                 logging.info("Created new API Key labeled \"{}\".".format(args.api_key_name))
             changed = True
         
