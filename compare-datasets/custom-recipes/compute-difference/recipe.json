@@ -1,6 +1,4 @@
-// This file is the descriptor for the Custom code recipe compute-difference
 {
-    // Meta data for display purposes
     "meta" : {
         "label" : "Computes the difference of two datasets",
         "description" : "This recipe compares selected columns in two datasets by joining common columns"
@@ -62,5 +60,4 @@
             "defaultValue": 1e-05
         }
       ]
-
 }
