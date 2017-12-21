@@ -15,6 +15,6 @@
 
 		"url" : "https://www.dataiku.com/dss/plugins/info/esri-geo-enrichment.html",
 
-		"tags" : ["Geospatial","API", "Enrichment","Geocoding","Esri"]
+		"tags" : ["Geospatial", "API", "Enrichment", "Geocoding"]
 	}
 }
