@@ -2,20 +2,11 @@
     "meta" : {
         "label" : "LIBSVM"
     },
-
-    /* whether the format can be selectable as a dataset format */
     "canBeDatasetFormat" : true,
-    
-    /* whether the format can be used to read files. If true, the get_format_extractor() must return an extractor */
     "canRead" : true,
-    
-    /* whether the format can be used to write files. If true, the get_output_formatter() must return a formatter */
     "canWrite" : false,
-    
-    /* whether the format can provide the schema without reading the data. If true, the FormatExtractor must implement read_schema() */
     "canExtractSchema" : false,
     
-    /* name of the class implementing the format */
     "formatClass" : "com.dataiku.dss.formats.libsvm.LIBSVMFormat",
     
     "params": [
@@ -23,7 +14,8 @@
             "name": "output_type",
             "label" : "Features output",
             "type": "SELECT",
-            "description": "Default value: multicolumn",
+            "canBeEmpty": "false",
+            "mandatory": "true",
             "selectChoices": [
                 {
                     "value": "multi_column",
@@ -33,14 +25,17 @@
                     "value": "single_column_json",
                     "label": "Single-column (JSON)"
                 },
-            ]
+            ],
+            "defaultValue": "multi_column"
         },
                 {
             "name": "max_features",
+            "canBeEmpty": "true",
+            "mandatory": "false",
             "label" : "Maximum features to extract",
             "type": "INT",
-            "description": "Default value: 2000 (for multicolumn output)",
-            "visibilityCondition" : "model.output_type == 'multi_column'"
+            "visibilityCondition" : "model.output_type == 'multi_column'",
+            "defaultValue": 2000
         }
     ]
 }
