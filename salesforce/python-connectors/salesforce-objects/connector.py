@@ -35,6 +35,10 @@ class MyConnector(Connector):
 
         results = salesforce.make_api_call('/services/data/v37.0/sobjects/')
 
+        salesforce.log("records_limit: %i" % records_limit)
+
+        n = 0
+
         for obj in results.get('sobjects'):
             if self.RESULT_FORMAT == 'json':
                 row = {"json": json.dumps(obj)}
@@ -45,5 +49,8 @@ class MyConnector(Connector):
                         row[key] = json.dumps(val)
                     else:
                         row[key] = val
-            yield row
+            n = n + 1
+            if records_limit < 0 or n <= records_limit:
+                #salesforce.log("row %i" % n)
+                yield row
         
