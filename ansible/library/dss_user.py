@@ -83,6 +83,47 @@ author:
 '''
 
 EXAMPLES = '''
+# Creates a user using dss_get_credentials if you have SSH Access
+- name: Get the API Key
+  become: true
+  become_user: dataiku
+  dss_get_credentials:
+    datadir: /home/dataiku/dss
+    api_key_name: myadminkey
+  register: dss_connection_info
+- name: Add a user  
+  become: true
+  become_user: dataiku
+  dss_user:
+    connect_to: "{{dss_connection_info}}"
+    login: user1
+    display_name: Robert
+    password: Robert
+    groups:
+      - readers
+    profile: DATA_SCIENTIST
+
+# Creates a user using explicit host/port/key
+# Force the password to be set everytime - always return as a change
+- name: Add a user  
+  delegate_to: localhost
+  dss_user:
+    host: 192.168.0.2
+    port: 80
+    api_key: XXXXXXXXXXXXXX
+    login: user2
+    display_name: Marcel
+    password: Marcel
+    set_password_at_creation_only: false
+
+# Delete a user
+- name: Add a user  
+  become: true
+  become_user: dataiku
+  dss_user:
+    connect_to: "{{dss_connection_info}}"
+    login: user1
+    state: absent
 '''
 
 RETURN = '''

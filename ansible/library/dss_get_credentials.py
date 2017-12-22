@@ -10,7 +10,7 @@ DOCUMENTATION = '''
 ---
 module: dss_user
 
-short_description: Creates, edit or delete a Data Science Studio user 
+short_description: Creates/get an admin API key onto a DSS datadir.
 
 description:
     - This module reads a datadir and returns the port on which the studio is exposed as well as an admin API Key.
@@ -31,6 +31,17 @@ author:
 '''
 
 EXAMPLES = '''
+# Creates and displays a key with a label
+- name: Get the API Key
+  become: true
+  become_user: dataiku
+  dss_get_credentials:
+    datadir: /home/dataiku/dss
+    api_key_name: mytestkey
+  register: dss_connection_info
+- name: Debug
+  debug:
+    var: dss_connection_info
 '''
 
 RETURN = '''

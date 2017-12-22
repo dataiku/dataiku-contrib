@@ -116,6 +116,39 @@ author:
 '''
 
 EXAMPLES = '''
+# Creates a group using dss_get_credentials if you have SSH Access
+- name: Get the API Key
+  become: true
+  become_user: dataiku
+  dss_get_credentials:
+    datadir: /home/dataiku/dss
+    api_key_name: myadminkey
+  register: dss_connection_info
+- name: Add a group
+  become: true
+  become_user: dataiku
+  dss_group:
+    connect_to: "{{dss_connection_info}}"
+    name: dssgroup
+
+# Creates a group using explicit host/port/key
+# From local machine
+- name: Add a user  
+  delegate_to: localhost
+  dss_user:
+    host: 192.168.0.2
+    port: 80
+    api_key: XXXXXXXXXXXXXX
+    name: dssgroup 
+
+# Deletes a group
+- name: Add a user  
+  become: true
+  become_user: dataiku
+  dss_user:
+    connect_to: "{{dss_connection_info}}"
+    group: dssgroup
+    state: absent
 '''
 
 RETURN = '''
