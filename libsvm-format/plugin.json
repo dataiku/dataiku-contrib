@@ -2,8 +2,8 @@
     "id" : "libsvm-format",
     "version" : "1.0.0",
     "meta" : {
-        "label" : "LIBSVM format extractor",
-        "description" : "Reads LIBSVM files",
+        "label" : "LIBSVM format",
+        "description" : "Lets you import LIBSVM files. Restart DSS after installation.",
         "author" : "Dataiku (Thomas Labadie)",
         "icon" : "icon-rocket",
         "licenseInfo" : "Apache Software License",
