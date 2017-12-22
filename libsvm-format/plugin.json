@@ -3,7 +3,7 @@
     "version" : "1.0.0",
     "meta" : {
         "label" : "LIBSVM format",
-        "description" : "Lets you import LIBSVM files. Restart DSS after installation.",
+        "description" : "Lets you import LIBSVM files.",
         "author" : "Dataiku (Thomas Labadie)",
         "icon" : "icon-rocket",
         "licenseInfo" : "Apache Software License",
