@@ -7,7 +7,7 @@ all:
 	rm -rf dist
 	ant
 	mkdir dist
-	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip lib plugin.json
+	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip js lib plugin.json
 
 reinstall-in-dss: all
 	${DIP_HOME}/bin/dku install-plugin dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip -u
