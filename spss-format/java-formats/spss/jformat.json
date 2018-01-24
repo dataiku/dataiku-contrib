@@ -1,0 +1,15 @@
+/* This file is the descriptor for the Custom java format spss */
+{
+    /* Meta data for display purposes */
+    "meta" : {
+        "label" : "SPSS"
+    },
+
+    "canBeDatasetFormat" : true,
+    "canRead" : true,
+    "canWrite" : false,
+    "canExtractSchema" : false,
+    
+    "formatClass" : "com.dataiku.dss.formats.spss.SPSSFormat",
+    "params": []
+}
