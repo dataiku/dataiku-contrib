@@ -1,5 +1,5 @@
 {
     "python" : [
-        {"name":"XlsxWriter", "version":"0.7.7"}
+        {"name":"XlsxWriter", "version":">=0.7.7"}
     ]
 }

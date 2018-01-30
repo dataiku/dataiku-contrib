@@ -1,17 +1,10 @@
 {
     "meta" : {
         "label" : "Send mails from a contacts dataset",
-        "description" : "The recipe takes as input a dataset of contacts, with one row per mail to send.\n\nFor each of the following fields, a value can either be provided in the configuration (if it is the same for each email to be sent) or be read from a column in the dataset\n\n* Recipient email\n* Sender email\n* Email subject\n* Email body\nOptionally, attachements can be provided from another dataset (and be sent as CSV or Excel).\n The output dataset is only used for reporting. Email address should generally be in the form: 'Name <local@domain.com>' "
+        "description" : "The recipe takes as input a dataset of contacts, with one row per mail to send.\n\nFor each of the following fields, a value can either be provided in the configuration (if it is the same for each email to be sent) or be read from a column in the dataset\n\n* Sender email\n* Email subject\n* Email body\n* Optionally, attachements can be provided from another dataset (and be sent as CSV or Excel).\n The output dataset is only used for reporting. Email address should generally be in the form: 'Name <local@domain.com>' "
     },
 
     "kind" : "PYTHON",
-
-    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
-    // or more dataset to each input and output role, depending on the role characteristics.
-
-    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
-    // or at most one ('UNARY'). The "required" field indicates whether the user will be allowed to not
-    // associate at least one dataset with the role.
 
     "inputRoles" : [
         {
@@ -37,6 +30,11 @@
 
     "params": [
         {
+        "name": "sep1",
+        "label": "Mail",
+        "type": "SEPARATOR"
+        },
+        {
             "name": "recipient_column",
             "label" : "Recipient (column)",
             "type": "COLUMN",
@@ -44,49 +42,64 @@
             "description" : "Recipient of the email (from a column)"
         },
         {
-            "name": "recipient_value",
-            "label" : "Recipient (value)",
-            "type": "STRING",
-            "description" : "Recipient of the email (provide value) - Exclusive with Recipient (column)"
-        },
-          {
             "name": "sender_column",
             "label" : "Sender (column)",
             "type": "COLUMN",
             "columnRole" : "contacts",
-            "description" : "Sender of the email (from a column)"
+            "description" : "Sender of the email (from a column)",
+            "visibilityCondition" : "!model.use_sender_value"
         },
         {
             "name": "sender_value",
             "label" : "Sender (value)",
             "type": "STRING",
-            "description" : "Sender of the  email (provide value inline) - Exclusive with Sender (column)"
+            "description" : "Sender of the  email (provide value inline)",
+            "visibilityCondition" : "model.use_sender_value"
+        },
+        {
+            "name": "use_sender_value",
+            "label" : "Use custom value for sender",
+            "type": "BOOLEAN"
         },
           {
             "name": "subject_column",
             "label" : "Subject (column)",
             "type": "COLUMN",
             "columnRole" : "contacts",
-            "description" : "Subject of the email (from a column)"
+            "description" : "Subject of the email (from a column)",
+            "visibilityCondition" : "!model.use_subject_value"
         },
         {
             "name": "subject_value",
             "label" : "Subject (value)",
             "type": "STRING",
-            "description" : "Subject of the email (provide value inline) - Exclusive with Subject (column)"
+            "description" : "Subject of the email (provide value inline)",
+            "visibilityCondition" : "model.use_subject_value"
+        },
+        {
+            "name": "use_subject_value",
+            "label" : "Use custom value for subject",
+            "type": "BOOLEAN"
         },
           {
             "name": "body_column",
             "label" : "Body (column)",
             "type": "COLUMN",
             "columnRole" : "contacts",
-            "description" : "Body of the email (from a column)"
+            "description" : "Body of the email (from a column)",
+            "visibilityCondition" : "!model.use_body_value"
         },
         {
             "name": "body_value",
             "label" : "Body (value)",
             "type": "STRING",
-            "description" : "Body of the email (provide value inline) - Exclusive with Body (column)"
+            "description" : "Body of the email (provide value inline)",
+            "visibilityCondition" : "model.use_body_value"
+        },
+        {
+            "name": "use_body_value",
+            "label" : "Use custom value for body",
+            "type": "BOOLEAN"
         },
         {
             "name": "attachment_type",
@@ -98,6 +111,11 @@
                 {"value":  "excel" , "label":"Excel"},
                 {"value":  "csv" , "label":"CSV"}
             ]
+        },
+                {
+        "name": "sep1",
+        "label": "Authentication",
+        "type": "SEPARATOR"
         },
         {
             "name": "smtp_host",

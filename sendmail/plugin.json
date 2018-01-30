@@ -1,22 +1,15 @@
 {
 	"id" : "sendmail",
 
-	"version" : "0.0.1",
-
+	"version" : "0.1.1",
 
 	"meta" : {
 		"label" : "Send emails",
-
 		"description" : "Sends emails based on a dataset containing a list of contacts, with optional attachments (other datasets)",
-
 		"author" : "Dataiku",
-
 		"icon" : "icon-envelope-alt",
-
 		"licenseInfo" : "Apache Software License",
-
 		"url" : "https://www.dataiku.com/community/plugins/info/sendmail.html",
-
 		"tags" : ["Recipe"]
 	}
 }
