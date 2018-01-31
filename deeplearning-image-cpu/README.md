@@ -5,5 +5,7 @@ This plugin relies on the Keras library. Keras is an open source neural network 
 
 This plugin provides a total of 3 recipes, a macro and a webapp template.
 
+This plugin will require the standard tensorflow package and runs on the CPU. Use the other plugin to enable GPU computation.
+
 ## Copyright notice
 Original work Copyright (c) 2016 François Chollet
