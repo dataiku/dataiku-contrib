@@ -1,7 +1,7 @@
 {
     // The identifier of the plugin.
     // This must be globally unique, and only contain A-Za-z0-9_-
-    "id" : "deeplearning-image",
+    "id" : "deeplearning-image-cpu",
 
     // Version. It is highly recommended to use Semantic Versioning
     "version" : "0.1",
@@ -9,7 +9,7 @@
     // Meta data for display purposes
     "meta" : {
         // Name of this plugin that appears in the interface.
-        "label" : "Deep Learning image",
+        "label" : "Deep Learning image, CPU only",
 
         "description" : "This plugin provides several tools to manipulate image data.
 It is possible to use a pre trained model to score images and obtain classes,
