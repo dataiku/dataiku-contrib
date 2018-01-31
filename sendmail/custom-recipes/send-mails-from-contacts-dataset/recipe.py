@@ -49,6 +49,11 @@ output.write_schema(output_schema)
 if not body_column and not body_value:
     raise AttributeError("No body column nor body value specified")
 
+people_columns = [ p['name'] for p in people.read_schema() ]
+for arg in ['sender', 'subject', 'body']:
+    if not globals()["use_" + arg + "_value"] and globals()[arg + "_column"] not in people_columns:
+        raise AttributeError("The column you specified for %s (%s) was not found." % (arg, globals()[arg + "_column"]))
+
 # Prepare attachements
 mime_parts = []
 
@@ -79,9 +84,9 @@ s = smtplib.SMTP(smtp_host, port=smtp_port)
 
 def send_email(contact):
     recipient = contact[recipient_column]
-    email_text = body_value if use_body_value else contact[body_column]
-    email_subject = subject_value if use_subject_value else contact[subject_column]
-    sender = sender_value if use_sender_value else contact[sender_column]
+    email_text = body_value if use_body_value else contact.get(body_column, "")
+    email_subject = subject_value if use_subject_value else contact.get(subject_column, "")
+    sender = sender_value if use_sender_value else contact.get(sender_column, "")
     
     msg = MIMEMultipart()
 
@@ -95,6 +100,7 @@ def send_email(contact):
         msg.attach(a)
 
     s.sendmail(sender, [recipient], msg.as_string())
+    
 
 with output.get_writer() as writer:
     i = 0

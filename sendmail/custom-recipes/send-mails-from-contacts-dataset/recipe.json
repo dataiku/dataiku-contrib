@@ -39,7 +39,8 @@
             "label" : "Recipient (column)",
             "type": "COLUMN",
             "columnRole" : "contacts",
-            "description" : "Recipient of the email (from a column)"
+            "description" : "Recipient of the email (from a column)",
+            "mandatory": true
         },
         {
             "name": "sender_column",
@@ -92,7 +93,7 @@
         {
             "name": "body_value",
             "label" : "Body (value)",
-            "type": "STRING",
+            "type": "TEXTAREA",
             "description" : "Body of the email (provide value inline)",
             "visibilityCondition" : "model.use_body_value"
         },
@@ -121,7 +122,8 @@
             "name": "smtp_host",
             "label" : "SMTP Host",
             "defaultValue" : "localhost",
-            "type": "STRING"
+            "type": "STRING",
+            "mandatory": true
         },
         {
             "name": "smtp_port",
