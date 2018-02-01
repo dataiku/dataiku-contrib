@@ -1,0 +1,13 @@
+{
+    "id" : "deeplearning-image-cpu",
+    "version" : "0.1.0",
+    "meta" : {
+        "label" : "Deep Learning image (CPU)",
+        "description" : "This plugin provides several tools to manipulate image data.\nIt is possible to use a pre trained model to score images and obtain classes, or use it to extract its antepenultimate layer for each image.\nA macro lets you download some popular pretrained models to a folder.\nYou can retrain a model to specialize it on a particular set of images.",
+        "author" : "Dataiku Labs",
+        "icon" : "icon-picture",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com/dss/plugins/info/deeplearning-image.html",
+        "tags" : ["feature_extraction", "transfer_learning", "deep_learning", "images"]
+    }
+}
