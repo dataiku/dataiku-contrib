@@ -1,32 +1,12 @@
 {
-    // The identifier of the plugin.
-    // This must be globally unique, and only contain A-Za-z0-9_-
     "id" : "deeplearning-image-gpu",
-
-    // Version. It is highly recommended to use Semantic Versioning
-    "version" : "0.1",
-
-    // Meta data for display purposes
+    "version" : "0.1.0",
     "meta" : {
-        // Name of this plugin that appears in the interface.
-        "label" : "Deep Learning image, GPU support",
-
-        "description" : "This plugin provides several tools to manipulate image data.
-It is possible to use a pre trained model to score images and obtain classes,
-or use it to extract its antepenultimate layer for each image.
-A macro lets you download some popular pretrained models to a folder.
-You can retrain a model to specialize it on a particular set of images.",
-        "author" : "Dataiku Labs",
-
-        // The icon of a plugin must be one of the FontAwesome 3.1 icons
+        "label" : "Deep Learning image (GPU)",
+        "description" : "This plugin provides several tools to manipulate image data.\nIt is possible to use a pre trained model to score images and obtain classes, or use it to extract its antepenultimate layer for each image.\nA macro lets you download some popular pretrained models to a folder.\nYou can retrain a model to specialize it on a particular set of images.",
         "icon" : "icon-picture",
-
         "licenseInfo" : "Apache Software License",
-
-        // URL where the user can learn more about the plugin
         "url" : "https://www.dataiku.com/dss/plugins/info/deeplearning-image.html",
-
-        // List of tags for filtering the list of plugins
         "tags" : ["feature_extraction", "transfer_learning", "deep_learning", "images"]
     }
 }
