@@ -1,6 +1,6 @@
 {
 	"id" : "wunderground",
-	"version" : "0.0.0",
+	"version" : "0.0.1",
 	"meta" : {
 		"label" : "Wunderground",
 		"description" : "Connect to Wunderground API and get weather data.",
