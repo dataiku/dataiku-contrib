@@ -1,0 +1,76 @@
+{
+    "meta" : {
+        "label" : "Wunderground history",
+        "description" : "Get histotrical weather data from Wunderground API"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "api_key",
+            "label": "Wunderground API key",
+            "type": "STRING",
+            "description": "Get it from: https://www.wunderground.com/weather/api/d/pricing.html",
+            "mandatory" : true
+        },
+        {
+            "name": "location",
+            "label": "Wunderground location",
+            "type": "STRING",
+            "description": "The location for which you want weather information. Read about the 'query' object here: https://www.wunderground.com/weather/api/d/docs?d=data/index",
+            "mandatory" : true
+        },
+        {
+            "name": "from_date",
+            "label": "Starting date",
+            "type": "STRING",
+            "description": "YYYY-MM-DD format",
+            "mandatory" : true
+        },
+        {
+            "name": "to_date",
+            "label": "End date",
+            "type": "STRING",
+            "description": "YYYY-MM-DD format",
+            "mandatory" : true
+        },
+        {
+            "name": "calls_per_minute",
+            "label": "API plan",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "10",
+                    "label": "Developer - 10 calls per minute max"
+                },
+                {
+                    "value": "100",
+                    "label": "Drizzle - 100 calls per minute max"
+                },
+                {
+                    "value": "1000",
+                    "label": "Shower/Downpour - 1000 calls per minute max"
+                }
+            ],
+            "defaultValue": "10",
+            "description": "The plugin will respect the rate limit.",
+            "mandatory": true
+        },
+        {
+            "name": "api_limit",
+            "label": "Limit of API calls (for each run)",
+            "type": "INT",
+            "defaultValue": 500,
+            "description": "Choose -1 for unlimited"
+        },
+        {
+            "name": "cache_folder",
+            "label": "Cache folder",
+            "type": "STRING",
+            "defaultValue": "${dip.home}/tmp/wunderground",
+            "description": "To store files between runs"
+        }
+    ]
+}
