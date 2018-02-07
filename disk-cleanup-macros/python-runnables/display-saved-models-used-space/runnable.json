@@ -1,0 +1,23 @@
+{
+    "meta" : {
+        "label" : "Saved models disk space",
+        "description" : "Checks the disk usage of the saved models",
+        "icon" : "icon-wrench"
+    },
+
+    "impersonate" : false,
+    "permissions" : ["ADMIN"],
+    "resultType" : "RESULT_TABLE",
+    "resultLabel" : "Disk Usage",
+
+    "adminParams": [
+        {
+            "name": "allProjects",
+            "label" : "All projects",
+            "type": "BOOLEAN",
+            "description":"Apply to all projects, not just the current one",
+            "mandatory" : false,
+            "defaultValue" : false
+        }
+    ]
+}

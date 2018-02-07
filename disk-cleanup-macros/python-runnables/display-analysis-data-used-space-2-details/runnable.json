@@ -1,0 +1,13 @@
+{
+    "meta" : {
+        "label" : "Analysis disk space (details)",
+        "description" : "Checks the disk usage of the visual analyses models, with more details and 'orphaned' analyses. May only be run by the global admin",
+        "icon" : "icon-wrench"
+    },
+    "impersonate" : false,
+    "requiresGlobalAdmin" : true,
+    "resultType" : "HTML",    
+    "resultLabel" : "Analysis data",
+    "params": [
+    ]
+}

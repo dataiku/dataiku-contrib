@@ -1,0 +1,41 @@
+{
+    "meta" : {
+        "label" : "Analysis disk space (summary)",
+        "description" : "Checks the disk usage of the visual analyses models.",
+        "icon" : "icon-wrench"
+    },
+
+    "impersonate" : false,
+    "permissions" : ["ADMIN"],
+    "resultType" : "RESULT_TABLE",
+    "resultLabel" : "Disk Usage",
+
+    "params": [
+        {
+            "name" : "granularity",
+            "label": "Granularity",
+            "type" : "SELECT",
+            "selectChoices": [
+                {
+                    "value": "project",
+                    "label": "Project"
+                },
+                {
+                    "value": "analysis",
+                    "label": "Analysis"
+                }
+            ]
+        }
+    ],
+
+    "adminParams": [
+        {
+            "name": "allProjects",
+            "label" : "All projects",
+            "type": "BOOLEAN",
+            "description":"Apply to all projects, not just the current one",
+            "mandatory" : false,
+            "defaultValue" : false
+        }
+    ]
+}
