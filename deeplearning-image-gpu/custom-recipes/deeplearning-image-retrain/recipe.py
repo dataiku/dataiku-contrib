@@ -117,7 +117,7 @@ def load_model_and_apply_recipe_params(model_folder_path, input_shape, n_classes
         lay.trainable = True
         
     elif layer_to_retrain == "n_last" :
-        n_last = int(var_dict["n_last"])
+        n_last = int(recipe_config["layer_to_retrain_n"])
         for lay in model.layers[:-n_last] :
             lay.trainable = False
         for lay in model.layers[-n_last:] :
