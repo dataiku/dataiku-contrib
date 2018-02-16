@@ -51,6 +51,13 @@
                 "description": "The Dataiku DSS version to install. Defaults to 'latest' (otherwise '3.1.4' for instance)."
             },
             "defaultValue": "latest"
+        },
+        "disableGatewayAuth": {
+            "type": "bool",
+            "metadata": {
+                "description": "Disables authentication for the DSS endpoint on the HDInsight gateway. Defaults to 'true'."
+            },
+            "defaultValue": true
         }
     },
     "variables": {
@@ -80,6 +87,7 @@
             "httpsEndpoints": [{
                 "subDomainSuffix": "[parameters('subdomainSuffix')]",
                 "destinationPort": "[variables('dssPort')]",
+                "disableGatewayAuth": "[parameters('disableGatewayAuth')]",
                 "accessModes": ["WebPage"]
             }],
             "applicationType": "CustomApplication"
