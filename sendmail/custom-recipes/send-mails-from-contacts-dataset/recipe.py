@@ -34,6 +34,7 @@ use_subject_value = config.get('use_subject_value', False)
 
 body_column = config.get('body_column', None)
 body_value = config.get('body_value', None)
+body_encoding = config.get('body_encoding', 'us-ascii')
 use_body_value = config.get('use_body_value', False)
 
 smtp_host = config.get('smtp_host', None)
@@ -95,7 +96,7 @@ def send_email(contact):
     msg["Subject"]=  email_subject
 
     # Leave some space for proper displaying of the attachment
-    msg.attach(MIMEText(email_text + "\n\n"))
+    msg.attach(MIMEText(email_text + '\n\n', 'plain', body_encoding))
     for a in mime_parts:
         msg.attach(a)
 

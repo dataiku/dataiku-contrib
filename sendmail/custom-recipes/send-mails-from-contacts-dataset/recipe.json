@@ -98,6 +98,18 @@
             "visibilityCondition" : "model.use_body_value"
         },
         {
+            "name": "body_encoding",
+            "label" : "Body (encoding)",
+            "type": "SELECT",
+            "selectChoices" : [
+                {"value": "us-ascii", "label":"Default (us-ascii)"},
+                {"value": "utf-8", "label":"UTF-8"},
+                {"value": "latin-1", "label":"Latin-1"}
+            ],
+            "defaultValue": "us-ascii",
+            "description" : "Body encoding (UTF-8 recommended)"
+        },
+        {
             "name": "use_body_value",
             "label" : "Use custom value for body",
             "type": "BOOLEAN"
