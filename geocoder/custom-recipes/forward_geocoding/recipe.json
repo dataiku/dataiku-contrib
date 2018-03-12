@@ -1,0 +1,250 @@
+{
+    "meta" : {
+        "label" : "Forward geocoding",
+        "description": "Transform addresses into sets of coordinates that can be used on a map.",
+        "icon" : "icon-rotate-right"
+    },
+    
+    "kind" : "PYTHON",
+    "selectableFromDataset":  "input_ds",
+
+    "inputRoles" : [
+        {
+            "name": "input_ds",
+            "label": "Input dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_ds",
+            "label": "Output dataset",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+    "params": [
+        {
+            "name": "address_column",
+            "label" : "Address column",
+            "type": "COLUMN",
+            "columnRole":"input_ds",
+            "mandatory" : true
+        },
+        {
+            "name": "provider",
+            "label" : "Geocoding provider",
+            "type": "SELECT",
+            "selectChoices": [
+            {
+                "value":"arcgis",
+                "label":"Arcgis"
+            },
+            {
+                "value":"baidu",
+                "label":"Baidu"
+            },
+            {
+                "value":"bing",
+                "label":"Bing"
+            },
+            {
+                "value":"canadapost",
+                "label":"CanadaPost"
+            },
+            {
+                "value":"freegeoip",
+                "label":"FreeGeoIP"
+            },
+            {
+                "value":"gaode",
+                "label":"Gaode"
+            },
+            {
+                "value":"geocodefarm",
+                "label":"Geocodefarm"
+            },
+            {
+                "value":"geolytica",
+                "label":"Geolytica (geocoder.ca)"
+            },
+            {
+                "value":"geonames",
+                "label":"Geonames"
+            },
+            {
+                "value":"ottawa",
+                "label":"GeoOttawa"
+            },
+            {
+                "value":"gisgraphy",
+                "label":"Gisgraphy"
+            },
+            {
+                "value":"google",
+                "label":"Google"
+            },
+            {
+                "value":"here",
+                "label":"HERE"
+            },
+            {
+                "value":"ipinfo",
+                "label":"IPInfo"
+            },
+            {
+                "value":"komoot",
+                "label":"Komoot"
+            },
+            {
+                "value":"locationiq",
+                "label":"LocationIQ"
+            },
+            {
+                "value":"mapbox",
+                "label":"Mapbox"
+            },
+            {
+                "value":"mapquest",
+                "label":"MapQuest"
+            },
+            {
+                "value":"mapzen",
+                "label":"Mapzen"
+            },
+            {
+                "value":"maxmind",
+                "label":"Maxmind"
+            },
+            {
+                "value":"opencage",
+                "label":"OpenCage"
+            },
+            {
+                "value":"osm",
+                "label":"OpenStreetMap"
+            },
+            {
+                "value":"tamu",
+                "label":"Tamu"
+            },
+            {
+                "value":"tgos",
+                "label":"TGOS"
+            },
+            {
+                "value":"tomtom",
+                "label":"TomTom"
+            },
+            {
+                "value":"uscensus",
+                "label":"USCensus"
+            },
+            {
+                "value":"w3w",
+                "label":"What3Words"
+            },
+            {
+                "value":"yahoo",
+                "label":"Yahoo"
+            },
+            {
+                "value":"yandex",
+                "label":"Yandex"
+            }
+            ]
+        },
+        {
+            "name": "sep_conf",
+            "type": "SEPARATOR",
+            "label" : "Configuration"
+        },
+        {
+            "name": "cache_enabled",
+            "type": "BOOLEAN",
+            "label" : "Use cache",
+            "defaultValue": true
+        },
+        {
+            "name": "batch_enabled",
+            "type": "BOOLEAN",
+            "label" : "Use batch mode",
+            "defaultValue": true,
+            "visibilityCondition" : "['bing', 'mapquest', 'uscensus'].indexOf(model.provider) >= 0"
+        },
+        {
+            "name": "batch_size_bing",
+            "type": "INT",
+            "label" : "Bing batch size",
+            "description": "50 for free basic keys, 200 000 for entreprise ones",
+            "defaultValue": 50,
+            "visibilityCondition" : "model.provider == 'bing' && model.batch_enabled"
+        },
+        {
+            "name": "batch_size_uscensus",
+            "type": "INT",
+            "label" : "USCensus batch size",
+            "description": "Up to 10 000, 1000 is recommended",
+            "defaultValue": 1000,
+            "visibilityCondition" : "model.provider == 'uscensus' && model.batch_enabled"
+        },
+        {
+            "name": "column_prefix",
+            "type": "STRING",
+            "label" : "Prefix for output columns",
+            "defaultValue": ""
+        },
+        {
+            "name": "smart_compute",
+            "type": "BOOLEAN",
+            "label" : "Do not recompute",
+            "description" : "Only compute when output columns are empty",
+            "defaultValue": true
+        },
+        {
+            "name": "sep_auth",
+            "type": "SEPARATOR",
+            "label" : "Authentication",
+            "visibilityCondition" : "['baidu', 'bing', 'canadapost', 'gaode', 'geonames', 'google', 'here', 'locationiq',  'mapbox',  'mapquest',  'mapzen',  'opencage',  'tamu',  'tomtom',  'w3w'].indexOf(model.provider) >= 0"
+        },
+        {
+            "name": "api_key",
+            "type": "STRING",
+            "label" : "API key",
+            "visibilityCondition" : "['baidu', 'bing', 'canadapost', 'gaode', 'geonames', 'google', 'locationiq',  'mapbox',  'mapquest',  'mapzen',  'opencage',  'tamu',  'tomtom',  'w3w'].indexOf(model.provider) >= 0"
+        },
+        {
+            "name": "here_app_id",
+            "type": "STRING",
+            "label" : "HERE App ID",
+            "visibilityCondition" : "model.provider === 'here'"
+        }, 
+        {
+            "name": "here_app_code",
+            "type": "STRING",
+            "label" : "HERE App Code",
+            "visibilityCondition" : "model.provider === 'here'"
+        },
+        {
+            "name": "google_client",
+            "type": "STRING",
+            "label" : "Google client ID",
+            "description": "Only if using a premium plan - optional otherwise",
+            "visibilityCondition" : "model.provider === 'google'"
+        }, 
+        {
+            "name": "google_client_secret",
+            "type": "STRING",
+            "label" : "Google secret",
+            "description": "Only if using a premium plan - optional otherwise",
+            "visibilityCondition" : "model.provider === 'google'"
+        }
+    ],
+
+    "resourceKeys" : []
+
+}
