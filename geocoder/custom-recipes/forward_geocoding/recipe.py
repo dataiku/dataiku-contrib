@@ -29,9 +29,13 @@ def get_config():
         'mapquest': 100,
         'uscensus': get_recipe_config().get('batch_size_uscensus', 1000)
     }.get(config['provider'], 0)
-
-    config['smart_compute'] = get_recipe_config().get('smart_compute', True)
-
+    
+    config['batch_timeout'] = {
+        'bing': 10,
+        'mapquest': 30,
+        'uscensus': 1800
+    }.get(config['provider'], 0)
+    
     if get_plugin_config().get('cache_location', 'original') == 'original':
         config['cache_location'] = os.environ["DIP_HOME"] + '/caches/plugins/geocoder/forward'
     else:
@@ -57,7 +61,7 @@ def get_geocode_function(config):
     elif config['provider'] == 'google':
         return lambda address: provider_function(address, key=config['api_key'], client=config['google_client'], client_secret=config['google_client_secret'])
     elif config['batch_enabled']:
-        return lambda addresses: provider_function(addresses, key=config['api_key'], method='batch', timeout=30.0)
+        return lambda addresses: provider_function(addresses, key=config['api_key'], method='batch', timeout=config['batch_timeout'])
     else:
         return lambda address: provider_function(address, key=config['api_key'])
 
@@ -72,7 +76,7 @@ def perform_geocode(df, config, fun, cache):
     res = [None, None]
 
     try:
-        if not config['smart_compute'] or all([is_empty(df[config[c]]) for c in ['latitude', 'longitude']]):
+        if any([is_empty(df[config[c]]) for c in ['latitude', 'longitude']]):
             res = cache[address]
         else:
             res = [df[config[c]] for c in ['latitude', 'longitude']]
@@ -113,19 +117,24 @@ if __name__ == '__main__':
     writer = None
 
     try:
+        # Creating a fake or real cache depending on user's choice
         with CacheHandler(config['cache_location'], enabled=config['cache_enabled'], \
                           size_limit=config['cache_size'], eviction_policy=config['cache_eviction']) as cache:
             for current_df in config['input_ds'].iter_dataframes(chunksize=max(10000, config['batch_size'])):
                 columns = current_df.columns.tolist()
-                if not all(config[c] in columns for c in ['latitude', 'longitude']):
-                    index = columns.index(config['address_column'])
-                    current_df = current_df.reindex(columns = \
-                        columns[:index + 1] + [config['latitude'], config['longitude']] + columns[index + 1:], copy=False)
 
+                # Adding columns to the schema
+                columns_to_append = [config[c] for c in ['latitude', 'longitude'] if not config[c] in columns]
+                if columns_to_append:
+                    index = columns.index(config['address_column'])
+                    current_df = current_df.reindex(columns = columns[:index + 1] + columns_to_append + columns[index + 1:], copy=False)
+
+                # Normal, 1 by 1 geocoding when batch is not enabled/available
                 if not config['batch_enabled']:
                     current_df[config['latitude']], current_df[config['longitude']] = \
                         zip(*current_df.apply(perform_geocode, axis=1, args=(config, geocode_function, cache)))
 
+                # Batch creation and geocoding otherwise
                 else:
                     batch = []
 
@@ -136,7 +145,7 @@ if __name__ == '__main__':
 
                         address = row[config['address_column']]
                         try:
-                            if not config['smart_compute'] or all([is_empty(row[config[c]]) for c in ['latitude', 'longitude']]):
+                            if any([is_empty(row[config[c]]) for c in ['latitude', 'longitude']]):
                                 res = cache[address]
                             else:
                                 res = [row[config[c]] for c in ['latitude', 'longitude']]

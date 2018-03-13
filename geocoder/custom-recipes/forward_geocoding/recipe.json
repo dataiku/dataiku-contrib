@@ -113,10 +113,6 @@
                 "label":"MapQuest"
             },
             {
-                "value":"mapzen",
-                "label":"Mapzen"
-            },
-            {
                 "value":"maxmind",
                 "label":"Maxmind"
             },
@@ -197,13 +193,6 @@
             "type": "STRING",
             "label" : "Prefix for output columns",
             "defaultValue": ""
-        },
-        {
-            "name": "smart_compute",
-            "type": "BOOLEAN",
-            "label" : "Do not recompute",
-            "description" : "Only compute when output columns are empty",
-            "defaultValue": true
         },
         {
             "name": "sep_auth",

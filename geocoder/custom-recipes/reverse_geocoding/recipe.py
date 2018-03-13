@@ -25,8 +25,6 @@ def get_config():
                                 and (config['provider'] == 'bing')
     config['batch_size'] = get_recipe_config().get('batch_size_bing', 50)
 
-    config['smart_compute'] = get_recipe_config().get('smart_compute', True)
-
     config['features'] = []
     prefix = get_recipe_config().get('column_prefix', '')
 
@@ -74,7 +72,7 @@ def perform_geocode(df, config, fun, cache):
     res = {'address': None, 'city': None, 'postal': None, 'state': None, 'country': None}
 
     try:
-        if not config['smart_compute'] or all([is_empty(df[f['column']]) for f in config['features']]):
+        if any([is_empty(df[f['column']]) for f in config['features']]):
             res = cache[(lat, lng)]
         else:
             for f in config['features']:
@@ -131,7 +129,6 @@ if __name__ == '__main__':
     config = get_config()
     geocode_function = get_geocode_function(config)
     input_df = config['input_ds'].get_dataframe()
-    cachedir = os.environ["DIP_HOME"] + '/caches/plugins/geocoder/reverse'
 
     writer = None
 
@@ -141,11 +138,10 @@ if __name__ == '__main__':
             for current_df in config['input_ds'].iter_dataframes(chunksize=max(10000, config['batch_size'])):
                 columns = current_df.columns.tolist()
 
-                if not all(f['column'] in columns for f in config['features']):
+                columns_to_append = [f['column'] for f in config['features'] if not f['column'] in columns]
+                if columns_to_append:
                     index = max(columns.index(config['lat_column']), columns.index(config['lng_column']))
-                    current_df = current_df.reindex(columns=columns[:index + 1] + \
-                        [f['column'] for f in config['features']] + \
-                        columns[index + 1:], copy=False)
+                    current_df = current_df.reindex(columns = columns[:index + 1] + columns_to_append + columns[index + 1:], copy=False)
 
                 if not config['batch_enabled']:
                     results = zip(*current_df.apply(perform_geocode, axis=1, args=(config, geocode_function, cache)))
@@ -165,7 +161,7 @@ if __name__ == '__main__':
                         lng = row[config['lng_column']]
 
                         try:
-                            if not config['smart_compute'] or all([is_empty(row[f['column']]) for f in config['features']]):
+                            if any([is_empty(row[f['column']]) for f in config['features']]):
                                 res = cache[(lat, lng)]
                             else:
                                 res = {}
