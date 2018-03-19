@@ -17,6 +17,7 @@ import com.dataiku.dip.plugin.CustomFormatInput;
 import com.dataiku.dip.plugin.CustomFormatOutput;
 import com.dataiku.dip.plugin.InputStreamWithFilename;
 import com.dataiku.dip.warnings.WarningsContext;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class SPSSFormat implements CustomFormat {
@@ -31,7 +32,16 @@ public class SPSSFormat implements CustomFormat {
      */
     @Override
     public CustomFormatInput getReader(JsonObject config, JsonObject pluginConfig) {
-        return new SPSSFormatInput();
+        boolean useVarLabels = false;
+
+        if (config != null) {
+            JsonElement tmpElt = config.get("use_varlabels");
+            if (tmpElt != null && tmpElt.isJsonPrimitive()) {
+                useVarLabels = tmpElt.getAsBoolean();
+            }
+        }
+
+        return new SPSSFormatInput(useVarLabels);
     }
 
     /**
@@ -52,6 +62,11 @@ public class SPSSFormat implements CustomFormat {
 
     public static class SPSSFormatInput implements CustomFormatInput {
         private WarningsContext wc;
+        private boolean useVarLabels;
+
+        SPSSFormatInput(boolean useVarLabels) {
+            this.useVarLabels = useVarLabels;
+        }
 
         /**
          * Called if the schema is available (ie, dataset has been created)
@@ -71,7 +86,7 @@ public class SPSSFormat implements CustomFormat {
          */
         @Override
         public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
-            SPSSStreamReader reader = new SPSSStreamReader(in.getInputStream(), cf, wc);
+            SPSSStreamReader reader = new SPSSStreamReader(in.getInputStream(), cf, wc, this.useVarLabels);
             reader.readData(out, rf);
         }
 

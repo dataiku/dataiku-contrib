@@ -97,7 +97,7 @@ public class SPSSStreamReader {
 
     private static final Logger logger = Logger.getLogger(SPSSFormat.class);
 
-    static final String START_TOKEN = "$FL2";
+    private static final String START_TOKEN = "$FL2";
     private static final Long GREGORIAN_CALENDAR_OFFSET = 12219379200000L;
     private static final Double MISSING_VALUE = -Double.MAX_VALUE;
     private static final Map<Integer, SimpleDateFormat> dateTypeToFormat;
@@ -130,14 +130,16 @@ public class SPSSStreamReader {
     private final SPSSInputStream is;
     private final ColumnFactory cf;
     private final WarningsContext wc;
+    private final boolean useVarLabels;
 
-    boolean headerParsed;
+    private boolean headerParsed;
 
 
-    public SPSSStreamReader(InputStream is, ColumnFactory cf, WarningsContext wc) {
+    public SPSSStreamReader(InputStream is, ColumnFactory cf, WarningsContext wc, boolean useVarLabels) {
         this.is = new SPSSInputStream(is);
         this.cf = cf;
         this.wc = wc;
+        this.useVarLabels = useVarLabels;
     }
 
 
@@ -253,6 +255,10 @@ public class SPSSStreamReader {
             // label uses 4 bytes blocks: skip the padding
             if (len % 4 != 0) {
                 is.skipBytes(4 - (len % 4));
+            }
+
+            if (this.useVarLabels && StringUtils.isNotBlank(var.label)) {
+                var.name = var.label;
             }
         }
         if (var.missingValueFormatCode != 0) {

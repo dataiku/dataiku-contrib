@@ -1,6 +1,4 @@
-/* This file is the descriptor for the Custom java format spss */
 {
-    /* Meta data for display purposes */
     "meta" : {
         "label" : "SPSS"
     },
@@ -11,5 +9,14 @@
     "canExtractSchema" : false,
     
     "formatClass" : "com.dataiku.dss.formats.spss.SPSSFormat",
-    "params": []
+    "params": [
+        {
+            "name": "use_varlabels",
+            "label" : "Use variable labels",
+            "description": "Use variable labels as column names",
+            "type": "BOOLEAN",
+            "defaultValue": false,
+            "mandatory" : true
+        }
+    ]
 }
