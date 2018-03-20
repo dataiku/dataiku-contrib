@@ -3,3 +3,4 @@ tensorflow-gpu==1.4.0
 keras==2.1.2
 h5py>=2.7.1
 Pillow
+pip==9.0.1
