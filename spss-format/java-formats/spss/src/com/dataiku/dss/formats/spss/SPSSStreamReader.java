@@ -2,11 +2,14 @@ package com.dataiku.dss.formats.spss;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.dataiku.dip.warnings.WarningsContext;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import com.dataiku.dip.datalayer.Column;
 import com.dataiku.dip.datalayer.ColumnFactory;
@@ -70,15 +73,6 @@ public class SPSSStreamReader {
         }
     }
 
-    static class ValueLabelRecord { // recordType 3
-        HashMap<byte[], String> valueLabelsMap;
-    }
-
-    static class VariableReferenceRecord { // recordType 4
-        int numberOfLabels;
-        int[] variableIndex;
-    }
-
     static class DocumentRecord { // recordType 6
         String[] lines;
     }
@@ -123,6 +117,8 @@ public class SPSSStreamReader {
     }
 
     private ArrayList<VariableRecord> vars = new ArrayList<>();
+    private Map<Integer, Map<List<Byte>, String>> valueLabelRecords = new HashMap<>();
+
     private Meta meta;
     private LongVariableNames longVariableNames;
     private VeryLongStrings veryLongStrings;
@@ -131,15 +127,18 @@ public class SPSSStreamReader {
     private final ColumnFactory cf;
     private final WarningsContext wc;
     private final boolean useVarLabels;
+    private final boolean useValueLabels;
 
     private boolean headerParsed;
 
 
-    public SPSSStreamReader(InputStream is, ColumnFactory cf, WarningsContext wc, boolean useVarLabels) {
+    public SPSSStreamReader(InputStream is, ColumnFactory cf, WarningsContext wc,
+                            boolean useVarLabels, boolean useValueLabels) {
         this.is = new SPSSInputStream(is);
         this.cf = cf;
         this.wc = wc;
         this.useVarLabels = useVarLabels;
+        this.useValueLabels = useValueLabels;
     }
 
 
@@ -276,15 +275,17 @@ public class SPSSStreamReader {
     // Record type 3
     // Source: https://www.gnu.org/software/pspp/pspp-dev/html_node/Value-Labels-Records.html#Value-Labels-Records
     private void readValueLabel() throws IOException {
-        ValueLabelRecord vl = new ValueLabelRecord();
+        Map<List<Byte>, String> valueLabelsMap = new HashMap<>();
         int nLabels = is.readInt();
-
-        vl.valueLabelsMap = new HashMap<>();
 
         for (int i = 0; i < nLabels; i++) {
             // read the label value
             byte[] value = new byte[8]; // unknown type
-            is.read(value);
+            is.readWithEndianness(value);
+
+            // Double num = is.readDouble();
+            // byte[] value = toByteArray(num);
+            // logger.debug(String.format("Value label double found: %f", num));
 
             int labelLength = is.read(); //max value is 60, let's not check
 
@@ -296,20 +297,25 @@ public class SPSSStreamReader {
                 is.skipBytes(8 - ((labelLength + 1) % 8));
             }
 
-            vl.valueLabelsMap.put(value, label);
+            valueLabelsMap.put(Arrays.asList(ArrayUtils.toObject(value)), label);
+
+            logger.debug(String.format("Value label record: %s -> %s", Arrays.toString(value), label));
         }
 
         expectInt(4, "missing variable reference (recordType 4) after value label (recordType 3)");
 
         int nVariables = is.readInt();
-        VariableReferenceRecord vr = new VariableReferenceRecord();
-        vr.variableIndex = new int[nVariables];
+        int[] associatedVarRecords = new int[nVariables];
+
         for (int i = 0; i < nVariables; i++) {
-            vr.variableIndex[i] = is.readInt();
+            associatedVarRecords[i] = is.readInt();
+            valueLabelRecords.put(associatedVarRecords[i], valueLabelsMap);
         }
 
+        logger.debug(String.format("Value label associated to %s", Arrays.toString(associatedVarRecords)));
+
         // Not logging since column labels are not used.
-        // logger.debug(String.format("Value labels record parsed. Found %d elements.", vl.valueLabelsMap.size()));
+        logger.debug(String.format("Value labels record parsed. Found %d elements.", valueLabelsMap.size()));
     }
 
     // Record type 6
@@ -428,12 +434,21 @@ public class SPSSStreamReader {
         }
         for (int i = 0; i < meta.nRecords; i++) {
             Row row = rf.row();
-            for (Iterator<VariableRecord> iterator = vars.iterator(); iterator.hasNext(); ) {
+            int index = 1;
+            for (Iterator<VariableRecord> iterator = vars.iterator(); iterator.hasNext(); index++) {
                 VariableRecord var = iterator.next();
 
                 Column col = cf.column(var.name);
                 if (var.isNumeric()) {
-                    row.put(col, readNumber(var.writeFormat));
+                    String value = readNumber(var.writeFormat);
+                    // logger.debug("Var n°" + i + " | Index n°" + index + " (" + var.name + ") | Found double is " + value);
+                    if (this.useValueLabels
+                            && valueLabelRecords.containsKey(index)
+                            && valueLabelRecords.get(index).containsKey(is.getLastByteArray())) {
+                        row.put(col, valueLabelRecords.get(index).get(is.getLastByteArray()));
+                    } else {
+                        row.put(col, value);
+                    }
                 } else {
                     if (var.segments > 0) {
                         int remainingSegments = var.segments;
@@ -446,9 +461,29 @@ public class SPSSStreamReader {
 
                         row.put(col, sb.toString().trim());
                     } else {
-                        row.put(col, readString(var.maxLength(), true));
+                        String value = readString(var.maxLength(), true);
+                        logger.debug("Var n°" + i + " | Index n°" + index + " | Found String is " + value);
+                        logger.debug("Byte array is " + is.getLastByteArray().toString());
+                        if (this.useValueLabels
+                                && valueLabelRecords.containsKey(index)
+                                && valueLabelRecords.get(index).containsKey(is.getLastByteArray())) {
+                            row.put(col, valueLabelRecords.get(index).get(is.getLastByteArray()));
+                        } else {
+                            row.put(col, value);
+                        }
                     }
                 }
+
+                // logger.debug("Var n°" + i + " | Index n°" + index + " (" + var.name + ") | bytes: " + is.getLastByteArray());
+                /*if (this.useValueLabels && valueLabelRecords.containsKey(index)) {
+                    logger.debug("valueLabelRecords.containsKey(index) " + valueLabelRecords.containsKey(index));
+                    if (valueLabelRecords.containsKey(index)) {
+                        logger.debug("valueLabelRecords.get(index).containsKey(is.getLastByteArray()) " + valueLabelRecords.get(index).containsKey(is.getLastByteArray()));
+                        if (valueLabelRecords.get(index).containsKey(is.getLastByteArray())) {
+                           logger.debug("valueLabelRecords.get(index).get(is.getLastByteArray()) " + valueLabelRecords.get(index).get(is.getLastByteArray()));
+                        }
+                    }
+                } */
             }
             out.emitRow(row);
         }
@@ -546,8 +581,10 @@ public class SPSSStreamReader {
                 break;
             default:
                 ret = byteValue - meta.compressionBias;
+                is.buff = is.toByteArray(ret);
                 break;
         }
+
         return ret;
     }
 

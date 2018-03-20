@@ -7,12 +7,20 @@ import com.dataiku.dip.datalayer.memimpl.MemTableAppendingOutput;
 
 import com.dataiku.dip.plugin.CustomFormatInput;
 import com.dataiku.dip.plugin.InputStreamWithFilename;
+import com.google.gson.JsonObject;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
 import org.junit.Test;
 import com.dataiku.dip.warnings.WarningsContext;
 
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 
 
@@ -151,6 +159,35 @@ public class SPSSFormatTest {
         assertCells(mt, data);
     }
 
+    @Test
+    public void labels() throws Exception {
+        MemTable mt = new MemTable();
+        WarningsContext wc = new WarningsContext();
 
+        JsonObject config = new JsonObject();
+        config.addProperty("use_varlabels", true);
+        config.addProperty("use_valuelabels", true);
+        CustomFormatInput input = new SPSSFormat().getReader(config, null);
+
+        input.setWarningsContext(wc);
+        input.run(getResourceFile("test_labels.sav"), new MemTableAppendingOutput(mt), mt, mt);
+
+        assertEquals(wc.getTotalCount(), 0);
+        assertSize(mt, 474, 4);
+
+        String[] cols = {"Gender", "method", "application", "evaluation"};
+        for (String col : cols) {
+            assertHasCol(mt, col);
+        }
+
+        String[][] data = {cols,
+                {"Male", "CTRL_1", "5.7", "2.7"},
+                {"Male", "CTRL_2", "4.0200000000000005", "1.875"},
+                {"Female", "EXP_2", "2.145", "1.2"},
+                {"Female", "EXP_1", "2.19", "1.3199999999999998"}
+        };
+
+        assertCells(mt, data);
+    }
 }
 

@@ -1,6 +1,6 @@
 {
     "id" : "spss-format",
-    "version" : "0.9.5",
+    "version" : "0.9.6",
 
     "meta" : {
         "label" : "SPSS format",

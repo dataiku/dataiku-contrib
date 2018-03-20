@@ -17,6 +17,14 @@
             "type": "BOOLEAN",
             "defaultValue": false,
             "mandatory" : true
+        },
+        {
+            "name": "use_valuelabels",
+            "label" : "Use value labels",
+            "description": "Use value labels as column values",
+            "type": "BOOLEAN",
+            "defaultValue": false,
+            "mandatory" : true
         }
     ]
 }

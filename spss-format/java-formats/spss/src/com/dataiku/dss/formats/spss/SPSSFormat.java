@@ -33,15 +33,21 @@ public class SPSSFormat implements CustomFormat {
     @Override
     public CustomFormatInput getReader(JsonObject config, JsonObject pluginConfig) {
         boolean useVarLabels = false;
+        boolean useValueLabels = false;
 
         if (config != null) {
             JsonElement tmpElt = config.get("use_varlabels");
             if (tmpElt != null && tmpElt.isJsonPrimitive()) {
                 useVarLabels = tmpElt.getAsBoolean();
             }
+
+            tmpElt = config.get("use_valuelabels");
+            if (tmpElt != null && tmpElt.isJsonPrimitive()) {
+                useValueLabels = tmpElt.getAsBoolean();
+            }
         }
 
-        return new SPSSFormatInput(useVarLabels);
+        return new SPSSFormatInput(useVarLabels, useValueLabels);
     }
 
     /**
@@ -63,9 +69,11 @@ public class SPSSFormat implements CustomFormat {
     public static class SPSSFormatInput implements CustomFormatInput {
         private WarningsContext wc;
         private boolean useVarLabels;
+        private boolean useValueLabels;
 
-        SPSSFormatInput(boolean useVarLabels) {
+        SPSSFormatInput(boolean useVarLabels, boolean useValueLabels) {
             this.useVarLabels = useVarLabels;
+            this.useValueLabels = useValueLabels;
         }
 
         /**
@@ -86,7 +94,7 @@ public class SPSSFormat implements CustomFormat {
          */
         @Override
         public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
-            SPSSStreamReader reader = new SPSSStreamReader(in.getInputStream(), cf, wc, this.useVarLabels);
+            SPSSStreamReader reader = new SPSSStreamReader(in.getInputStream(), cf, wc, this.useVarLabels, this.useValueLabels);
             reader.readData(out, rf);
         }
 

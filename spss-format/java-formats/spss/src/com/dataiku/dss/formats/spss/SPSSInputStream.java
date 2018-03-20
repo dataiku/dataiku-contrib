@@ -7,22 +7,28 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 import com.dataiku.dss.formats.spss.SPSSStreamReader.NumericFormat;
+import org.apache.commons.lang.ArrayUtils;
 
 public class SPSSInputStream extends InputStream {
     Charset charset;
     DataInputStream is;
     boolean littleEndian;
+    byte[] buff;
 
     SPSSInputStream(InputStream is) {
         this.is = new DataInputStream(is);
     }
 
     @Override
-    public int read(byte[] buff) throws IOException {
-        int ret = is.read(buff);
-        if (ret < buff.length) {
+    public int read(byte[] userBuff) throws IOException {
+        int ret = is.read(userBuff);
+        buff = userBuff.clone();
+
+        if (ret < userBuff.length) {
             throw new EOFException("End of stream reached");
         }
         return ret;
@@ -34,6 +40,25 @@ public class SPSSInputStream extends InputStream {
         if (ret == -1) {
             throw new EOFException("End of stream reached");
         }
+        return ret;
+    }
+
+    public int readWithEndianness(byte[] userBuff) throws IOException {
+        buff = new byte[userBuff.length];
+        int ret = is.read(buff);
+
+        ByteBuffer bb;
+        if (littleEndian) {
+            bb = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).put(buff);
+            bb.flip();
+        } else {
+            bb = ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).put(buff);
+        }
+
+        //bb.get(userBuff);
+        //buff = userBuff.clone();
+        System.arraycopy(buff, 0, userBuff, 0, userBuff.length);
+
         return ret;
     }
 
@@ -54,14 +79,18 @@ public class SPSSInputStream extends InputStream {
     }
 
     public double readDouble() throws IOException {
+        buff = new byte[8];
+        is.read(buff);
+
+        ByteBuffer bb;
         if (littleEndian) {
-            byte[] buff = new byte[8];
-            is.read(buff);
-            ByteBuffer bb = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).put(buff);
+            bb = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).put(buff);
             bb.flip();
-            return bb.getDouble();
+        } else {
+            bb = ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).put(buff);
         }
-        return is.readDouble();
+
+        return bb.getDouble();
     }
 
     public NumericFormat readNumericFormat() throws IOException {
@@ -78,7 +107,7 @@ public class SPSSInputStream extends InputStream {
 
     public String readString(int len, boolean shouldTrim) throws IOException {
         String ret;
-        byte[] buff = new byte[len];
+        buff = new byte[len];
         is.read(buff);
 
         if (charset != null) {
@@ -90,11 +119,33 @@ public class SPSSInputStream extends InputStream {
         return shouldTrim ? ret.trim() : ret;
     }
 
+    public List<Byte> getLastByteArray() {
+        return Arrays.asList(ArrayUtils.toObject(buff));
+    }
+
     public String readString(int len) throws IOException {
         return readString(len, true);
     }
 
     public void skipBytes(int i) throws IOException {
-        is.skipBytes(i);
+        // When we skip bytes for the padding, these bytes might still be used for the value labels.
+        if (buff.length + i == 8) {
+            byte[] secondBuff = new byte[i];
+            is.read(secondBuff);
+
+            byte[] newBuff = new byte[8];
+            System.arraycopy(buff, 0, newBuff, 0, buff.length);
+            System.arraycopy(secondBuff, 0, newBuff, buff.length, secondBuff.length);
+
+            buff = newBuff;
+        } else {
+            is.skipBytes(i);
+        }
+    }
+
+    public byte[] toByteArray(double value) {
+        byte[] bytes = new byte[8];
+        ByteBuffer.wrap(bytes).order(littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN).putDouble(value);
+        return bytes;
     }
 }
