@@ -160,7 +160,7 @@ public class SPSSFormatTest {
     }
 
     @Test
-    public void labels() throws Exception {
+    public void labelsFile() throws Exception {
         MemTable mt = new MemTable();
         WarningsContext wc = new WarningsContext();
 

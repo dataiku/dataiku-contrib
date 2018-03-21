@@ -2,8 +2,6 @@ package com.dataiku.dss.formats.spss;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -281,11 +279,7 @@ public class SPSSStreamReader {
         for (int i = 0; i < nLabels; i++) {
             // read the label value
             byte[] value = new byte[8]; // unknown type
-            is.readWithEndianness(value);
-
-            // Double num = is.readDouble();
-            // byte[] value = toByteArray(num);
-            // logger.debug(String.format("Value label double found: %f", num));
+            is.read(value);
 
             int labelLength = is.read(); //max value is 60, let's not check
 
@@ -298,24 +292,17 @@ public class SPSSStreamReader {
             }
 
             valueLabelsMap.put(Arrays.asList(ArrayUtils.toObject(value)), label);
-
-            logger.debug(String.format("Value label record: %s -> %s", Arrays.toString(value), label));
         }
 
         expectInt(4, "missing variable reference (recordType 4) after value label (recordType 3)");
 
         int nVariables = is.readInt();
-        int[] associatedVarRecords = new int[nVariables];
-
         for (int i = 0; i < nVariables; i++) {
-            associatedVarRecords[i] = is.readInt();
-            valueLabelRecords.put(associatedVarRecords[i], valueLabelsMap);
+            valueLabelRecords.put(is.readInt(), valueLabelsMap);
         }
 
-        logger.debug(String.format("Value label associated to %s", Arrays.toString(associatedVarRecords)));
-
         // Not logging since column labels are not used.
-        logger.debug(String.format("Value labels record parsed. Found %d elements.", valueLabelsMap.size()));
+        logger.debug(String.format("Value labels record parsed. Found %d elements: %s", valueLabelsMap.size(), Arrays.toString(valueLabelsMap.values().toArray())));
     }
 
     // Record type 6
@@ -441,7 +428,8 @@ public class SPSSStreamReader {
                 Column col = cf.column(var.name);
                 if (var.isNumeric()) {
                     String value = readNumber(var.writeFormat);
-                    // logger.debug("Var n°" + i + " | Index n°" + index + " (" + var.name + ") | Found double is " + value);
+
+                    // Value label matching if possible
                     if (this.useValueLabels
                             && valueLabelRecords.containsKey(index)
                             && valueLabelRecords.get(index).containsKey(is.getLastByteArray())) {
@@ -450,6 +438,7 @@ public class SPSSStreamReader {
                         row.put(col, value);
                     }
                 } else {
+                    // Long string building
                     if (var.segments > 0) {
                         int remainingSegments = var.segments;
                         StringBuilder sb = new StringBuilder(readString(var.maxLength(), false));
@@ -462,8 +451,8 @@ public class SPSSStreamReader {
                         row.put(col, sb.toString().trim());
                     } else {
                         String value = readString(var.maxLength(), true);
-                        logger.debug("Var n°" + i + " | Index n°" + index + " | Found String is " + value);
-                        logger.debug("Byte array is " + is.getLastByteArray().toString());
+
+                        // Value label matching if possible
                         if (this.useValueLabels
                                 && valueLabelRecords.containsKey(index)
                                 && valueLabelRecords.get(index).containsKey(is.getLastByteArray())) {
@@ -473,17 +462,6 @@ public class SPSSStreamReader {
                         }
                     }
                 }
-
-                // logger.debug("Var n°" + i + " | Index n°" + index + " (" + var.name + ") | bytes: " + is.getLastByteArray());
-                /*if (this.useValueLabels && valueLabelRecords.containsKey(index)) {
-                    logger.debug("valueLabelRecords.containsKey(index) " + valueLabelRecords.containsKey(index));
-                    if (valueLabelRecords.containsKey(index)) {
-                        logger.debug("valueLabelRecords.get(index).containsKey(is.getLastByteArray()) " + valueLabelRecords.get(index).containsKey(is.getLastByteArray()));
-                        if (valueLabelRecords.get(index).containsKey(is.getLastByteArray())) {
-                           logger.debug("valueLabelRecords.get(index).get(is.getLastByteArray()) " + valueLabelRecords.get(index).get(is.getLastByteArray()));
-                        }
-                    }
-                } */
             }
             out.emitRow(row);
         }

@@ -43,25 +43,6 @@ public class SPSSInputStream extends InputStream {
         return ret;
     }
 
-    public int readWithEndianness(byte[] userBuff) throws IOException {
-        buff = new byte[userBuff.length];
-        int ret = is.read(buff);
-
-        ByteBuffer bb;
-        if (littleEndian) {
-            bb = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).put(buff);
-            bb.flip();
-        } else {
-            bb = ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).put(buff);
-        }
-
-        //bb.get(userBuff);
-        //buff = userBuff.clone();
-        System.arraycopy(buff, 0, userBuff, 0, userBuff.length);
-
-        return ret;
-    }
-
     public void setLittleEndian(boolean littleEndian) {
         this.littleEndian = littleEndian;
     }
