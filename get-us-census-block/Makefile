@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.8
+PLUGIN_VERSION=0.0.10
 PLUGIN_ID=get-us-census-block
 
 plugin:
