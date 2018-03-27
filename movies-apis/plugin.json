@@ -1,6 +1,6 @@
 {
   "id" : "movies-apis",
-  "version" : "0.0.1",
+  "version" : "0.0.2",
   "meta" : {
     "label" : "Enrich from Movies APIs",
     "description" : "Enrich datasets with data about movies (ratings, runlength, IMDb id...) from the Open Movie Database and The Movie DB",
@@ -8,7 +8,7 @@
     "icon" : "icon-film",
     "licenseInfo" : "Apache Software License",
     "url" : "https://www.dataiku.com/community/plugins/info/movies-apis.html",
-    "tags" : ["Enrich", "Open Data", "API"]
+    "tags" : ["Enrichment", "Open Data", "API"]
   },
   "params": [
       {

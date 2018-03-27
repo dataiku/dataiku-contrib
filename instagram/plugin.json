@@ -1,6 +1,6 @@
 {
     "id" : "instagram",
-    "version" : "0.9",
+    "version" : "0.9.1",
     "meta" : {
         "label" : "Instagram",
         "description" : "A set of DSS functions allowing to interact with the Instagram public API",
@@ -8,6 +8,6 @@
         "icon" : "icon-instagram",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com",
-        "tags" : ["instagram", "social-media", "api"]
+        "tags" : ["Social network", "API"]
     }
 }

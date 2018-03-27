@@ -1,7 +1,7 @@
 {
 	"id" : "gutenberg",
 
-	"version" : "0.0.1",
+	"version" : "0.0.2",
 
 	"meta" : {
 		"label" : "Project Gutenberg",
@@ -15,6 +15,6 @@
 
 		"url" : "https://www.dataiku.com/community/plugins/info/gutenberg.html",
 
-	    "tags" : ["Public data","NLP"]
+	    "tags" : ["Open Data", "NLP"]
 	}
 }
