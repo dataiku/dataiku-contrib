@@ -75,7 +75,6 @@ for df in dataiku.Dataset(input_name).iter_dataframes(chunksize= P_BATCH_SIZE_UN
         lat = v[P_LAT]
         lon = v[P_LON]
         print '%s - processing: (%s,%s)' % (n_record,lat, lon)
-        #https://geo.fcc.gov/api/census/block/find?latitude=38.26&longitude=-77.51&format=json
         call = requests.get('https://geo.fcc.gov/api/census/block/find', params={
                 'format': 'json',
                 'latitude': lat,
