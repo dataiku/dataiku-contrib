@@ -4,7 +4,7 @@
 	"id" : "get-us-census-block",
 
 
-	"version" : "0.0.8",
+	"version" : "0.0.10",
 
 
 
@@ -19,7 +19,7 @@
 
 		"licenseInfo" : "Apache Software License",
 
-		"url" : "https://www.dataiku.com/dss/plugins/info/get-us-block.html",
+		"url" : "https://www.dataiku.com",
 
 		"tags" : ["us census", "block", "API"]
 	}
