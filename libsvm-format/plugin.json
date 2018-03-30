@@ -8,6 +8,6 @@
         "icon" : "icon-rocket",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/dss/plugins/info/libsvm-format.html",
-        "tags" : ["format", "productivity"]
+        "tags" : ["Format", "Productivity"]
     }
 }

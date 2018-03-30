@@ -8,6 +8,6 @@
         "icon" : "icon-picture",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/dss/plugins/info/deeplearning-image.html",
-        "tags" : ["Deep learning", "Images"]
+        "tags" : ["Deep Learning", "Images"]
     }
 }

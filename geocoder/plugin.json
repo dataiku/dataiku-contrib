@@ -9,7 +9,7 @@
         "icon" : "icon-globe",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/dss/plugins/info/geocoder.html",
-        "tags" : ["Geospatial", "API"]
+        "tags" : ["Geospatial", "Enrichment"]
     },
     
     "params" : [
