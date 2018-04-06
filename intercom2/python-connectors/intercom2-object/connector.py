@@ -57,6 +57,6 @@ class MyConnector(Connector):
             # "Each app can only have 1 scroll open at a time. You'll get an error message if you try to have more than one open per app.
             # If the scroll isn't used for 1 minute, it expires and calls with that scroll param will fail
             # If the end of the scroll is reached, the scroll parameter will expire"
-            if n >= records_limit and object_to_func[self.OBJECT] != scroll_object:
+            if records_limit > 0 and n >= records_limit and object_to_func[self.OBJECT] != scroll_object:
                 break
 
