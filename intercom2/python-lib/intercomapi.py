@@ -3,13 +3,7 @@ import urlparse
 import requests
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
-
-# Basic logging
-def log(*args):
-    for thing in args:
-        if type(thing) is dict:
-            thing = json.dumps(thing)
-        print('Intercom plugin - %s' % thing)
+import logging
 
 # Session object for requests
 s = requests.Session()
@@ -32,7 +26,7 @@ def make_api_call(action, token, parameters = {}, method = 'get', data = {}):
         r = s.request(method, 'https://api.intercom.io/'+action, headers=headers, params=parameters, timeout=30)
     else:
         raise ValueError('Unimplemented method.')
-    log('API %s call: %s' % (method, r.url) )
+    logging.info('Intercom plugin - API %s call: %s' % (method, r.url) )
     if r.status_code < 300:
         return r.json()
     else:
@@ -46,11 +40,11 @@ def list_object(object_name, token, parameters = {}):
     parameters.update({'page': None})
     while looping:
         json = make_api_call(object_name, token, parameters)
-        log('%s: results = %i' % (object_name, len(json.get(object_name))) )
+        logging.info('Intercom plugin - %s: results = %i' % (object_name, len(json.get(object_name))) )
         for r in json.get(object_name):
             yield r
         next = json.get('pages', {}).get('next')
-        log('%s: next = %s' % (object_name, next) )
+        logging.info('Intercom plugin - %s: next = %s' % (object_name, next) )
         if next is None:
             looping = False
         else:
@@ -68,8 +62,8 @@ def scroll_object(object_name, token, parameters = {}):
     while looping:
         parameters.update({'scroll_param':page})
         json = make_api_call(object_name+'/scroll', token, parameters)
-        log('%s: scroll_param = %s' % (object_name, json.get("scroll_param")) )
-        log('%s: results = %i' % (object_name, len(json.get(object_name))) )
+        logging.info('Intercom plugin - %s: scroll_param = %s' % (object_name, json.get("scroll_param")) )
+        logging.info('Intercom plugin - %s: results = %i' % (object_name, len(json.get(object_name))) )
         for r in json.get(object_name):
             yield r
         page = json.get('scroll_param')

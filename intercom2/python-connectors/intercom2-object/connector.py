@@ -41,7 +41,7 @@ class MyConnector(Connector):
         if self.OBJECT not in object_to_func.keys():
             raise Exception("Unknown object")
 
-        log("records_limit: %i" % records_limit)
+        logging.info("Intercom plugin - records_limit: %i" % records_limit)
         n = 0
 
         for item in object_to_func[self.OBJECT](self.OBJECT, self.TOKEN):
