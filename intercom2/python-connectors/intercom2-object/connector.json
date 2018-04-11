@@ -1,0 +1,73 @@
+{
+    "meta" : {
+        "label" : "Intercom object",
+        "description" : "Get all the records from an Intercom object (users, leads, companies, admins, conversations, ...)"
+    },
+
+    "readable" : true,
+    "writable" : false,
+
+    "params": [
+        {
+            "name": "token",
+            "label": "Intercom Access Token (with Extended Scopes)",
+            "description": "https://developers.intercom.com/v2.0/docs/personal-access-tokens",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "object",
+            "label": "Object to retrieve",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "users",
+                    "label": "Users"
+                },
+                {
+                    "value": "contacts",
+                    "label": "Leads"
+                },
+                {
+                    "value": "companies",
+                    "label": "Companies"
+                },
+                {
+                    "value": "admins",
+                    "label": "Admins"
+                },
+                {
+                    "value": "conversations",
+                    "label": "Conversations"
+                },
+                {
+                    "value": "tags",
+                    "label": "Tags"
+                },
+                {
+                    "value": "segments",
+                    "label": "Segments"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        },
+        {
+            "name": "result_format",
+            "label": "Format",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "readable",
+                    "label": "Readable with columns"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "readable"
+        }
+    ]
+}
