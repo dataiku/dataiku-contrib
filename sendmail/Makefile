@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.1.3
+PLUGIN_VERSION=0.1.4
 PLUGIN_ID=sendmail
 
 all:

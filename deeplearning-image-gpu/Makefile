@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.1.2
+PLUGIN_VERSION=0.1.3
 PLUGIN_ID=deeplearning-image-gpu
 
 plugin:

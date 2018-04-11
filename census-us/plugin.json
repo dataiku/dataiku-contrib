@@ -1,9 +1,6 @@
-// This file is the descriptor for the DSS Plugin census-us
 {
-
     "id" : "census-us",
-
-    "version" : "0.2.4",
+    "version" : "0.2.5",
 
     "meta" : {
 
@@ -13,6 +10,6 @@
         "icon" : "icon-book",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/dss/plugins/info/us-census.html",
-        "tags" : ["census","usa","enrichment"]
+        "tags" : ["Open Data", "Enrichment"]
     }
 }

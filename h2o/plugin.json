@@ -1,6 +1,6 @@
 {
     "id" : "h2o",
-    "version" : "0.0.3",
+    "version" : "0.0.4",
     "meta" : {
         "label" : "H2O Machine Learning",
         "description" : "Train models and perform predictions using the H2O distributed ML library",
@@ -8,7 +8,7 @@
         "icon" : "icon-tint",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/community/plugins/info/h2o.html",
-        "tags" : ["API", "ML"]
+        "tags" : ["API", "Machine Learning"]
     },
     "params": [
         {

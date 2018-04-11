@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.1
+PLUGIN_VERSION=0.0.3
 PLUGIN_ID=gutenberg
 
 all:

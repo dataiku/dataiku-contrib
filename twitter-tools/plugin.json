@@ -1,29 +1,19 @@
 {
-	// The identifier of the plugin.
-	// This must be globally unique, and only contain A-Za-z0-9_-
 	"id" : "twitter-tools",
+	"version" : "0.0.4",
 
-	// Version. It is highly recommended to use Semantic Versioning
-	"version" : "0.0.3",
-
-
-	// Meta data for display purposes
 	"meta" : {
-		// Name of this plugin that appears in the interface.
 		"label" : "Twitter tools",
 
 		"description" : "This plugin contains several tools that will turn DSS into an efficient machine to manage your Twitter account. It contains recipes to:\n\n * Get information about your followers\n * Get information about who you are following\n * Search for users by multiple keywords\n * Follow and unfollow users from a dataset\n\nFor this plugin, you will need to create a Dataiku API key with admin rights",
 		"author" : "Sonra (Vadim Mytarev)",
 
-		// The icon of a plugin must be one of the FontAwesome 3.1 icons
 		"icon" : "icon-twitter",
 
 		"licenseInfo" : "Apache Software License",
 
-		// URL where the user can learn more about the plugin
 		"url" : "https://www.dataiku.com/dss/plugins/info/twitter-tools.html",
 
-		// List of tags for filtering the list of plugins
-		"tags" : ["API", "Social"]
+		"tags" : ["Social network"]
 	}
 }

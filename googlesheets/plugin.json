@@ -1,6 +1,6 @@
 {
 	"id" : "googlesheets",
-	"version" : "0.1.0",
+	"version" : "0.1.1",
 	"meta" : {
 		"label" : "Google Sheets connector",
 		"description" : "Connector to spreadsheets hosted by Google Sheets",
@@ -8,6 +8,6 @@
 		"icon" : "icon-file-text",
 		"licenseInfo" : "Apache Software License version 2",
 		"url" : "https://www.dataiku.com/community/plugins/info/googlesheets.html",
-		"tags" : ["Google", "Productivity"]
+		"tags" : ["API", "Productivity"]
 	}
 }

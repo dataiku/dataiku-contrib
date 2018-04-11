@@ -8,6 +8,6 @@
     "icon" : "icon-circle",
     "licenseInfo" : "Apache Software License",
     "url" : "https://www.dataiku.com/community/plugins/info/import-io.html",
-    "tags" : ["API", "Enrichment"]
+    "tags" : ["Enrichment", "Scraping"]
   }
 }

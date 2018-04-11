@@ -1,7 +1,7 @@
 {
 	"id" : "wikipedia-pageviews",
 
-	"version" : "0.0.1",
+	"version" : "0.0.2",
 
 	"meta" : {
 		"label" : "Wikipedia Page Views",
@@ -15,6 +15,6 @@
 
 		"url" : "https://www.dataiku.com/community/plugins/info/wikipedia-pageviews.html",
 
-		"tags" : ["Public Data"]
+		"tags" : ["Open Data", "Analytics"]
 	}
 }

@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.9
+PLUGIN_VERSION=0.9.1
 PLUGIN_ID=instagram
 
 plugin:

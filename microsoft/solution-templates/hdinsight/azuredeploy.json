@@ -20,15 +20,15 @@
             "metadata": {
                 "description": "Size of the edge node that will host Dataiku DSS. Please be sure to select a VM with enough capacity if you plan to process your datasets in memory, using Python or R."
             },
-            "defaultValue": "Standard_D12_v2",
+            "defaultValue": "Standard_D12_V2",
             "allowedValues": [
-                "Standard_D3_v2",
-                "Standard_D4_v2",
-                "Standard_D5_v2",
-                "Standard_D11_v2",
-                "Standard_D12_v2",
-                "Standard_D13_v2",
-                "Standard_D14_v2"
+                "Standard_D3_V2",
+                "Standard_D4_V2",
+                "Standard_D5_V2",
+                "Standard_D11_V2",
+                "Standard_D12_V2",
+                "Standard_D13_V2",
+                "Standard_D14_V2"
             ]
         },
         "applicationName": {
@@ -48,7 +48,7 @@
         "dssVersion": {
             "type": "string",
             "metadata": {
-                "description": "The Dataiku DSS version to install. Defaults to 'latest' (otherwise '3.1.4' for instance)."
+                "description": "The Dataiku DSS version to install. Defaults to 'latest' (otherwise '4.1.5' for instance)."
             },
             "defaultValue": "latest"
         },

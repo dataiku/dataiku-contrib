@@ -1,6 +1,6 @@
 {
 	"id" : "esri-geo-enrichment",
-	"version" : "0.1.4",
+	"version" : "0.1.5",
 
 	"meta" : {
 
@@ -15,6 +15,6 @@
 
 		"url" : "https://www.dataiku.com/dss/plugins/info/esri-geo-enrichment.html",
 
-		"tags" : ["Geospatial", "API", "Enrichment", "Geocoding"]
+		"tags" : ["Geospatial", "Enrichment"]
 	}
 }

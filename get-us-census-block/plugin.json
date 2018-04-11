@@ -1,26 +1,15 @@
 
 {
-
 	"id" : "get-us-census-block",
-
-
-	"version" : "0.0.8",
-
-
-
+	"version" : "0.0.10",
 	"meta" : {
-
 		"label" : "Get US census block",
-
-		"description" : "Get an US Census block_id from the fcc.gov API",
+		"description" : "Get an US Census block_id from lat/lon coordinates",
 		"author" : "Dataiku (Nicolas GAKRELIDZ)",
-
 		"icon" : "icon-location-arrow",
-
 		"licenseInfo" : "Apache Software License",
-
 		"url" : "https://www.dataiku.com/dss/plugins/info/get-us-block.html",
-
-		"tags" : ["us census", "block", "API"]
-	}
+		"tags" : ["Open Data", "Geospatial"]
+		}
 }
+

@@ -1,10 +1,8 @@
-// This file is the descriptor for the Custom code recipe compute_weather_histo_dataset
 {
-    // Meta data for display purposes
     "meta" : {
         "label" : "From Dataset - get US census block_id from lat lon",
         "author" : "Dataiku (Nicolas GAKRELIDZ)",
-        "description":"From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon. The inputed coordinates must be clean.",
+        "description": "From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin performs a groupby for removing duplicated Lat/Lon. The inputed coordinates must be clean.",
         "tags" : ["us census", "block", "API"]
     },
 
@@ -75,7 +73,39 @@
            "defaultValue": 50000,
            "description":"For handling large datasets",
            "mandatory" : true
+        },
+        {
+           "name": "param_output_bbox",
+           "label" : "Output BBOX:",
+           "type": "BOOLEAN",
+           "defaultValue": false,
+           "description":"Output the squared bounding box of the area",
+           "mandatory" : true
         }
+        //,
+        //{
+           //"name": "param_id",
+           //"label" : "Column ID:",
+           //"type": "COLUMN",
+           //"description":"For only submitting some of the inputs ids, INTEGER. (will be processed on the entire input dataset)",
+           //"mandatory" : true
+        //},
+        //{
+           //"name": "param_id_min",
+           //"label" : "ID From:",
+           //"type": "INT",
+           //"defaultValue": 0,
+           //"description":"ID Min",
+           //"mandatory" : true
+        //},
+        //{
+           //"name": "param_id_max",
+           //"label" : "ID To:",
+           //"type": "INT",
+           //"defaultValue": 100,
+           //"description":"ID Max",
+           //"mandatory" : true
+        //}
               
     ]
 
