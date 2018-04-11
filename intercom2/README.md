@@ -2,7 +2,7 @@
 
 This plugin provides a read connector to interact with [Intercom](https://www.intercom.com), a SaaS customer messaging platform, in [Dataiku DSS](http://www.dataiku.com/dss/). You can import users, leads, companies, admins, conversations, tags, segments through Segment API.
 
-When available, it will use the `scroll` endpoint (for example, see the documentation for [/users/scroll](https://developers.intercom.com/reference#iterating-over-all-users)).
+When available, the plugin uses the `scroll` endpoint (for example, see the documentation for [/users/scroll](https://developers.intercom.com/reference#iterating-over-all-users)). It allows one to fetch more than 10,000 but it has disadvantages: only 1 scroll can be open at a time (so concurrent recipes runs are not possible), and the scroll is unlocked when all records are fetched or after a timeout (so the plugin will always fetch all records).
 
 ## How to set-up
 
@@ -12,7 +12,7 @@ When available, it will use the `scroll` endpoint (for example, see the document
 
 ## Changelog
 
-**Version 1.0.0 (2018-??-??)**
+**Version 1.0.0 (2018-04-11)**
 
 * Initial release
 
