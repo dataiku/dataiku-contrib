@@ -162,7 +162,7 @@ def augmentation_generator(df_imgs, image_folder_path, batch_size, n_augmentatio
 
                 row = df_imgs_batch.iloc[num_img, :]
                 img_filename = row[constants.FILENAME]
-                img_path = os.path.join(image_folder_path, img_filename)
+                img_path = utils.get_file_path(image_folder_path, img_filename)
                 label = row[constants.LABEL]
                 label_index = labels.index(label)
                 
@@ -207,7 +207,7 @@ def no_augmentation_generator(df_imgs, image_folder_path, batch_size, input_shap
                 row = df_imgs_batch.iloc[num_img, :]
                 img_filename = row[constants.FILENAME]
 
-                img_path = os.path.join(image_folder_path, img_filename)
+                img_path = utils.get_file_path(image_folder_path, img_filename)
                 label = row[constants.LABEL]
                 label_index = labels.index(label)
                 try :
@@ -276,7 +276,7 @@ callback_list.append(mcheck)
 ###################################################################################################################
 
 if tensorboard:
-    log_path = os.path.join(output_model_folder_path, constants.TENSORBOARD_LOGS)
+    log_path = utils.get_file_path(output_model_folder_path, constants.TENSORBOARD_LOGS)
 
     # If already folder at loger_path, delete it
     if os.path.isdir(log_path):
@@ -309,7 +309,7 @@ model_config[constants.TOP_PARAMS] = model_params
 utils.write_config(output_model_folder_path, model_config)
 
 df_labels = pd.DataFrame({"id": range(n_classes), "className": labels})
-df_labels.to_csv(os.path.join(output_model_folder_path, constants.MODEL_LABELS_FILE), index=False)
+df_labels.to_csv(utils.get_file_path(output_model_folder_path, constants.MODEL_LABELS_FILE), index=False)
 
 # Computing model info
 utils.save_model_info(output_model_folder_path)

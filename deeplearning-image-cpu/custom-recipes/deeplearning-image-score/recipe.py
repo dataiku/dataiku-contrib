@@ -45,7 +45,7 @@ model_input_shape = model.input_shape[1:3]
 
 # (classId -> Name) mapping
 labels_df = None
-labels_path = os.path.join(model_folder_path, constants.MODEL_LABELS_FILE)
+labels_path = utils.get_file_path(model_folder_path, constants.MODEL_LABELS_FILE)
 if os.path.isfile(labels_path):
     labels_df = pd.read_csv(labels_path, sep=",")
     labels_df = labels_df.set_index('id')
@@ -74,7 +74,7 @@ def predict(limit = 5, min_threshold = 0):
         for index_in_batch, i in enumerate(range(n*batch_size, min((n+1)*batch_size, num_images))):
             img_path = images_paths[i]
             try:
-                preprocessed_img = utils.preprocess_img(os.path.join(image_folder_path, img_path), model_input_shape, preprocessing)
+                preprocessed_img = utils.preprocess_img(utils.get_file_path(image_folder_path, img_path), model_input_shape, preprocessing)
                 next_batch_list.append(preprocessed_img)
             except IOError as e:
                 print("Cannot read the image '{}', skipping it. Error: {}".format(img_path, e))
