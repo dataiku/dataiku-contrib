@@ -33,6 +33,7 @@ keras_applications = {
     constants.RESNET: {
         "model_func": ResNet50, 
         "preprocessing": resnet50_preprocessing,
+        "input_shape": (224, 224),
         "weights": {
             constants.IMAGENET: {
                 "top": "https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_tf_dim_ordering_tf_kernels.h5",
@@ -43,6 +44,7 @@ keras_applications = {
     constants.XCEPTION: {
         "model_func": Xception,
         "preprocessing": xception_preprocessing,
+        "input_shape": (299, 299),
         "weights": {
             constants.IMAGENET: {
                 "top": "https://github.com/fchollet/deep-learning-models/releases/download/v0.4/xception_weights_tf_dim_ordering_tf_kernels.h5",
@@ -53,6 +55,7 @@ keras_applications = {
     constants.INCEPTIONV3: {
         "model_func": InceptionV3,
         "preprocessing": inceptionv3_preprocessing,
+        "input_shape": (299, 299),
         "weights": {
             constants.IMAGENET: {
                 "top": "https://github.com/fchollet/deep-learning-models/releases/download/v0.5/inception_v3_weights_tf_dim_ordering_tf_kernels.h5",
@@ -63,6 +66,7 @@ keras_applications = {
     constants.VGG16: {
         "model_func": VGG16,
         "preprocessing": vgg16_preprocessing,
+        "input_shape": (224, 224),
         "weights": {
             constants.IMAGENET: {
                 "top": "https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_tf_dim_ordering_tf_kernels.h5",
@@ -94,6 +98,25 @@ def should_save_weights_only(config):
 ###############################################################
 ## EXTRACT INFO FROM MODEL (SUMMARY AND LAYERS)
 ###############################################################
+
+def get_model_input_shape(model, mf_path):
+
+    input_shape = model.input_shape[1:3]
+
+    # Check that model has an actual input shape
+    if input_shape[0] == None or input_shape[1] == None:
+        
+        config = get_config(mf_path)
+        architecture = config["architecture"]
+
+        if not is_keras_application(architecture):
+            raise IOError("You must provide an input shape for your architecture '{}'".format(architecture))
+
+        return keras_applications[architecture].get("input_shape", (224, 224))
+
+    else:
+        return input_shape
+
 
 def get_layers_as_list(model):
     layers = model.layers

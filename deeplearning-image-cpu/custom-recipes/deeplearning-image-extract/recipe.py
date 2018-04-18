@@ -44,7 +44,7 @@ model = model_and_pp["model"]
 preprocessing = model_and_pp["preprocessing"]
 
 model = Model(inputs=model.input, outputs=model.layers[extract_layer_index].output)
-model_input_shape = model.input_shape[1:3]
+model_input_shape = utils.get_model_input_shape(model, model_folder_path)
 
 # Image paths
 images_paths = os.listdir(image_folder_path)
