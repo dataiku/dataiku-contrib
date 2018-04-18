@@ -68,7 +68,7 @@ def get_predictions():
         for index_in_batch, i in enumerate(range(n*batch_size, min((n + 1)*batch_size, num_images))):
             img_path = images_paths[i]
             try:
-                preprocssed_img = utils.preprocess_img(os.path.join(image_folder_path, img_path), model_input_shape, preprocessing)
+                preprocssed_img = utils.preprocess_img(utils.get_file_path(image_folder_path, img_path), model_input_shape, preprocessing)
                 next_batch_list.append(preprocssed_img)
             except IOError as e:
                 print("Cannot read the image '{}', skipping it. Error: {}".format(img_path, e))
