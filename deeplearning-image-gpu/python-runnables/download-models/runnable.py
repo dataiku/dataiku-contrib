@@ -85,7 +85,7 @@ class MyRunnable(Runnable):
                 file_info["response"] = response
             update_time = time.time()
             for file_info in files_info:
-                with open(os.path.join(folder_path, file_info["filename"]), "wb") as f:
+                with open(utils.get_file_path(folder_path, file_info["filename"]), "wb") as f:
                     for content in file_info["response"].iter_content(chunk_size=chunk_size):
                         bytes_so_far += len(content)
                         # Only scale to 80% because needs to compute model summary after download
@@ -111,11 +111,11 @@ class MyRunnable(Runnable):
 
         if trained_on == constants.IMAGENET:
             # Convert class mapping from json to csv
-            mapping_df = pd.read_json(os.path.join(output_folder_path, imagenet_class_mapping_temp_file), orient="index")
+            mapping_df = pd.read_json(utils.get_file_path(output_folder_path, imagenet_class_mapping_temp_file), orient="index")
             mapping_df = mapping_df.reset_index()
             mapping_df = mapping_df.rename(columns={"index": "id", 1: "className"})[["id", "className"]]
-            mapping_df.to_csv(os.path.join(output_folder_path, constants.MODEL_LABELS_FILE), index=False, sep=",")
-            os.remove(os.path.join(output_folder_path, imagenet_class_mapping_temp_file))
+            mapping_df.to_csv(utils.get_file_path(output_folder_path, constants.MODEL_LABELS_FILE), index=False, sep=",")
+            os.remove(utils.get_file_path(output_folder_path, imagenet_class_mapping_temp_file))
 
         # Computing model info
         utils.save_model_info(output_folder_path)

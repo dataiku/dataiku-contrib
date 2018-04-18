@@ -11,6 +11,7 @@ from collections import OrderedDict
 import StringIO
 import numpy as np
 import tensorflow as tf
+import sys
 
 # Support Truncated Images with PIL
 from PIL import ImageFile
@@ -112,13 +113,13 @@ def save_model_info(mf_path):
     # For BEFORE_TRAIN
     model_info[constants.BEFORE_TRAIN] = compute_model_info(mf_path, constants.BEFORE_TRAIN)
 
-    with open(os.path.join(mf_path, constants.MODEL_INFO_FILE), 'w') as f:
+    with open(get_file_path(mf_path, constants.MODEL_INFO_FILE), 'w') as f:
         json.dump(model_info, f)
 
 def get_model_info(mf_path, goal):
 
-    if os.path.isfile(os.path.join(mf_path, constants.MODEL_INFO_FILE)):
-        model_info = json.loads(open(os.path.join(mf_path, constants.MODEL_INFO_FILE)).read())
+    if os.path.isfile(get_file_path(mf_path, constants.MODEL_INFO_FILE)):
+        model_info = json.loads(open(get_file_path(mf_path, constants.MODEL_INFO_FILE)).read())
         return model_info[goal]
     else:
         return compute_model_info(mf_path, goal)
@@ -319,7 +320,7 @@ def can_use_gpu():
 
 def get_weights_path(mf_path, config, suffix="", should_exist=True):
     weights_filename =  get_weights_filename(mf_path, config, suffix)
-    model_weights_path = os.path.join(mf_path, weights_filename)
+    model_weights_path = get_file_path(mf_path, weights_filename)
 
     if not os.path.isfile(model_weights_path) and should_exist:
         raise IOError("No weigth file found")
@@ -330,10 +331,10 @@ def get_weights_filename(mf_path, config, suffix=""):
     return "{}_{}_weights{}.h5".format(config["architecture"], config["trained_on"], suffix)
 
 def get_config(mf_path):
-    return json.loads(open(os.path.join(mf_path, constants.CONFIG_FILE)).read())
+    return json.loads(open(get_file_path(mf_path, constants.CONFIG_FILE)).read())
 
 def write_config(mf_path, config):
-    config_path = os.path.join(mf_path, constants.CONFIG_FILE)
+    config_path = get_file_path(mf_path, constants.CONFIG_FILE)
     with open(config_path, 'w') as f:
         json.dump(config, f)
 
@@ -345,7 +346,18 @@ def check_managed_folder_filesystem(managed_folder):
     if connection_type != "Filesystem" :
         raise IOError("The managed folder '{}' has a '{}' connection. Only Filesystem based managed folders are supported.".format(managed_folder_name, connection_type))
 
+def get_file_path(folder_path, file_name):
+    # Be careful to enforce that folder_path and file_name are actually strings
+    return os.path.join(safe_str(folder_path), safe_str(file_name))
 
+def safe_str(val):
+    if sys.version_info > (3, 0):
+        return str(val)
+    else:
+        if isinstance(val, unicode):
+            return val.encode("utf-8")
+        else:
+            return str(val)
 ###################################################################################################################
 ## MISC.
 ###################################################################################################################
