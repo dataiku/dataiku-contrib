@@ -41,7 +41,7 @@ output_dataset =  dataiku.Dataset(output_name)
 model_and_pp = utils.load_instantiate_keras_model_preprocessing(model_folder_path, goal=constants.SCORING)
 model = model_and_pp["model"]
 preprocessing = model_and_pp["preprocessing"]
-model_input_shape = model.input_shape[1:3]
+model_input_shape = utils.get_model_input_shape(model, model_folder_path)
 
 # (classId -> Name) mapping
 labels_df = None
