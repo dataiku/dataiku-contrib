@@ -119,8 +119,13 @@ with open(gsFile, \"w\") as f:
 echo '+ Installing DSS R integration'
 $dataDir/bin/dssadmin install-R-integration
 if command -v spark-submit >/dev/null; then
-	echo '+ Installing DSS Spark integration'
-	$dataDir/bin/dssadmin install-spark-integration
+	if [ -n \"\$SPARK_HOME\" ]; then
+		echo '+ Installing DSS Spark integration, sparkHome='\"\$SPARK_HOME\"
+		$dataDir/bin/dssadmin install-spark-integration -sparkHome \"\$SPARK_HOME\"
+	else
+		echo '+ Installing DSS Spark integration'
+		$dataDir/bin/dssadmin install-spark-integration
+	fi
 	echo '+ Installing DSS H2O integration'
 	$dataDir/bin/dssadmin install-h2o-integration
 else
