@@ -95,6 +95,9 @@ class PowerBIExporter(Exporter):
                 len(self.row_buffer["rows"]), 
                 response.status_code
             )
+            if not str(response.status_code).startswith('2'):
+                print "[-] Response code {} may indicate an issue while loading your records.".format(response.status_code)
+                print "[-] API response: {}".format(response.json())
             self.row_buffer["rows"] = []
         self.row_index += 1
         
@@ -112,6 +115,9 @@ class PowerBIExporter(Exporter):
                 len(self.row_buffer["rows"]), 
                 response.status_code
             )
+            if not str(response.status_code).startswith('2'):
+                print "[-] Response code {} may indicate an issue while loading your records.".format(response.status_code)
+                print "[-] API response: {}".format(response.json())
         print "[+] Loading complete."
         msg = ""
         msg = msg + "[+] {}".format("="*80) + "\n"
