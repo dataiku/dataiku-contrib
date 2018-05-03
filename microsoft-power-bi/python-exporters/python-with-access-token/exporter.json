@@ -1,0 +1,56 @@
+{
+    "meta" : {
+        "label" : "Export to Power BI (with access token)",
+        "description" : "Custom DSS Exporter to Microsoft Power BI (online versions). This version requires a valid access token stored in your Project Variables.",
+        "icon" : "icon-cloud"
+    },
+    
+    "exportBehavior" : "MANAGES_OUTPUT",
+        
+    "exportOptions": [
+        {
+            "label" : "Export to Power BI (with access token)"
+        }
+    ],
+
+    "params": [
+        {
+            "name": "project_key",
+            "label": "DSS project key",
+            "description": "Please type the current DSS Project key (as seen in the URL above)",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "dataset",
+            "label": "Dataset",
+            "description": "Power BI output dataset name",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "overwrite",
+            "label": "Overwrite dataset",
+            "description": "Whether Power BI dataset will be overwritten or not (or created in the case of a new export)",
+            "type": "BOOLEAN",
+            "mandatory": true,
+            "defaultValue": true
+        },
+        {
+            "name": "table",
+            "label": "Table",
+            "description": "Power BI output table name (will always be 'dss-data')",
+            "type": "STRING",
+            "mandatory" : false,
+            "defaultValue": "dss-data"
+        },
+        {
+            "name": "buffer_size",
+            "label": "Buffer size",
+            "description": "Number of records to send to Power BI at each write",
+            "type": "INT",
+            "mandatory": true,
+            "defaultValue": 100
+        }
+    ]
+}

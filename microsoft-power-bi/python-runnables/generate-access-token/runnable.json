@@ -1,0 +1,46 @@
+{
+    "meta" : {
+        "label" : "Power BI Access Token",
+        "description" : "Custom DSS Macro to generate a new access token to interact with the Power BI API (online version).",
+        "icon" : "icon-cloud"
+    },
+
+    "impersonate" : false,
+    
+    "permissions" : [],
+
+    "resultType" : "HTML",
+
+    "resultLabel" : "Acces Token",
+        
+    "params": [
+        {
+            "name": "username",
+            "label": "Username",
+            "description": "Power BI username (email address)",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "password",
+            "label": "Password",
+            "description": "Power BI password",
+            "type": "PASSWORD",
+            "mandatory" : true
+        },
+        {
+            "name": "client-id",
+            "label": "Client ID",
+            "description": "Power BI application client ID",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "client-secret",
+            "label": "Client Secret",
+            "description": "Power BI application client secret",
+            "type": "PASSWORD",
+            "mandatory" : true
+        }
+    ]
+}
