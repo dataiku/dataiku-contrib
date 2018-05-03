@@ -1,0 +1,85 @@
+{
+    "meta" : {
+        "label" : "Export to Power BI (with credentials)",
+        "description" : "Custom DSS Exporter to Microsoft Power BI (online versions). This version will generate a new access token each time the Recipe is run, and requires the user to fill its Microsoft Power BI credentials.",
+        "icon" : "icon-cloud"
+    },
+    
+    "exportBehavior" : "MANAGES_OUTPUT",
+        
+    "exportOptions": [
+        {
+            "label" : "Export to Power BI (with credentials)"
+        }
+    ],
+
+    "params": [
+        {
+            "label":"Power BI Credentials",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "username",
+            "label": "Username",
+            "description": "Power BI username (email address)",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "password",
+            "label": "Password",
+            "description": "Power BI password",
+            "type": "PASSWORD",
+            "mandatory" : true
+        },
+        {
+            "name": "client-id",
+            "label": "Client ID",
+            "description": "Power BI application client ID",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "client-secret",
+            "label": "Client Secret",
+            "description": "Power BI application client secret",
+            "type": "PASSWORD",
+            "mandatory" : true
+        },
+        {
+            "label":"Power BI Output",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "dataset",
+            "label": "Dataset",
+            "description": "Power BI output dataset name",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "overwrite",
+            "label": "Overwrite dataset",
+            "description": "Whether Power BI dataset will be overwritten or not (or created in the case of a new export)",
+            "type": "BOOLEAN",
+            "mandatory": true,
+            "defaultValue": true
+        },
+        {
+            "name": "table",
+            "label": "Table",
+            "description": "Power BI output table name (will always be 'dss-data')",
+            "type": "STRING",
+            "mandatory" : false,
+            "defaultValue": "dss-data"
+        },
+        {
+            "name": "buffer_size",
+            "label": "Buffer size",
+            "description": "Number of records to send to Power BI at each write",
+            "type": "INT",
+            "mandatory": true,
+            "defaultValue": 100
+        }
+    ]
+}

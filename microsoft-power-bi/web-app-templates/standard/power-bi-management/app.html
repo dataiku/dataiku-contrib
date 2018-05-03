@@ -1,0 +1,63 @@
+<div class="container">
+    
+    <h2>Power BI Connection Settings</h2>
+    <p>
+        This web application will let you retrieve or update the access token required to authenticate against Power BI (online). 
+        Please fill in your credentials (you may need support from your Power BI account administrator) to get your token.
+    </p>
+    <hr/>
+    
+    <form class="form-horizontal" id="powerbi-form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-username">Username</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="text" id="powerbi-username" name="powerbi-username" placeholder="Email used for your Power BI account"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-password">Password</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="password" id="powerbi-password" name="powerbi-password" placeholder="Power BI password"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-client-id">Client ID</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="text" id="powerbi-client-id" name="powerbi-client-id" placeholder="Power BI App Client ID"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-client-secret">Client Secret</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="password" id="powerbi-client-secret" name="powerbi-client-secret" placeholder="Power BI App Client Secret"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-resource">Resource</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="text" id="powerbi-resource" name="powerbi-resource" placeholder="Power BI resource (default: 'https://analysis.windows.net/powerbi/api')" value="https://analysis.windows.net/powerbi/api"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-grant-type">Grant Type</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="text" id="powerbi-grant-type" name="powerbi-grant-type" placeholder="Authorisation Grant Type (default: 'password')" value="password"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="powerbi-scope">Scope</label>
+            <div   class="col-sm-10">
+                <input class="col-sm-10 form-control" type="text" id="powerbi-scope" name="powerbi-scope" placeholder="Authorisation Scope (default: 'openid')" value="openid"/>
+            </div>
+        </div>
+    </form>
+    
+    <button class="btn btn-info"    id="get-existing-credentials" type="submit">Fill with existing credentials</button>
+    <button class="btn btn-success" id="display-new-token"        type="submit">Create and display new token</button>
+    <button class="btn btn-primary" id="save-new-token"           type="submit">Create, display & save new token</button>
+    
+    <pre id="results" class="results">Placeholder for results...</pre>
+    
+    <button class="btn btn-default" id="get-token" type="submit">Get token</button>
+    
+</div>
