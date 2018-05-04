@@ -1,0 +1,45 @@
+{
+    "meta" : {
+        "label" : "Azure Data Lake Store",
+        "description" : "A custom DSS file system provider allowing to read data stored in Azure Data Lake Store. Uses \"service-to-service\" authentication, so you will need to register and authorize a dedicated App in your Azure AD (please check with your Azure admin for support).",
+        "icon" : "icon-cloud"
+    },
+    "params": [
+        {
+            "label":"Credentials",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "client-id",
+            "label" : "Client ID",
+            "type": "STRING",
+            "description": "The Client ID is actually the App ID that is authorized in your AAD.",
+            "mandatory" : true
+        },
+        {
+            "name": "client-secret",
+            "label": "Client Secret",
+            "type": "PASSWORD",
+            "description": "The corresponding App secret key retrieved from your AAD.",
+            "mandatory" : true
+        },
+        {
+            "name": "tenant-id",
+            "label": "Tenant ID",
+            "type": "STRING",
+            "description": "The ID of the Tenant (or Active Directory) where the App is registered.",
+            "mandatory" : true
+        },
+        {
+            "label":"ADLS information",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "adls-account",
+            "label" : "ADLS Account Name",
+            "type": "STRING",
+            "description": "The name of your Azure Data Lake Store account",
+            "mandatory" : true
+        }
+    ]
+}
