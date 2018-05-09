@@ -124,6 +124,11 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
                     val = int(val)
                 except Exception, e:
                     logging.warning("Failed to parse data as int col=%s val=%s err=%s" % (col["name"], val, e))
+            if col['type'] == 'boolean':
+                try:
+                    val = (val == 'true')
+                except Exception, e:
+                    logging.warning("Failed to parse data as int col=%s val=%s err=%s" % (col["name"], val, e))
             if col['type'] in ['array', 'object', 'map']:
                 try:
                     val = json.loads(val)
