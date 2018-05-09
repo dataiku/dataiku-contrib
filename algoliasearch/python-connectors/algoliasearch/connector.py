@@ -119,9 +119,6 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
     def write_row(self, row):
         obj = {}
         for (col, val) in zip(self.dataset_schema["columns"], row):
-            #logging.info("Write %s for %s" % (val, col))
-            if len(unicode(val)) > 8000:   #algolia.com/doc/faq/basics/is-there-a-size-limit-for-my-index-records : 10KB
-                val = unicode(val)[0:7995] + '(...)'
             if col['type'] in ['tinyint', 'smallint', 'int', 'bigint']:
                 try:
                     val = int(val)
