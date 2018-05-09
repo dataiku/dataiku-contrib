@@ -38,6 +38,12 @@
 			"label" :"Search settings",
 			"type":"TEXTAREA",
 			"description" : "Optional - As a JSON dict - See Algolia doc"
+		},
+		{
+			"name": "batchSize",
+			"label": "Batch size",
+			"type": "INT",
+			"defaultValue": 10000
 		}
 	]
 }

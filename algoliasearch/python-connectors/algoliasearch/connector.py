@@ -50,7 +50,7 @@ class AlgoliaSearchConnector(Connector):
 
             print "Searching with facets: %s" % ",".join(facetFilters)
             if search_settings.get("facetFilters", None) is not None:
-                search_settings["facetFilters"] = search_settings["facetFilters"] + "," +",".join(facetFilters)
+                search_settings["facetFilters"] = search_settings["facetFilters"] + "," + ",".join(facetFilters)
             else:
                 search_settings["facetFilters"] = facetFilters
 
@@ -105,6 +105,7 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
         self.dataset_schema = dataset_schema
         self.dataset_partitioning = dataset_partitioning
         self.partition_id = partition_id
+        self.batch_size = int(config["batchSize"])
 
         self.buffer = []
 
@@ -135,7 +136,7 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
                 except Exception, e:
                     logging.warning("Failed to parse data as JSON col=%s val=%s err=%s" % (col["name"], val, e))
             obj[col["name"]] = val
-            if col["name"] =="id":
+            if col["name"] == "id":
                 logging.info("Set ObjectID")
                 obj["objectID"] = val
 
@@ -150,7 +151,7 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
         logging.info("Final obj: %s" % obj)
         self.buffer.append(obj)
 
-        if len(self.buffer) > 50:
+        if len(self.buffer) >= self.batch_size:
             self.flush()
 
     def flush(self):
