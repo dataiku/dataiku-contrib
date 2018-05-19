@@ -1,0 +1,32 @@
+// This file is the descriptor for the DSS Plugin lime
+{
+    // The identifier of the plugin.
+    // This must be globally unique, and only contain A-Za-z0-9_-
+    // BEWARE: Changing this value is a dangerous operation and
+    // needs manual administrator intervention to fix directory names
+    "id" : "lime",
+
+    // Version. It is highly recommended to use Semantic Versioning
+    "version" : "0.0.4",
+
+
+    // Meta data for display purposes
+    "meta" : {
+        // Name of this plugin that appears in the interface.
+        "label" : "Plugin LIME",
+
+        "description" : "The Classification explain recipe explains each instance of a tabular test datasets. It takes the train set and the model as input. If no input is given for the test set, then the train set will be explain.",
+        "author" : "DKU",
+
+        // The icon of a plugin must be one of the FontAwesome 3.1 icons
+        "icon" : "icon-zoom-in",
+
+        "licenseInfo" : "Apache Software License",
+
+        // URL where the user can learn more about the plugin
+        "url" : "https://github.com/dataiku/dataiku-contrib/tree/master/lime",
+
+        // List of tags for filtering the list of plugins
+        "tags" : ["experimental", "model", "interpretation", "lime"]
+    }
+}

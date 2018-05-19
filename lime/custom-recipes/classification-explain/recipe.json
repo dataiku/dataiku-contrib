@@ -1,0 +1,123 @@
+// This file is the descriptor for the Custom code recipe lime_compute_rows_explanations
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Classification-Explain",
+        "author" : "DKU",
+        "icon": "icon-zoom-in"
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [
+        {
+            "name": "train",
+            "label": "Train dataset used by the model",
+            "description": "The data used to train the model",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "input_model",
+            "label": "Model",
+            "description": "Saved model to be interpreted",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsSavedModel": true,
+            "acceptsDataset": false
+        },
+        {
+            "name": "test",
+            "label": "Dataset to explain (leave empty to explain the train dataset)",
+            "description": "Leave empty to explain on train set",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+       {
+            "name": "explanations",
+            "label": "Explanations",
+            "description": "Output for explanations",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "samples",
+            "label": "Detailed samples",
+            "description": "Can contain many columns in case of categorical variable dummification",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    // The field "params" holds a list of all the params
+    // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+    // The available parameter types are:
+    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
+
+    "params": [
+        {
+            "name": "num_samples",
+            "label" : "Number of instances to explain",
+            "description": "use -1 to explain all dataset instances",
+            "type": "INT",
+            "defaultValue": 1000
+        },
+        {
+            "name": "nh_size",
+            "label" : "Number of perturbations",
+            "type": "INT",
+            "defaultValue": 1000
+        },
+        {
+            "name": "advanced_toogle",
+            "label": "Advanced options",
+            "description": "tick to access advanced configuration options",
+            "type": "BOOLEAN",
+            "defaultValue": false,
+            "mandatory": true
+        },
+        {
+            "name" : "_advanced",
+            "label" : "Advanced Options",
+            "type" : "SEPARATOR",
+            "visibilityCondition": "model.advanced_toogle"
+        },
+        {
+            "name": "kernel_width",
+            "label": "Kernel width",
+            "description": "Increasing kernel width will favor more samples but can include outliners",
+            "type": "INT",
+            "defaultValue": 10,
+            "visibilityCondition": "model.advanced_toogle"
+            
+        },
+        {
+            "name": "interpolation_algo",
+            "label": "LIME Algorithm",
+            "description": "Algorithm used for local model interpolation",
+            "type": "SELECT",
+            "selectChoices": [
+                {"value": "ridge", "label": "Ridge regression"}
+                //{"value": "ridgeCV", "label": "RidgeCV regression"}
+            ],
+            "defaultValue": "ridge",
+            "visibilityCondition" : "model.advanced_toogle"
+        },
+        { 
+            "name": "ridge_alpha",
+            "label" : "Alpha",
+            "description": "Ridge alpha parameter used in standard ridge regression",
+            "type" : "DOUBLE",
+            "defaultValue": 1.0,
+            "visibilityCondition": "model.advanced_toogle && model.interpolation_algo == 'ridge'"
+        }
+    ]
+}
