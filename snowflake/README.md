@@ -1,30 +1,35 @@
 ## Plugin information
 
-Snowflake is a data warehouse optimized for the Cloud, faster, easier to use, and more flexible than the traditional ones. It allows corporate users to store and analyze data using cloud-based hardware and software. The data is stored in Amazon S3. 
+[Snowflake](https://www.snowflake.net/) is a data warehouse built for the Cloud offering the following characteristics:
 
-The DSS Snowflake Plugin allows users to load data from files in an existing Amazon Simple Storage Service (Amazon S3) bucket into a new Snowflake table. That enables the processing of the data to happen directly in Snowflake.
+* Performance: Snowflake easily scales to multiple petabytes and performs up to 200x faster than other systems.
+* Concurrency: multiple groups can access the same data at the same time without impacting performance. 
+* Simplicity: a fully managed, pay-as-you-go solution that stores, integrates and analyzes all your data.
+
+Snowflake is built on top of the Amazon Web Services (AWS) cloud and has deep integrations with S3. Snowflake has the ability to quicly read and write data stored in S3. 
+
+The purpose of this Plugin is to leverage these integrations to speed up data transfers and processing. 
 
 
 ## How It Works
  
-Snowflake and S3 are complementary solutions. If you already have an AWS account and use S3 buckets for storing and managing your data files, you can make use of your existing buckets and folder paths for bulk loading into Snowflake. DSS Plugin allows you to load the data from S3 to Snowflake directly from DSS, without any external actions.
+Snowflake and S3 are deeply integrated solutions. If you already have an AWS account and use S3 buckets for storing and managing your data, you can make use of your existing buckets and folder paths for bulk loading into Snowflake. This DSS Plugin allows you to load the data from S3 to Snowflake directly, without any external actions - and ensuring fast data transfers.
 
 A typical usage scenario would be:
 
-* read the input data from Amazon S3 buckets and load it to Snowflake tables by using DSS
-* build workflows in DSS to create complex data transformation pipelines and build machine learning models
+* read some input data from Amazon S3 and load it to Snowflake tables by using this DSS Plugin
+* build workflows in DSS to create complex data transformation pipelines (including features engineering) supported by Snowflake and build machine learning models
 * push the outputs of these workflows directly to Snowflake
 
-The Plugin allows DSS to create new tables in Snowflake and do a bulk load using the COPY INTO table command.
+The Plugin allows DSS to create new Snowflake tables and to perform a fast bulkload using the COPY INTO table command from S3 data.
  
 ## Prerequisites
 
-* Snowflake JDBC connection set up in DSS
-* Amazon S3 connection set up in DSS
-* AWS credentials: AWS Secret Key and AWS Key ID
-* Snowflake Python Connector: the library ```snowflake-python-connector``` needs to be installed in the host machine. If the library does not exist, please use the following guide to install it: https://docs.snowflake.net/manuals/user-guide/python-connector-install.html 
+* [Snowflake (JDBC) Connection](https://doc.dataiku.com/dss/latest/connecting/sql/snowflake.html) set up in DSS
+* [Amazon S3 Connection](https://doc.dataiku.com/dss/latest/connecting/s3.html) set up in DSS
+* the corresponding AWS credentials for the S3 buckets (AWS Access Key and AWS Secret Key)
 
-This connector requires the following Linux libraries to exist in the host machine:
+The Plugin comes with a code environment that installs the [Snowflake Python Connector](https://docs.snowflake.net/manuals/user-guide/python-connector.html) and is automatically installed with the Plugin. Note that this connector may require the following Linux libraries to exist in the host machine:
 
 * Libssl-dev
 * Libffi-dev
@@ -32,19 +37,35 @@ This connector requires the following Linux libraries to exist in the host machi
 Check if these libraries are already installed or install them by using the following command:
 ```sudo apt-get install -y libssl-dev libffi-dev```
 
+Finally, the Plugin has been tested with Python 3.6 and requires a valid Python 3.6 installation on the machine (the Plugin code environment is restricted to Python 3.6).
+
 
 ## How To Use
 
 In order to use the Plugin:
 
-* Connect to the preferred dataset in Amazon S3 bucket
-* Add the plugin to your Flow
+* Defined a DSS S3 Dataset
+* Add the Plugin to your Flow
 * Set the S3 Dataset as Input of the Plugin (mandatory - only S3 is supported)
-* Assign a name for the output data which will be stored in Snowflake
+* Assign a name for the output Dataset, stored in your Snowflake Connection
 
-The Plugin requires 2 input variables: AWS Secret Key and AWS Access Key. You can fill in the values in the plugin form or set them as local variables in your project.
+The Plugin requires 2 input parameters: the AWS Access Key and AWS Secret Key. You can either:
+
+* fill in the values in the Plugin form 
+* or set them Project Variables
+* or set the in Global Variables
+
+When DSS Variables are used, DSS will look for the following inputs:
+```
+{
+  "snowflake": {
+    "aws_access_key": "your-aws-access-key",
+    "aws_secret_key": "your-aws-secret-key"
+  }
+}
+```
  
-Finally, run the Plugin Recipe and browse the data. A new table should have been created in Snowflake. 
+Finally, run the Plugin Recipe and browse the output Dataset. A new table should have been created in Snowflake. 
 
 
 ### Error Handling
