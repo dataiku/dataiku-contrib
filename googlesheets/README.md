@@ -1,30 +1,36 @@
 # Google Sheets connector
 
-This plugin provides a read (and soon write) connector to interact with [Google Sheets](https://www.google.com/intl/en_us/sheets/about/) documents, that are commonly named spreadsheets.
+This plugin provides a read and write connector to interact with [Google Sheets](https://www.google.com/intl/en_us/sheets/about/) documents, that are commonly named spreadsheets.
 
 ## How to set-up
 
-* Install python dependencies with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html): `data_dir/bin/pip install --upgrade gspread oauth2client PyOpenSSL awesome-slugify`
+* Install the plugin in Dataiku DSS.
+* Install python dependencies in the UI of Dataiku DSS, or manually with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html): `data_dir/bin/pip install --upgrade gspread oauth2client PyOpenSSL awesome-slugify`
 * Get a JSON file containing a `Service account` from the [Google Developers Console](https://console.developers.google.com/project) with the `Drive API` enabled.
-* Install the plugin in DSS.
 * Create a new dataset with this connector. Fill the 4 parameters and click on the `Test & Get schema` button. Then, `save` and `explore`.
 * Remember to share the spreadsheet with the email of the service account (`536772...-fezerf...@developer.gserviceaccount.com`).
 
 ## Improvement ideas
 
-* Add ability to write to a sheet
 * Add ability to import all sheets from a unique spreadsheet
 * Add a new connector to list all worksheets available from an account
 
 ## Know issues
 
+**I get some errors when installing Python dependencies.**
+
+For example, I get this:
+
+![Screenshot](https://raw.githubusercontent.com/dataiku/dataiku-contrib/tree/master/googlesheets/dss-4-2-error.png)
+
+Try the following:
+
+* [Dataiku doc - Troubleshooting Python H not found](https://doc.dataiku.com/dss/latest/code-envs/troubleshooting.html#python-h-not-found)
+* [Stackoverflow - Failed to install Python Cryptography package with PIP and setup.py](http://stackoverflow.com/questions/22073516/failed-to-install-python-cryptography-package-with-pip-and-setup-py).
+
 **Even with dependencies installed, there are missing modules.**
 
 Try to upgrade your pip: `data_dir/bin/pip install --upgrade pip`
-
-**I get some errors when installing Python dependencies.**
-
-The resolution depends on your OS. Google it or try [this thread on Stackoverflow](http://stackoverflow.com/questions/22073516/failed-to-install-python-cryptography-package-with-pip-and-setup-py).
 
 **I get an error `WorksheetNotFound`.**
 
