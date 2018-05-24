@@ -21,7 +21,7 @@ This plugin provides a read and write connector to interact with [Google Sheets]
 
 For example, I get this:
 
-![Screenshot](https://raw.githubusercontent.com/dataiku/dataiku-contrib/tree/master/googlesheets/dss-4-2-error.png)
+![Screenshot](https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/googlesheets/dss-4-2-error.png)
 
 Try the following:
 
