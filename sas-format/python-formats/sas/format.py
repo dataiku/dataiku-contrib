@@ -5,6 +5,9 @@ from collections import OrderedDict
 import pandas as pd
 import json, base64
 import types
+import os
+import time
+
 
 class SASFormatter(Formatter):
     def __init__(self, config, plugin_config):
@@ -45,8 +48,30 @@ class SASFormatExtractor(FormatExtractor):
         FormatExtractor.__init__(self, stream)
         
         chunksize = int(config.get("chunksize", "10000"))
+        sas_format = config.get("sas_format", "sas7bdat")
+        encoding = config.get("encoding", "latin_1")
+        dump_to_file = config.get("dump_to_file", False)
+
         self.hasSchema = schema != None
-        self.iterator = pd.read_sas(ForwardSeekStream(stream), format="sas7bdat", iterator=True, chunksize=chunksize)
+
+        read_from = ForwardSeekStream(stream)
+
+        if dump_to_file:
+            dirname, _ = os.path.split(os.path.abspath(__file__))
+            fullpath = os.path.join(dirname, 'dumped-%s.sas7bdat' % (time.time()))
+            with open(fullpath, 'w+') as of:
+                # Reading 500kb data everytime
+                for data in iter((lambda:stream.read(500000)), b''):
+                    of.write(data)
+                
+            read_from = fullpath
+
+        self.iterator = pd.read_sas(read_from,
+                                    format=sas_format,
+                                    iterator=True,
+                                    encoding=encoding,
+                                    chunksize=chunksize)
+
         self.get_chunk()
         
     def get_chunk(self):
