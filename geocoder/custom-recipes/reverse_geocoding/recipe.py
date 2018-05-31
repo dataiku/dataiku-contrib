@@ -8,7 +8,7 @@ from cache_handler import CacheHandler
 import geocoder
 import pandas as pd, numpy as np
 import logging
-import errno, os
+import errno, os, sys
 
 # Logging setup
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -125,7 +125,7 @@ def perform_geocode_batch(df, config, fun, cache, batch):
             logging.error("Failed to geocode %s (%s)" % (loc, e))
     
     
-if __name__ == '__main__':
+def main():
     config = get_config()
     geocode_function = get_geocode_function(config)
     input_df = config['input_ds'].get_dataframe()
@@ -188,3 +188,4 @@ if __name__ == '__main__':
         if writer is not None:
             writer.close()
 
+main()

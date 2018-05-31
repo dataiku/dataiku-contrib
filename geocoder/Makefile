@@ -1,4 +1,4 @@
-PLUGIN_VERSION=1.0.7
+PLUGIN_VERSION=1.0.8
 PLUGIN_ID=geocoder
 
 all:
