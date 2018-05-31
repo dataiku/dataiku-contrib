@@ -2,6 +2,7 @@
     "meta" : {
         "label" : "Analysis disk space (details)",
         "description" : "Checks the disk usage of the visual analyses models, with more details and 'orphaned' analyses. May only be run by the global admin",
+        "category" : "Disk space maintenance",
         "icon" : "icon-wrench"
     },
     "impersonate" : false,

@@ -2,6 +2,7 @@
     "meta" : {
         "label" : "Analysis disk space (summary)",
         "description" : "Checks the disk usage of the visual analyses models.",
+                "category" : "Disk space maintenance",
         "icon" : "icon-wrench"
     },
 

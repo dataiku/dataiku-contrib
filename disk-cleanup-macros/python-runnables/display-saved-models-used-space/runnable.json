@@ -2,6 +2,7 @@
     "meta" : {
         "label" : "Saved models disk space",
         "description" : "Checks the disk usage of the saved models",
+        "category" : "Disk space maintenance",
         "icon" : "icon-wrench"
     },
 

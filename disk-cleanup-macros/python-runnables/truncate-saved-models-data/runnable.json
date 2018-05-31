@@ -2,6 +2,7 @@
     "meta" : {
         "label" : "Truncate saved models split data",
         "description" : "Truncates \"old\" train and test split data stored in saved models to the first x lines. This can strongly reduce disk space usage but will prevent from using \"Predicted data\" and \"Charts\" on predicted data",
+        "category" : "Disk space maintenance",
         "icon" : "icon-trash"
     },
 
