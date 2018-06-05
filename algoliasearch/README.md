@@ -12,6 +12,14 @@ Algolia search index.
 
 # Changelog
 
+## Version 0.0.5 (2018/06/05)
+
+Thanks to @raphi for this contribution!
+
+* Made the object size limit since it's not the same limit for all users (and it's better to let it handled/reject by the Algolia API itself)
+* Fixed the boolean type not being recognized as it by Algolia
+* Allowed custom batch size for indexing operations with a default to 10k objects, which drastically improves the processing/indexing time
+
 ## Version 0.0.4 (2016/06/28)
 
 * Truncate to 8K chars instead of 5K
