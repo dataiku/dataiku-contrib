@@ -50,7 +50,7 @@ class AlgoliaSearchConnector(Connector):
 
             print "Searching with facets: %s" % ",".join(facetFilters)
             if search_settings.get("facetFilters", None) is not None:
-                search_settings["facetFilters"] = search_settings["facetFilters"] + "," +",".join(facetFilters)
+                search_settings["facetFilters"] = search_settings["facetFilters"] + "," + ",".join(facetFilters)
             else:
                 search_settings["facetFilters"] = facetFilters
 
@@ -77,7 +77,7 @@ class AlgoliaSearchConnector(Connector):
         index = self._get_index()
         res = index.search(self.config.get("searchQuery", ""), search_settings)
 
-        vals =[]
+        vals = []
 
         for dim in dataset_partitioning["dimensions"]:
             facet = res["facets"][dim["name"]]
@@ -105,6 +105,8 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
         self.dataset_schema = dataset_schema
         self.dataset_partitioning = dataset_partitioning
         self.partition_id = partition_id
+        self.batch_size = int(config["batchSize"])
+        self.payload_max_size = int(config["payloadMaxSize"])
 
         self.buffer = []
 
@@ -119,12 +121,20 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
     def write_row(self, row):
         obj = {}
         for (col, val) in zip(self.dataset_schema["columns"], row):
-            #logging.info("Write %s for %s" % (val, col))
-            if len(unicode(val)) > 8000:   #algolia.com/doc/faq/basics/is-there-a-size-limit-for-my-index-records : 10KB
-                val = unicode(val)[0:7995] + '(...)'
+            # Truncate cell value to fit Algolia's record size limit. Skipped by default.
+            # See https://www.algolia.com/doc/faq/basics/is-there-a-size-limit-for-my-index-records/
+            if self.payload_max_size > 0 and len(unicode(val)) > (self.payload_max_size - 2000):
+                logging.warning("Algolia payload max size reached, truncating record")
+                max_size = self.payload_max_size - 5
+                val = unicode(val)[0:max_size] + '(...)'
             if col['type'] in ['tinyint', 'smallint', 'int', 'bigint']:
                 try:
                     val = int(val)
+                except Exception, e:
+                    logging.warning("Failed to parse data as int col=%s val=%s err=%s" % (col["name"], val, e))
+            if col['type'] == 'boolean':
+                try:
+                    val = (val == 'true')
                 except Exception, e:
                     logging.warning("Failed to parse data as int col=%s val=%s err=%s" % (col["name"], val, e))
             if col['type'] in ['array', 'object', 'map']:
@@ -133,7 +143,7 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
                 except Exception, e:
                     logging.warning("Failed to parse data as JSON col=%s val=%s err=%s" % (col["name"], val, e))
             obj[col["name"]] = val
-            if col["name"] =="id":
+            if col["name"] == "id":
                 logging.info("Set ObjectID")
                 obj["objectID"] = val
 
@@ -145,10 +155,10 @@ class AlgoliaSearchConnectorWriter(CustomDatasetWriter):
                 logging.info("Forcing partitioning dim: %s=%s" % (dim["name"], id_chunks[idx]))
                 idx += 1
 
-        logging.info("Final obj: %s" % obj)
+        logging.debug("Final obj: %s" % obj)
         self.buffer.append(obj)
 
-        if len(self.buffer) > 50:
+        if len(self.buffer) >= self.batch_size:
             self.flush()
 
     def flush(self):

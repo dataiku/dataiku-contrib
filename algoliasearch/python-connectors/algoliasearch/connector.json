@@ -20,7 +20,6 @@
 			"type" : "STRING",
 			"mandatory" : true
 		},
-
 		{
 			"name" : "index",
 			"label" : "Index name",
@@ -38,6 +37,19 @@
 			"label" :"Search settings",
 			"type":"TEXTAREA",
 			"description" : "Optional - As a JSON dict - See Algolia doc"
+		},
+		{
+			"name": "batchSize",
+			"label": "Batch size",
+			"type": "INT",
+			"defaultValue": 10000
+		},
+		{
+			"name": "payloadMaxSize",
+			"label": "Payload size limit in bytes",
+			"type": "INT",
+			"defaultValue": 0,
+			"description": "Truncate record to fit Algolia max size limit (Default: 0, no truncation)"
 		}
 	]
 }
