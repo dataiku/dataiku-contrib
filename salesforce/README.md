@@ -13,6 +13,10 @@ This plugin offers four way to retrieve data:
 * results of a [SOQL query](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql.htm) you define
 * results of a Report
 
+The plugin also offers two ways of creating / editing data:
+* Create records
+* Update records
+
 ## How to set-up
 
 1) Create a new "Connected App" in your Salesforce portal.
@@ -80,7 +84,18 @@ According to [the documentation](https://developer.salesforce.com/docs/atlas.en-
 
 Two restrictions: the report must be in TABULAR format and must be available with a synchronous API call.
 
+## Recipes available with the plugin
+
+** Salesforce - Create Objects (BETA)
+A recipe that let's you create Salesforce object records based on the columns of a dataset, columns should have the same name as your Salesforce fields name
+
+** Salesforce - Update Objects (BETA)
+A recipe that let's you update Salesforce object records based on the columns of a dataset, columns should have the same name as your Salesforce fields name
+
 ## Changelog
+
+** Version 1.2.0 (2018-06-11) **
+*New : Create and Update records recipes added
 
 **Version 1.1.0 (2017-12-01)**
 
