@@ -86,16 +86,16 @@ Two restrictions: the report must be in TABULAR format and must be available wit
 
 ## Recipes available with the plugin
 
-** Salesforce - Create Objects (BETA)
+** Salesforce - Create Objects (BETA) **
 A recipe that let's you create Salesforce object records based on the columns of a dataset, columns should have the same name as your Salesforce fields name
 
-** Salesforce - Update Objects (BETA)
+** Salesforce - Update Objects (BETA) **
 A recipe that let's you update Salesforce object records based on the columns of a dataset, columns should have the same name as your Salesforce fields name
 
 ## Changelog
 
 ** Version 1.2.0 (2018-06-11) **
-*New : Create and Update records recipes added
+* New : Create and Update records recipes added
 
 **Version 1.1.0 (2017-12-01)**
 
