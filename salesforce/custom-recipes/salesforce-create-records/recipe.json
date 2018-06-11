@@ -1,0 +1,95 @@
+// This file is the descriptor for the Custom code recipe Create Object Records
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Create Records",
+        "description" : "Custom recipe",
+        "icon" : "icon-cloud-upload"
+    },
+
+    "kind" : "PYTHON",
+    
+
+    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+    // or more dataset to each input and output role.
+
+    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+    // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
+    // associate no dataset with the role.
+
+    "inputRoles" : [
+        {
+            "name": "main",
+            "label": "Input dataset",
+            "description": "Input dataset, each line corresponds to a record to be created",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+        // ...
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "main",
+            "label": "Output Dataset",
+            "description": "Output dataset for the results",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+
+    // The field "params" holds a list of all the params
+    // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+    // The available parameter types are:
+    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
+
+    "params": [
+        {
+            "name": "sep1",
+            "label": "Authentication",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "token",
+            "label": "JSON token",
+            "description": "JSON, or path to a file containing the JSON",
+            "type": "STRING",
+            "mandatory" : true,
+            "defaultValue": "${dip.home}/SalesforceToken.json"
+        },
+        {
+            "name": "sep2",
+            "label": "Parameters",
+            "type": "SEPARATOR"
+        },
+        
+        {
+            "name": "SF_OBJECT",
+            "type": "STRING",
+            "label" : "SF Object Records to Create",
+            "mandatory": true
+        },
+        {
+            "name": "COLUMNS",
+            "type": "COLUMNS",
+            "columnRole" : "main",
+            "label" : "SF Fields Columns",
+            "description":"Include here all the columns that correspond to fields of your record",
+            "mandatory": true
+        }
+
+
+    ],
+
+    // The field "resourceKeys" holds a list of keys that allows to limit the number
+    // of concurrent executions and activities triggered by this recipe.
+    //
+    // Administrators can configure the limit per resource key in the Administration > Settings > Flow build
+    // screen.
+
+    "resourceKeys" : []
+
+}
