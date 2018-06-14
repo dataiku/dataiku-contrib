@@ -2,12 +2,14 @@
     
     "meta" : {
         "label" : "Bulk load from S3",
-        "description" : "This Plugin allows a user to bulk load data stored in S3 (in a DSS S3 Managed Dataset) to a Snowflake table.",
-        "author" : "Dataiku",
-        "icon" : "icon-cloud"
+        "description" : "This recipe allows a user to bulk load data stored in S3 (in a DSS S3 Managed Dataset) to a Snowflake table.",
+        "author" : "Dataiku and Outra Ltd",
+        "icon" : "icon-cloud",
+        "iconColor": "sky"
     },
 
     "kind" : "PYTHON",
+    "selectableFromDataset": "input_dataset",
     
 
     "inputRoles" : [
@@ -29,25 +31,57 @@
             "description": "Output DSS Dataset that will be stored in Snowflake",
             "arity": "UNARY",
             "required": true,
-            "acceptsDataset": true
+            "acceptsDataset": true,
+            "mustBeStrictlyType": "JDBC"
         }
     ],
 
     "params": [
         {
+            "name": "append_instead_of_overwrite",
+            "label": "Append instead of overwrite",
+            "description": "If the table already exists in SF, append rather than overwriting data",
+            "type": "BOOLEAN",
+            "mandatory": false,
+            "defaultValue": false
+        },
+        {
+            "name": "sep1",
+            "label": "S3 Authentication",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "use_input_connection",
+            "label": "Use Input Dataset Connection",
+            "description": "If the Input Dataset uses an S3 connection with defined AWS credentials (not an Instance Profile), use this information to connect Snowflake to S3",
+            "type": "BOOLEAN",
+            "mandatory": false,
+            "defaultValue": true
+        },
+        {
+            "name": "use_project_variables",
+            "type": "BOOLEAN",
+            "label": "Use Project Variables",
+            "description": "Use AWS credentials (snowflake.aws_access_key and snowflake.aws_secret_key) defined as Project Variables",
+            "mandatory": false,
+            "visibilityCondition": "!model.use_input_connection"
+        },
+        {
             "name": "aws_access_key",
-            "label" : "AWS Access Key",
+            "label": "AWS Access Key",
             "type": "STRING",
-            "description":"Leave empty if it is defined as a project variable",
-            "mandatory" : false
+            "description": "Access Key which grants Snowflake access to the Input Dataset",
+            "mandatory": false,
+            "visibilityCondition": "!model.use_project_variables && !model.use_input_connection"
         },
     
            {
             "name": "aws_secret_key",
             "label" : "AWS Secret Key",
             "type": "PASSWORD",
-            "description":"Leave empty if it is defined as a project variable",
-            "mandatory" : false
+            "description": "Secret Key which grants Snowflake access to the Input Dataset",
+            "mandatory" : false,
+            "visibilityCondition" : "!model.use_project_variables && !model.use_input_connection"
         }
          
         
