@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "edgeNodeSize": {
+            "value": "Standard_D12_V2"
+        },
+        "dssVersion": {
+            "value": "latest"
+        },
+				"vmName": {
+					"value": "GEN-UNIQUE"
+				},
+				"dnsLabelPrefix": {
+					"value": "GEN-UNIQUE"
+				},
+				"clusterName": {
+					"value": "GEN-UNIQUE"
+				},
+				"clusterLoginUserName": {
+					"value": "admin"
+				},
+				"clusterLoginPassword": {
+					"value": "GEN-PASSWORD"
+				},
+				"sshUserName": {
+					"value": "hdiuser"
+				},
+				"sshPassword": {
+					"value": "GEN-PASSWORD"
+				},
+				"aadTenantId": {
+					"value": "00000000-0000-0000-0000-000000000000"
+				},
+				"servicePrincipalObjectId": {
+					"value": "00000000-0000-0000-0000-000000000000"
+				},
+				"servicePrincipalApplicationId": {
+					"value": "00000000-0000-0000-0000-000000000000"
+				},
+				"servicePrincipalCertificateContents": {
+					"value": "base-64-encoded PFX certificate file contents here"
+				},
+				"servicePrincipalCertificatePassword": {
+					"value": "GEN-PASSWORD"
+				}
+    }
+}

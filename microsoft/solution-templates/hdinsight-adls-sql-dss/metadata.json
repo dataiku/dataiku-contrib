@@ -1,0 +1,7 @@
+{
+    "itemDisplayName": "Dataiku DSS with HDInsight on ADLS",
+    "description": "Deploy a HDInsight cluster based on an ADLS store with DSS linked onto it",
+    "githubUsername": "ThomasCabrol",
+    "summary": "Deploy a HDInsight cluster based on an ADLS store with DSS linked onto it",
+    "dateUpdated": "2018-06-14"
+}

@@ -1,0 +1,389 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique name to identify the machine into the Resource Group"
+      }
+		},
+    "dnsLabelPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the DSS Instance"
+      }
+		},
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+	  },
+    "vnetAddressSpace": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "The virtual network's address range in CIDR notion. It must be contained in one of the standard private address spaces: 10.0.0.0/8, 172.160.0.0/12, or 192.168.0.0/16."
+      }
+    },
+    "vnetSubnetAddressRange": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/24",
+      "metadata": {
+        "description": "The subnet's address range in CIDR notation. It must be contained by the address space of the virtual network."
+      }
+		},
+    "clusterName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the HDInsight cluster to create."
+      }
+    },
+    "clusterLoginUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "These credentials can be used to submit jobs to the cluster and to log into cluster dashboards."
+      }
+    },
+    "clusterLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+      }
+    },
+    "sshUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "These credentials can be used to remotely access the cluster."
+      }
+    },
+    "sshPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+      }
+    },
+    "aadTenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "The tenant ID (guid) of the Azure Active Directory (AAD) tenant where the service principal resides."
+      }
+    },
+    "adlName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Data Lake Storage account"
+      }
+    },
+    "servicePrincipalObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "The AAD object ID (guid) of the service principal that represents the HDInsight cluster. The service principal will be given permissions on the root folder of the Data Lake Store account."
+      }
+    },
+    "servicePrincipalApplicationId": {
+      "type": "string",
+      "metadata": {
+        "description": "The AAD application ID (guid) of the service principal that represents the HDInsight cluster. The service principal will be given permissions on the root folder of the Data Lake Store account."
+      }
+    },
+    "servicePrincipalCertificateContents": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The base-64-encoded contents of the PFX certificate file that can be used to authenticate as the service principal that represents the HDInsight cluster."
+      }
+    },
+    "servicePrincipalCertificatePassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password securing the PFX certificate file that can be used to authenticate as the service principal that represents the HDInsight cluster."
+      }
+    },
+    "clusterWorkerNodeCount": {
+      "type": "int",
+      "defaultValue": 4,
+      "metadata": {
+        "description": "The number of nodes in the HDInsight cluster."
+      }
+    },
+		"headnodeSize": {
+			"type": "string",
+			"defaultValue": "Standard_D12_V2",
+      "metadata": {
+        "description": "Microsoft Compute type for the head node"
+      }
+    },
+		"workerSize": {
+			"type": "string",
+			"defaultValue": "Standard_D3_V2",
+      "metadata": {
+        "description": "Microsoft Compute type for the worker nodes"
+      }
+    },
+    "edgeNodeSize": {
+        "type": "string",
+        "metadata": {
+            "description": "Size of the edge node that will host Dataiku DSS. Please be sure to select a VM with enough capacity if you plan to process your datasets in memory, using Python or R."
+        },
+        "defaultValue": "Standard_D12_V2",
+        "allowedValues": [
+            "Standard_D3_V2",
+            "Standard_D4_V2",
+            "Standard_D5_V2",
+            "Standard_D11_V2",
+            "Standard_D12_V2",
+            "Standard_D13_V2",
+            "Standard_D14_V2"
+        ]
+    },
+    "dssVersion": {
+        "type": "string",
+        "metadata": {
+            "description": "The Dataiku DSS version to install. Defaults to 'latest' (otherwise '4.1.5' for instance)."
+        },
+        "defaultValue": "latest"
+    },
+    "disableGatewayAuth": {
+        "type": "bool",
+        "metadata": {
+            "description": "Disables authentication for the DSS endpoint on the HDInsight gateway. Defaults to 'true'."
+        },
+        "defaultValue": true
+    }
+  },
+  "variables": {
+    "defaultApiVersion": "2015-06-15",
+    "applicationName": "dss",
+    "dssPort": 20000,
+		"vnetName": "[concat(parameters('vmName'),'-vnet')]",
+		"vnetSubnetName": "[concat(parameters('vmName'),'-subnet')]"
+  },
+  "resources": [
+    {
+      "name": "[variables('vnetName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[parameters('location')]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [],
+      "tags": {},
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressSpace')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('vnetSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('vnetSubnetAddressRange')]"
+            }
+          }
+        ]
+      }
+		},
+    {
+      "name": "[parameters('clusterName')]",
+      "type": "Microsoft.HDInsight/clusters",
+      "location": "[parameters('location')]",
+      "apiVersion": "2015-03-01-preview",
+      "dependsOn": [],
+      "tags": {},
+      "properties": {
+        "clusterVersion": "3.6",
+        "osType": "Linux",
+				"tier": "standard",
+        "clusterDefinition": {
+          "kind": "spark",
+          "configurations": {
+            "gateway": {
+              "restAuthCredential.isEnabled": true,
+              "restAuthCredential.username": "[parameters('clusterLoginUserName')]",
+              "restAuthCredential.password": "[parameters('clusterLoginPassword')]"
+            },
+						"core-site": {
+							"dfs.adls.home.mountpoint": "[concat('/clusters/',parameters('adlName'))]", 
+							"dfs.adls.home.hostname": "[concat(parameters('adlName'),'.azuredatalakestore.net')]", 
+							"fs.defaultFS": "adl://home"
+						},
+            "clusterIdentity": {
+              "clusterIdentity.applicationId": "[parameters('servicePrincipalApplicationId')]",
+              "clusterIdentity.certificate": "[parameters('servicePrincipalCertificateContents')]",
+              "clusterIdentity.certificatePassword": "[parameters('servicePrincipalCertificatePassword')]",
+              "clusterIdentity.aadTenantId": "[concat('https://login.windows.net/',parameters('aadTenantId'))]",
+              "clusterIdentity.resourceUri": "https://management.core.windows.net/"
+            }
+          }
+        },
+        "storageProfile": {
+          "storageaccounts": []
+        },
+        "computeProfile": {
+          "roles": [
+            {
+              "name": "headnode",
+              "targetInstanceCount": "2",
+              "hardwareProfile": {
+                "vmSize": "[paremeters('headnodeSize')]"
+              },
+              "osProfile": {
+                "linuxOperatingSystemProfile": {
+                  "username": "[parameters('sshUserName')]",
+                  "password": "[parameters('sshPassword')]"
+                }
+              },
+							"virtualNetworkProfile": {
+								"id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')]",
+								"subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
+							}
+            },
+            {
+              "name": "workernode",
+              "targetInstanceCount": "[parameters('clusterWorkerNodeCount')]",
+              "hardwareProfile": {
+                "vmSize": "[paremeters('workerSize')]"
+              },
+              "osProfile": {
+                "linuxOperatingSystemProfile": {
+                  "username": "[parameters('sshUserName')]",
+                  "password": "[parameters('sshPassword')]"
+                }
+              },
+							"virtualNetworkProfile": {
+								"id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')]",
+								"subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
+							}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-04-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat(parameters('vmName'),'-ip')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-04-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(parameters('vmName'),'-interface')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.HDInsight/clusters', parameters('clusterName')))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses/', concat(parameters('vmName'), '-ip'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('vmName'),'-ip'))]"
+              },
+              "subnet": {
+								"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-03-30",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vmName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.HDInsight/clusters', parameters('clusterName')))]",
+        "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('edgeNodeSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('vmName')]",
+          "adminUsername": "[parameters('sshUserName')]",
+          "adminPassword": "[parameters('sshPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "diskSizeGB": 100,
+              "lun": 0,
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vmName'),'-interface'))]"
+            }
+					]
+				}
+			}
+		},
+    {
+      "apiVersion": "2015-06-15",
+      "type": "extensions",
+      "name": "config-app",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', concat(variables('vmName'),copyindex()))]"
+      ],
+      "tags": {
+        "displayName": "config-app"
+      },
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/microsoft/solution-templates/hdinsight-adls-sql-dss/scripts/hdinsight-dss-install.sh"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh ', reference(parameters('clusterName')).connectivityEndpoints[0].location)]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "cluster": {
+      "type": "object",
+      "value": "[reference(resourceId('Microsoft.HDInsight/clusters',parameters('clusterName')))]"
+    },
+    "hostname": {
+      "type": "string",
+      "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+    },
+    "sshCommand": {
+      "type": "string",
+      "value": "[concat('ssh ', parameters('sshUserName'), '@', reference(concat(parameters('vmName'),'-ip')).dnsSettings.fqdn)]"
+		}
+	}
+}
+
