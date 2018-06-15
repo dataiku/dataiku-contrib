@@ -21,26 +21,6 @@
         "description": "Location for all resources."
       }
 	  },
-    "vnetAddressSpace": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/16",
-      "metadata": {
-        "description": "The virtual network's address range in CIDR notion. It must be contained in one of the standard private address spaces: 10.0.0.0/8, 172.160.0.0/12, or 192.168.0.0/16."
-      }
-    },
-    "vnetSubnetAddressRange": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/24",
-      "metadata": {
-        "description": "The subnet's address range in CIDR notation. It must be contained by the address space of the virtual network."
-      }
-		},
-    "clusterName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the HDInsight cluster to create."
-      }
-    },
     "clusterLoginUserName": {
       "type": "string",
       "metadata": {
@@ -75,6 +55,12 @@
       "type": "string",
       "metadata": {
         "description": "Name of the Azure Data Lake Storage account"
+      }
+    },
+    "adlRootDir": {
+      "type": "string",
+      "metadata": {
+        "description": "ADL Directory owned by the service principal for DSS to write in"
       }
     },
     "servicePrincipalObjectId": {
@@ -158,7 +144,12 @@
     "applicationName": "dss",
     "dssPort": 20000,
 		"vnetName": "[concat(parameters('vmName'),'-vnet')]",
-		"vnetSubnetName": "[concat(parameters('vmName'),'-subnet')]"
+		"vnetSubnetName": "[concat(parameters('vmName'),'-subnet')]",
+    "vnetAddressSpace": "10.0.0.0/16",
+    "vnetSubnetAddressRange": "10.0.0.0/24",
+    "clusterName": "[concat(parameters('vmName'),'-cluster')]",
+    "itfName": "[concat(parameters('vmName'),'-interface')]",
+    "ipaddressName": "[concat(parameters('vmName'),'-ip')]"
   },
   "resources": [
     {
@@ -185,7 +176,7 @@
       }
 		},
     {
-      "name": "[parameters('clusterName')]",
+      "name": "[variables('clusterName')]",
       "type": "Microsoft.HDInsight/clusters",
       "location": "[parameters('location')]",
       "apiVersion": "2015-03-01-preview",
@@ -204,7 +195,7 @@
               "restAuthCredential.password": "[parameters('clusterLoginPassword')]"
             },
 						"core-site": {
-							"dfs.adls.home.mountpoint": "[concat('/clusters/',parameters('adlName'))]", 
+							"dfs.adls.home.mountpoint": "[parameters('adlRootDir')]", 
 							"dfs.adls.home.hostname": "[concat(parameters('adlName'),'.azuredatalakestore.net')]", 
 							"fs.defaultFS": "adl://home"
 						},
@@ -263,7 +254,7 @@
     {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat(parameters('vmName'),'-ip')]",
+      "name": "[variables('ipaddressName')]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -275,11 +266,11 @@
     {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('vmName'),'-interface')]",
+      "name": "[variables('itfName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.HDInsight/clusters', parameters('clusterName')))]",
-        "[resourceId('Microsoft.Network/publicIPAddresses/', concat(parameters('vmName'), '-ip'))]",
+        "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName')))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses/', variables('ipaddressName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
       ],
       "properties": {
@@ -289,7 +280,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('vmName'),'-ip'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipaddressName'))]"
               },
               "subnet": {
 								"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
@@ -305,7 +296,7 @@
       "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.HDInsight/clusters', parameters('clusterName')))]",
+        "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName')))]",
         "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
       ],
       "properties": {
@@ -350,7 +341,7 @@
       "name": "config-app",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', concat(variables('vmName'),copyindex()))]"
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
       ],
       "tags": {
         "displayName": "config-app"
@@ -366,7 +357,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh ', reference(parameters('clusterName')).connectivityEndpoints[0].location)]"
+          "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh ', reference(variables('clusterName')).connectivityEndpoints[0].location)]"
         }
       }
     }
@@ -374,15 +365,15 @@
   "outputs": {
     "cluster": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.HDInsight/clusters',parameters('clusterName')))]"
+      "value": "[reference(resourceId('Microsoft.HDInsight/clusters',variables('clusterName')))]"
     },
     "hostname": {
       "type": "string",
-      "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      "value": "[reference(variables('ipaddressName')).dnsSettings.fqdn]"
     },
     "sshCommand": {
       "type": "string",
-      "value": "[concat('ssh ', parameters('sshUserName'), '@', reference(concat(parameters('vmName'),'-ip')).dnsSettings.fqdn)]"
+      "value": "[concat('ssh ', parameters('sshUserName'), '@', reference(variables('ipaddressName')).dnsSettings.fqdn)]"
 		}
 	}
 }
