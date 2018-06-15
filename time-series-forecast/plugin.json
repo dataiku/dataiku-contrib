@@ -1,0 +1,37 @@
+// This file is the descriptor for the DSS Plugin time_series_forecast
+{
+    // The identifier of the plugin.
+    // This must be globally unique, and only contain A-Za-z0-9_-
+    // BEWARE: Changing this value is a dangerous operation and
+    // needs manual administrator intervention to fix directory names
+    "id" : "time-series-forecast",
+
+    // Version. It is highly recommended to use Semantic Versioning
+    "version" : "0.0.1",
+
+
+    // Meta data for display purposes
+    "meta" : {
+        // Name of this plugin that appears in the interface.
+        "label" : "Time series forecast",
+
+        "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. \
+						 These recipes cover the cycle of data cleaning, model training, evaluation, and prediction.\
+						 They are based on univariate forecasting methods described in \
+						<a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. \
+						<i>Forecasting: principles and practice.</i> OTexts, 2014.</a>",
+		
+        "author" : "Alexandre Combessie (Dataiku)",
+
+        // The icon of a plugin must be one of the FontAwesome 3.1 icons
+        "icon" : "icon-calendar-empty",
+
+        "licenseInfo" : "Apache Software License",
+
+        // URL where the user can learn more about the plugin
+        "url" : "https://www.dataiku.com",
+
+        // List of tags for filtering the list of plugins
+        "tags" : ["time series", "forecast"]
+    }
+}

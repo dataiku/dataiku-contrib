@@ -1,0 +1,50 @@
+library(dataiku)
+R_lib_path <- paste(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R", sep="/")
+source(R_lib_path)
+
+input_dataset_name = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
+output_dataset_name = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
+
+config = dkuCustomRecipeConfig()
+TIME_COLUMN <- config[["TIME_COLUMN"]]
+SERIES_COLUMN <- config[["SERIES_COLUMN"]]
+CHOSEN_GRANULARITY <- config[["CHOSEN_GRANULARITY"]]
+TIMEZONE <- config[["TIMEZONE"]]
+REPLACE_OUTLIER <- config[["REPLACE_OUTLIER"]]
+REPLACE_MISSING <- config[["REPLACE_MISSING"]]
+
+df <- dkuReadDataset(input_dataset_name,
+                     columns = c(TIME_COLUMN, SERIES_COLUMN),
+                     colClasses = c("character","numeric")) %>%
+
+        # rename columns to simplify internal handling
+        rename("time_column" := !!TIME_COLUMN, "series_column" := !!SERIES_COLUMN) %>%
+
+        # convert to R POSIX date format
+        mutate_at(c("time_column"), funs(as.POSIXct(., TIMEZONE, format=dku_date_format))) %>%
+
+        # truncate all dates to the start of the period to avoid errors at the date_range_generate step
+        mutate_at(c("time_column"), funs(trunc_to_granularity_start(., CHOSEN_GRANULARITY))) %>%
+        
+        # allows to use the same dataset to aggregate at higher granularities e.g. from hour to day
+        group_by(time_column) %>%
+        summarise(series_column = sum_na(series_column)) %>%
+
+        # sort by date to avoid errors at the date_range_generate step
+        arrange(time_column) %>%
+
+        # resample the original data to a continuous date range at the chosen granularity
+        date_range_generate(CHOSEN_GRANULARITY) %>%
+
+        # replace outlier and or missing values using seasonality decomposition
+        # WARNING: heavy computational load
+        replace_outlier_or_missing(CHOSEN_GRANULARITY, REPLACE_OUTLIER, REPLACE_MISSING) %>%
+
+        # converts the date from POSIX to a character following dataiku date format in ISO 8601 standard
+        mutate_at(c("time_column"), funs(strftime(. , dku_date_format, TIMEZONE))) %>%
+
+        # renames the columns back to the original names in the input dataset
+        rename(!!TIME_COLUMN := "time_column", !!SERIES_COLUMN := "series_column")
+
+# Recipe outputs
+dkuWriteDataset(df, output_dataset_name)
