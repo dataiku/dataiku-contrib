@@ -181,7 +181,7 @@
       "location": "[parameters('location')]",
       "apiVersion": "2015-03-01-preview",
       "dependsOn": [
-        "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
+        "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
       ],
       "tags": {},
       "properties": {
@@ -229,7 +229,7 @@
               },
 							"virtualNetworkProfile": {
                   "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                  "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
+                  "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
 							}
             },
             {
@@ -246,7 +246,7 @@
               },
 							"virtualNetworkProfile": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
+                "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
 							}
             }
           ]
@@ -285,7 +285,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipaddressName'))]"
               },
               "subnet": {
-                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
               }
             }
           }
