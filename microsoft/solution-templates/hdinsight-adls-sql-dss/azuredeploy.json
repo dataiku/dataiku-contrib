@@ -181,7 +181,7 @@
       "location": "[parameters('location')]",
       "apiVersion": "2015-03-01-preview",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('vnetSubnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
       ],
       "tags": {},
       "properties": {
@@ -229,7 +229,7 @@
               },
 							"virtualNetworkProfile": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('vnetSubnetName'))]"
+                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
 							}
             },
             {
@@ -246,7 +246,7 @@
               },
 							"virtualNetworkProfile": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('vnetSubnetName'))]"
+                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
 							}
             }
           ]
@@ -285,7 +285,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipaddressName'))]"
               },
               "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('vnetSubnetName'))]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
               }
             }
           }
