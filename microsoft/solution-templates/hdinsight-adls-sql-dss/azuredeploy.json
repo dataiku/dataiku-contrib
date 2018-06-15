@@ -180,7 +180,9 @@
       "type": "Microsoft.HDInsight/clusters",
       "location": "[parameters('location')]",
       "apiVersion": "2015-03-01-preview",
-      "dependsOn": [],
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetSubnetName'), 'default')]"
+      ],
       "tags": {},
       "properties": {
         "clusterVersion": "3.6",
@@ -269,7 +271,7 @@
       "name": "[variables('itfName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-                "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
+        "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses/', variables('ipaddressName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
       ],
