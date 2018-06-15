@@ -162,14 +162,14 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[parameters('vnetAddressSpace')]"
+            "[variables('vnetAddressSpace')]"
           ]
         },
         "subnets": [
           {
-            "name": "[parameters('vnetSubnetName')]",
+            "name": "[variables('vnetSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('vnetSubnetAddressRange')]"
+              "addressPrefix": "[variables('vnetSubnetAddressRange')]"
             }
           }
         ]
@@ -217,7 +217,7 @@
               "name": "headnode",
               "targetInstanceCount": "2",
               "hardwareProfile": {
-                "vmSize": "[paremeters('headnodeSize')]"
+                "vmSize": "[parameters('headnodeSize')]"
               },
               "osProfile": {
                 "linuxOperatingSystemProfile": {
@@ -226,15 +226,15 @@
                 }
               },
 							"virtualNetworkProfile": {
-								"id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')]",
-								"subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetSubnetName'), 'default')]"
 							}
             },
             {
               "name": "workernode",
               "targetInstanceCount": "[parameters('clusterWorkerNodeCount')]",
               "hardwareProfile": {
-                "vmSize": "[paremeters('workerSize')]"
+                "vmSize": "[parameters('workerSize')]"
               },
               "osProfile": {
                 "linuxOperatingSystemProfile": {
@@ -243,8 +243,8 @@
                 }
               },
 							"virtualNetworkProfile": {
-								"id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')]",
-								"subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetSubnetName'), 'default')]"
 							}
             }
           ]
@@ -269,7 +269,7 @@
       "name": "[variables('itfName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName')))]",
+                "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses/', variables('ipaddressName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
       ],
@@ -283,7 +283,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipaddressName'))]"
               },
               "subnet": {
-								"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetSubnetName'), 'default')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetSubnetName'), 'default')]"
               }
             }
           }
@@ -296,15 +296,15 @@
       "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName')))]",
-        "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+                "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces',variables('itfName'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('edgeNodeSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('vmName')]",
+                    "computerName": "[parameters('vmName')]",
           "adminUsername": "[parameters('sshUserName')]",
           "adminPassword": "[parameters('sshPassword')]"
         },
@@ -329,38 +329,40 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vmName'),'-interface'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('itfName'))]"
             }
 					]
 				}
-			}
 		},
-    {
-      "apiVersion": "2015-06-15",
-      "type": "extensions",
-      "name": "config-app",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
-      ],
-      "tags": {
-        "displayName": "config-app"
-      },
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/microsoft/solution-templates/hdinsight-adls-sql-dss/scripts/hdinsight-dss-install.sh"
-          ]
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "extensions",
+        "name": "config-app",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+        ],
+        "tags": {
+          "displayName": "config-app"
         },
-        "protectedSettings": {
-          "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh ', reference(variables('clusterName')).connectivityEndpoints[0].location)]"
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/microsoft/solution-templates/hdinsight-adls-sql-dss/scripts/hdinsight-dss-install.sh"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh ', reference(variables('clusterName')).connectivityEndpoints[0].location)]"
+          }
         }
       }
-    }
+    ]
+  }
   ],
   "outputs": {
     "cluster": {
@@ -377,4 +379,3 @@
 		}
 	}
 }
-
