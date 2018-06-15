@@ -181,7 +181,7 @@
       "location": "[parameters('location')]",
       "apiVersion": "2015-03-01-preview",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
+        "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
       ],
       "tags": {},
       "properties": {
@@ -228,8 +228,8 @@
                 }
               },
 							"virtualNetworkProfile": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+                  "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
 							}
             },
             {
@@ -245,8 +245,8 @@
                 }
               },
 							"virtualNetworkProfile": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+                "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
 							}
             }
           ]
@@ -285,7 +285,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipaddressName'))]"
               },
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/', variables('vnetSubnetName'))]"
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', parameters('vnetSubnetName'))]"
               }
             }
           }
