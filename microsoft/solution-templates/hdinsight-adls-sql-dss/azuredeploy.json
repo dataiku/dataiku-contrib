@@ -181,7 +181,7 @@
       "location": "[parameters('location')]",
       "apiVersion": "2015-03-01-preview",
       "dependsOn": [
-        "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
+        "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
       ],
       "tags": {},
       "properties": {
@@ -229,7 +229,7 @@
               },
 							"virtualNetworkProfile": {
                   "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                  "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
+                  "subnet": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
 							}
             },
             {
@@ -246,7 +246,7 @@
               },
 							"virtualNetworkProfile": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                "subnet": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
+                "subnet": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
 							}
             }
           ]
@@ -273,7 +273,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses/', variables('ipaddressName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+        "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -306,7 +306,7 @@
           "vmSize": "[variables('edgeNodeSize')]"
         },
         "osProfile": {
-                    "computerName": "[parameters('vmName')]",
+          "computerName": "[parameters('vmName')]",
           "adminUsername": "[parameters('sshUserName')]",
           "adminPassword": "[parameters('sshPassword')]"
         },
@@ -331,7 +331,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('itfName'))]"
+                "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('itfName'))]"
             }
 					]
 				}
