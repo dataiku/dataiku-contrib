@@ -229,7 +229,7 @@
               },
 							"virtualNetworkProfile": {
                   "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                  "subnet": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
+                  "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'default')]"
 							}
             },
             {
@@ -246,7 +246,7 @@
               },
 							"virtualNetworkProfile": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-                "subnet": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
+                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'default')]"
 							}
             }
           ]
@@ -273,7 +273,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses/', variables('ipaddressName'))]",
-        "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'),'2016-06-01').subnets[0].id]"
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'default')]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -285,7 +285,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipaddressName'))]"
               },
               "subnet": {
-                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets/', variables('vnetSubnetName'))]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'default')]"
               }
             }
           }
