@@ -358,7 +358,7 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/microsoft/solution-templates/hdinsight-adls-sql-dss/scripts/hdinsight-dss-install.sh"
+              "https://raw.githubusercontent.com/dataiku/dataiku-contrib/hdinsight-adls-sql-dss/microsoft/solution-templates/hdinsight-adls-sql-dss/scripts/hdinsight-dss-install.sh"
             ]
           },
           "protectedSettings": {
