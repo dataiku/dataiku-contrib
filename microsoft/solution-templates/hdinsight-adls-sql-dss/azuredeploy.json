@@ -63,16 +63,16 @@
         "description": "ADL Directory owned by the service principal for DSS to write in"
       }
     },
-    "servicePrincipalObjectId": {
-      "type": "string",
-      "metadata": {
-        "description": "The AAD object ID (guid) of the service principal that represents the HDInsight cluster. The service principal will be given permissions on the root folder of the Data Lake Store account."
-      }
-    },
     "servicePrincipalApplicationId": {
       "type": "string",
       "metadata": {
         "description": "The AAD application ID (guid) of the service principal that represents the HDInsight cluster. The service principal will be given permissions on the root folder of the Data Lake Store account."
+      }
+    },
+    "servicePrincipalObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "The AAD object ID (guid) of the service principal that represents the HDInsight cluster. The service principal will be given permissions on the root folder of the Data Lake Store account."
       }
     },
     "servicePrincipalCertificateContents": {
