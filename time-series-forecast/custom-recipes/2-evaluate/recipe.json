@@ -128,6 +128,14 @@
             "type": "BOOLEAN",
             "defaultValue" : false,
 			"mandatory" : false
+        },
+        
+        {
+            "name": "kwargs",
+			"label" : "add",
+			"description":"MAP",
+            "type": "MAP",
+			"mandatory" : false
         }
 
 

@@ -34,13 +34,14 @@
 
     "outputRoles" : [
         {
-            "name": "output_dataset",
-            "label": "Output dataset",
-            "description": "Will output cleaned date and numerical columns",
+            "name": "output_folder",
+            "label": "Output folder",
+            "description": "Will store trained R forecast models",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": false,
-            "acceptsFolder": true
+            "acceptsManagedFolder": true,
+            "mustBeStrictlyType": "Filesystem"
         } 
         // ...
     ],
@@ -114,16 +115,244 @@
             "defaultValue" : "UTC",
             "mandatory" : false
         },
-		
-		{
-            "name": "MAP_TEST",
-			"label" : "Map test",
-			"description":"map test",
+        
+        {
+            "name": "BOX_COX_TRANSFORMATION_ACTIVATED",
+            "label" : "Box-Cox transformation",
+            "description": "Adjust raw time series before forecasting with Box-Cox transformation - Recommended",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : true
+        },
+
+        {
+            "name": "NAIVE_MODEL_ACTIVATED",
+            "label" : "Naive model",
+            "description": "Train a naive forecasting model as a baseline to run a benchmark",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "NAIVE_MODEL_METHOD",
+            "label" : "\u21B3 method",
+            "description": "cf. otexts.org/fpp2/simple-methods.html",
+            "type": "SELECT",
+            "mandatory" : false,
+            "defaultValue": "simple",
+            "visibilityCondition": "model.NAIVE_MODEL_ACTIVATED",
+            "selectChoices": [
+                {
+                    "value": "simple",
+                    "label": "No seasonality - forecast preceding value"
+                },
+                {
+                    "value": "seasonal",
+                    "label": "Seasonality - forecast value at previous period"
+                },
+                {
+                    "value": "drift",
+                    "label": "Seasonality - forecast value at previous period with drift correction"
+                }
+            ]
+        },
+        
+        {
+            "name": "SEASONALTREND_MODEL_ACTIVATED",
+            "label" : "Seasonal Trend model",
+            "description": "Train a Seasonal Trend forecasting model based on ets/stlf R implementations",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "SEASONALTREND_MODEL_ERROR_TYPE",
+            "label" : "\u21B3 error type",
+            "type": "SELECT",
+            "mandatory" : false,
+            "defaultValue": "Z",
+            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "selectChoices": [
+                {
+                    "value": "Z",
+                    "label": "Automatically selected"
+                },
+                {
+                    "value": "N",
+                    "label": "None"
+                },
+                {
+                    "value": "A",
+                    "label": "Additive"
+                },
+                {
+                    "value": "M",
+                    "label": "Multiplicative"
+                }
+            ]
+        },
+        
+        {
+            "name": "SEASONALTREND_MODEL_TREND_TYPE",
+            "label" : "\u21B3 trend type",
+            "type": "SELECT",
+            "mandatory" : false,
+            "defaultValue": "Z",
+            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "selectChoices": [
+                {
+                    "value": "Z",
+                    "label": "Automatically selected"
+                },
+                {
+                    "value": "N",
+                    "label": "None"
+                },
+                {
+                    "value": "A",
+                    "label": "Additive"
+                },
+                {
+                    "value": "M",
+                    "label": "Multiplicative"
+                }
+            ]
+        },
+        
+        {
+            "name": "SEASONALTREND_MODEL_SEASONALITY_TYPE",
+            "label" : "\u21B3 seasonality type",
+            "type": "SELECT",
+            "mandatory" : false,
+            "defaultValue": "Z",
+            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "selectChoices": [
+                {
+                    "value": "Z",
+                    "label": "Automatically selected"
+                },
+                {
+                    "value": "N",
+                    "label": "None"
+                },
+                {
+                    "value": "A",
+                    "label": "Additive"
+                },
+                {
+                    "value": "M",
+                    "label": "Multiplicative"
+                }
+            ]
+        },
+        
+       {
+            "name": "SEASONALTREND_MODEL_KWARGS",
             "type": "MAP",
-			"mandatory" : false
+            "label" : "\u21B3 additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/ets",
+            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+        
+        {
+            "name": "NEURALNETWORK_MODEL_ACTIVATED",
+            "label" : "Neural Network model",
+            "description": "Train a Neural Network autoregressive forecasting model based on nnetar R implementations",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS",
+            "label" : "\u21B3 seasonal lags",
+            "description": "Number of seasonal lags used as inputs - default is 1",
+            "type": "INT",
+            "mandatory" : false,
+            "defaultValue" : 1,
+            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED"
+        },
+
+        {
+            "name": "NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS",
+            "label" : "\u21B3 non-seasonal lags",
+            "description": "Number of non-seasonal lags used as inputs - leave -1 for automatic selection",
+            "type": "INT",
+            "mandatory" : false,
+            "defaultValue" : -1,
+            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED"
+        },
+        
+        {
+            "name": "NEURALNETWORK_MODEL_SIZE",
+            "label" : "\u21B3 number of neurons",
+            "description": "Number of neurons in the hidden layer - leave -1 for automatic selection",
+            "type": "INT",
+            "mandatory" : false,
+            "defaultValue" : -1,
+            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED"
+        },
+               
+        {
+            "name": "NEURALNETWORK_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3 additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/nnetar",
+            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+        
+        {
+            "name": "ARIMA_MODEL_ACTIVATED",
+            "label" : "ARIMA model",
+            "description": "Train an ARIMA forecasting model based on auto.arima R implementation. \
+                            WARNING: not suitable for long time series",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "ARIMA_MODEL_STEPWISE_ACTIVATED",
+            "label" : "\u21B3 stepwise",
+            "description": "Use stepwise procedure to speed up the search for model parameters",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : false,
+            "visibilityCondition": "model.ARIMA_MODEL_ACTIVATED"
+        },
+
+        {
+            "name": "ARIMA_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3  additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/auto.arima",
+            "visibilityCondition": "model.ARIMA_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+
+        {
+            "name": "STATE_SPACE_MODEL_ACTIVATED",
+            "label" : "State Space model",
+            "description": "Train a State Space forecasting model based on tbats R implementation. \
+                             WARNING: not suitable for long time series",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+
+        {
+            "name": "STATESPACE_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3  additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/tbats",
+            "visibilityCondition": "model.STATE_SPACE_MODEL_ACTIVATED",
+            "mandatory" : false
         }
-
-
+        
     ],
 
     // The field "resourceKeys" holds a list of keys that allows to limit the number

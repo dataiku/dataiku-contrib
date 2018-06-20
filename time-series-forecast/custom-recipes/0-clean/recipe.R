@@ -15,7 +15,9 @@ REPLACE_MISSING <- config[["REPLACE_MISSING"]]
 
 df <- dkuReadDataset(input_dataset_name,
                      columns = c(TIME_COLUMN, SERIES_COLUMN),
-                     colClasses = c("character","numeric")) %>%
+                     colClasses = c("character","numeric")) %T>%
+
+        {plugin_print("Preparation stage: date parsing, cleaning, aggregation, sorting")} %>%
 
         # rename columns to simplify internal handling
         rename("time_column" := !!TIME_COLUMN, "series_column" := !!SERIES_COLUMN) %>%
@@ -31,10 +33,14 @@ df <- dkuReadDataset(input_dataset_name,
         summarise(series_column = sum_na(series_column)) %>%
 
         # sort by date to avoid errors at the date_range_generate step
-        arrange(time_column) %>%
+        arrange(time_column) %T>%
+
+        {plugin_print("Resampling stage: generating a continuous date range")} %>%
 
         # resample the original data to a continuous date range at the chosen granularity
-        date_range_generate(CHOSEN_GRANULARITY) %>%
+        date_range_generate(CHOSEN_GRANULARITY) %T>%
+
+        {plugin_print("Interpolation stage: finding and replacing outlier and or missing values")} %>%
 
         # replace outlier and or missing values using seasonality decomposition
         # WARNING: heavy computational load
@@ -45,6 +51,8 @@ df <- dkuReadDataset(input_dataset_name,
 
         # renames the columns back to the original names in the input dataset
         rename(!!TIME_COLUMN := "time_column", !!SERIES_COLUMN := "series_column")
+
+plugin_print("All stages completed!")
 
 # Recipe outputs
 dkuWriteDataset(df, output_dataset_name)

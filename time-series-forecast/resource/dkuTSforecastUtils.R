@@ -1,11 +1,36 @@
 library(zoo)
 library(timeDate)
 library(dplyr)
+library(magrittr)
 library(forecast)
 library(lubridate)
+library(R.utils)
 
 # This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard
 dku_date_format = "%Y-%m-%dT%T.000Z"
+
+plugin_print <- function(message){
+    print(paste("[PLUGIN_LOG]", message))
+}
+
+clean_list_mixed_type <- function(named_list){
+    cleaned_list <- list()
+    for(name in names(named_list)){
+        if(!is.na(as.numeric(named_list[[name]]))){
+            cleaned_list[[name]] <- as.numeric(named_list[[name]])
+        }
+        else{
+            if(!is.na(as.logical(named_list[[name]]))){
+                cleaned_list[[name]] <- as.logical(named_list[[name]])
+            }
+            else{
+                cleaned_list[[name]] <- as.character(named_list[[name]])
+            }
+            
+        }
+    }
+    return(cleaned_list)
+}
 
 trunc_to_granularity_start <- function(date, granularity) {
     #' Truncate a date to the start of the chosen granularity
@@ -140,10 +165,22 @@ naive_forecast <- function(y, method){
     return(forecast)
 }
 
+save_models_to_managed_folder <- function(model_list, folder_id){
+    folder_type <- tolower(dkuManagedFolderInfo(folder_id)[["info"]][["type"]])
+    folder_path <- dkuManagedFolderPath(folder_id)
+    if(folder_type!="filesystem"){
+        stop("Output folder must be on the Server Filesystem. \
+          Please use the \"filesystem_folders\" connection.")
+    }
+    unlink(file.path(folder_path,"*"), recursive = TRUE) # clear folder to avoid history conflicts
+    for(model_name in names(model_list)){
+        model <- model_list[[model_name]]
+        if(!is.null(model)){
+            target_dir <- file.path(folder_path, model_name)
+            dir.create(target_dir)
+            save(model, file = file.path(target_dir,"model.RData"))
+        }
 
-test <- "Train a set of forecasting models:\
-                            \n* \"Naïve\" seasonal model for benchmarking\
-                            \n* Auto Regressive Integrated Moving Average (ARIMA)\
-                            \n* Seasonal and Trend decomposition (ETS and STL)\
-                            \n* State space model (TBATS)\
-                            \n* Neural network (NNAR)"
+    }
+}
+
