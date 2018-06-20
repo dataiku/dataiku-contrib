@@ -1,5 +1,5 @@
 PLUGIN_VERSION=1.0.0
-PLUGIN_ID=sendmail
+PLUGIN_ID=sentiment-analysis
 
 all:
 	cat plugin.json|json_pp > /dev/null
