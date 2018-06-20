@@ -1,0 +1,90 @@
+{
+    "meta" : {
+        "label" : "Compute sentiment polarity",
+        "description" : "Classify your texts into two categories : \"positive\" when the text is positive (e.g. \"This movie is good\") and \"negative\" otherwise."
+    },
+
+    "kind" : "PYTHON",
+
+    
+    
+    "inputRoles" : [
+        {
+            "name": "input_dataset",
+            "label": "Input dataset",
+            "description": "The dataset that contains the column of interest",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "description": "A copy of the input dataset with an additional column of predicted sentiment polarities",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    
+    
+    "params": [
+        {
+            "name": "text_column_name",
+            "label" : "Text column",
+            "type": "COLUMN",
+            "description": "Select the column to perform sentiment analysis on",
+            "mandatory" : true,
+            "columnRole":"input_dataset"
+        },
+
+        {
+            "name": "advanced_settings",
+            "type": "BOOLEAN",
+            "label" : "Advanced settings",
+            "description": "Language identification / prediction confidence",
+            "defaultValue" : false
+        }, 
+
+        
+        {
+            "name": "detect_language",
+            "type": "BOOLEAN",
+            "label" : "Detect language",
+            "visibilityCondition" : "model.advanced_settings",
+            "description": "Uncheck the box to manually set the text language",
+            "defaultValue" : true
+        }, 
+        {
+            "name": "text_language",
+            "label" : "Text language",
+            "description": "Choose an available language from the list",
+            "type": "SELECT",
+            "visibilityCondition" : "model.advanced_settings && !model.detect_language",
+            "mandatory" : true,
+            "selectChoices": [
+                {
+                    "value": "english",
+                    "label": "English"
+                },
+                {
+                    "value": "french",
+                    "label": "French"
+                }
+            ]
+        },
+
+        {
+            "name": "output_confidence",
+            "type": "BOOLEAN",
+            "label" : "Output confidence scores",
+            "visibilityCondition" : "model.advanced_settings",
+            "description": "Check the box to output the model's confidence for each prediction",
+            "defaultValue" : false
+        }
+    ]
+}

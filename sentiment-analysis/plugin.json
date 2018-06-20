@@ -1,0 +1,17 @@
+{
+    "id" : "sentiment-analysis",
+    "version" : "0.0.1",
+    "meta" : {
+        "label" : "Sentiment Analysis",
+
+        "description" : "This plugin provides a tool to perform sentiment analysis on your text data.",
+        "author" : "Dataiku (Hicham EL BOUKKOURI)",
+
+        "icon" : "icon-comments",
+        "licenseInfo" : "Apache Software License",
+
+        "url" : "https://dataiku.com/community/plugins/info/sentiment-analysis.html",
+
+        "tags" : ["NLP", "Machine Learning"]
+    }
+}
