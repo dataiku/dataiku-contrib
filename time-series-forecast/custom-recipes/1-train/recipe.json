@@ -53,6 +53,13 @@
     // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
 
     "params": [
+        
+        {
+            "name": "separator_preprocessing",
+            "label": "Preprocessing",
+            "type": "SEPARATOR"
+        },
+        
 
         {
             "name": "TIME_COLUMN",
@@ -119,16 +126,22 @@
         {
             "name": "BOX_COX_TRANSFORMATION_ACTIVATED",
             "label" : "Box-Cox transformation",
-            "description": "Adjust raw time series before forecasting with Box-Cox transformation - Recommended",
+            "description": "Adjust raw time series before forecasting with Box-Cox transformation (recommended)",
             "type": "BOOLEAN",
             "defaultValue" : true,
             "mandatory" : true
         },
 
         {
+            "name": "separator_modeling",
+            "label": "Training forecasting models - select which to apply",
+            "type": "SEPARATOR"
+        },
+        
+        {
             "name": "NAIVE_MODEL_ACTIVATED",
-            "label" : "Naive model",
-            "description": "Train a naive forecasting model as a baseline to run a benchmark",
+            "label" : "Naive model (baseline)",
+            "description": "Based on the naive/snaive implementation in R \"forecast\" package",
             "type": "BOOLEAN",
             "defaultValue" : true,
             "mandatory" : true
@@ -161,7 +174,7 @@
         {
             "name": "SEASONALTREND_MODEL_ACTIVATED",
             "label" : "Seasonal Trend model",
-            "description": "Train a Seasonal Trend forecasting model based on ets/stlf R implementations",
+            "description": "Based on the ets/stlf implementation in R \"forecast\" package",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -260,7 +273,7 @@
         {
             "name": "NEURALNETWORK_MODEL_ACTIVATED",
             "label" : "Neural Network model",
-            "description": "Train a Neural Network autoregressive forecasting model based on nnetar R implementations",
+            "description": "Based on the nnetar implementation in R \"forecast\" package",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -269,7 +282,7 @@
         {
             "name": "NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS",
             "label" : "\u21B3 seasonal lags",
-            "description": "Number of seasonal lags used as inputs - default is 1",
+            "description": "Number of seasonal lags used as inputs. Default is 1.",
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : 1,
@@ -279,7 +292,7 @@
         {
             "name": "NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS",
             "label" : "\u21B3 non-seasonal lags",
-            "description": "Number of non-seasonal lags used as inputs - leave -1 for automatic selection",
+            "description": "Number of non-seasonal lags used as inputs. Leave -1 for automatic selection.",
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : -1,
@@ -289,7 +302,7 @@
         {
             "name": "NEURALNETWORK_MODEL_SIZE",
             "label" : "\u21B3 number of neurons",
-            "description": "Number of neurons in the hidden layer - leave -1 for automatic selection",
+            "description": "Number of neurons in the hidden layer. Leave -1 for automatic selection.",
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : -1,
@@ -308,7 +321,7 @@
         {
             "name": "ARIMA_MODEL_ACTIVATED",
             "label" : "ARIMA model",
-            "description": "Train an ARIMA forecasting model based on auto.arima R implementation. \
+            "description": "Based on the auto.arima implementation in R \"forecast\" package. \
                             WARNING: not suitable for long time series",
             "type": "BOOLEAN",
             "defaultValue" : false,
@@ -337,7 +350,7 @@
         {
             "name": "STATE_SPACE_MODEL_ACTIVATED",
             "label" : "State Space model",
-            "description": "Train a State Space forecasting model based on tbats R implementation. \
+            "description": "Based on the tbats implementation in R \"forecast\" package. \
                              WARNING: not suitable for long time series",
             "type": "BOOLEAN",
             "defaultValue" : false,
