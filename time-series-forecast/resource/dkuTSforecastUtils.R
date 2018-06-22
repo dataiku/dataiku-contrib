@@ -171,33 +171,35 @@ naive_forecast <- function(y, method) {
 }
 
 save_to_managed_folder <- function(folder_id, model_list, ts, ...) {
-    #' Save R models and arbitrary objects to a filesystem folder in Rdata format
+    #' Save R models and arbitrary objects to a filesystem folder in Rdata format with a defined structure
     #'
-    #' @description First, it clears the output folder (no previous model versions can be stored). 
-    #' Then it saves each model to a dedicated folder named after each model type. 
-    #' Then it saves the ts object and any arbitrary list of parameters.
-
-    # TODO: (next version) allow to store multiple model versions across time?
+    #' @description First, it creates a structure inside the directory:
+    #' - version/<timestamp in ms>/ for parameters and time series,
+    #' - version/<timestamp in ms>/models for models.
+    #' Then it saves the objects in Rdata format to the relevant directory.
+    #' It handles versioning of models so all trained models are saved.
     
-    folder_type <- tolower(dkuManagedFolderInfo(folder_id)[["info"]][["type"]])
     folder_path <- dkuManagedFolderPath(folder_id)
+    folder_type <- tolower(dkuManagedFolderInfo(folder_id)[["info"]][["type"]])
     if(folder_type!="filesystem") {
         stop("Output folder must be on the Server Filesystem. \
           Please use the \"filesystem_folders\" connection.")
     }
     
-    unlink(file.path(folder_path,"*"), recursive = TRUE) # clear folder to avoid history conflicts
+    # create standard directory structure
+    timestamp_ms <- as.character(round(as.numeric(Sys.time())*1000))
+    version_path <- file.path(folder_path, "versions", timestamp_ms)
+    models_path <- file.path(version_path, "models")
+    dir.create(models_path, recursive = TRUE)
+    
+    save(ts, file = file.path(version_path , "ts.Rdata"))
+    save(..., file = file.path(version_path , "params.Rdata"))
     
     for(model_name in names(model_list)) {
         model <- model_list[[model_name]]
-        if(!is.null(model)){
-            model_path <- file.path(folder_path, "models")
-            dir.create(model_path)
-            save(model, file = file.path(model_path, paste0(model_name,".RData")))
+        if(!is.null(model)) {
+            save(model, file = file.path(models_path, paste0(model_name,".RData")))
         }
     }
-
-    save(ts, file = file.path(folder_path , "ts.Rdata"))
-    save(..., file = file.path(folder_path , "parameters.Rdata"))
 }
 
