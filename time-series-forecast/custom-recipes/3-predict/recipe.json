@@ -9,7 +9,7 @@
 
     "kind" : "R",
     
-    "selectableFromDataset" : "input_dataset",
+    "selectableFromDataset" : "input_folder",
 
     // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
     // or more dataset to each input and output role.
@@ -20,21 +20,31 @@
 
     "inputRoles" : [
         {
-            "name": "input_dataset",
-            "label": "Input dataset",
-            "description": "Must include one date and one numerical column",
+            "name": "input_folder",
+            "label": "Saved model folder",
+            "description": "Contains saved models from the \"Train\" recipe",
             "arity": "UNARY",
             "required": true,
+            "acceptsDataset": false,
+            "acceptsManagedFolder": true,
+            "mustBeStrictlyType": "Filesystem"
+        },
+        {
+            "name": "input_dataset",
+            "label": "Evaluation dataset",
+            "description": "Result dataset from the \"Evaluate\" recipe",
+            "arity": "UNARY",
+            "required": false,
             "acceptsDataset": true,
             "acceptsFolder": false
-        }
+        } 
     ],
 
     "outputRoles" : [
         {
             "name": "output_dataset",
             "label": "Output dataset",
-            "description": "Will output cleaned date and numerical columns",
+            "description": "Will output forecasted values",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": true,
@@ -50,86 +60,151 @@
     // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
 
     "params": [
-		
-		{
-            "name": "TIME_COLUMN",
-			"label" : "Time column",
-			"description":"Must be a parsed date",
-            "type": "COLUMN",
-            "columnRole":"input_dataset",
-			"mandatory" : true
-        },
-		
-		{
-            "name": "SERIES_COLUMN",
-			"label" : "Series column",
-			"description":"Must be numeric",
-            "type": "COLUMN",
-            "columnRole":"input_dataset",
-			"mandatory" : true
+        
+        {
+            "name": "separator_model_selection",
+            "label": "Selecting which model(s) to use",
+            "type": "SEPARATOR"
         },
 		
 		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
         {
-            "name": "CHOSEN_GRANULARITY",
+            "name": "SELECTED_MODEL",
+            "label" : "Model to use",
             "type": "SELECT",
-			"mandatory" : true,
+			"mandatory" : false,
+            "defaultValue" : "all",
+            "visibilityCondition": "!model.AUTO_MODEL_SELECTION_ACTIVATED",
             "selectChoices": [
                 {
-                    "value": "year",
-                    "label": "Year"
+                    "value": "all",
+                    "label": "All models"
                 },
 				{
-                    "value": "quarter",
-                    "label": "Quarter"
-                },
-				{
-                    "value": "month",
-                    "label": "Month"
+                    "value": "naive",
+                    "label": "Naive model"
                 },
                 {
-                    "value": "week",
-                    "label": "Week"
+                    "value": "seasonaltrend",
+                    "label": "Seasonal Trend model"
                 },
 				{
-                    "value": "day",
-                    "label": "Day"
+                    "value": "neuralnetwork",
+                    "label": "Neural Network model"
                 },
 				{
-                    "value": "hour",
-                    "label": "Hour"
+                    "value": "arima",
+                    "label": "ARIMA model"
+                },
+                {
+                    "value": "statespace",
+                    "label": "State space model"
+                }
+            ]
+        },
+        
+        {
+            "name": "AUTO_MODEL_SELECTION_ACTIVATED",
+			"label" : "Automatic model selection",
+			"description": "Automatically select model according to evaluated performance metrics",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+			"mandatory" : true
+        },
+				
+		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
+        {
+            "name": "METRIC_TO_OPTIMIZE",
+            "label" : "Metric to optimize",
+            "type": "SELECT",
+			"mandatory" : false,
+            "defaultValue" : "MASE",
+            "visibilityCondition": "model.AUTO_MODEL_SELECTION_ACTIVATED",
+            "selectChoices": [
+                {
+                    "value": "RMSE",
+                    "label": "Root Mean Squared Error"
+                },
+				{
+                    "value": "MAE",
+                    "label": "Mean Absolute Error"
+                },
+                {
+                    "value": "MAPE",
+                    "label": "Mean Absolute Percentage Error"
+                },
+				{
+                    "value": "MASE",
+                    "label": "Mean Absolute Scaled Error"
                 },
             ]
         },
-		
+
         {
-            "name": "TIMEZONE",
-            "label" : "Time zone",
-            "type": "STRING",
-            "description":"Follow ISO 8601 standard (default is UTC)",
-            "defaultValue" : "UTC",
-			"mandatory" : false
+            "name": "CROSS_VALIDATION_STRATEGY",
+            "label" : "Cross-validation strategy",
+            "description": "Select which cross-validation results to use from \
+                           the previous \"evaluate\" recipe",
+            "type": "SELECT",
+			"mandatory" : false,
+            "defaultValue" : "test",
+            "visibilityCondition": "model.AUTO_MODEL_SELECTION_ACTIVATED",
+            "selectChoices": [
+                {
+                    "value": "test",
+                    "label": "Test set"
+                },
+				{
+                    "value": "multistepforecast",
+                    "label": "Multi-step forecast"
+                }
+            ]
         },
-		
-		{
-            "name": "REPLACE_MISSING",
-			"label" : "Replace missing values",
-			"description":"Interpolate missing values",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
-			"mandatory" : false
-        },
-		
+
+
         {
-            "name": "REPLACE_OUTLIER",
-			"label" : "Replace outliers",
-			"description":"Identify and replace outliers (optional)",
+            "name": "separator_forecasting",
+            "label": "Generating future values",
+            "type": "SEPARATOR"
+        },
+        
+        {
+            "name": "NUMBER_OF_FORECAST_PERIODS",
+            "label" : "Number of periods to forecast",
+            "type": "INT",
+            "mandatory" : true,
+            "defaultValue" : 10
+        },
+        
+        {
+            "name": "CONFIDENCE_INTERVAL_LEVEL_1",
+            "label" : "First confidence interval",
+            "type": "INT",
+            "mandatory" : true,
+            "defaultValue" : 80,
+            "description": "in percentage point"
+        },
+        
+        {
+            "name": "CONFIDENCE_INTERVAL_LEVEL_2",
+            "label" : "Second confidence interval",
+            "type": "INT",
+            "mandatory" : true,
+            "defaultValue" : 95,
+            "description": "in percentage point"
+        },
+        
+        {
+            "name": "CONFIDENCE_LEVEL_BOOTSTRAP_ACTIVATED",
+			"label" : "Bootstrap confidence intervals",
+			"description": "Use statistical bootstrapping to get more robust confidence intervals. \
+                            WARNING: it takes more time to compute.",
             "type": "BOOLEAN",
             "defaultValue" : false,
-			"mandatory" : false
+			"mandatory" : true
         }
 
-
+        
     ],
 
     // The field "resourceKeys" holds a list of keys that allows to limit the number

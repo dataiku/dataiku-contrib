@@ -192,8 +192,8 @@ save_to_managed_folder <- function(folder_id, model_list, ts, ...) {
     models_path <- file.path(version_path, "models")
     dir.create(models_path, recursive = TRUE)
     
-    save(ts, file = file.path(version_path , "ts.Rdata"))
-    save(..., file = file.path(version_path , "params.Rdata"))
+    save(ts, file = file.path(version_path , "ts.RData"))
+    save(..., file = file.path(version_path , "params.RData"))
     
     for(model_name in names(model_list)) {
         model <- model_list[[model_name]]
@@ -201,5 +201,28 @@ save_to_managed_folder <- function(folder_id, model_list, ts, ...) {
             save(model, file = file.path(models_path, paste0(model_name,".RData")))
         }
     }
+    plugin_print("Models, time series and parameters saved to folder")
 }
 
+load_from_managed_folder <- function(folder_id){
+    input_folder_path <- dkuManagedFolderPath(folder_id)
+    input_folder_type <- tolower(dkuManagedFolderInfo(folder_id)[["info"]][["type"]])
+    if(input_folder_type!="filesystem") {
+         stop("Input folder must be on the Server Filesystem. \
+         Please use the \"filesystem_folders\" connection.")
+    }
+    last_version_timestamp <- max(list.files(file.path(input_folder_path, "versions")))
+    version_path <- file.path(input_folder_path, "versions", last_version_timestamp)
+    models_path <- file.path(version_path, "models")
+    rdata_path_list <- list.files(
+        path = version_path,
+        pattern = "*.RData",
+        full.names = TRUE,
+        include.dirs = FALSE,
+        recursive = TRUE
+    )
+    for(rdata_path in rdata_path_list){
+        load(rdata_path, envir = .GlobalEnv)
+    }
+    plugin_print("Models, time series and parameters loaded from folder")
+}

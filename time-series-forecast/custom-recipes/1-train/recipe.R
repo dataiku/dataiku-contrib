@@ -1,4 +1,3 @@
-# WORK IN PROGRESS
 library(dataiku)
 R_lib_path <- paste(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R", sep="/")
 source(R_lib_path)
