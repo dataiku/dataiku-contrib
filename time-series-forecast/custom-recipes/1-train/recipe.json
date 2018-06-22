@@ -158,15 +158,15 @@
             "selectChoices": [
                 {
                     "value": "simple",
-                    "label": "No seasonality - forecast preceding value"
+                    "label": "Non-seasonal: forecast preceding value"
                 },
                 {
                     "value": "seasonal",
-                    "label": "Seasonality - forecast value at previous period"
+                    "label": "Seasonal: forecast value at previous period"
                 },
                 {
                     "value": "drift",
-                    "label": "Seasonality - forecast value at previous period with drift correction"
+                    "label": "Seasonal: forecast value at previous period with drift correction"
                 }
             ]
         },

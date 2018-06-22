@@ -173,4 +173,12 @@ if(STATE_SPACE_MODEL_ACTIVATED){
 
 plugin_print("All stages completed!")
 
-save_models_to_managed_folder(.MODEL_LIST, output_folder_name)
+save_to_managed_folder(
+    folder_id = output_folder_name,
+    model_list = .MODEL_LIST, 
+    msts,
+    TIME_COLUMN,
+    SERIES_COLUMN,
+    CHOSEN_GRANULARITY,
+    TIMEZONE
+)

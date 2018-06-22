@@ -156,7 +156,12 @@ replace_outlier_or_missing <- function(df, granularity, replace_outlier, replace
     return(df_output)
 }
 
-naive_forecast <- function(y, method){
+naive_forecast <- function(y, method) {
+    #' Wrap naive models from the forecast package in a simpler way
+    #'
+    #' @description Depending on a simple "method" argument, this wrapper function switches to 
+    #' different implementations of naive models in the forecast package.
+    
     forecast <- switch(method,
         simple = forecast::naive(y),
         seasonal = forecast::snaive(y),
@@ -165,22 +170,34 @@ naive_forecast <- function(y, method){
     return(forecast)
 }
 
-save_models_to_managed_folder <- function(model_list, folder_id){
+save_to_managed_folder <- function(folder_id, model_list, ts, ...) {
+    #' Save R models and arbitrary objects to a filesystem folder in Rdata format
+    #'
+    #' @description First, it clears the output folder (no previous model versions can be stored). 
+    #' Then it saves each model to a dedicated folder named after each model type. 
+    #' Then it saves the ts object and any arbitrary list of parameters.
+
+    # TODO: (next version) allow to store multiple model versions across time?
+    
     folder_type <- tolower(dkuManagedFolderInfo(folder_id)[["info"]][["type"]])
     folder_path <- dkuManagedFolderPath(folder_id)
-    if(folder_type!="filesystem"){
+    if(folder_type!="filesystem") {
         stop("Output folder must be on the Server Filesystem. \
           Please use the \"filesystem_folders\" connection.")
     }
+    
     unlink(file.path(folder_path,"*"), recursive = TRUE) # clear folder to avoid history conflicts
-    for(model_name in names(model_list)){
+    
+    for(model_name in names(model_list)) {
         model <- model_list[[model_name]]
         if(!is.null(model)){
-            target_dir <- file.path(folder_path, model_name)
-            dir.create(target_dir)
-            save(model, file = file.path(target_dir,"model.RData"))
+            model_path <- file.path(folder_path, "models")
+            dir.create(model_path)
+            save(model, file = file.path(model_path, paste0(model_name,".RData")))
         }
-
     }
+
+    save(ts, file = file.path(folder_path , "ts.Rdata"))
+    save(..., file = file.path(folder_path , "parameters.Rdata"))
 }
 

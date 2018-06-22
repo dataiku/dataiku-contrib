@@ -13,6 +13,8 @@ TIMEZONE <- config[["TIMEZONE"]]
 REPLACE_OUTLIER <- config[["REPLACE_OUTLIER"]]
 REPLACE_MISSING <- config[["REPLACE_MISSING"]]
 
+# TODO: (next versions) extend this to multivariate time series?
+
 df <- dkuReadDataset(input_dataset_name,
                      columns = c(TIME_COLUMN, SERIES_COLUMN),
                      colClasses = c("character","numeric")) %T>%
