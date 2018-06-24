@@ -9,7 +9,7 @@
 
     "kind" : "R",
     
-    "selectableFromDataset" : "input_dataset",
+    "selectableFromDataset" : "input_folder",
     
 
     // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
@@ -21,23 +21,24 @@
 
     "inputRoles" : [
         {
-            "name": "input_dataset",
-            "label": "Input dataset",
-            "description": "Must include one date and one numerical column",
+            "name": "input_folder",
+            "label": "Saved model folder",
+            "description": "Contains saved models from the \"Train\" recipe",
             "arity": "UNARY",
             "required": true,
-            "acceptsDataset": true,
-            "acceptsFolder": false
+            "acceptsDataset": false,
+            "acceptsManagedFolder": true,
+            "mustBeStrictlyType": "Filesystem"
         }
     ],
 
     "outputRoles" : [
         {
             "name": "output_dataset",
-            "label": "Output dataset",
-            "description": "Will output cleaned date and numerical columns",
+            "label": "Evaluation dataset",
+            "description": "Table of evaluation results",
             "arity": "UNARY",
-            "required": true,
+            "required": false,
             "acceptsDataset": true,
             "acceptsFolder": false
         } 
@@ -52,92 +53,43 @@
 
     "params": [
 		
-		{
-            "name": "TIME_COLUMN",
-			"label" : "Time column",
-			"description":"Must be a parsed date",
-            "type": "COLUMN",
-            "columnRole":"input_dataset",
-			"mandatory" : true
-        },
-		
-		{
-            "name": "SERIES_COLUMN",
-			"label" : "Series column",
-			"description":"Must be numeric",
-            "type": "COLUMN",
-            "columnRole":"input_dataset",
-			"mandatory" : true
-        },
-		
-		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
         {
-            "name": "CHOSEN_GRANULARITY",
-            "type": "SELECT",
-			"mandatory" : true,
-            "selectChoices": [
-                {
-                    "value": "year",
-                    "label": "Year"
-                },
-				{
-                    "value": "quarter",
-                    "label": "Quarter"
-                },
-				{
-                    "value": "month",
-                    "label": "Month"
-                },
-                {
-                    "value": "week",
-                    "label": "Week"
-                },
-				{
-                    "value": "day",
-                    "label": "Day"
-                },
-				{
-                    "value": "hour",
-                    "label": "Hour"
-                },
-            ]
-        },
-		
-        {
-            "name": "TIMEZONE",
-            "label" : "Time zone",
-            "type": "STRING",
-            "description":"Follow ISO 8601 standard (default is UTC)",
-            "defaultValue" : "UTC",
-			"mandatory" : false
-        },
-		
-		{
-            "name": "REPLACE_MISSING",
-			"label" : "Replace missing values",
-			"description":"Interpolate missing values",
+            "name": "TRAIN_TEST_SPLIT_ACTIVATED",
+            "label" : "Train/test split strategy",
+            "description": "Apply simple train/test temporal split strategy",
             "type": "BOOLEAN",
             "defaultValue" : true,
-			"mandatory" : false
-        },
-		
-        {
-            "name": "REPLACE_OUTLIER",
-			"label" : "Replace outliers",
-			"description":"Identify and replace outliers (optional)",
-            "type": "BOOLEAN",
-            "defaultValue" : false,
-			"mandatory" : false
+            "mandatory" : false
         },
         
         {
-            "name": "kwargs",
-			"label" : "add",
-			"description":"MAP",
-            "type": "MAP",
-			"mandatory" : false
+            "name": "TEST_SIZE",
+            "label" : "\u21B3 Test periods",
+            "description": "Number of periods to use as test from the original dataset",
+            "type": "INT",
+            "defaultValue" : 10,
+            "mandatory" : false,
+            "visibilityCondition": "model.TRAIN_TEST_SPLIT_ACTIVATED"
+        },
+        
+        {
+            "name": "TSCROSSVALIDATION_ACTIVATED",
+            "label" : "Times series CV strategy",
+            "description": "Cross-validation strategy for time series cf. https://robjhyndman.com/hyndsight/tscv/",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : false
+        },
+        
+        {
+            "name": "CROSSVALIDATION_HORIZON",
+            "label" : "\u21B3 Prediction horizon",
+            "description": "Number of periods to predict in advance",
+            "type": "INT",
+            "defaultValue" : 1,
+            "mandatory" : false,
+            "visibilityCondition": "model.TSCROSSVALIDATION_ACTIVATED"
         }
-
 
     ],
 

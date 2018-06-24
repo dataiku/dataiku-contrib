@@ -1,6 +1,6 @@
 library(dataiku)
-R_lib_path <- paste(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R", sep="/")
-source(R_lib_path)
+source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R"))
+source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastWrappers.R"))
 
 input_dataset_name = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
 output_folder_name = dkuCustomRecipeOutputNamesForRole('output_folder')[1]
@@ -138,9 +138,28 @@ plugin_print("All stages completed!")
 save_to_managed_folder(
     folder_id = output_folder_name,
     model_list = .MODEL_LIST, 
-    msts,
+    ts_output = ts,
     TIME_COLUMN,
     SERIES_COLUMN,
     CHOSEN_GRANULARITY,
-    TIMEZONE
+    TIMEZONE,
+    BIASADJ,
+    .LAMBDA,
+    NAIVE_MODEL_ACTIVATED,
+    NAIVE_MODEL_METHOD,
+    SEASONALTREND_MODEL_ACTIVATED,
+    SEASONALTREND_MODEL_ERROR_TYPE,
+    SEASONALTREND_MODEL_TREND_TYPE,
+    SEASONALTREND_MODEL_SEASONALITY_TYPE,
+    SEASONALTREND_MODEL_KWARGS,
+    NEURALNETWORK_MODEL_ACTIVATED,
+    NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS,
+    NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS,
+    NEURALNETWORK_MODEL_SIZE,
+    NEURALNETWORK_MODEL_KWARGS,
+    ARIMA_MODEL_ACTIVATED,
+    ARIMA_MODEL_STEPWISE_ACTIVATED,
+    ARIMA_MODEL_KWARGS,
+    STATE_SPACE_MODEL_ACTIVATED,
+    STATESPACE_MODEL_KWARGS
 )

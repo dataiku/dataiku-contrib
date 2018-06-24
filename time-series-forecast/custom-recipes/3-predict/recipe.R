@@ -1,7 +1,7 @@
 # WORK IN PROGRESS
 library(dataiku)
-R_lib_path <- paste(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R", sep="/")
-source(R_lib_path)
+source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R"))
+source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastWrappers.R"))
 
 input_dataset_name = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
 input_folder_name = dkuCustomRecipeOutputNamesForRole('input_folder')[1]

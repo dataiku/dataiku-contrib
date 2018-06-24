@@ -1,6 +1,5 @@
 library(dataiku)
-R_lib_path <- paste(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R", sep="/")
-source(R_lib_path)
+source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R"))
 
 input_dataset_name = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
 output_dataset_name = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]

@@ -4,7 +4,6 @@ library(dplyr)
 library(magrittr)
 library(forecast)
 library(lubridate)
-library(R.utils)
 
 # This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard
 dku_date_format = "%Y-%m-%dT%T.000Z"
@@ -165,119 +164,7 @@ clean_kwargs_from_param <- function(kwargs_param) {
     return(clean_kwargs)
 }
 
-naive_model_train <- function(ts, method, lambda, biasadj) {
-    #' Wrap naive models from the forecast package in a simpler standard way
-    #'
-    #' @description Depending on a simple "method" argument, this wrapper function switches to 
-    #' different implementations of naive models in the forecast package.
-    
-    plugin_print("Naive model training started")   
-    
-    model <- switch(method,
-        simple = forecast::naive(ts, lambda = lambda, biasadj = biasadj),
-        seasonal = forecast::snaive(ts, lambda = lambda, biasadj = biasadj),
-        drift = forecast::rwf(ts, drift=TRUE, lambda = lambda, biasadj = biasadj)
-    )
-    
-    plugin_print("Naive model training completed")
-    
-    return(model)
-}
-
-
-seasonaltrend_model_train <- function(ts, error_type, trend_type, seasonality_type, lambda, biasadj, kwargs) {
-    #' Wrap seasonal trend models from the forecast package in a simpler standard way
-
-    plugin_print("Seasonal trend model training started") 
-    
-    model_type <- paste0(error_type, trend_type, seasonality_type)
-    model <- doCall("forecast", 
-        object = ts,
-        model = model_type,
-        lambda = lambda,
-        biasadj = biasadj,
-        args = kwargs, 
-        .ignoreUnusedArgs = TRUE
-    )
-    
-    plugin_print("Seasonal trend model training completed")
-    
-    return(model)
-}
-
-
-neuralnetwork_model_train <- function(ts, non_seasonal_lags, seasonal_lags, size, lambda, biasadj, kwargs) {
-    #' Wrap seasonal trend models from the forecast package in a simpler standard way
-
-    if(non_seasonal_lags != -1){
-        # -1 is for automatic selection in which case the parameter should not be assigned
-        kwargs[["p"]] <- non_seasonal_lags
-    }
-    if(size != -1){
-        # -1 is for automatic selection in which case the parameter should not be assigned
-        kwargs[["size"]] <- size
-    }
-    
-    plugin_print("Neural network model training started")
-    
-    # could also be used with external regressors
-    model <- doCall("nnetar", 
-        y = ts,
-        P = seasonal_lags,
-        lambda = lambda,
-        biasadj = biasadj,
-        args = kwargs, 
-        .ignoreUnusedArgs = TRUE
-    )
-    
-    plugin_print("Neural network model training completed")
-    
-    return(model)
-}
-
-
-arima_model_train <- function(ts, stepwise, lambda, biasadj, kwargs) {
-    #' Wrap auto.arima models from the forecast package in a simpler standard way
-
-    plugin_print("ARIMA model training started") 
-    
-    # could also be used with external regressors
-    model <- doCall("auto.arima", 
-        y = ts,
-        stepwise = stepwise,
-        lambda = lambda,
-        biasadj = biasadj,
-        args = kwargs, 
-        parallel = TRUE,
-        trace = TRUE,
-        .ignoreUnusedArgs = TRUE
-    )
-    
-    plugin_print("ARIMA model training completed")
-    
-    return(model)
-}
-
-statespace_model_train <- function(ts, lambda, biasadj, kwargs) {
-    #' Wrap tbats models from the forecast package in a simpler standard way
-
-    plugin_print("State model training started") 
-    
-    # could also be used with external regressors
-    model <- doCall("tbats", 
-        y = ts,
-        lambda = lambda,
-        biasadj = biasadj,
-        args = kwargs, 
-        .ignoreUnusedArgs = TRUE
-    )
-    
-    plugin_print("State model model training completed")
-    
-    return(model)
-}
-
-save_to_managed_folder <- function(folder_id, model_list, ts, ...) {
+save_to_managed_folder <- function(folder_id, model_list, ts_output, ...) {
     #' Save R models and arbitrary objects to a filesystem folder in Rdata format with a defined structure
     #'
     #' @description First, it creates a structure inside the directory:
@@ -299,13 +186,15 @@ save_to_managed_folder <- function(folder_id, model_list, ts, ...) {
     models_path <- file.path(version_path, "models")
     dir.create(models_path, recursive = TRUE)
     
-    save(ts, file = file.path(version_path , "ts.RData"))
+    assign("TS_OUTPUT", ts_output)
+    save(list = c("TS_OUTPUT"), file = file.path(version_path , "ts.RData"))
     save(..., file = file.path(version_path , "params.RData"))
     
     for(model_name in names(model_list)) {
-        model <- model_list[[model_name]]
-        if(!is.null(model)) {
-            save(model, file = file.path(models_path, paste0(model_name,".RData")))
+        model_variable_name <- paste0(toupper(model_name), "_MODEL")
+        assign(model_variable_name, model_list[[model_name]])
+        if(!is.null(model_list[[model_name]])) {
+            save(list = c(model_variable_name), file = file.path(models_path, paste0(model_name,".RData")))
         }
     }
     plugin_print("Models, time series and parameters saved to folder")
@@ -321,11 +210,11 @@ load_from_managed_folder <- function(folder_id){
     last_version_timestamp <- max(list.files(file.path(input_folder_path, "versions")))
     version_path <- file.path(input_folder_path, "versions", last_version_timestamp)
     models_path <- file.path(version_path, "models")
+    
     rdata_path_list <- list.files(
         path = version_path,
         pattern = "*.RData",
         full.names = TRUE,
-        include.dirs = FALSE,
         recursive = TRUE
     )
     for(rdata_path in rdata_path_list){
