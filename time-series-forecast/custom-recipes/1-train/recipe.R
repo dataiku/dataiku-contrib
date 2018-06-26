@@ -13,7 +13,7 @@ TIMEZONE <- config[["TIMEZONE"]]
 
 plugin_print("Preparation stage: date parsing and conversion to R time series format")
 
-ts <- dkuReadDataset(input_dataset_name,
+TS_OUTPUT <- dkuReadDataset(input_dataset_name,
                      columns = c(TIME_COLUMN, SERIES_COLUMN),
                      colClasses = c("character","numeric")) %>%
 
@@ -27,7 +27,7 @@ ts <- dkuReadDataset(input_dataset_name,
         msts_conversion(., CHOSEN_GRANULARITY)
 
 # manage Box Cox time series transformation according to https://otexts.org/fpp2/transformations.html
-BIASADJ <- config[["BOX_COX_TRANSFORMATION_ACTIVATED"]]
+BIASADJ <- as.logical(config[["BOX_COX_TRANSFORMATION_ACTIVATED"]])
 .LAMBDA <- NULL # internal parameter used by models
 if(BIASADJ){
     .LAMBDA <- "auto"
@@ -50,12 +50,11 @@ NAIVE_MODEL_METHOD <- config[["NAIVE_MODEL_METHOD"]]
 
 if(NAIVE_MODEL_ACTIVATED){
     .MODEL_LIST[["naive"]] <- naive_model_train(
-        ts = ts, 
+        ts = TS_OUTPUT, 
         method = NAIVE_MODEL_METHOD,
         lambda = .LAMBDA,
         biasadj = BIASADJ
     )
-    #print(summary(.MODEL_LIST[["naive"]]))
 }
 
 
@@ -68,7 +67,7 @@ SEASONALTREND_MODEL_KWARGS <- clean_kwargs_from_param(config[["SEASONALTREND_MOD
 
 if(SEASONALTREND_MODEL_ACTIVATED){
     .MODEL_LIST[["seasonaltrend"]] <- seasonaltrend_model_train(
-        ts = ts, 
+        ts = TS_OUTPUT, 
         error_type = SEASONALTREND_MODEL_ERROR_TYPE,
         trend_type = SEASONALTREND_MODEL_TREND_TYPE,
         seasonality_type = SEASONALTREND_MODEL_SEASONALITY_TYPE,
@@ -88,8 +87,8 @@ NEURALNETWORK_MODEL_SIZE <- config[["NEURALNETWORK_MODEL_SIZE"]] # auto -1
 NEURALNETWORK_MODEL_KWARGS <- clean_kwargs_from_param(config[["NEURALNETWORK_MODEL_KWARGS"]])
 
 if(NEURALNETWORK_MODEL_ACTIVATED){  
-    .MODEL_LIST[["seasonaltrend"]] <- neuralnetwork_model_train(
-        ts = ts, 
+    .MODEL_LIST[["neuralnetwork"]] <- neuralnetwork_model_train(
+        ts = TS_OUTPUT, 
         non_seasonal_lags = NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS,
         seasonal_lags = NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS,
         size = NEURALNETWORK_MODEL_SIZE,
@@ -97,7 +96,6 @@ if(NEURALNETWORK_MODEL_ACTIVATED){
         biasadj = BIASADJ,
         kwargs = NEURALNETWORK_MODEL_KWARGS
     )
-    #print(summary(.MODEL_LIST[["neuralnetwork"]]))
 }
 
 
@@ -108,13 +106,12 @@ ARIMA_MODEL_KWARGS <- clean_kwargs_from_param(config[["ARIMA_MODEL_KWARGS"]])
 
 if(ARIMA_MODEL_ACTIVATED){
     .MODEL_LIST[["arima"]] <- arima_model_train(
-        ts = ts,
+        ts = TS_OUTPUT,
         stepwise = ARIMA_MODEL_STEPWISE_ACTIVATED,
         lambda = .LAMBDA,
         biasadj = BIASADJ,
         kwargs = ARIMA_MODEL_KWARGS
     )
-    #print(summary(.MODEL_LIST[["arima"]]))
 }
 
 
@@ -124,12 +121,11 @@ STATESPACE_MODEL_KWARGS <- clean_kwargs_from_param(config[["STATESPACE_MODEL_KWA
 
 if(STATE_SPACE_MODEL_ACTIVATED){
     .MODEL_LIST[["statespace"]] <- statespace_model_train(
-        ts = ts, 
+        ts = TS_OUTPUT, 
         lambda = .LAMBDA,
         biasadj = BIASADJ,
         kwargs = STATESPACE_MODEL_KWARGS
     )
-    #print(summary(.MODEL_LIST[["statespace"]]))
 }
 
 
@@ -138,7 +134,7 @@ plugin_print("All stages completed!")
 save_to_managed_folder(
     folder_id = output_folder_name,
     model_list = .MODEL_LIST, 
-    ts_output = ts,
+    ts_output = TS_OUTPUT,
     TIME_COLUMN,
     SERIES_COLUMN,
     CHOSEN_GRANULARITY,

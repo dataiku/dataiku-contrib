@@ -1,5 +1,5 @@
 # Collection of wrapper functions to forecast methods
-# It works but it could be factorized into a single simpler function or class
+# It works but it could be factorized into a single simple function or class
 
 library(forecast)
 library(R.utils)
@@ -23,6 +23,14 @@ naive_model_train <- function(ts, method, lambda, biasadj) {
     return(model)
 }
 
+naive_forecast_function <- function(ts, h){
+    switch(NAIVE_MODEL_METHOD,
+        simple = forecast::naive(ts, h = h, lambda = .LAMBDA, biasadj = BIASADJ),
+        seasonal = forecast::snaive(ts, h = h, lambda = .LAMBDA, biasadj = BIASADJ),
+        drift = forecast::rwf(ts, h = h, drift = TRUE, lambda = .LAMBDA, biasadj = BIASADJ)
+    )
+}
+
 
 seasonaltrend_model_train <- function(ts, error_type, trend_type, seasonality_type, lambda, biasadj, kwargs) {
     #' Wrap seasonal trend models from the forecast package in a simpler standard way
@@ -42,6 +50,14 @@ seasonaltrend_model_train <- function(ts, error_type, trend_type, seasonality_ty
     plugin_print("Seasonal trend model training completed")
     
     return(model)
+}
+
+seasonal_trend_forecast_function <- function(ts, h){
+    model_type <- substr(SEASONALTREND_MODEL$method, 1, 3) # ETS or STL
+    switch(model_type,
+        ETS = forecast(ts, h = h, model = ets(ts)),
+        STL = forecast(ts, h = h, model = stlf(ts)),
+    )
 }
 
 
@@ -74,6 +90,9 @@ neuralnetwork_model_train <- function(ts, non_seasonal_lags, seasonal_lags, size
     return(model)
 }
 
+neuralnetwork_forecast_function <- function(ts, h){
+    forecast(ts, h = h, model = nnetar(ts, model = NEURALNETWORK_MODEL))
+}
 
 arima_model_train <- function(ts, stepwise, lambda, biasadj, kwargs) {
     #' Wrap auto.arima models from the forecast package in a simpler standard way
@@ -97,6 +116,10 @@ arima_model_train <- function(ts, stepwise, lambda, biasadj, kwargs) {
     return(model)
 }
 
+arima_forecast_function <- function(ts, h){
+    forecast(ts, h = h, model = Arima(ts, model = ARIMA_MODEL))
+}
+
 statespace_model_train <- function(ts, lambda, biasadj, kwargs) {
     #' Wrap tbats models from the forecast package in a simpler standard way
 
@@ -114,4 +137,8 @@ statespace_model_train <- function(ts, lambda, biasadj, kwargs) {
     plugin_print("State model model training completed")
     
     return(model)
+}
+
+statespace_forecast_function <- function(ts, h){
+    forecast(ts, h = h, model = tbats(ts, model = STATESPACE_MODEL))
 }

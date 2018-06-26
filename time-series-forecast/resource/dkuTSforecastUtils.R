@@ -208,6 +208,9 @@ load_from_managed_folder <- function(folder_id){
          Please use the \"filesystem_folders\" connection.")
     }
     last_version_timestamp <- max(list.files(file.path(input_folder_path, "versions")))
+    last_version_date <- as.POSIXct(as.numeric(last_version_timestamp)/1000, origin="1970-01-01") %>%
+        (function(x) strftime(x , dku_date_format, "UTC"))
+    assign("LAST_VERSION_DATE", last_version_date, envir = .GlobalEnv)
     version_path <- file.path(input_folder_path, "versions", last_version_timestamp)
     models_path <- file.path(version_path, "models")
     
