@@ -131,18 +131,17 @@
         },
         "defaultValue": "latest"
     },
-    "disableGatewayAuth": {
-        "type": "bool",
+    "clusterVersion": {
+        "type":  "string",
         "metadata": {
-            "description": "Disables authentication for the DSS endpoint on the HDInsight gateway. Defaults to 'true'."
+            "description": "The Azure HDI cluster version"
         },
-        "defaultValue": true
+        "defaultValue": "3.6"
     }
   },
   "variables": {
     "defaultApiVersion": "2015-06-15",
     "applicationName": "dss",
-    "dssPort": 20000,
 		"vnetName": "[concat(parameters('vmName'),'-vnet')]",
 		"vnetSubnetName": "[concat(parameters('vmName'),'-subnet')]",
     "vnetAddressSpace": "10.0.0.0/16",
@@ -188,7 +187,7 @@
       ],
       "tags": {},
       "properties": {
-        "clusterVersion": "3.6",
+        "clusterVersion": "[parameters('clusterVersion')]",
         "osType": "Linux",
 				"tier": "standard",
         "clusterDefinition": {
@@ -362,7 +361,7 @@
             ]
           },
           "protectedSettings": {
-            "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh ', reference(variables('clusterName')).connectivityEndpoints[0].location)]"
+            "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh \"', parameters('dssVersion'), '\" \"', reference(variables('clusterName')).connectivityEndpoints[0].location, '\" \"', parameters('sshUserName'), '\" \"', parameters('sshPassword'),'\"')]"
           }
         }
       }
