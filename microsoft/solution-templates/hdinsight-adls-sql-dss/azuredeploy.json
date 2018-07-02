@@ -361,7 +361,7 @@
             ]
           },
           "protectedSettings": {
-            "commandToExecute": "[concat('sudo sh hdinsight-dss-install.sh \"', parameters('dssVersion'), '\" \"', reference(variables('clusterName')).connectivityEndpoints[0].location, '\" \"', parameters('sshUserName'), '\" \"', parameters('sshPassword'),'\"')]"
+            "commandToExecute": "[concat('sudo bash hdinsight-dss-install.sh \'', parameters('dssVersion'), '\' \'', reference(variables('clusterName')).connectivityEndpoints[0].location, '\' \'', parameters('sshUserName'), '\' \'', parameters('sshPassword'),'\' \'',reference(variables('ipaddressName')).dnsSettings.fqdn,'\'')]"
           }
         }
       }
