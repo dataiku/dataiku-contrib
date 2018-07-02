@@ -33,6 +33,18 @@
         "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
       }
     },
+    "sqlLoginUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "Credentials to setupe the SQL database with"
+      }
+    },
+    "sqlLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+      }
+    },
     "sshUserName": {
       "type": "string",
       "metadata": {
@@ -124,6 +136,13 @@
             "Standard_D14_V2"
         ]
     },
+		"sqlMaxSize": {
+      "type": "string",
+        "metadata": {
+            "description": "Maximum size of the SQL database, in bytes"
+        },
+        "defaultValue": "1073741824"
+    },
     "dssVersion": {
         "type": "string",
         "metadata": {
@@ -144,13 +163,68 @@
     "applicationName": "dss",
 		"vnetName": "[concat(parameters('vmName'),'-vnet')]",
 		"vnetSubnetName": "[concat(parameters('vmName'),'-subnet')]",
+    "securityGroupName":  "[concat(parameters('vmName'),'-security-group')]",
+    "sqlserverName":  "[concat(parameters('dnsLabelPrefix'),'-sql')]",
+    "databaseName":  "[concat(parameters('vmName'),'-sql-db')]",
     "vnetAddressSpace": "10.0.0.0/16",
     "vnetSubnetAddressRange": "10.0.0.0/24",
-    "clusterName": "[concat(parameters('vmName'),'-cluster')]",
+    "clusterName": "[concat(parameters('dnsLabelPrefix'),'-cluster')]",
     "itfName": "[concat(parameters('vmName'),'-interface')]",
     "ipaddressName": "[concat(parameters('vmName'),'-ip')]"
   },
   "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('securityGroupName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "description": "Allow SSH access",
+              "protocol": "TCP",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "access": "Allow",
+              "priority": 123,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "HTTP",
+            "properties": {
+              "description": "Allow HTTP access",
+              "protocol": "TCP",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "access": "Allow",
+              "priority": 124,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "HTTPS",
+            "properties": {
+              "description": "Allow HTTPS access",
+              "protocol": "TCP",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "access": "Allow",
+              "priority": 125,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+		},
     {
       "name": "[variables('vnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -158,6 +232,9 @@
       "apiVersion": "2015-05-01-preview",
       "dependsOn": [],
       "tags": {},
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('securityGroupName'))]"
+			],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -268,6 +345,53 @@
       }
     },
     {
+      "name": "[variables('sqlserverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "SqlServer"
+      },
+      "apiVersion": "2014-04-01",
+      "properties": {
+        "administratorLogin": "[parameters('sqlLoginUserName')]",
+        "administratorLoginPassword": "[parameters('sqlLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "name": "[variables('databaseName')]",
+          "type": "databases",
+          "location": "[parameters('location')]",
+          "tags": {
+            "displayName": "Database"
+          },
+          "apiVersion": "2015-01-01",
+          "dependsOn": [
+            "[variables('sqlserverName')]"
+          ],
+          "properties": {
+            "edition": "Basic",
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "maxSizeBytes": "[parameters('sqlMaxSize')]",
+            "requestedServiceObjectiveName": "Basic"
+          }
+        },
+        {
+          "type": "firewallrules",
+          "apiVersion": "2014-04-01",
+          "dependsOn": [
+            "[variables('sqlserverName')]"
+          ],
+          "location": "[parameters('location')]",
+          "name": "AllowAllWindowsAzureIps",
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          }
+        }
+      ]
+		},
+    {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('itfName')]",
@@ -278,6 +402,9 @@
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('vnetSubnetName'))]"
       ],
       "properties": {
+				"networkSecurityGroup": {
+						"id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('securityGroupName'))]"
+				},
         "ipConfigurations": [
           {
             "name": "ipconfig1",
@@ -301,7 +428,8 @@
       "location": "[parameters('location')]",
       "dependsOn": [
                 "[resourceId('Microsoft.HDInsight/clusters', variables('clusterName'))]",
-                "[resourceId('Microsoft.Network/networkInterfaces',variables('itfName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces',variables('itfName'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlserverName'))]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -361,7 +489,7 @@
             ]
           },
           "protectedSettings": {
-            "commandToExecute": "[concat('sudo bash hdinsight-dss-install.sh \'', parameters('dssVersion'), '\' \'', reference(variables('clusterName')).connectivityEndpoints[0].location, '\' \'', parameters('sshUserName'), '\' \'', parameters('sshPassword'),'\' \'',reference(variables('ipaddressName')).dnsSettings.fqdn,'\'')]"
+            "commandToExecute": "[concat('sudo bash hdinsight-dss-install.sh ''', parameters('dssVersion'), ''' ''', reference(variables('clusterName')).connectivityEndpoints[0].location, ''' ''', parameters('sshUserName'), ''' ''', parameters('sshPassword'),''' ''',reference(variables('ipaddressName')).dnsSettings.fqdn,''' ''',variables('sqlserverName'),''' ''', parameters('sqlLoginUserName'), ''' ''', parameters('sqlLoginPassword'), ''' ''', variables('databaseName'),'''')]"
           }
         }
       }

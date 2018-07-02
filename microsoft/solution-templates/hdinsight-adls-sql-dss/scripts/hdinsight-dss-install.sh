@@ -11,6 +11,10 @@ clusterMaster="$2"
 sshUserName="$3"
 sshPassword="$4"
 dnsName="$5"
+sqlServer="$6"
+sqlUser="$7"
+sqlPassword="$8"
+sqlDatabase="$9"
 dssDatadir=/home/dataiku/dss
 
 echo "[+] DSS version: $dssVersion"
@@ -20,14 +24,15 @@ echo "[+] SSH password: $(echo $sshPassword|sed 's/./*/g')"
 echo "[+] DNS name: $dnsName"
 
 echo "[+] Install dependencies"
-apt-get install python python-virtualenv python-apt python-distutils-extra python-openssl nginx jq
+apt-get -y update
+apt-get -y install python python-virtualenv python-apt python-distutils-extra python-openssl nginx jq
 
 echo "[+] Retrieve pulic IP from Azure metadata"
 publicIpAddress=$(curl -s -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-04-02"|jq -r -C ".network.interface[0].ipv4.ipAddress[0].publicIpAddress")
 
 echo "[+] Retrieve DSS version from website"
 if [[ "$dssVersion" == "latest" ]]; then
-  dssVersion=$(curl -s https://downloads.dataiku.com/latest_dkumonitor.json|jq -r '.version')
+  dssVersion=$(curl -s https://downloads.dataiku.com/latest_studio.json|jq -r '.version')
   echo "[+] Resolved DSS version: $dssVersion"
 fi
 
@@ -202,108 +207,12 @@ cat > hdiclient.yml <<EOF
       url: "https://downloads.dataiku.com/public/studio/{{dssVersion}}/dataiku-dss-{{dssVersion}}.tar.gz"
       dest: "/opt/dss/dataiku-dss-{{dssVersion}}.tar.gz"
 
-  - name: Unarchive DSS
-    become: true
-    become_user: dataiku
-    unarchive:
-      src: "/opt/dss/dataiku-dss-{{dssVersion}}.tar.gz"
-      dest: /opt/dss/
-      creates: "/opt/dss/dataiku-dss-{{dssVersion}}"
-      remote_src: yes
-
-  - name: Compile DSS python code
-    become: true
-    become_user: dataiku
-    block:
-      - command: python2.7 -m compileall -q /opt/dss/dataiku-dss-{{dssVersion}}/python /opt/dss/dataiku-dss-{{dssVersion}}/dku-jupyter
-      - command: python2.7 -m compileall -q /opt/dss/dataiku-dss-{{dssVersion}}/python.packages
-        ignore_errors: true
-
-  - name: Check if DSS deps have been installed
-    stat:
-      path: "/opt/dss/dataiku-dss-{{dssVersion}}/scripts/install/DEPS-INSTALLED"
-    register: dss_deps_install_flag
-
-  - name: Install DSS deps
-    become: yes
-    block:
-      - shell: "/opt/dss/dataiku-dss-{{dssVersion}}/scripts/install/install-deps.sh -yes -with-r -without-java 2>&1 > /tmp/dss-install-deps.log"
-      - file:
-          path: "/opt/dss/dataiku-dss-{{dssVersion}}/scripts/install/DEPS-INSTALLED"
-          state: touch
-    when: dss_deps_install_flag.stat.exists == False
-
-  - name: Creates DSS DATA directory
-    become: true
-    become_user: dataiku
-    file:
-      path: "{{dssDatadir}}"
-      state: directory
-
-  - name: Configure DSS instance
-    become: true
-    become_user: dataiku
-    shell: /opt/dss/dataiku-dss-{{dssVersion}}/installer.sh -d {{dssDatadir}} -p {{dssPort}} -n -t design
-    args:
-      creates: "{{dssDatadir}}/dss-version.json"
-
-  - name: Set DSS channel property
-    lineinfile:
-      path: "{{dssDatadir}}/config/dip.properties"
-      line: "dku.registration.channel=hdinsight-application"
-      regexp: "^dku.registration.channel="
-
-  - name: Grab headnodehost definition
-    command: "getent hosts headnodehost"
-    delegate_to: "{{hdiMaster}}"
-    register: headnodehost
-
-  - name: Update headnodehost definition
-    lineinfile:
-      path: /etc/hosts
-      line: "{{headnodehost.stdout_lines[0].split()[0]}} headnodehost headnodehost."
-      regexp: '\sheadnodehost(\s|$)'
-
-  - name: Synchronize HDInsight libraries
-    command: rsync -a --delete {{sshUser}}@{{masterIP}}:/usr/lib/hdinsight* /usr/lib/
-
-  - name: Synchronize Hadoop libraries
-    command: rsync -a --delete {{sshUser}}@{{masterIP}}:/usr/hdp/ /usr/hdp/ --exclude=/*/oozie/ --exclude=/*/storm/
-
-  - name: Synchronize Hadoop configurations
-    command: rsync -av --delete {{sshUser}}@{{masterIP}}:/etc/{{item}} /etc/ --exclude=conf.server
-    with_items:
-    - hadoop
-    - hive*
-    - pig
-    - ranger*
-    - spark*
-    - tez*
-    - zookeeper
-
-  - name: Create user dataiku
-    become: true
-    user: name=dataiku state=present
-
-  - name: Create group dataiku
-    become: true
-    group: name=dataiku state=present
-
-  - name: Create public directories
-    become: true
-    file:
-      path: /opt/dss
-      state: directory
-      owner: dataiku
-      group: dataiku
-      mode: "u=rwx,g=rx,o=rx"
-
-  - name: Download DSS
+  - name: Download SQL Server JDBC driver
     become: true
     become_user: dataiku
     get_url:
-      url: "https://downloads.dataiku.com/public/studio/{{dssVersion}}/dataiku-dss-{{dssVersion}}.tar.gz"
-      dest: "/opt/dss/dataiku-dss-{{dssVersion}}.tar.gz"
+      url: "https://download.microsoft.com/download/0/2/A/02AAE597-3865-456C-AE7F-613F99F850A8/sqljdbc_6.0.8112.200_enu.tar.gz"
+      dest: "/opt/dss/sqljdbc_6.0.8112.200_enu.tar.gz"
 
   - name: Unarchive DSS
     become: true
@@ -312,6 +221,15 @@ cat > hdiclient.yml <<EOF
       src: "/opt/dss/dataiku-dss-{{dssVersion}}.tar.gz"
       dest: /opt/dss/
       creates: "/opt/dss/dataiku-dss-{{dssVersion}}"
+      remote_src: yes
+
+  - name: Unarchive SQL Server JDBC driver
+    become: true
+    become_user: dataiku
+    unarchive:
+      src: "/opt/dss/sqljdbc_6.0.8112.200_enu.tar.gz"
+      dest: /opt/dss/
+      creates: "/opt/dss/sqljdbc_6.0"
       remote_src: yes
 
   - name: Compile DSS python code
@@ -350,9 +268,15 @@ cat > hdiclient.yml <<EOF
     args:
       creates: "{{dssDatadir}}/dss-version.json"
 
-  - name: Set DSS channel property
+  - name: Install SQL Server jdbc driver
     become: true
     become_user: dataiku
+    copy:
+      src: "/opt/dss/sqljdbc_6.0/enu/jre8/sqljdbc42.jar"
+      dest: "{{dssDatadir}}/lib/jdbc/sqljdbc42.jar"
+      remote_src: true
+
+  - name: Set DSS channel property
     lineinfile:
       path: "{{dssDatadir}}/config/dip.properties"
       line: "dku.registration.channel=hdinsight-application"
@@ -429,25 +353,27 @@ cat > hdiclient.yml <<EOF
         when: managed_dataset_hdfs_dir.rc is defined and managed_dataset_hdfs_dir.rc != 0
         command: "hadoop fs -mkdir -p /user/dataiku/dss_managed_datasets"
 
-  - name: Configure DSS Hadoop integration
-    become: true
-    block:
-      - name: Test if already installed
-        become_user: "dataiku"
-        stat:
-          path: "{{dssDatadir}}/bin/env-hadoop.sh"
-        register: dss_hadoop_installed
-      - name: "Stop DSS if needed"
-        service:
-          name: "dataiku"
-          state: stopped 
-        when: not dss_hadoop_installed.stat.exists and "RUNNING" in dss_instances_status.stdout
-      - name: "Install Hadoop integration"
-        become_user: "dataiku"
-        when: not dss_hadoop_installed.stat.exists
-        command: "{{dssDatadir}}/bin/dssadmin install-hadoop-integration"
-        args:
-          creates: "{{dssDatadir}}/bin/env-hadoop.sh"
+  # NOTE: Already done cause we install DSS after the Hadoop client
+  # Might change with a pre-built image
+  #- name: Configure DSS Hadoop integration
+  #  become: true
+  #  block:
+  #    - name: Test if already installed
+  #      become_user: "dataiku"
+  #      stat:
+  #        path: "{{dssDatadir}}/bin/env-hadoop.sh"
+  #      register: dss_hadoop_installed
+  #    - name: "Stop DSS if needed"
+  #      service:
+  #        name: "dataiku"
+  #        state: stopped 
+  #      when: not dss_hadoop_installed.stat.exists and "RUNNING" in dss_instances_status.stdout
+  #    - name: "Install Hadoop integration"
+  #      become_user: "dataiku"
+  #      when: not dss_hadoop_installed.stat.exists
+  #      command: "{{dssDatadir}}/bin/dssadmin install-hadoop-integration"
+  #      args:
+  #        creates: "{{dssDatadir}}/bin/env-hadoop.sh"
 
   - name: Configure DSS Spark integration
     become: true
@@ -561,7 +487,7 @@ cat > hdiclient.yml <<EOF
 EOF
 
 echo "[+] Run playbook"
-ansible-playbook -i "localhost," -e host_key_checking=false -e ansible_ssh_private_key_file=id_install_ssh hdiclient.yml
+ansible-playbook -i "localhost," --ssh-extra-args "-o StrictHostKeyChecking=no" -e ansible_ssh_private_key_file=id_install_ssh hdiclient.yml
 
 
 echo "[+] Update DSS configuration"
@@ -580,29 +506,41 @@ general_settings.update({
 with open("$dssDatadir/config/general-settings.json","w") as settings_file:
   json.dump(general_settings,settings_file,indent=2)
 
-# Setup a root hdfs connection
+# Setup a SQL Server connection
 connections=json.load(open("$dssDatadir/config/connections.json","r"))
 connections["connections"].update({
-  "hdfs-readonly": {
-    "detailsReadability": {
-      "readableBy": "NONE", 
-      "allowedGroups": []
-    }, 
-    "maxActivities": 0, 
-    "allowWrite": False, 
-    "allowManagedDatasets": True, 
-    "allowedGroups": [], 
-    "credentialsMode": "GLOBAL", 
-    "params": {
-      "namingRule": {}, 
-      "aclSynchronizationMode": "SUBDIRECTORY", 
-      "root": "/", 
-      "clearMode": "DSS_USER"
-    }, 
-    "useGlobalProxy": False, 
-    "usableBy": "ALL", 
-    "type": "HDFS"
-  }
+	"SQL_Server": {
+		"params": {
+			"port": -1,
+			"azureDWH": False,
+			"kerberosLoginEnabled": False,
+			"host": "$sqlServer.database.windows.net",
+			"user": "$sqlUser",
+			"password": "$sqlPassword",
+			"db": "$sqlDatabase",
+			"useURL": False,
+			"namingRule": {
+				"tableNameDatasetNamePrefix": "${projectKey}_",
+				"canOverrideSchemaInManagedDatasetCreation": False
+			},
+			"useTruncate": False,
+			"autocommitMode": False,
+			"properties": []
+		},
+		"type": "SQLServer",
+		"allowWrite": True,
+		"allowManagedDatasets": True,
+		"allowManagedFolders": False,
+		"useGlobalProxy": False,
+		"maxActivities": 0,
+		"credentialsMode": "GLOBAL",
+		"usableBy": "ALL",
+		"allowedGroups": [],
+		"detailsReadability": {
+			"readableBy": "NONE",
+			"allowedGroups": []
+		},
+	}
 })
 with open("$dssDatadir/config/connections.json","w") as connections_file:
   json.dump(connections,connections_file,indent=2)
