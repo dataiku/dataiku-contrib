@@ -1,7 +1,10 @@
 #!/bin/bash -e
 # Installs Dataiku Data Science Studio on an HDInsight edge node
 
-#set -x
+set -e
+set -o pipefail
+CURRENT_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
+cd $CURRENT_DIR
 
 echo "[+] Installing Dataiku DSS HDInsight edge node"
 echo "[+] Arguments: $@"
@@ -22,6 +25,14 @@ echo "[+] Cluster master IP: $clusterMaster"
 echo "[+] SSH user name: $sshUserName"
 echo "[+] SSH password: $(echo $sshPassword|sed 's/./*/g')"
 echo "[+] DNS name: $dnsName"
+
+echo "[+] Generates a retry script"
+cat > /home/$sshUserName/retry_install <<EOF
+#!/bin/bash
+sudo /var/lib/waagent/custom-script/download/0/hdinsight-dss-install.sh '$1' '$2' '$3' '$4' '$5' '$6' '$7' '$8' '$9'
+EOF
+chown $sshUserName: /home/$sshUserName/retry_install
+chmod 700 /home/$sshUserName/retry_install
 
 echo "[+] Install dependencies"
 apt-get -y update
@@ -182,6 +193,14 @@ cat > hdiclient.yml <<EOF
     - spark*
     - tez*
     - zookeeper
+
+  # TODO: Full setup of MDSD instead ?
+  # See: https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/diagnostics-linux
+  # With the same storage account than the corresponding HDI cluster
+  - name: Disable the MDS logger for spark2
+    file:
+      path: /usr/hdp/current/spark2-client/jars/mdsdclient-1.jar
+      state: absent
 
   - name: Create user dataiku
     become: true
