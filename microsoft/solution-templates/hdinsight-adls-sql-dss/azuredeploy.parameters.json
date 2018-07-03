@@ -2,12 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "edgeNodeSize": {
-            "value": "Standard_D12_V2"
-        },
-        "dssVersion": {
-            "value": "latest"
-        },
 				"vmName": {
 					"value": "GEN-UNIQUE"
 				},
@@ -18,7 +12,7 @@
 					"value": "GEN-UNIQUE"
 				},
 				"clusterLoginUserName": {
-					"value": "admin"
+					"value": "hdiuser"
 				},
 				"clusterLoginPassword": {
 					"value": "GEN-PASSWORD"
@@ -27,6 +21,12 @@
 					"value": "hdiuser"
 				},
 				"sshPassword": {
+					"value": "GEN-PASSWORD"
+				},
+				"sqlLoginUserName": {
+					"value": "hdiuser"
+				},
+				"sqlLoginPassword": {
 					"value": "GEN-PASSWORD"
 				},
 				"aadTenantId": {
