@@ -27,7 +27,7 @@ The Plugin allows DSS to create new Snowflake tables and to perform a fast bulkl
 
 * [Snowflake (JDBC) Connection](https://doc.dataiku.com/dss/latest/connecting/sql/snowflake.html) set up in DSS
 * [Amazon S3 Connection](https://doc.dataiku.com/dss/latest/connecting/s3.html) set up in DSS
-* the corresponding AWS credentials for the S3 buckets (AWS Access Key and AWS Secret Key)
+* the corresponding AWS credentials for the S3 buckets (AWS Access Key and AWS Secret Key), or [temporary credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) configured.
 
 The Plugin comes with a code environment that installs the [Snowflake Python Connector](https://docs.snowflake.net/manuals/user-guide/python-connector.html) and is automatically installed with the Plugin. Note that this connector may require the following Linux libraries to exist in the host machine:
 
@@ -49,7 +49,7 @@ In order to use the Plugin:
 * Set the S3 Dataset as Input of the Plugin (mandatory - only S3 is supported)
 * Assign a name for the output Dataset, stored in your Snowflake Connection
 
-The Plugin requires 2 input parameters: the AWS Access Key and AWS Secret Key. You can either:
+If IAM temporary credentials are not available, the Plugin requires 2 input parameters: the AWS Access Key and AWS Secret Key. You can either:
 
 * fill in the values in the Plugin form 
 * or set them Project Variables

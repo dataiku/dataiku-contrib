@@ -5,42 +5,70 @@ import dataiku
 import urllib.parse as urlparse
 import snowflake.connector as sf
 from dataiku.customrecipe import *
+from boto3 import Session
 
 # Settings
 DATASET_IN     = get_input_names_for_role("input_dataset")[0]
 DATASET_OUT    = get_output_names_for_role("output_dataset")[0]
 
+AWS_USE_ENVIRONMENT_CREDENTIALS = get_recipe_config().get("aws_use_environment_credentials")
 AWS_ACCESS_KEY = get_recipe_config().get("aws_access_key")
 AWS_SECRET_KEY = get_recipe_config().get("aws_secret_key")
+SNOWFLAKE_ON_ERROR = get_recipe_config().get("snowflake_on_error")
 
-if not AWS_ACCESS_KEY or not AWS_SECRET_KEY:
-    # Looking up in Project Variables
-    print("[+] AWS Access Key or Secret Key not entered in the Plugin interface. Looking into Project Variables...")    
-    dss = dataiku.api_client()
-    project = dss.get_project(dataiku.default_project_key())
-    variables = project.get_variables()["standard"]
-    if "snowflake" in variables:
-        if "aws_access_key" in variables["snowflake"] and "aws_secret_key" in variables["snowflake"]:
-            print("[+] Found AWS credentials in Project Variables")
-            AWS_ACCESS_KEY = variables["snowflake"]["aws_access_key"]
-            AWS_SECRET_KEY = variables["snowflake"]["aws_secret_key"]
-        else:
-            print("[-] Snowflake key found in Project Variables but can not retrieve aws_access_key and/or aws_secret_key.")
-            print("[-] Please check and correct your Project Variables.")
-            sys.exit("Project Variables error")
-    else:
-        # Looking into Global Variables
-        variables = dss.get_variables()
+
+if AWS_USE_ENVIRONMENT_CREDENTIALS is True:
+    print("[-] Using AWS environment credentials")
+    session = Session()
+    credentials = session.get_credentials()
+    current_credentials = credentials.get_frozen_credentials()
+    AWS_ACCESS_KEY = current_credentials.access_key
+    AWS_SECRET_KEY = current_credentials.secret_key
+    AWS_TOKEN = current_credentials.token
+    if not AWS_ACCESS_KEY:
+        print("[-] You requested that AWS environment credentials be used for S3 load, but the boto3 library could not find an access key in your environment (see https://boto3.readthedocs.io/en/latest/guide/configuration.html)")
+        sys.exit("Project Variables error")
+    if not AWS_SECRET_KEY:
+        print("[-] You requested that AWS environment credentials be used for S3 load, but the boto3 library could not find a secret key in your environment (see https://boto3.readthedocs.io/en/latest/guide/configuration.html)")
+        sys.exit("Project Variables error")
+    if not AWS_TOKEN:
+        print("[-] You requested that AWS environment credentials be used for S3 load, but the boto3 library could not find a token in your environment (see https://boto3.readthedocs.io/en/latest/guide/configuration.html)")
+        sys.exit("Project Variables error")
+    print("[-] Found AWS environment credentials")
+else:
+    if not AWS_ACCESS_KEY or not AWS_SECRET_KEY:
+        # Looking up in Project Variables
+        print("[+] AWS Access Key or Secret Key not entered in the Plugin interface. Looking into Project Variables...")    
+        dss = dataiku.api_client()
+        project = dss.get_project(dataiku.default_project_key())
+        variables = project.get_variables()["standard"]
         if "snowflake" in variables:
             if "aws_access_key" in variables["snowflake"] and "aws_secret_key" in variables["snowflake"]:
-                print("[+] Found AWS credentials in Global Variables")
+                print("[+] Found AWS credentials in Project Variables")
                 AWS_ACCESS_KEY = variables["snowflake"]["aws_access_key"]
                 AWS_SECRET_KEY = variables["snowflake"]["aws_secret_key"]
+            else:
+                print("[-] Snowflake key found in Project Variables but can not retrieve aws_access_key and/or aws_secret_key.")
+                print("[-] Please check and correct your Project Variables.")
+                sys.exit("Project Variables error")
         else:
-            print("[-] Snowflake key found in Global Variables but can not retrieve aws_access_key and/or aws_secret_key.")
-            print("[-] Please check and correct your Global Variables.")
-            sys.exit("Global Variables error")
-    
+            # Looking into Global Variables
+            variables = dss.get_variables()
+            if "snowflake" in variables:
+                if "aws_access_key" in variables["snowflake"] and "aws_secret_key" in variables["snowflake"]:
+                    print("[+] Found AWS credentials in Global Variables")
+                    AWS_ACCESS_KEY = variables["snowflake"]["aws_access_key"]
+                    AWS_SECRET_KEY = variables["snowflake"]["aws_secret_key"]
+            else:
+                print("[-] Snowflake key found in Global Variables but can not retrieve aws_access_key and/or aws_secret_key.")
+                print("[-] Please check and correct your Global Variables.")
+                sys.exit("Global Variables error")
+        
+if not SNOWFLAKE_ON_ERROR:
+    print("[-] No value found for the snowflake_on_error parameter, this should have been supplied as mandatory.")
+    sys.exit("Project parameters error")
+else:
+    print("[-] Using Snowflake ON_ERROR value {}".format(SNOWFLAKE_ON_ERROR))
 
 # Dataiku Datasets
 ds = dataiku.Dataset(DATASET_IN)
@@ -50,7 +78,7 @@ out = dataiku.Dataset(DATASET_OUT)
 #------------------------------------------------------------------------------
 # INPUT DATASET SETTINGS
 #------------------------------------------------------------------------------
-
+print("[-] Reading input dataset settings (S3 source)")
 # Input dataset settings
 config = ds.get_config()
 
@@ -60,11 +88,16 @@ if config["formatType"] != 'csv':
     sys.exit("Format error (CSV needed)")
 
 project_key = config["projectKey"]
+if not config["params"]["bucket"]:
+    print("[-] S3 bucket name must be defined in the dataset, and not at the connection level. Please remove the bucket name specification at the connection level and specify it on the data source.")
+    sys.exit("Configuration error")
 
 # Actual path of the input file on S3
+print("[-] Building S3 file path")
 bucket = config["params"]["bucket"]
 path = config["params"]["path"].replace("${projectKey}",config["projectKey"])
 full_path = "s3://{}{}".format(bucket, path)
+print("[-] Full path of input to provide to Snowflake stage: {}".format(full_path))
 
 # Input file definition
 separator = config["formatParams"]["separator"]
@@ -75,6 +108,7 @@ skip_rows = config["formatParams"]["skipRowsBeforeHeader"]
 # OUTPUT DATASET SETTINGS
 #------------------------------------------------------------------------------
 
+print("[-] Configuring output dataset settings (Snowflake table)")
 # Output configuration
 config = out.get_location_info(sensitive_info=True)
 
@@ -95,7 +129,7 @@ output_table = config["info"]["table"].replace("${projectKey}", project_key)
 #------------------------------------------------------------------------------
 # BULK LOADING TO SNOWFLAKE
 #------------------------------------------------------------------------------
-
+print("[-] Connecting to snowflake")
 cnx = sf.connect(
     user=sf_user,
     password=sf_password,
@@ -146,16 +180,22 @@ q = """CREATE OR REPLACE FILE FORMAT dss_ff
 cur.execute(q)
 
 print("[+] Create stage file ...")
-q = """CREATE OR REPLACE STAGE dss_stage
-       FILE_FORMAT = dss_ff
-       URL = '{}'
-       CREDENTIALS = (AWS_KEY_ID = '{}' AWS_SECRET_KEY = '{}')""".format(full_path, AWS_ACCESS_KEY, AWS_SECRET_KEY)
+if AWS_USE_ENVIRONMENT_CREDENTIALS is True:
+    q = """CREATE OR REPLACE STAGE dss_stage
+           FILE_FORMAT = dss_ff
+           URL = '{}'
+           CREDENTIALS = (AWS_KEY_ID = '{}' AWS_SECRET_KEY = '{}' AWS_TOKEN = '{}')""".format(full_path, AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_TOKEN)
+else:
+    q = """CREATE OR REPLACE STAGE dss_stage
+           FILE_FORMAT = dss_ff
+           URL = '{}'
+           CREDENTIALS = (AWS_KEY_ID = '{}' AWS_SECRET_KEY = '{}')""".format(full_path, AWS_ACCESS_KEY, AWS_SECRET_KEY)
 cur.execute(q)
 
 
 print("[+] Loading data...")
 q = """COPY INTO \"{}\" FROM @dss_stage 
-        ON_ERROR = 'ABORT_STATEMENT' """.format(output_table)
+        ON_ERROR = '{}' """.format(output_table,SNOWFLAKE_ON_ERROR)
 print(q)
 cur.execute(q)
 
