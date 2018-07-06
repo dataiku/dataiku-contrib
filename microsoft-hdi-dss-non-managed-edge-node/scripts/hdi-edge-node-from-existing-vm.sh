@@ -7,11 +7,12 @@ Usage() {
   echo "'headnode_user' is the Linux account of the HDI cluster"
   echo "options:"
   echo "  -n: for dry-run"
-  exit 1
+  return 1
 }
 
 if [ $# -le 1 ]; then
   Usage
+  return 1
 fi
 
 headnode_ip=
@@ -28,23 +29,26 @@ while [ $# -gt 0 ]; do
         shift 2
     elif [ "$1" = "-n" ]; then
         echo "Dryrun only"
-        exit
+        return
     else
         Usage
+	return 1
     fi
 done
 
 if [ -z "headnode_ip" ]; then
     Usage
+    return 1
 fi
 if [ -z "headnode_user" ]; then
     Usage
+    return 1
 fi
 
 PRIVATEKEYPATH=$(realpath ~/.ssh/id_rsa)
 if [ ! -f $PRIVATEKEYPATH ]; then
   echo "No private key found"
-  exit 1
+  return 1
 fi
 
 sshTest=$(ssh -q -q -o StrictHostKeyChecking=no -o ConnectTimeout=3 -o PasswordAuthentication=no $headnode_user@$headnode_ip echo "OK")
@@ -54,7 +58,7 @@ if [[ $sshTest == "OK" ]]; then
 else
   echo "SSH connection $headnode_user@$headnode_ip failed"
   echo "Possible couses: headnode not in the same VNET, Passwordless connection not configured"
-  exit 1
+  return 1
 fi
 
 headnodeTest=$(ssh -q -q -o StrictHostKeyChecking=no -o ConnectTimeout=3 -o PasswordAuthentication=no $headnode_user@$headnode_ip hostname -s)
@@ -62,7 +66,7 @@ if [[ $headnodeTest == hn* || $headnodeTest == headnode* ]]; then
   echo "headnode ip: $headnode_ip is headnode $headnodeTest"
 else
   echo "[ERROR] headnode ip: $headnode_ip does not appear to be headnode, hostname returns $headnodeTest"
-  exit 1
+  return 1
 fi
 
 echo "Adding headnode IP to hosts with headnodehost"
@@ -80,7 +84,7 @@ echo -e "$headnode_ip\t$HEADNODEHOST" | sudo tee -a $HOSTSFILE
 testIfSudoer=$(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=3 -o PasswordAuthentication=no $headnode_user@$headnode_ip 'sudo -n true; echo $?')
 if [[ $testIfSudoer != 0 ]]; then
   echo "[ERROR] User $headnode_user is not sudoer on headnode $headnode_ip"
-  exit 1
+  return 1
 fi
 
 ssh -o StrictHostKeyChecking=no $headnode_user@$headnode_ip 'sudo chmod -R +r /etc/apt/sources.list.d'
