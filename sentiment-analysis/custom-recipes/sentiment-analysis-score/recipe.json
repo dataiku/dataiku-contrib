@@ -1,0 +1,54 @@
+{
+    "meta" : {
+        "label" : "Compute sentiment polarity",
+        "description" : "Classify your texts into two categories : \"positive\" when the text is positive (e.g. \"This movie is good\") and \"negative\" otherwise."
+    },
+
+    "kind" : "PYTHON",
+
+    
+    
+    "inputRoles" : [
+        {
+            "name": "input_dataset",
+            "label": "Input dataset",
+            "description": "The dataset that contains the column of interest",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "description": "A copy of the input dataset with an additional column of predicted sentiment polarities",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    
+    
+    "params": [
+        {
+            "name": "text_column_name",
+            "label" : "Text column",
+            "type": "COLUMN",
+            "description": "Select the column to perform sentiment analysis on",
+            "mandatory" : true,
+            "columnRole":"input_dataset"
+        },
+
+        {
+            "name": "output_confidence",
+            "type": "BOOLEAN",
+            "label" : "Output confidence scores",
+            "visibilityCondition" : "model.advanced_settings",
+            "description": "Check the box to output the model's confidence for each prediction",
+            "defaultValue" : false
+        }
+    ]
+}
