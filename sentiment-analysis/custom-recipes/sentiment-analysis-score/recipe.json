@@ -6,7 +6,7 @@
 
     "kind" : "PYTHON",
 
-    
+    "selectableFromDataset": "input_dataset",
     
     "inputRoles" : [
         {
@@ -46,7 +46,6 @@
             "name": "output_confidence",
             "type": "BOOLEAN",
             "label" : "Output confidence scores",
-            "visibilityCondition" : "model.advanced_settings",
             "description": "Check the box to output the model's confidence for each prediction",
             "defaultValue" : false
         }
