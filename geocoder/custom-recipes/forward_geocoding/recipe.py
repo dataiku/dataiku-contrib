@@ -94,6 +94,7 @@ def perform_geocode(df, config, fun, cache):
     return res
     
 def perform_geocode_batch(df, config, fun, cache, batch):
+    results = []
     try:
         results = fun(zip(*batch)[1])
     except Exception as e:
