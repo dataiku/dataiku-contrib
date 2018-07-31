@@ -1,0 +1,5 @@
+networkx
+python-louvain
+flask
+matplotlib
+scipy

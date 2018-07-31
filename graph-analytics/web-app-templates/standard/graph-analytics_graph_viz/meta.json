@@ -1,0 +1,12 @@
+// This file is the descriptor for the Standard Web App Template graph-analytics_graph_viz
+{
+     "libraries": [
+      "jquery",
+      "dataiku",
+      "d3",
+      "bootstrap",
+      "font_awesome"
+    ],
+    
+    "label" : "Visualization of a graph with community detection"
+}

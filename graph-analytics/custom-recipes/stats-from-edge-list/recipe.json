@@ -28,6 +28,24 @@
 
     "params": [
       {
+            "name": "node_A",
+            "label" : "node_A",
+            "type": "COLUMN",
+            "columnRole":"Input Dataset",
+            "description": "The first node",
+            "mandatory" : true
+          
+      },
+      {
+            "name": "node_B",
+            "label" : "node_B",
+            "type": "COLUMN",
+            "columnRole":"Input Dataset",
+            "description": "The second node",
+            "mandatory" : true
+          
+      },
+      {
          "name": "eigenvector_centrality",
          "label": "Compute eigenvector centrality",
          "type": "BOOLEAN",
