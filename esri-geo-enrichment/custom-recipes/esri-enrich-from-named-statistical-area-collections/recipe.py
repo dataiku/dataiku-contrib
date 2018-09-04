@@ -70,7 +70,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
 
     date = datetime.now().isoformat()
 
-    df = df.sort([P_COLUMN_COUNTRY],ascending=[1])
+    df = df.sort_values([P_COLUMN_COUNTRY],ascending=[1])
     
     
     # Make a separate query for each country in the chunk

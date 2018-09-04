@@ -243,7 +243,7 @@
         },
         {
            "name": "activate_backup",
-           "label" : "Activate backup:",
+           "label" : "Backup:",
            "type": "BOOLEAN",
            "defaultValue": false,
            "description":"Save the whole enrichment into a .csv file into the DSS tmp DATA-DIR (see the job log for the path)",

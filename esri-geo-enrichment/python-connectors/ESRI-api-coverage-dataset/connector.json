@@ -1,3 +1,4 @@
+/* This file is the descriptor for the Custom python dataset ESRI-coverage */
 {
     "meta" : {
         "label" : "ESRI(r) - Utils - Show Enrichment API coverage",
