@@ -1,4 +1,6 @@
+/* This file is the descriptor for the Custom python dataset census-us_us_census_custom_dataset */
 {
+    /* Meta data for display purposes */
     "meta" : {
         "label" : "US Census metadata dataset",
         "description": "Get all the metadata from a specific vintage.",
@@ -6,8 +8,18 @@
         "tags" : ["census","usa", "metadata"]
     },
 
+    /* Can this connector read data ? */
     "readable" : true,
+    /* Can this connector write data ? */
     "writable" : false,
+
+
+    /* The field "params" holds a list of all the params
+       for wich the user will be prompted for values:
+
+       The available parameter types are:
+       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
+    */
 
     "params": [
         
@@ -20,16 +32,16 @@
            "mandatory" : true,
            "selectChoices": [
                {
-                    "value": "ACS5Y2015",
-                    "label": "ACS5Y2015"
+                    "value": 'ACS5Y2015',
+                    "label": 'ACS5Y2015'
                 },
                 {
-                    "value": "ACS5Y2014",
-                    "label": "ACS5Y2014"
+                    "value": 'ACS5Y2014',
+                    "label": 'ACS5Y2014'
                 },
                 {
-                    "value": "ACS5Y2013",
-                    "label": "ACS5Y2013"
+                    "value": 'ACS5Y2013',
+                    "label": 'ACS5Y2013'
                 }
             ]
         }
