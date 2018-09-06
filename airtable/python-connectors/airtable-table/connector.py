@@ -9,6 +9,7 @@ class MyConnector(Connector):
         self.base = self.config.get("base")
         self.table = self.config.get("table")
         self.key = self.config.get("key")
+        self.retrieve_id = self.config.get("retrieve_id", "no")
 
         if self.base is None or self.table is None or self.key is None:
             raise ValueError("Missing parameters (Base ID, or Table name, or API key")
@@ -37,6 +38,8 @@ class MyConnector(Connector):
                 params.update({'offset':offset})
             results = airtable_api(self.base, self.table, self.key, parameters=params)
             for record in results.get("records"):
+                if self.retrieve_id == 'yes':
+                    record["fields"]["id"] = record["id"]
                 yield record["fields"]
             offset = results.get("offset")
             looping = False if offset is None else True
