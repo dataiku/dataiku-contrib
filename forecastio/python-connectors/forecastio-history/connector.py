@@ -17,22 +17,28 @@ class MyConnector(Connector):
         self.longitude = str(self.config.get("longitude"))
         self.from_date = str(self.config.get("from_date"))
         self.to_date = str(self.config.get("to_date"))
-        self.cache_folder = str(self.config.get("cache_folder"))
+        self.cache_folder = str(self.config.get("cache_folder", ""))
         self.api_limit = int(self.config.get("api_limit", -1))
+        self.cache_data = {}
 
-        # Cache file path
-        filename = "cache-forecastio-history-%s.json" % base64.urlsafe_b64encode(str(self.latitude) + '-' + str(self.longitude))
-        self.cache_file = os.path.join(self.cache_folder, filename)
+        # Cache file
+        if self.cache_folder != "":
 
-        # Cache directory
-        if not os.path.isdir(self.cache_folder):
-            os.makedirs(self.cache_folder)
+            filename = "cache-forecastio-history-%s.json" % base64.urlsafe_b64encode(str(self.latitude) + '-' + str(self.longitude))
+            self.cache_file = os.path.join(self.cache_folder, filename)
 
-        # Create cache file if does not exist
-        if not os.path.exists(self.cache_file):
-            with open(self.cache_file, 'w') as f:
-                json.dump({}, f)
-                f.close()
+            # create directory if required
+            if not os.path.isdir(self.cache_folder):
+                os.makedirs(self.cache_folder)
+
+            # create file if required
+            if not os.path.exists(self.cache_file):
+                with open(self.cache_file, 'w') as f:
+                    json.dump({}, f)
+                    f.close()
+        else:
+            self.cache_folder = None
+            self.cache_file = None
 
         # The API returns the number of call made for today. We keep it to optionnaly limit the number of calls.
         # For te first call, we don't know the actual value but we assume it is 0.
@@ -51,23 +57,36 @@ class MyConnector(Connector):
             }
 
 
-    def get_weather(self, day=None):
+    def __load_cache(self):
+        """ Reading json cache """
+        if self.cache_file:
+            print "Forecast.io plugin - Loading cache (%s)" % self.cache_file
+            with open(self.cache_file, 'r') as f:
+                self.cache_data = json.load(f)
+                f.close()
+
+
+    def __save_cache(self):
+        """ Writing json cache """
+        if self.cache_file:
+            print "Forecast.io plugin - Saving cache (%s)" % self.cache_file
+            with open(self.cache_file, 'w') as f:
+                json.dump(self.cache_data, f)
+                f.close()
+
+
+    def __get_weather(self, day=None):
 
         if not day:
             return None
 
-        # Reading json cache
-        with open(self.cache_file, 'r') as f:
-            cache = json.load(f)
-            f.close()
-
         day_key = day.strftime("%Y-%m-%dT00:00:00")
 
-        if day_key in cache.keys():
+        if day_key in self.cache_data.keys():
 
             # In cache
             print  "Forecast.io plugin - Already in cache for %s" % day_key
-            return cache.get(day_key)
+            return self.cache_data.get(day_key)
 
         else:
 
@@ -85,10 +104,15 @@ class MyConnector(Connector):
                 "Accept": "application/json"
             }
             params = {
-                "units": "auto",
+                "lang": "en",
+                "units": "si",
                 "exclude": "currently,minutely"
             }
-            r = requests.get('https://api.forecast.io/forecast/' + self.api_key + '/' + self.latitude + ',' + self.longitude + ',' + day_key, params=params, headers=headers)
+            r = requests.get(
+                url='https://api.darksky.net/forecast/%s/%s,%s,%s' % (self.api_key, self.latitude, self.longitude, day_key),
+                params=params,
+                headers=headers
+            )
             
             # verification of the status code
             if r.status_code != 200:
@@ -107,11 +131,10 @@ class MyConnector(Connector):
             else:
                 self.api_calls = -1
 
-            # writing json cache
-            cache[day_key] = result
-            with open(self.cache_file, 'w') as f:
-                json.dump(cache, f)
-                f.close()
+            # add to cache only if not a prediction
+            if self.cache_file and day < datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0):
+                print "Forecast.io plugin - Adding to cache: %s" % day_key
+                self.cache_data[day_key] = result
 
             sleep(0.1)
             return result
@@ -126,8 +149,8 @@ class MyConnector(Connector):
         if to_date < from_date:
             raise ValueError("The end date must occur after the start date")
 
-        if to_date >= datetime.datetime.today():
-            raise ValueError("The end date must occurs before today")
+        # if to_date >= datetime.datetime.today():
+        #     raise ValueError("The end date must occurs before today")
 
         list_datetimes = [from_date + datetime.timedelta(days=x) for x in range((to_date-from_date).days + 1)]
         print "Forecast.io plugin - List of dates: %s" % ", ".join([d.strftime("%d/%m/%Y") for d in list_datetimes])
@@ -135,9 +158,11 @@ class MyConnector(Connector):
         # Test request
         # TODO
 
+        self.__load_cache()
+
         # Requests
         for day in list_datetimes:
-                result = self.get_weather(day)
+                result = self.__get_weather(day)
                 yield {
                         'day': day.strftime("%Y-%m-%d"),
                         'day_date' : day.strftime("%Y-%m-%dT00:00:00.000Z"),
@@ -145,5 +170,9 @@ class MyConnector(Connector):
                         'hourly_data': json.dumps(result.get('hourly', '')) if 'hourly' in result else '',
                         'full_json': json.dumps(result)
                     }
+
+        self.__save_cache()
+
+
 
 
