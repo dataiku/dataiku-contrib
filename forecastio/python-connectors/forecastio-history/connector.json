@@ -1,7 +1,7 @@
 {
     "meta": {
-        "label": "Dark Sky weather conditions",
-        "description": "Get historical and forecast weather conditions data for anywhere on the globe."
+        "label": "Dark Sky weather data",
+        "description": "Get past and future weather conditions data for anywhere on the globe."
     },
 
     "readable": true,

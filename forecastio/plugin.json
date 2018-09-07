@@ -3,7 +3,7 @@
 	"version" : "0.2.0",
 	"meta" : {
 		"label" : "Dark Sky (previously Forecast.io)",
-		"description" : "Connect to Dark Sky API and get historical and forecast weather conditions.",
+		"description" : "Connect to Dark Sky API and get weather forecasts.",
 		"author" : "Dataiku (Jérémy Grèze)",
 		"icon" : "icon-cloud",
 		"licenseInfo" : "Apache Software License version 2",
