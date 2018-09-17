@@ -41,12 +41,18 @@
             "mandatory" : true,
             "columnRole":"input_dataset"
         },
-
+        {
+            "name": "predict_polarity",
+            "type": "BOOLEAN",
+            "label" : "Predict polarity",
+            "description": "Untick to predict a sentiment value in {1, ..., 5} instead of a polarity in {0, 1}.",
+            "defaultValue" : true
+        },
         {
             "name": "output_confidence",
             "type": "BOOLEAN",
             "label" : "Output confidence scores",
-            "description": "Check the box to output the model's confidence for each prediction",
+            "description": "Output the model's confidence for each prediction",
             "defaultValue" : false
         }
     ]
