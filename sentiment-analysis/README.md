@@ -12,7 +12,10 @@ Classifies your texts into two categories : 1 when the sentiment is positive (e.
 **How to use the recipe**  
 Using the recipe is very straightforward. Just plug in your dataset, select the column containing the texts you are interested in scoring and run the recipe!
 
-(*optional*) You can tick the “Output confidence scores” box to output the model's confidence for each prediction.
+[Option] You can tick the “Output confidence scores” box to output the model's confidence for each prediction.
+
+[Option] You can un-tick the “Predict polarity” box to produce sentiment scores that vary from 1 (highly negative) to 5 (highly positive).
+
 
 ### References
 
