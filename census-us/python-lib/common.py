@@ -118,6 +118,12 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         print 'Fields definition extracted'
 
     
+    geo_header_file_found=0
+    for fs in os.listdir(fdef_dir):
+        if fs == geo_header_file:
+            geo_header_file_found+=1
+
+            
     ## For taking into account that some vintage like ACS52013 does not have a structure with the template and a folder
     ## If no template, recreate the same structure as the alternative one.
     if fields_definition_url_file != fields_definition_url_file_template:
@@ -153,8 +159,15 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
                     shutil.move(fdef_dir +'/' + fs, fdef_dir+'/'+segment_folder_name_alternative)
 
             shutil.move(fdef_t_dir +'/' + template_definition_xls_file, fdef_dir+'/')
-
-    
+            
+    #### in case of the geo_header_file is in the sequence folder...
+    elif geo_header_file_found==0:
+        segment_folder_name = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['fields_definition']['folder_name']
+        geo_header_file_current_dir = fdef_dir + '/' + segment_folder_name + '/' + geo_header_file
+        geo_header_file_new_dir = fdef_dir + '/' + geo_header_file
+        cmd = "mv %s %s" % (geo_header_file_current_dir,geo_header_file_new_dir)
+        os.system(cmd)
+            
 
     ### download the ZCTA to ZIPCODE file
     if P_CENSUS_TYPE=='ZCTA':
@@ -172,8 +185,9 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
     
     #### collect the geo referential from US Census API for finding the Level.
     print 'Calling Census API...'
-    api_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels_code']
-    
+    api_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels']['levels_code']
+    api_level_name = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels']['levels_name']
+        
     req = requests.get(api_url) 
     data_d = req.json()
     geo_ref = pd.DataFrame(data_d['fips'])
@@ -242,7 +256,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
     
     dico_sumlevel = {}
     for i in xrange(1,len(data_d[u'fips'])):
-        dico_sumlevel[data_d['fips'][i]['name']] =  data_d['fips'][i]['geoLevelId']
+        dico_sumlevel[data_d['fips'][i]['name']] =  data_d['fips'][i][api_level_name] #geoLevelDisplay #geoLevelId #api_level_name
 
     level_api_name = census_resources.dict_level_corresp['v1'][P_CENSUS_LEVEL]['census_name']
     sumlevel_val = [int(dico_sumlevel[level_api_name])]  #EXAMPLE : sumlevel_val=[150]

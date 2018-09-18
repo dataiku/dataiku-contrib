@@ -8,6 +8,8 @@ from dataiku.customrecipe import *
 
 def get_metadata_sources(url):
 
+    print ('Calling US Census metadata HTML page...')
+    
     string_to_find = '.'
     metadata_d = {'name':[],'label':[],'concept':[],'type':[] }
     try:
@@ -45,6 +47,56 @@ def get_metadata_sources(url):
     
     
     return status,df_metadata_sources
+
+def get_metadata_sources_from_api(url):
+
+    print ('Calling US Census metadata API...')
+    
+    try:
+        r = requests.get(url)
+        status = 'ok'
+    
+    except:
+        status = 'The US Census metadata API is not available: %s' % (url)
+        print status
+    
+    rr= r.json()
+    v=rr['variables'].keys()
+    
+    df_metadata_sources=pd.DataFrame()
+    for vv in v:
+        
+        if vv.endswith('E'):
+            dv= rr['variables'][vv]
+            
+            ### This json not only contains variables...
+            if 'concept' in dv:
+                if 'predicateType' in dv:
+                    d={'concept':dv['concept']
+                       ,'label':dv['label']
+                       ,'name':vv
+                       ,'type':dv['predicateType']
+                      }
+                else:
+                    d={'concept':dv['concept']
+                       ,'label':dv['label']
+                       ,'name':vv
+                       ,'type':'N/A'
+                      }
+                    
+            else:
+                d={'concept':'N/A'
+                   ,'label':'N/A'
+                   ,'name':vv
+                   ,'type':'N/A'
+                  }
+
+            df_metadata_sources_tmp=pd.DataFrame([d])
+            df_metadata_sources=pd.concat((df_metadata_sources,df_metadata_sources_tmp),0)
+    
+    return status,df_metadata_sources
+
+
 
 def build_metadata(df_metadata_source,var_list):
     df_vars = pd.DataFrame(var_list)

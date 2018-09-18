@@ -1,5 +1,6 @@
 # HOW TO USE IT :
 
+### This plugins requires to perform some actions in the data_dir/tmp using the Python os library. If this is not allowed the plugin won't work.
 ### Please, create a code-env for this plugin this will keep your libraries up to date.
 
 ## 0/ INTRO
@@ -64,15 +65,20 @@ https://censusreporter.org/data/table/?table=B00001&geo_ids=05000US10001,150|050
 > Dimensions must be Exactly the same, any doubt download the data from census reporter and check in excel (better...)
 
 
-Requirements note:
+## Requirements/recommendations/important note:
 
-Dataiku DSS without code-envs
-This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
 => ! Try it on a neutral environment [dev, sandbox] before any deployment in production !
+=> This plugin might not work in Multi User Security environment since it requires the Plugin to access the data_dir and uses Python system libraries.
+
+It's highly recommended to enable the code-env provided with the plugin
+
+Otherwise, without code-envs:
+This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
+
 - idna<2.6,>=2.5
 - cryptography>=1.3.4
 - pyopenssl>=0.14
 => These dependencies can be tricky to install on Mac OS and only due to pip, not the plugin. Mind: Mac OS not officially supported by Dataiku : https://doc.dataiku.com/dss/latest/installation/index.html
 
-
+=> Please check your the results generated with the resources provided or by yourself. The plugin is delivered as-is and usage and outputs under your responsability.
 
