@@ -1,0 +1,71 @@
+{
+    "meta" : {
+        "label" : "Summarize Texts",
+        "description" : "Use this recipe to summarize your texts using one of three available techniques: TextRank (default), KL-Sum or LSA.",
+        "icon": "icon-file-text"
+    },
+
+    "kind" : "PYTHON",
+
+    "selectableFromDataset": "input_dataset",
+    
+    "inputRoles" : [
+        {
+            "name": "input_dataset",
+            "label": "Input dataset",
+            "description": "The dataset that contains your texts.",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "description": "A dataset with the input texts and their corresponding summaries.",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    
+    
+    "params": [
+        {
+            "name": "text_column_name",
+            "label" : "Text column",
+            "type": "COLUMN",
+            "mandatory" : true,
+            "columnRole":"input_dataset"
+        },
+        {
+            "name": "method",
+            "label" : "Summarization Method",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "textrank",
+                    "label": "TextRank"
+                },
+                {
+                    "value": "KL",
+                    "label": "KL-Sum"
+                },
+                {
+                    "value": "LSA",
+                    "label": "LSA"
+                }
+            ], 
+            "defaultValue" : "textrank"
+        },
+        {
+            "name": "n_sentences",
+            "label" : "Number of Sentences",
+            "type": "INT",
+            "defaultValue" : 1
+        }
+    ]
+}
