@@ -36,3 +36,6 @@ This plugin offers a WebApp template for testing SpaCy's NER model. To successfu
 
 ### References
 Alan Akbik, Duncan Blythe and Roland Vollgraf [*Contextual String Embeddings for Sequence Labeling, 2018*](http://alanakbik.github.io/papers/coling2018.pdf) In 27th International Conference on Computational Linguistics.
+
+### Licences
+Both SpaCy and Flair are distributed under the MIT License.
