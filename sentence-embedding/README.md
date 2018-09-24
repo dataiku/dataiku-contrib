@@ -71,4 +71,5 @@ Using this recipe is similar to using the "Compute sentence embeddings" recipe. 
 Christopher Clark, Kenton Lee, Luke Zettlemoyer.  [*Deep contextualized word representations*](https://arxiv.org/abs/1802.05365) NAACL 2018.
 
 ### Licenses
-... add licences for fasttext / word2vec / glove and ELMo.
+Word2vec, GloVe, ELMo and Tensorflow Hub are under the Apache License 2.0.
+FastText vectors are distributed under the Creative Commons Attribution-Share-Alike License 3.0.
