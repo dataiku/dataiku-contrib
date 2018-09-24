@@ -78,9 +78,9 @@
                 {
                     "value": "wasserstein",
                     "label": "Earth-Mover Distance"
-                },
+                }
             ],
-            "defaultValue" : 'cosine'
+            "defaultValue" : "cosine"
         },
         {
             "name": "aggregation_method",
@@ -97,7 +97,7 @@
                     "label": "SIF Embedding"
                 }
             ],
-            "defaultValue" : 'simple_average'
+            "defaultValue" : "simple_average"
         },
         {
             "name": "embedding_is_custom",
