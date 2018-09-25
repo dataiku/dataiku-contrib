@@ -61,7 +61,7 @@ except IOError:
 def extract_entities(text_column, format):
 
     # Tag sentences
-    docs = nlp.pipe(text_column.values)
+    docs = nlp.pipe(text_column.apply(lambda s: unicode(s, errors='ignore')).values)
 
     # Extract entities
     entity_df = pd.DataFrame()
