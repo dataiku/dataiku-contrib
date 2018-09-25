@@ -67,7 +67,7 @@ n_lines = 0
 for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZE)):
 
     # Process chunk
-    out_df = extract_entities(df["sentence"], format=output_single_json)
+    out_df = extract_entities(df[text_column_name], format=output_single_json)
 
     # Append dataframe to output Dataset
     if chunk_idx == 0:
