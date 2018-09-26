@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import dataiku
+import pandas as pd
 from dataiku.customrecipe import *
 
 import warnings
@@ -67,8 +68,8 @@ n_lines = 0
 for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZE)):
 
     # Process chunk
-    out_df = extract_entities(df[text_column_name], format=output_single_json)
-
+    out_df = extract_entities(df.pop(text_column_name), format=output_single_json)
+    out_df = pd.concat([out_df, df], axis=1)
     # Append dataframe to output Dataset
     if chunk_idx == 0:
         output_dataset.write_schema_from_dataframe(out_df)

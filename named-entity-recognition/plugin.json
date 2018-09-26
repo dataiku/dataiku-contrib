@@ -1,6 +1,6 @@
 {
     "id" : "named-entity-recognition",
-    "version" : "1.0.3",
+    "version" : "1.0.4",
     "meta" : {
         "label" : "Named Entity Recognition",
 
