@@ -1,4 +1,4 @@
-PLUGIN_VERSION=1.0.4
+PLUGIN_VERSION=1.0.5
 PLUGIN_ID=named-entity-recognition
 
 plugin:

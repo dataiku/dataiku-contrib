@@ -60,7 +60,7 @@ else:
 # Main Loop
 #############################
 
-CHUNK_SIZE = 1000
+CHUNK_SIZE = 10000
 
 logger.info("Started chunk-processing of input Dataset.")
 
@@ -68,8 +68,11 @@ n_lines = 0
 for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZE)):
 
     # Process chunk
-    out_df = extract_entities(df.pop(text_column_name), format=output_single_json)
-    out_df = pd.concat([out_df, df], axis=1)
+    out_df = extract_entities(df[text_column_name], format=output_single_json)
+    out_df = out_df.merge(df, left_on='sentence', right_on=text_column_name)
+    if text_column_name != 'sentence':
+        out_df.pop('sentence')
+    
     # Append dataframe to output Dataset
     if chunk_idx == 0:
         output_dataset.write_schema_from_dataframe(out_df)
