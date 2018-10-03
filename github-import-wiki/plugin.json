@@ -1,0 +1,22 @@
+// This file is the descriptor for the DSS Plugin WIKIIMPORT
+{
+    // The identifier of the plugin.
+    // This must be globally unique, and only contain A-Za-z0-9_-
+    // BEWARE: Changing this value is a dangerous operation and
+    // needs manual administrator intervention to fix directory names
+    "id" : "github-import-wiki",
+
+    // Version. It is highly recommended to use Semantic Versioning
+    "version" : "1.0.0",
+
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "Github Wiki importer",
+        "description" : "Import a GitHub wiki into DSS",
+        "author" : "Dataiku",
+        "icon" : "icon-github",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["wiki"]
+    }
+}
