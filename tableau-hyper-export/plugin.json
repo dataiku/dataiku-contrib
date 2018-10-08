@@ -7,7 +7,7 @@
         "author" : "Dataiku",
         "icon" : "icon-tableau",
         "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
+        "url" : "https://www.dataiku.com/dss/plugins/info/tableau-hyper-export.html",
         "tags" : ["Vizualisation"]
     }
 }
