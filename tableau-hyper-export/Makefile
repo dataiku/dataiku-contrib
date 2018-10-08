@@ -6,3 +6,5 @@ plugin:
 	rm -rf dist
 	mkdir dist
 	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json python-lib code-env python-exporters install.sh requirements.json
+
+include ../Makefile.inc
