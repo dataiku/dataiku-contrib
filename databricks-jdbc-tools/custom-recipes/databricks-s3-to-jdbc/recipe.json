@@ -1,0 +1,33 @@
+{
+    "meta" : {
+        "label" : "S3 -> Databricks JDBC sync",
+        "description" : "Custom recipe",
+        "icon" : "icon-puzzle-piece"
+    },
+
+    "kind" : "PYTHON",
+    
+    "selectableFromDataset" : "main",
+    
+
+    "inputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "main",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [],
+    "resourceKeys" : []
+}

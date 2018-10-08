@@ -1,0 +1,20 @@
+{
+    "id" : "databricks-jdbc-tools",
+
+    "version" : "0.0.1",
+
+    "meta" : {
+        "label" : "Databricks JDBC tools",
+
+        "description" : "Tools for working with Databricks as a JDBC data source",
+        "author" : "Dataiku",
+
+        "icon" : "icon-cloud",
+
+        "licenseInfo" : "Apache Software License",
+
+        "url" : "https://www.dataiku.com",
+
+        "tags" : ["Databricks", "Cloud"]
+    }
+}
