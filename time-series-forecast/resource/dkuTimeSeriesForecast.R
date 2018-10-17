@@ -1,8 +1,9 @@
-# Collection of wrapper functions to forecast methods
-# It works but it could be factorized into a single simple function or class
+# Functions used for the Forecast recipe
 
 library(forecast)
 library(R.utils)
+library(dataiku)
+source(file.path(dkuCustomRecipeResource(), "dkuPluginUtils.R"))
 
 naive_model_train <- function(ts, method, lambda, biasadj) {
     #' Wrap naive models from the forecast package in a simpler standard way
@@ -141,4 +142,41 @@ statespace_model_train <- function(ts, lambda, biasadj, kwargs) {
 
 statespace_forecast_function <- function(ts, h){
     forecast(ts, h = h, model = tbats(ts, model = STATESPACE_MODEL))
+}
+
+
+save_to_managed_folder <- function(folder_id, model_list, ts_output, ...) {
+    #' Save R models and arbitrary objects to a filesystem folder in Rdata format with a defined structure
+    #'
+    #' @description First, it creates a structure inside the directory:
+    #' - version/<timestamp in ms>/ for parameters and time series,
+    #' - version/<timestamp in ms>/models for models.
+    #' Then it saves the objects in Rdata format to the relevant directory.
+    #' It handles versioning of models so all trained models are saved.
+    
+    folder_path <- dkuManagedFolderPath(folder_id)
+    folder_type <- tolower(dkuManagedFolderInfo(folder_id)[["info"]][["type"]])
+    if(folder_type!="filesystem") {
+        stop("Output folder must be on the Server Filesystem. \
+          Please use the \"filesystem_folders\" connection.")
+    }
+    
+    # create standard directory structure
+    timestamp_ms <- as.character(round(as.numeric(Sys.time())*1000))
+    version_path <- file.path(folder_path, "versions", timestamp_ms)
+    models_path <- file.path(version_path, "models")
+    dir.create(models_path, recursive = TRUE)
+    
+    assign("TS_OUTPUT", ts_output)
+    save(list = c("TS_OUTPUT"), file = file.path(version_path , "ts.RData"))
+    save(..., file = file.path(version_path , "params.RData"))
+    
+    for(model_name in names(model_list)) {
+        model_variable_name <- paste0(toupper(model_name), "_MODEL")
+        assign(model_variable_name, model_list[[model_name]])
+        if(!is.null(model_list[[model_name]])) {
+            save(list = c(model_variable_name), file = file.path(models_path, paste0(model_name,".RData")))
+        }
+    }
+    plugin_print("Models, time series and parameters saved to folder")
 }

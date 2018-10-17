@@ -7,7 +7,7 @@
     "id" : "time-series-forecast",
 
     // Version. It is highly recommended to use Semantic Versioning
-    "version" : "0.0.1",
+    "version" : "0.0.2",
 
 
     // Meta data for display purposes
@@ -15,16 +15,12 @@
         // Name of this plugin that appears in the interface.
         "label" : "Time series forecast",
 
-        "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. \
-						 These recipes cover the cycle of data cleaning, model training, evaluation, and prediction.\
-						 They are based on univariate forecasting methods described in \
-						<a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. \
-						<i>Forecasting: principles and practice.</i> OTexts, 2014.</a>",
-		
+        "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. It cover the cycle of data cleaning, model training, evaluation, and prediction. They are based on forecasting methods described in <a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. <i>Forecasting: principles and practice.</i> OTexts, 2014.</a> and in <a href=\"https://doi.org/10.1080/00031305.2017.1380080\">Taylor, Sean J., and Benjamin Letham. <i>Forecasting at Scale.</i> The American Statistician, 2018.</a>",
+        
         "author" : "Alexandre Combessie (Dataiku)",
 
         // The icon of a plugin must be one of the FontAwesome 3.1 icons
-        "icon" : "icon-calendar-empty",
+        "icon" : "icon-calendar",
 
         "licenseInfo" : "Apache Software License",
 

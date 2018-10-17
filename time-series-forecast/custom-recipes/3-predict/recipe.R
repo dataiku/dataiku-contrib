@@ -1,17 +1,18 @@
-# WORK IN PROGRESS
-library(dataiku)
-source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastUtils.R"))
-source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTSforecastWrappers.R"))
+# WORK IN PROGRESS NOT READY!
 
-input_dataset_name = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
-input_folder_name = dkuCustomRecipeOutputNamesForRole('input_folder')[1]
+library(dataiku)
+source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTimeSeriesForecast.R"))
+
+eval_dataset_name = dkuCustomRecipeInputNamesForRole('eval_dataset')[1]
+model_folder_name = dkuCustomRecipeInputNamesForRole('model_folder')[1]
 output_dataset_name = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
 
 config = dkuCustomRecipeConfig()
-CONFIDENCE_INTERVAL_LEVEL_1 <- config[["CONFIDENCE_INTERVAL_LEVEL_1"]]
-CONFIDENCE_INTERVAL_LEVEL_2 <- config[["CONFIDENCE_INTERVAL_LEVEL_2"]]
-CONFIDENCE_LEVEL_BOOTSTRAP_ACTIVATED <- config[["CONFIDENCE_LEVEL_BOOTSTRAP_ACTIVATED"]]
+print(config)
+for(n in names(config)){
+    assign(n, config[[n]])
+}
 
 .LEVEL <- c(CONFIDENCE_INTERVAL_LEVEL_1, CONFIDENCE_INTERVAL_LEVEL_2)
 
-load_from_managed_folder(input_folder_name)
+load_from_managed_folder(model_folder_name)

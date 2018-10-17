@@ -1,11 +1,10 @@
 // This file is the descriptor for the Custom code recipe clean
-// WORK IN PROGRESS
 {
     // Meta data for display purposes
     "meta" : {
-        "label" : "1. Forecast - train",
-        "description" : "Train forecasting models on historical data",
-        "icon" : "icon-beaker"
+        "label" : "2. Train and evaluate",
+        "description" : "Train forecasting models and evaluate them on cleaned historical data",
+        "icon" : "icon-calendar"
     },
 
     "kind" : "R",
@@ -24,7 +23,6 @@
         {
             "name": "input_dataset",
             "label": "Input dataset",
-            "description": "Must include one date and one numerical column",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": true,
@@ -32,18 +30,24 @@
         }
     ],
 
-    "outputRoles" : [
-        {
-            "name": "output_folder",
-            "label": "Output folder",
-            "description": "Will store trained R forecast models",
+    "outputRoles" : [ 
+       {
+            "name": "model_folder",
+            "label": "Trained models folder",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": false,
             "acceptsManagedFolder": true,
             "mustBeStrictlyType": "Filesystem"
-        } 
-        // ...
+        },
+        {
+            "name": "eval_dataset",
+            "label": "Evaluation results",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true,
+            "acceptsFolder": false
+        }
     ],
 
     // The field "params" holds a list of all the params
@@ -55,12 +59,11 @@
     "params": [
         
         {
-            "name": "separator_preprocessing",
-            "label": "Preprocessing",
-            "type": "SEPARATOR"
+            "type": "SEPARATOR",
+            "name": "separator_input",
+            "label": "Input data"
         },
         
-
         {
             "name": "TIME_COLUMN",
             "label" : "Time column",
@@ -70,77 +73,70 @@
             "mandatory" : true
         },
         
+        
+        {
+            "name": "TIMEZONE",
+            "label" : "Timezone",
+            "type": "STRING",
+            "description":"ISO 8601 format",
+            "defaultValue" : "UTC",
+            "mandatory" : true
+        },
+        
+
+        
         {
             "name": "SERIES_COLUMN",
-            "label" : "Series column",
+            "label" : "Target series column",
             "description":"Must be numeric",
             "type": "COLUMN",
             "columnRole":"input_dataset",
             "mandatory" : true
         },
         
-        // A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
+        
         {
-            "name": "CHOSEN_GRANULARITY",
-            "label" : "Granularity",
-            "description": "Period of the observations",
+            "name": "separator_modeling",
+            "label": "Modeling",
+            "type": "SEPARATOR"
+        },
+        
+        {
+            "name": "AUTOML",
+            "label" : "Forecasting style",
             "type": "SELECT",
             "mandatory" : true,
             "selectChoices": [
                 {
-                    "value": "year",
-                    "label": "Year"
+                    "value": "auto",
+                    "label": "Automated mode"
                 },
                 {
-                    "value": "quarter",
-                    "label": "Quarter"
-                },
-                {
-                    "value": "month",
-                    "label": "Month"
-                },
-                {
-                    "value": "week",
-                    "label": "Week"
-                },
-                {
-                    "value": "day",
-                    "label": "Day"
-                },
-                {
-                    "value": "hour",
-                    "label": "Hour"
-                },
-            ]
-        },
-        
-        {
-            "name": "TIMEZONE",
-            "label" : "Time zone",
-            "type": "STRING",
-            "description":"Follow ISO 8601 standard (default is UTC)",
-            "defaultValue" : "UTC",
-            "mandatory" : false
+                    "value": "expert",
+                    "label": "Expert mode"
+                }
+            ],
+            "defaultValue": "auto"
         },
         
         {
             "name": "BOX_COX_TRANSFORMATION_ACTIVATED",
             "label" : "Box-Cox transformation",
-            "description": "Adjust raw time series before forecasting with Box-Cox transformation (recommended)",
+            "description": "Adjust raw time series with Box-Cox transformation before forecasting",
             "type": "BOOLEAN",
             "defaultValue" : true,
-            "mandatory" : true
+            "mandatory" : true,
+            "visibilityCondition": "model.AUTOML=='expert'"
         },
-
+        
         {
-            "name": "separator_modeling",
-            "label": "Training forecasting models - select which to apply",
-            "type": "SEPARATOR"
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
         },
         
         {
             "name": "NAIVE_MODEL_ACTIVATED",
-            "label" : "Naive model (baseline)",
+            "label" : "Baseline model",
             "description": "Based on the naive/snaive implementation in R \"forecast\" package",
             "type": "BOOLEAN",
             "defaultValue" : true,
@@ -150,11 +146,10 @@
         {
             "name": "NAIVE_MODEL_METHOD",
             "label" : "\u21B3 method",
-            "description": "cf. otexts.org/fpp2/simple-methods.html",
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "simple",
-            "visibilityCondition": "model.NAIVE_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.NAIVE_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "simple",
@@ -172,11 +167,16 @@
         },
         
         {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
             "name": "SEASONALTREND_MODEL_ACTIVATED",
             "label" : "Seasonal Trend model",
             "description": "Based on the ets/stlf implementation in R \"forecast\" package",
             "type": "BOOLEAN",
-            "defaultValue" : false,
+            "defaultValue" : true,
             "mandatory" : true
         },
         
@@ -186,7 +186,7 @@
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "Z",
-            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "Z",
@@ -213,7 +213,7 @@
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "Z",
-            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "Z",
@@ -240,7 +240,7 @@
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "Z",
-            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "Z",
@@ -266,14 +266,20 @@
             "type": "MAP",
             "label" : "\u21B3 additional parameters",
             "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/ets",
-            "visibilityCondition": "model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
             "mandatory" : false
+        },
+        
+        {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
         },
         
         {
             "name": "NEURALNETWORK_MODEL_ACTIVATED",
             "label" : "Neural Network model",
-            "description": "Based on the nnetar implementation in R \"forecast\" package",
+            "description": "Based on the nnetar implementation in R \"forecast\" package. \
+            WARNING: slow for long time series",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -286,7 +292,7 @@
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : 1,
-            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED"
+            "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
         },
 
         {
@@ -296,7 +302,7 @@
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : -1,
-            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED"
+            "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
         },
         
         {
@@ -306,7 +312,7 @@
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : -1,
-            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED"
+            "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
         },
                
         {
@@ -314,15 +320,20 @@
             "type": "MAP",
             "label" : "\u21B3 additional parameters",
             "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/nnetar",
-            "visibilityCondition": "model.NEURALNETWORK_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED",
             "mandatory" : false
+        },
+        
+        {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
         },
         
         {
             "name": "ARIMA_MODEL_ACTIVATED",
             "label" : "ARIMA model",
             "description": "Based on the auto.arima implementation in R \"forecast\" package. \
-                            WARNING: not suitable for long time series",
+                            WARNING: slow for long time series",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -335,7 +346,7 @@
             "type": "BOOLEAN",
             "defaultValue" : true,
             "mandatory" : false,
-            "visibilityCondition": "model.ARIMA_MODEL_ACTIVATED"
+            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
         },
 
         {
@@ -343,15 +354,20 @@
             "type": "MAP",
             "label" : "\u21B3  additional parameters",
             "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/auto.arima",
-            "visibilityCondition": "model.ARIMA_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
             "mandatory" : false
         },
-
+        
         {
-            "name": "STATE_SPACE_MODEL_ACTIVATED",
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
+            "name": "STATESPACE_MODEL_ACTIVATED",
             "label" : "State Space model",
             "description": "Based on the tbats implementation in R \"forecast\" package. \
-                             WARNING: not suitable for long time series",
+                             WARNING: slow for long time series",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -362,10 +378,68 @@
             "type": "MAP",
             "label" : "\u21B3  additional parameters",
             "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/tbats",
-            "visibilityCondition": "model.STATE_SPACE_MODEL_ACTIVATED",
-            "mandatory" : false
+            "mandatory" : false,
+            "visibilityCondition": "model.AUTOML=='expert' && model.STATESPACE_MODEL_ACTIVATED"
+        },
+    
+        
+        {
+            "name": "separator_evaluation",
+            "label": "Evaluation",
+            "type": "SEPARATOR"
+        },
+        
+        {
+            "name": "EVAL_HORIZON",
+            "label" : "Horizon",
+            "description": "Number of periods to evaluate the forecast for",
+            "type": "INT",
+            "defaultValue" : 10,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "VALIDATION_STRATEGY",
+            "label" : "Train / Test strategy",
+            "type": "SELECT",
+            "mandatory" : true,
+            "description": "Cross-validation gives error margins on metrics, but strongly increases training time",
+            "selectChoices": [
+                {
+                    "value": "split",
+                    "label": "Split"
+                },
+                {
+                    "value": "crossval",
+                    "label": "Cross-validation"
+                }
+            ],
+            "defaultValue": "split"
+        },
+
+        
+        {
+            "name": "CROSSVAL_INITIAL",
+            "label" : "Initial training",
+            "description": "Number of periods in the initial train set. If 0 or not provided, 3 * horizon is used.",
+            "type": "INT",
+            "mandatory" : false,
+            "defaultValue" : null,
+            "visibilityCondition": "model.VALIDATION_STRATEGY =='crossval'"
+        },
+        
+        {
+            "name": "CROSSVAL_PERIOD",
+            "label" : "Cutoff period",
+            "description": "Number of periods between cutoff dates. If 0 or not provided, 0.5 * horizon is used.",
+            "type": "INT",
+            "mandatory" : false,
+            "defaultValue" : null,
+            "visibilityCondition": "model.VALIDATION_STRATEGY =='crossval'"
         }
         
+
+
     ],
 
     // The field "resourceKeys" holds a list of keys that allows to limit the number

@@ -2,14 +2,14 @@
 {
     // Meta data for display purposes
     "meta" : {
-        "label" : "3. Forecast - predict",
-        "description" : "Use trained models to predict future values with confidence intervals" ,
+        "label" : "3. Predict",
+        "description" : "Use previously trained models to predict future values or get historic residuals" ,
         "icon" : "icon-signal"
     },
 
     "kind" : "R",
     
-    "selectableFromDataset" : "input_folder",
+    "selectableFromDataset" : "input_dataset",
 
     // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
     // or more dataset to each input and output role.
@@ -20,7 +20,7 @@
 
     "inputRoles" : [
         {
-            "name": "input_folder",
+            "name": "model_folder",
             "label": "Saved model folder",
             "description": "Contains saved models from the \"Train\" recipe",
             "arity": "UNARY",
@@ -30,7 +30,7 @@
             "mustBeStrictlyType": "Filesystem"
         },
         {
-            "name": "input_dataset",
+            "name": "eval_dataset",
             "label": "Evaluation dataset",
             "description": "Result dataset from the \"Evaluate\" recipe",
             "arity": "UNARY",
@@ -66,6 +66,15 @@
             "label": "Selecting which model(s) to use",
             "type": "SEPARATOR"
         },
+        
+        {
+            "name": "AUTO_MODEL_SELECTION_ACTIVATED",
+			"label" : "Automatic model selection",
+			"description": "Automatically select model according to evaluated performance metrics",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+			"mandatory" : true
+        },
 		
 		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
         {
@@ -73,13 +82,10 @@
             "label" : "Model to use",
             "type": "SELECT",
 			"mandatory" : false,
-            "defaultValue" : "all",
+            "defaultValue" : "naive",
             "visibilityCondition": "!model.AUTO_MODEL_SELECTION_ACTIVATED",
             "selectChoices": [
-                {
-                    "value": "all",
-                    "label": "All models"
-                },
+
 				{
                     "value": "naive",
                     "label": "Naive model"
@@ -102,15 +108,7 @@
                 }
             ]
         },
-        
-        {
-            "name": "AUTO_MODEL_SELECTION_ACTIVATED",
-			"label" : "Automatic model selection",
-			"description": "Automatically select model according to evaluated performance metrics",
-            "type": "BOOLEAN",
-            "defaultValue" : false,
-			"mandatory" : true
-        },
+    
 				
 		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
         {
