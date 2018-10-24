@@ -68,20 +68,24 @@ n_lines = 0
 for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZE)):
 
     # Process chunk
-    out_df = extract_entities(df[text_column_name], format=output_single_json)
-    out_df = out_df.merge(df, left_on='sentence', right_on=text_column_name)
+    out_df = extract_entities(df[text_column_name].fillna(" "), format=output_single_json)
+    df = df.reset_index(drop=True)
+    out_df = out_df.reset_index(drop=True)
+    out_df = out_df.merge(df, left_index=True, right_index=True)
     if text_column_name != 'sentence':
         out_df.pop('sentence')
     
     # Append dataframe to output Dataset
     if chunk_idx == 0:
-        output_dataset.write_schema_from_dataframe(out_df)
-        writer = output_dataset.get_writer()
-        writer.write_dataframe(out_df)
+        df_concat = out_df #worst quick fix - to use writer, would need to set the schema from spacy/flair entities first !
+        #output_dataset.write_schema_from_dataframe(out_df)
+        #writer = output_dataset.get_writer()
+        #writer.write_dataframe(out_df)
     else:
-        writer.write_dataframe(out_df)
+        df_concat = pd.concat([df_concat, out_df], axis=0)
+        #writer.write_dataframe(out_df)
 
     n_lines += len(df)
     logger.info("Finished processing {} lines".format(n_lines))
 
-writer.close()
+#writer.close()
