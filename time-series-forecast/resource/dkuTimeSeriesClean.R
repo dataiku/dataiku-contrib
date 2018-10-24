@@ -59,46 +59,6 @@ aggregation_na <- function(x, strategy){
 }
 
 
-msts_conversion <- function(df, time_column, series_column, granularity) {
-    #' Converts a univariate time series from R data.frame to forecast::msts multi-seasonal time series format
-    #'
-    #' @description First the functions computes the start date and converts it to the numeric vector expected by the ts object.
-    #' This vector requires two numeric elements: 
-    #'
-    #' 1. The year in yyyy format
-    #'
-    #' 2. The numeric fraction of the period inside the year e.g. 3/12. for the third month of the year 
-    #' and 10/365.25 for the 10th day of the year
-    #' 
-    #' Hence, the content of this vector depends on the chosen granularity.
-    #'
-    #' Finally, it takes the original series data and builds it into a msts object.
-    #' 
-    #' @details The expected structure for the input time series data.frame is to have two columns:
-    #' "time_column" of date or POSIX type 
-    #' "series_column" of numeric type
-    
-    min_date <- min(df[[time_column]])
-    seasonal.periods <- map_granularity_seasonality[[granularity]]
-    start_date <- c() # vector of two elements according to the ts object documentation
-    start_date[1] <- lubridate::year(min_date) # year
-    start_date[2] <- switch(granularity,
-        year = 1,
-        quarter = lubridate::quarter(min_date),
-        month = lubridate::month(min_date),
-        week = lubridate::week(min_date),
-        day = lubridate::yday(min_date),
-        hour = 24 * (lubridate::yday(min_date) - 1) + lubridate::hour(min_date),
-    )
-    output_msts <- msts(
-            data = df[[series_column]],
-            seasonal.periods = seasonal.periods,
-            start = start_date
-        )
-    return(output_msts)
-}
-
-
 timeseries_clean <- function(msts, missing_values, missing_impute_with, missing_impute_constant, 
                              outliers, outliers_impute_with, outliers_impute_constant) {
     if (missing_values == 'interpolate') {

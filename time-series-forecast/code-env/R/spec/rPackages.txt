@@ -1,5 +1,6 @@
-"forecast","8.3"
+"forecast","8.4"
 "xts","0.10-0"
 "lubridate","1.7.4"
 "R.utils","2.6"
-"tidyr","0.8.1"
+"rstan","2.18.1"
+"prophet","0.3.0.1"

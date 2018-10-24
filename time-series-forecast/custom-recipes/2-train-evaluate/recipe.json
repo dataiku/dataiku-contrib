@@ -83,6 +83,40 @@
             "mandatory" : true
         },
         
+        {
+            "name": "GRANULARITY",
+            "label" : "Granularity",
+            "type": "SELECT",
+            "mandatory" : true,
+            "selectChoices": [
+                {
+                    "value": "year",
+                    "label": "Year"
+                },
+                {
+                    "value": "quarter",
+                    "label": "Quarter"
+                },
+                {
+                    "value": "month",
+                    "label": "Month"
+                },
+                {
+                    "value": "week",
+                    "label": "Week"
+                },
+                {
+                    "value": "day",
+                    "label": "Day"
+                },
+                {
+                    "value": "hour",
+                    "label": "Hour"
+                },
+            ],
+            "defaultValue": "day"
+        },
+        
 
         
         {
@@ -92,6 +126,15 @@
             "type": "COLUMN",
             "columnRole":"input_dataset",
             "mandatory" : true
+        },
+        
+        {
+            "name": "PARTITION_DIMENSION_NAME",
+            "label" : "Partitioning",
+            "description":"Optional - name of the dimension used for partitioning if activated",
+            "type": "STRING",
+            "mandatory" : false,
+            "defaultValue": ""
         },
         
         
@@ -153,7 +196,7 @@
             "selectChoices": [
                 {
                     "value": "simple",
-                    "label": "Non-seasonal: forecast preceding value"
+                    "label": "Forecast preceding value"
                 },
                 {
                     "value": "seasonal",
@@ -167,6 +210,14 @@
         },
         
         {
+            "name": "NAIVE_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3 additional parameters",
+            "visibilityCondition": "false",
+            "mandatory" : false
+        },
+        
+        {
             "type": "SEPARATOR",
             "visibilityCondition": "model.AUTOML=='expert'"
         },
@@ -174,19 +225,140 @@
         {
             "name": "SEASONALTREND_MODEL_ACTIVATED",
             "label" : "Seasonal Trend model",
-            "description": "Based on the ets/stlf implementation in R \"forecast\" package",
+            "description": "Based on the stlf implementation in R \"forecast\" package",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : true
+        },
+        
+        
+       {
+            "name": "SEASONALTREND_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3 additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/forecast.stl",
+            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+        
+        {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
+            "name": "PROPHET_MODEL_ACTIVATED",
+            "label" : "Prophet model",
+            "description": "Based on the Prophet implementation in R \"prophet\" package.",
             "type": "BOOLEAN",
             "defaultValue" : true,
             "mandatory" : true
         },
         
         {
-            "name": "SEASONALTREND_MODEL_ERROR_TYPE",
+            "name": "PROPHET_MODEL_GROWTH",
+            "label" : "\u21B3 Growth",
+            "description": "Use a linear or logistic trend",
+            "type": "SELECT",
+            "defaultValue" : "linear",
+            "mandatory" : true,
+            "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
+             "selectChoices": [
+                {
+                    "value": "linear",
+                    "label": "Linear"
+                },
+                {
+                    "value": "logistic",
+                    "label": "Logistic"
+                }
+            ]
+        },
+        
+        {
+            "name": "PROPHET_MODEL_MINIMUM",
+            "label" : "\u21B3 Minimum",
+            "description": "Saturating minimum for logistic growth (optional)",
+            "type": "DOUBLE",
+            "defaultValue" : 0.0,
+            "mandatory" : false,
+            "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED && model.PROPHET_MODEL_GROWTH=='logistic'"
+        },
+        
+        {
+            "name": "PROPHET_MODEL_MAXIMUM",
+            "label" : "\u21B3 Maximum",
+            "description": "Saturating maximum for logistic growth",
+            "type": "DOUBLE",
+            "defaultValue" : 1.0,
+            "mandatory" : false,
+            "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED && model.PROPHET_MODEL_GROWTH=='logistic'"
+        },
+
+        {
+            "name": "PROPHET_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3  additional parameters",
+            "description":"Optional additional parameters cf. cran.r-project.org/web/packages/prophet/prophet.pdf",
+            "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+        
+                {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
+            "name": "ARIMA_MODEL_ACTIVATED",
+            "label" : "ARIMA model",
+            "description": "Based on the auto.arima implementation in R \"forecast\" package. \
+                            WARNING: slow for long time series (1000+ records)",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "ARIMA_MODEL_STEPWISE",
+            "label" : "\u21B3 stepwise",
+            "description": "Use stepwise procedure to speed up the search for model parameters",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : false,
+            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
+        },
+
+        {
+            "name": "ARIMA_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3  additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
+            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+        
+                {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
+            "name": "EXPONENTIALSMOOTHING_MODEL_ACTIVATED",
+            "label" : "Exponential Smoothing model",
+            "description": "Based on the ets implementation in R \"forecast\" package.  WARNING: slow for long time series (1000+ records)",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+    
+                {
+            "name": "EXPONENTIALSMOOTHING_MODEL_ERROR_TYPE",
             "label" : "\u21B3 error type",
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "Z",
-            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.EXPONENTIALSMOOTHING_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "Z",
@@ -208,12 +380,12 @@
         },
         
         {
-            "name": "SEASONALTREND_MODEL_TREND_TYPE",
+            "name": "EXPONENTIALSMOOTHING_MODEL_TREND_TYPE",
             "label" : "\u21B3 trend type",
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "Z",
-            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.EXPONENTIALSMOOTHING_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "Z",
@@ -235,12 +407,12 @@
         },
         
         {
-            "name": "SEASONALTREND_MODEL_SEASONALITY_TYPE",
+            "name": "EXPONENTIALSMOOTHING_MODEL_SEASONALITY_TYPE",
             "label" : "\u21B3 seasonality type",
             "type": "SELECT",
             "mandatory" : false,
             "defaultValue": "Z",
-            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
+            "visibilityCondition": "model.AUTOML=='expert' && model.EXPONENTIALSMOOTHING_MODEL_ACTIVATED",
             "selectChoices": [
                 {
                     "value": "Z",
@@ -262,13 +434,14 @@
         },
         
        {
-            "name": "SEASONALTREND_MODEL_KWARGS",
+            "name": "EXPONENTIALSMOOTHING_MODEL_KWARGS",
             "type": "MAP",
             "label" : "\u21B3 additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/ets",
-            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/ets",
+            "visibilityCondition": "model.AUTOML=='expert' && model.EXPONENTIALSMOOTHING_MODEL_ACTIVATED",
             "mandatory" : false
         },
+        
         
         {
             "type": "SEPARATOR",
@@ -279,7 +452,7 @@
             "name": "NEURALNETWORK_MODEL_ACTIVATED",
             "label" : "Neural Network model",
             "description": "Based on the nnetar implementation in R \"forecast\" package. \
-            WARNING: slow for long time series",
+            WARNING: slow for long time series (1000+ records)",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -319,44 +492,11 @@
             "name": "NEURALNETWORK_MODEL_KWARGS",
             "type": "MAP",
             "label" : "\u21B3 additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/nnetar",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/nnetar",
             "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED",
             "mandatory" : false
         },
         
-        {
-            "type": "SEPARATOR",
-            "visibilityCondition": "model.AUTOML=='expert'"
-        },
-        
-        {
-            "name": "ARIMA_MODEL_ACTIVATED",
-            "label" : "ARIMA model",
-            "description": "Based on the auto.arima implementation in R \"forecast\" package. \
-                            WARNING: slow for long time series",
-            "type": "BOOLEAN",
-            "defaultValue" : false,
-            "mandatory" : true
-        },
-        
-        {
-            "name": "ARIMA_MODEL_STEPWISE_ACTIVATED",
-            "label" : "\u21B3 stepwise",
-            "description": "Use stepwise procedure to speed up the search for model parameters",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
-            "mandatory" : false,
-            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
-        },
-
-        {
-            "name": "ARIMA_MODEL_KWARGS",
-            "type": "MAP",
-            "label" : "\u21B3  additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/auto.arima",
-            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
-            "mandatory" : false
-        },
         
         {
             "type": "SEPARATOR",
@@ -367,7 +507,7 @@
             "name": "STATESPACE_MODEL_ACTIVATED",
             "label" : "State Space model",
             "description": "Based on the tbats implementation in R \"forecast\" package. \
-                             WARNING: slow for long time series",
+                             WARNING: slow for long time series (1000+ records)",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
@@ -377,7 +517,7 @@
             "name": "STATESPACE_MODEL_KWARGS",
             "type": "MAP",
             "label" : "\u21B3  additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.3/topics/tbats",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/tbats",
             "mandatory" : false,
             "visibilityCondition": "model.AUTOML=='expert' && model.STATESPACE_MODEL_ACTIVATED"
         },
@@ -421,20 +561,20 @@
         {
             "name": "CROSSVAL_INITIAL",
             "label" : "Initial training",
-            "description": "Number of periods in the initial train set. If 0 or not provided, 3 * horizon is used.",
+            "description": "Number of periods in the initial train set. If -1 or not provided, 3 * horizon is used.",
             "type": "INT",
             "mandatory" : false,
-            "defaultValue" : null,
+            "defaultValue" : -1,
             "visibilityCondition": "model.VALIDATION_STRATEGY =='crossval'"
         },
         
         {
             "name": "CROSSVAL_PERIOD",
             "label" : "Cutoff period",
-            "description": "Number of periods between cutoff dates. If 0 or not provided, 0.5 * horizon is used.",
+            "description": "Number of periods between cutoff dates. If -1 or not provided, 0.5 * horizon is used.",
             "type": "INT",
             "mandatory" : false,
-            "defaultValue" : null,
+            "defaultValue" : -1,
             "visibilityCondition": "model.VALIDATION_STRATEGY =='crossval'"
         }
         
