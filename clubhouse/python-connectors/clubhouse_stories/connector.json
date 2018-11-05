@@ -1,0 +1,11 @@
+{
+    "meta" : {
+        "label" : "Clubhouse Stories",
+        "description" : "A simple non-partioned connector for clubhouse.io stories",
+        "icon" : "icon-ticket"
+    },
+    "readable" : true,
+    "writable" : false,
+    "params": [],
+    "partitioningMode" : "NOT_PARTITIONABLE"
+}

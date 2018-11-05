@@ -1,0 +1,22 @@
+{
+    "id" : "clubhouse",
+    "version" : "0.0.1",
+    "meta" : {
+        "label" : "Clubhouse",
+        "description" : "Connector to read data from Clubhouse.io",
+        "author" : "Dataiku (Arnaud PICHERY)",
+        "icon" : "icon-flag-alt",
+        "licenseInfo" : "Apache Software License version 2",
+        "url" : "https://www.dataiku.com/community/plugins/info/clubhouse.html",
+        "tags" : ["API", "Productivity", "SaaS", "clubhouse"]
+    },
+    "params" : [
+        {
+            "name" : "api_token",
+            "label" : "clubhouse.io API Token",
+            "description" : "Create one from your profile settings in clubhouse.io",
+            "type" : "STRING",
+            "mandatory" : true
+        }
+    ]
+}

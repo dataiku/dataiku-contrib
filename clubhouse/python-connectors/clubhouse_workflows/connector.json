@@ -1,0 +1,11 @@
+{
+    "meta" : {
+        "label" : "Clubhouse Workflows",
+        "description" : "A simple non-partioned connector for clubhouse.io workflows",
+        "icon" : "icon-road"
+    },
+    "readable" : true,
+    "writable" : false,
+    "params": [],
+    "partitioningMode" : "NOT_PARTITIONABLE"
+}
