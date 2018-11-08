@@ -9,16 +9,18 @@ print(config)
 for(n in names(config)){
     assign(n, config[[n]])
 }
-
+        
 selected_columns <- c(TIME_COLUMN, SERIES_COLUMNS)
 column_classes <- c("character", rep("numeric", length(SERIES_COLUMNS)))
+
+check_partition <- check_partitioning_setting_input_output(input_dataset_name, PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 df <- dkuReadDataset(input_dataset_name, columns = selected_columns, colClasses = column_classes) 
 
 plugin_print("Preparation stage: date parsing, cleaning, aggregation, sorting")
 
 # convert to R POSIX date format
-df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], TIMEZONE, format = dku_date_format)
+df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dku_date_format)
 
 # truncate all dates to the start of the period to avoid errors at the date_range_generate step
 df[[TIME_COLUMN]] <- trunc_to_granularity_start(df[[TIME_COLUMN]], GRANULARITY)
@@ -45,9 +47,9 @@ df <- df %>%
                      OUTLIERS, OUTLIERS_IMPUTE_WITH, OUTLIERS_IMPUTE_CONSTANT)
 
 # converts the date from POSIX to a character following dataiku date format in ISO 8601 standard
-df[[TIME_COLUMN]] <- strftime(df[[TIME_COLUMN]] , dku_date_format, TIMEZONE)
+df[[TIME_COLUMN]] <- strftime(df[[TIME_COLUMN]] , dku_date_format)
 
 plugin_print("All stages completed!")
 
 # Recipe outputs
-dkuWriteDataset(df, output_dataset_name)
+write_dataset_with_partitioning_column(df, output_dataset_name, PARTITION_DIMENSION_NAME, check_partitioning)

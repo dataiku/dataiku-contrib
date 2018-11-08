@@ -58,19 +58,9 @@
         {
             "name": "TIME_COLUMN",
             "label" : "Time column",
-            "description":"Must be a parsed date",
+            "description": "Required column in DSS parsed date format at timezone UTC",
             "type": "COLUMN",
             "columnRole":"input_dataset",
-            "mandatory" : true
-        },
-        
-        
-        {
-            "name": "TIMEZONE",
-            "label" : "Timezone",
-            "type": "STRING",
-            "description":"ISO 8601 format",
-            "defaultValue" : "UTC",
             "mandatory" : true
         },
         
@@ -79,10 +69,35 @@
         {
             "name": "SERIES_COLUMNS",
             "label" : "Series columns",
-            "description":"Must be numeric",
+            "description":"Required numeric columns to clean",
             "type": "COLUMNS",
             "columnRole":"input_dataset",
             "mandatory" : true
+        },
+        
+        {
+            "type": "SEPARATOR",
+            "name": "separator_partitioning",
+            "label": "Partitioning - optional"
+        },
+        
+        {
+            "name": "PARTITIONING_ACTIVATED",
+            "label" : "Activate partitioning",
+            "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
+            "type": "BOOLEAN",
+            "mandatory" : true,
+            "defaultValue": false
+        },
+        
+        {
+            "name": "PARTITION_DIMENSION_NAME",
+            "label" : "Dimension name",
+            "description": "Mandatory if partitioning is activated, else leave blank",
+            "type": "STRING",
+            "mandatory" : false,
+            "defaultValue": "",
+            "visibilityCondition": "model.PARTITIONING_ACTIVATED"
         },
         
         {
@@ -164,6 +179,10 @@
                 {
                     "value": "impute",
                     "label": "Impute ..."
+                },
+                {
+                    "value": "no",
+                    "label": "Do not replace"
                 }
             ]
  
@@ -221,6 +240,10 @@
                 {
                     "value": "impute",
                     "label": "Impute ..."
+                },
+                {
+                    "value": "no",
+                    "label": "Do not replace"
                 }
             ]
  

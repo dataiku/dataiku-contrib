@@ -14,6 +14,8 @@ for(n in names(config)){
     assign(n, clean_plugin_param(config[[n]]))
 }
 
+check_partition <- check_partitioning_setting_input_output(input_dataset_name, PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+
 plugin_print("Preparation stage starting...")
 
 df <- dkuReadDataset(input_dataset_name,
@@ -21,10 +23,17 @@ df <- dkuReadDataset(input_dataset_name,
                      colClasses = c("character","numeric")) 
 
 # convert to R POSIX date format
-df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], TIMEZONE, format = dku_date_format)
+df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dku_date_format)
 
 # convert to msts time series format
 ts <- msts_conversion(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
+
+# convert df to generic prophet-compatible format
+names(df) <- c('ds','y')
+if(PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic'){
+    df[['floor']] <- PROPHET_MODEL_MINIMUM
+    df[['cap']] <- PROPHET_MODEL_MAXIMUM
+}
 
 plugin_print("Preparation stage completed")
 
@@ -33,12 +42,6 @@ plugin_print("Training stage starting...")
 # Bring all model parameters into a standard named list format for all models
 
 NAIVE_MODEL_KWARGS[["method"]] <- NAIVE_MODEL_METHOD
-
-PROPHET_MODEL_KWARGS[["growth"]] <- PROPHET_MODEL_GROWTH
-if(PROPHET_MODEL_GROWTH == 'logistic') {
-    PROPHET_MODEL_KWARGS[["floor"]] <- PROPHET_MODEL_MINIMUM
-    PROPHET_MODEL_KWARGS[["cap"]] <- PROPHET_MODEL_MAXIMUM
-} 
 
 ARIMA_MODEL_KWARGS[["stepwise"]] <- ARIMA_MODEL_STEPWISE
 
@@ -57,9 +60,9 @@ if(NEURALNETWORK_MODEL_SIZE != -1) {
 } 
 
 model_parameter_list <- list(
-    NAIVE_MODEL = list(model_function = "dkuNaive"),
+    NAIVE_MODEL = list(model_function = "naive_model_wrapper"),
     SEASONALTREND_MODEL = list(model_function = "stlf"),
-    PROPHET_MODEL = list(model_function = "dkuProphet"),
+    PROPHET_MODEL = list(model_function = "prophet_model_wrapper"),
     ARIMA_MODEL = list(model_function = "auto.arima"),
     EXPONENTIALSMOOTHING_MODEL = list(model_function = "ets"), 
     NEURALNETWORK_MODEL = list(model_function = "nnetar"),
@@ -68,38 +71,51 @@ model_parameter_list <- list(
 
 for(model_name in names(model_parameter_list)){
     model_parameter_list[[model_name]][["kwargs"]] <- get(paste0(model_name,"_KWARGS"))
-    if(model_name != "PROPHET_MODEL"){
-        model_parameter_list[[model_name]][["kwargs"]][["biasadj"]] <- BOX_COX_TRANSFORMATION_ACTIVATED
-        if(BOX_COX_TRANSFORMATION_ACTIVATED) model_parameter_list[[model_name]][["kwargs"]][["lambda"]] <- "auto"
-    }
 }
-
-print(model_parameter_list)
 
 # Now launch training of activated models
-model_list <- list()
-for(model_name in names(model_parameter_list)){
-    model_activated <- get(paste0(model_name,"_ACTIVATED"))
-    if(model_activated){
-        plugin_print(paste0(model_name," training starting"))
-        model_list[[model_name]] <- R.utils::doCall(
-            .fcn = model_parameter_list[[model_name]][["model_function"]],
-            y = ts,
-            args = model_parameter_list[[model_name]][["kwargs"]],
-            .ignoreUnusedArgs = TRUE
-        )
-        plugin_print(paste0(model_name," training completed"))
-    }
-}
+model_list <- train_forecasting_models(ts, df, model_parameter_list)
 
 plugin_print("Training stage completed, saving models to output folder")
 
 version_name <- as.character(Sys.time())
-save_forecasting_objects(model_folder_name, PARTITION_DIMENSION_NAME, version_name,
-                         ts, df, model_parameter_list, model_list)
+save_forecasting_objects(
+    folder_name = model_folder_name,
+    partition_dimension_name = PARTITION_DIMENSION_NAME,
+    version_name = version_name, 
+    ts = ts,
+    df = df,
+    model_parameter_list = model_parameter_list,
+    model_list = model_list
+) 
 
 plugin_print("Models, time series and parameters saved to folder")
 
-#plugin_print("Evaluation stage starting")
+plugin_print(paste0("Evaluation stage starting with ", VALIDATION_STRATEGY, " strategy..."))
 
-#plugin_print("Evaluation stage completed, writing results to output dataset")
+if(VALIDATION_STRATEGY == 'split'){
+    train_ts <- head(ts, length(ts) - EVAL_HORIZON)
+    eval_ts <- tail(ts, EVAL_HORIZON)
+    train_df <- head(df, nrow(df) - EVAL_HORIZON)
+    eval_df <- tail(df, EVAL_HORIZON)
+
+    eval_model_list <- train_forecasting_models(
+        train_ts, train_df, model_parameter_list, refit = TRUE, refit_model_list = model_list)
+
+    eval_forecast_df_list <- predict_forecasting_models(
+         train_ts, train_df, eval_model_list, EVAL_HORIZON, GRANULARITY)
+    print(eval_forecast_df_list)
+
+    eval_df <- eval_forecasting_df(eval_forecast_df_list, eval_df)
+    
+} else if(VALIDATION_STRATEGY == 'crossval') {
+    # TODO
+    plugin_print("Not implemented, TODO")
+}
+    
+plugin_print("Evaluation stage completed, saving evaluation results to output dataset")
+
+# Recipe outputs
+write_dataset_with_partitioning_column(eval_df, eval_dataset_name, PARTITION_DIMENSION_NAME, check_partitioning)
+
+plugin_print("All stages completed!")

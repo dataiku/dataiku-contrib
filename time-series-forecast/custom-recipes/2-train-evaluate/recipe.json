@@ -73,15 +73,15 @@
             "mandatory" : true
         },
         
-        
         {
-            "name": "TIMEZONE",
-            "label" : "Timezone",
-            "type": "STRING",
-            "description":"ISO 8601 format",
-            "defaultValue" : "UTC",
+            "name": "SERIES_COLUMN",
+            "label" : "Target series column",
+            "description":"Must be numeric",
+            "type": "COLUMN",
+            "columnRole":"input_dataset",
             "mandatory" : true
         },
+        
         
         {
             "name": "GRANULARITY",
@@ -117,24 +117,30 @@
             "defaultValue": "day"
         },
         
-
         
         {
-            "name": "SERIES_COLUMN",
-            "label" : "Target series column",
-            "description":"Must be numeric",
-            "type": "COLUMN",
-            "columnRole":"input_dataset",
-            "mandatory" : true
+            "type": "SEPARATOR",
+            "name": "separator_partitioning",
+            "label": "Partitioning - optional"
+        },
+        
+        {
+            "name": "PARTITIONING_ACTIVATED",
+            "label" : "Activate partitioning",
+            "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
+            "type": "BOOLEAN",
+            "mandatory" : true,
+            "defaultValue": false
         },
         
         {
             "name": "PARTITION_DIMENSION_NAME",
-            "label" : "Partitioning",
-            "description":"Optional - name of the dimension used for partitioning if activated",
+            "label" : "Dimension name",
+            "description": "Mandatory if partitioning is activated, else leave blank",
             "type": "STRING",
             "mandatory" : false,
-            "defaultValue": ""
+            "defaultValue": "",
+            "visibilityCondition": "model.PARTITIONING_ACTIVATED"
         },
         
         
@@ -160,16 +166,6 @@
                 }
             ],
             "defaultValue": "auto"
-        },
-        
-        {
-            "name": "BOX_COX_TRANSFORMATION_ACTIVATED",
-            "label" : "Box-Cox transformation",
-            "description": "Adjust raw time series with Box-Cox transformation before forecasting",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
-            "mandatory" : true,
-            "visibilityCondition": "model.AUTOML=='expert'"
         },
         
         {
@@ -304,7 +300,7 @@
             "mandatory" : false
         },
         
-                {
+        {
             "type": "SEPARATOR",
             "visibilityCondition": "model.AUTOML=='expert'"
         },
@@ -338,7 +334,7 @@
             "mandatory" : false
         },
         
-                {
+        {
             "type": "SEPARATOR",
             "visibilityCondition": "model.AUTOML=='expert'"
         },
@@ -543,7 +539,7 @@
             "label" : "Train / Test strategy",
             "type": "SELECT",
             "mandatory" : true,
-            "description": "Cross-validation gives error margins on metrics, but strongly increases training time",
+            "description": "Cross-validation is more robust but increases training time",
             "selectChoices": [
                 {
                     "value": "split",
