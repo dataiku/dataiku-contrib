@@ -3,8 +3,8 @@
 library(dataiku)
 library(jsonlite)
 
-plugin_print <- function(message){
-    print(paste("[PLUGIN_LOG]", message))
+plugin_print <- function(message, verbose = TRUE){
+    if(verbose) print(paste("[PLUGIN_LOG]", message))
 }
 
 # This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard
@@ -72,20 +72,16 @@ clean_plugin_param <- function(param){
         for(name in names(param)){
             if(!is.na(as.numeric(param[[name]]))){
                 cleaned_list[[name]] <- as.numeric(param[[name]])
-            }
-            else{
+            } else{
                 if(!is.na(as.logical(param[[name]]))){
                     cleaned_list[[name]] <- as.logical(param[[name]])
-                }
-                else{
+                } else{
                     cleaned_list[[name]] <- as.character(param[[name]])
                 }
-
             }
         }
         return(cleaned_list)
-    }
-    else{
+    } else {
         return(param)
     }
 }
@@ -142,6 +138,7 @@ write_dataset_with_partitioning_column <- function(df, output_dataset_name, part
         plugin_print("Writing partition value as new column")
         partitioning_column_name <- paste0("_dku_partition_", partition_dimension_name)
         df[[partitioning_column_name]] <- dkuFlowVariable(paste0("DKU_DST_", partition_dimension_name))
+        df <- df %>% select(partitioning_column_name, everything())
     }
     dkuWriteDataset(df, output_dataset_name)
 }

@@ -535,8 +535,8 @@
         },
         
         {
-            "name": "VALIDATION_STRATEGY",
-            "label" : "Train / Test strategy",
+            "name": "EVAL_STRATEGY",
+            "label" : "Strategy",
             "type": "SELECT",
             "mandatory" : true,
             "description": "Cross-validation is more robust but increases training time",

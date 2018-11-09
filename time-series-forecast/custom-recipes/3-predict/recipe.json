@@ -3,7 +3,7 @@
     // Meta data for display purposes
     "meta" : {
         "label" : "3. Predict",
-        "description" : "Use previously trained models to predict future values or get historic residuals" ,
+        "description" : "Use previously trained models to predict future values and/or get historic residuals" ,
         "icon" : "icon-signal"
     },
 
@@ -22,7 +22,7 @@
         {
             "name": "model_folder",
             "label": "Saved model folder",
-            "description": "Contains saved models from the \"Train\" recipe",
+            "description": "Contains saved models from the Train and evaluate recipe",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": false,
@@ -32,7 +32,7 @@
         {
             "name": "eval_dataset",
             "label": "Evaluation dataset",
-            "description": "Result dataset from the \"Evaluate\" recipe",
+            "description": "Evaluation dataset from the Train and evaluate recipe",
             "arity": "UNARY",
             "required": false,
             "acceptsDataset": true,
@@ -44,7 +44,7 @@
         {
             "name": "output_dataset",
             "label": "Output dataset",
-            "description": "Will output forecasted values",
+            "description": "Future values and/or historic residuals",
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": true,
@@ -63,17 +63,51 @@
         
         {
             "name": "separator_model_selection",
-            "label": "Selecting which model(s) to use",
+            "label": "Model selection",
             "type": "SEPARATOR"
         },
         
         {
-            "name": "AUTO_MODEL_SELECTION_ACTIVATED",
-			"label" : "Automatic model selection",
-			"description": "Automatically select model according to evaluated performance metrics",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
-			"mandatory" : true
+            "name": "MODEL_SELECTION",
+            "label" : "Mode",
+            "type": "SELECT",
+			"mandatory" : true,
+            "defaultValue" : "auto",
+             "description": "Automatically select model with lowest error, or select manually",
+            "selectChoices": [
+
+				{
+                    "value": "auto",
+                    "label": "Automatic"
+                },
+                {
+                    "value": "manual",
+                    "label": "Manual"
+                }
+            ]
+        },
+        
+        {
+            "name": "ERROR_METRIC",
+            "label" : "Error metric",
+            "type": "SELECT",
+			"mandatory" : false,
+            "defaultValue" : "MAE",
+            "visibilityCondition": "model.MODEL_SELECTION=='auto'",
+            "selectChoices": [
+                {
+                    "value": "MAE",
+                    "label": "Mean Absolute Error"
+                },
+                {
+                    "value": "MAPE",
+                    "label": "Mean Absolute Percentage Error"
+                },
+                {
+                    "value": "RMSE",
+                    "label": "Root Mean Squared Error"
+                }
+            ]
         },
 		
 		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
@@ -82,79 +116,38 @@
             "label" : "Model to use",
             "type": "SELECT",
 			"mandatory" : false,
-            "defaultValue" : "naive",
-            "visibilityCondition": "!model.AUTO_MODEL_SELECTION_ACTIVATED",
+            "defaultValue" : "PROPHET_MODEL",
+            "visibilityCondition": "model.MODEL_SELECTION=='manual'",
             "selectChoices": [
 
 				{
-                    "value": "naive",
-                    "label": "Naive model"
+                    "value": "NAIVE_MODEL",
+                    "label": "Baseline model"
                 },
                 {
-                    "value": "seasonaltrend",
+                    "value": "SEASONALTREND_MODEL",
                     "label": "Seasonal Trend model"
                 },
-				{
-                    "value": "neuralnetwork",
-                    "label": "Neural Network model"
+                {
+                    "value": "PROPHET_MODEL",
+                    "label": "Prophet model"
                 },
-				{
-                    "value": "arima",
+                {
+                    "value": "ARIMA_MODEL",
                     "label": "ARIMA model"
                 },
                 {
-                    "value": "statespace",
-                    "label": "State space model"
-                }
-            ]
-        },
-    
-				
-		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
-        {
-            "name": "METRIC_TO_OPTIMIZE",
-            "label" : "Metric to optimize",
-            "type": "SELECT",
-			"mandatory" : false,
-            "defaultValue" : "MASE",
-            "visibilityCondition": "model.AUTO_MODEL_SELECTION_ACTIVATED",
-            "selectChoices": [
-                {
-                    "value": "RMSE",
-                    "label": "Root Mean Squared Error"
+                    "value": "EXPONENTIALSMOOTHING_MODEL",
+                    "label": "Exponential Smoothing model"
                 },
 				{
-                    "value": "MAE",
-                    "label": "Mean Absolute Error"
+                    "value": "NEURALNETWORK_MODEL",
+                    "label": "Neural Network model"
                 },
-                {
-                    "value": "MAPE",
-                    "label": "Mean Absolute Percentage Error"
-                },
-				{
-                    "value": "MASE",
-                    "label": "Mean Absolute Scaled Error"
-                },
-            ]
-        },
 
-        {
-            "name": "CROSS_VALIDATION_STRATEGY",
-            "label" : "Cross-validation strategy",
-            "description": "Select which cross-validation results to use from \
-                           the previous \"evaluate\" recipe",
-            "type": "SELECT",
-			"mandatory" : false,
-            "defaultValue" : "test",
-            "visibilityCondition": "model.AUTO_MODEL_SELECTION_ACTIVATED",
-            "selectChoices": [
                 {
-                    "value": "test",
-                    "label": "Test set"
-                },
-				{
-                    "value": "multistepforecast",
-                    "label": "Multi-step forecast"
+                    "value": "STATESPACE_MODEL",
+                    "label": "State Space model"
                 }
             ]
         },
@@ -162,44 +155,71 @@
 
         {
             "name": "separator_forecasting",
-            "label": "Generating future values",
+            "label": "Prediction",
             "type": "SEPARATOR"
         },
         
         {
-            "name": "NUMBER_OF_FORECAST_PERIODS",
-            "label" : "Number of periods to forecast",
-            "type": "INT",
-            "mandatory" : true,
-            "defaultValue" : 10
+            "name": "INCLUDE_HISTORY",
+			"label" : "Include history",
+			"description": "Historical values and forecast residuals",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+			"mandatory" : true
         },
         
         {
-            "name": "CONFIDENCE_INTERVAL_LEVEL_1",
-            "label" : "First confidence interval",
-            "type": "INT",
-            "mandatory" : true,
-            "defaultValue" : 80,
-            "description": "in percentage point"
+            "name": "INCLUDE_FORECAST",
+			"label" : "Get forecast",
+			"description": "Forecast from selected model",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+			"mandatory" : true
         },
         
         {
-            "name": "CONFIDENCE_INTERVAL_LEVEL_2",
-            "label" : "Second confidence interval",
+            "name": "FORECAST_HORIZON",
+            "label" : "Horizon",
+            "type": "INT",
+            "mandatory" : true,
+            "defaultValue" : 10,
+            "description": "in number of periods",
+            "visibilityCondition": "model.INCLUDE_FORECAST"
+        },
+        
+        {
+            "name": "CONFIDENCE_INTERVAL",
+            "label" : "Confidence interval",
             "type": "INT",
             "mandatory" : true,
             "defaultValue" : 95,
-            "description": "in percentage point"
+            "description": "%",
+            "visibilityCondition": "model.INCLUDE_FORECAST"
         },
         
         {
-            "name": "CONFIDENCE_LEVEL_BOOTSTRAP_ACTIVATED",
-			"label" : "Bootstrap confidence intervals",
-			"description": "Use statistical bootstrapping to get more robust confidence intervals. \
-                            WARNING: it takes more time to compute.",
+            "type": "SEPARATOR",
+            "name": "separator_partitioning",
+            "label": "Partitioning - optional"
+        },
+        
+        {
+            "name": "PARTITIONING_ACTIVATED",
+            "label" : "Activate partitioning",
+            "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
             "type": "BOOLEAN",
-            "defaultValue" : false,
-			"mandatory" : true
+            "mandatory" : true,
+            "defaultValue": false
+        },
+        
+        {
+            "name": "PARTITION_DIMENSION_NAME",
+            "label" : "Dimension name",
+            "description": "Mandatory if partitioning is activated, else leave blank",
+            "type": "STRING",
+            "mandatory" : false,
+            "defaultValue": "",
+            "visibilityCondition": "model.PARTITIONING_ACTIVATED"
         }
 
         

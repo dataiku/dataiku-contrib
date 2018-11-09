@@ -1,5 +1,10 @@
+########## LIBRARY LOADING ##########
+
 library(dataiku)
 source(file.path(dkuCustomRecipeResource(), "dkuTimeSeriesClean.R"))
+
+
+########## INPUT OUTPUT CONFIGURATION ##########
 
 input_dataset_name = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
 output_dataset_name = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
@@ -9,11 +14,15 @@ print(config)
 for(n in names(config)){
     assign(n, config[[n]])
 }
-        
+     
+# Check that partitioning settings are correct if activated
+check_partition <- check_partitioning_setting_input_output(input_dataset_name, PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+
 selected_columns <- c(TIME_COLUMN, SERIES_COLUMNS)
 column_classes <- c("character", rep("numeric", length(SERIES_COLUMNS)))
 
-check_partition <- check_partitioning_setting_input_output(input_dataset_name, PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+
+########## DATA PREPARATION STAGE ##########
 
 df <- dkuReadDataset(input_dataset_name, columns = selected_columns, colClasses = column_classes) 
 
