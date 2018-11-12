@@ -115,7 +115,7 @@ if distance == "cosine":
     distance_function = cosine
 
 elif distance == "euclidian":
-    distance_function = euclidian
+    distance_function = euclidean
 
 elif distance == "absolute":
     def distance_function(x, y):
