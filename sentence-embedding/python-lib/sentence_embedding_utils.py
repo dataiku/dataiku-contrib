@@ -10,6 +10,7 @@ from collections import Counter, defaultdict
 from sklearn.decomposition import TruncatedSVD
 from gensim.models import KeyedVectors
 from dataiku.customrecipe import *
+import pickle
 
 import string
 maketrans = string.maketrans
@@ -58,7 +59,7 @@ def clean_text(text):
 
     """
 
-    text = text.lower()  # lower text
+    text = str(text).lower()  # lower text
 
     # ignore urls, mails, twitter mentions and hashtags
     for regex in TOKENS_TO_IGNORE:
@@ -220,11 +221,13 @@ class EmbeddingModel():
         if self.origin == "elmo":
             raise NotImplementedError
 
+        #Check if sentence contains at least one token and return None if not
         indices = [self.word2idx[w]
                    for w in sentence.split() if w in self.word2idx]
         embeddings = self.embedding_matrix[indices]
         weights = [weights[w] for w in sentence.split() if w in self.word2idx]
         return [w * e for w, e in zip(weights, embeddings)]
+
 
 
 ###########################################################################
@@ -271,7 +274,7 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
     def weighted_average_embedding(text, weights):
         """Weighted average embedding for computing SIF."""
         embeddings = embedding_model.get_weighted_sentence_word_vectors(
-            text, weights)
+            text, weights)    
         avg_embedding = np.mean(embeddings, axis=0)
         return avg_embedding
 
@@ -279,15 +282,27 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
         """Removes the first PC for computing SIF."""
         svd = TruncatedSVD(n_components=npc, n_iter=7, random_state=0)
         X = np.array(X)
+        logger.info(X.shape)
         svd.fit(X)
         u = svd.components_
         return X - X.dot(u.T).dot(u)
+
+    def contruct_final_res(res,is_void):
+        res_final = []
+        j = 0
+        for v in is_void:
+            if v == 0:
+                res_final.append(res[j])
+                j+=1
+            else:
+                res_final.append(np.nan)
+        return res_final
 
     #####################################################
 
     logger.info("Pre-processing texts...")
     clean_texts = map(clean_text, texts)
-
+    
     # Computing either simple average or weighted average embedding
     method_name = method + "_" + embedding_model.origin
 
@@ -298,6 +313,7 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             res = map(average_embedding, clean_texts)
         else:
             res = elmo_batch_average(clean_texts)
+        res = contruct_final_res(res,is_void)
 
     elif method == 'SIF':
 
@@ -319,8 +335,14 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             res = map(lambda s: weighted_average_embedding(
                 s, word_weights), clean_texts)
 
+            #Remove empty sentences and save their indecies
+            is_void = map(lambda x: 1 if x.shape == () else 0 , res)
+            res = [x for x,y in zip(res,is_void) if y==0]
+
             logger.info("Removing vectors first principal component...")
             res = remove_first_principal_component(res)
+            res = contruct_final_res(res,is_void)
+
         else:
             raise NotImplementedError(
                 "SIF is not implemented for ELMo. Please choose 'Simple Average' instead.")
