@@ -313,7 +313,6 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             res = map(average_embedding, clean_texts)
         else:
             res = elmo_batch_average(clean_texts)
-        res = contruct_final_res(res,is_void)
 
     elif method == 'SIF':
 
