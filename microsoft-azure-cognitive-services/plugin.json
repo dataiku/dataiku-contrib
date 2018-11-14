@@ -1,6 +1,6 @@
 {
     "id" : "azure-cognitive-services",
-    "version" : "0.2.0",
+    "version" : "0.3.0",
     "meta" : {
         "label" : "Azure Cognitive Services",
         "description" : "This Dataiku Plugin leverages the Azure Cognitive Services API to perform various tasks related to text analytics and computer vision.",
