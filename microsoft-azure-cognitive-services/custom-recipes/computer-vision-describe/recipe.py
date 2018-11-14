@@ -18,7 +18,7 @@ OUTPUT_DS_NAME = get_output_names_for_role('output-dataset')[0]
 # Recipe settings
 API_KEY = get_recipe_config()['api-key']
 AZURE_LOCATION = get_recipe_config()['azure-location']
-MAX_CANDIDATES = get_recipe_config()['max-candidates']
+MAX_CANDIDATES = get_recipe_config().get('max-candidates', 1)
 LANGUAGE = get_recipe_config()['language']
 
 
@@ -56,8 +56,8 @@ for file in os.listdir(folder_path):
     # Query options
     options = {}
     options['language'] = LANGUAGE
-    if MAX_CANDIDATES is not None:
-        options['maxCandidates'] = MAX_CANDIDATES
+    if MAX_CANDIDATES > 1:
+        options['maxCandidates'] = int(MAX_CANDIDATES)
         
     # Query data
     extension = file.split(".")[-1].lower()
