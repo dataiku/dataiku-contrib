@@ -1,0 +1,118 @@
+{
+    
+    "meta" : {
+        "label" : "(Text Analytics API) Entities Detection",
+        "description" : "Detect entities in your text using the Azure Cognitive Services API for text analytics",
+        "icon" : "icon-cloud"
+    },
+    
+    "kind" : "PYTHON",
+    
+    "inputRoles" : [
+        {
+            "name": "input-dataset",
+            "label": "Input Dataset",
+            "description": "Dataset containing the data to analyze",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output-dataset",
+            "label": "Output Dataset",
+            "description": "Dataset containing the enriched data from the Azure API",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+
+    "params": [
+        {
+            "label":"Azure Cognitive API Credentials",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "api-key",
+            "label" : "API Key",
+            "type": "STRING",
+            "description":"Enter your Azure Cognitive Services API Key",
+            "mandatory" : true
+        },
+        {
+            "name": "azure-location",
+            "label" : "Azure Location",
+            "type": "SELECT",
+            "selectChoices" : [
+                {"value" : "westeurope", "label" : "West Europe"},                
+                {"value" : "westus", "label" : "West US"},
+                {"value" : "westus2", "label" : "West US 2"},
+                {"value" : "eastus", "label" : "East US"},
+                {"value" : "eastus2", "label" : "East US 2"},
+                {"value" : "westcentralus", "label" : "West Central US"},
+                {"value" : "southcentralus", "label" : "South Central US"},
+                {"value" : "northeurope", "label" : "North Europe"},
+                {"value" : "southeastasia", "label" : "Southeast Asia"},
+                {"value" : "eastasia", "label" : "East Asia"},
+                {"value" : "australiaeast", "label" : "Australia East"},
+                {"value" : "brazilsouth", "label" : "Brazil South"},
+                {"value" : "canadacentral", "label" : "Canada Central"},
+                {"value" : "centralindia", "label" : "Central India"},
+                {"value" : "uksouth", "label" : "UK South"},
+                {"value" : "japaneast", "label" : "Japan East"}
+            ],
+            "defaultValue": "westeurope",
+            "description":"Name of the Azure location for your API Key",
+            "mandatory" : true
+        },
+        {
+            "label":"Query Settings",
+            "type": "SEPARATOR"
+        },
+        {
+            "name": "text-column",
+            "label" : "Text Column",
+            "type": "COLUMN",
+            "columnRole": "input-dataset",
+            "description":"Name of the column storing the text to analyze",
+            "mandatory" : true
+        },
+        {
+            "name": "language-column",
+            "label" : "Language Column",
+            "type": "COLUMN",
+            "columnRole": "input-dataset",
+            "description":"Name of the column storing the language of the text in ISO 639-1 format (optional)",
+            "mandatory" : false
+        },
+        {
+            "name": "output-column",
+            "label" : "Output Column",
+            "type": "STRING",
+            "description":"Name of the column storing the output of the analysis",
+            "mandatory" : true,
+            "defaultValue" : "keyPhrases"
+        },
+        {
+            "name": "batch-size",
+            "label" : "Batch Size",
+            "type": "INT",
+            "defaultValue" : 20,
+            "description":"Number of records to send to the API at a time",
+            "mandatory" : true
+        },
+        {
+            "name": "reading-limit",
+            "label" : "Read Limit",
+            "type": "INT",
+            "defaultValue" : 100,
+            "description":"Limit the number of input records to read (optional, blank for no limit)",
+            "mandatory" : false
+        }
+    ]
+
+}
