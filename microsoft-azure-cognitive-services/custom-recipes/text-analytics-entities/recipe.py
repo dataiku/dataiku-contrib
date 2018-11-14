@@ -10,17 +10,17 @@ from azure_cognitive_services import *
 #==============================================================================
 
 # Input & output dataset
-INPUT_DS_NAME = get_input_names_for_role('input-dataset')[0]
-OUTPUT_DS_NAME = get_output_names_for_role('output-dataset')[0]
+INPUT_DS_NAME   = get_input_names_for_role('input-dataset')[0]
+OUTPUT_DS_NAME  = get_output_names_for_role('output-dataset')[0]
 
 # Recipe settings
-API_KEY = get_recipe_config()['api-key']
-AZURE_LOCATION = get_recipe_config()['azure-location']
-TEXT_COLUMN = get_recipe_config()['text-column']
-LANGUAGE_COLUMN = get_recipe_config()['language-column']
-OUTPUT_COLUMN = get_recipe_config()['output-column']
-BATCH_SIZE = get_recipe_config()['batch-size']
-READING_LIMIT = get_recipe_config()['reading-limit']
+API_KEY         = get_recipe_config().get('api-key', None)
+AZURE_LOCATION  = get_recipe_config().get('azure-location', None)
+TEXT_COLUMN     = get_recipe_config().get('text-column', None)
+LANGUAGE_COLUMN = get_recipe_config().get('language-column', '')
+OUTPUT_COLUMN   = get_recipe_config().get('output-column', 'entities')
+BATCH_SIZE      = get_recipe_config().get('batch-size', None)
+READING_LIMIT   = get_recipe_config().get('reading-limit', None)
 
 
 #==============================================================================
@@ -72,8 +72,8 @@ for group in grouper(BATCH_SIZE, iterator):
         d = {}
         d["id"] = i
         d["text"] = record[TEXT_COLUMN]
-        if LANGUAGE_COLUMN != '':
-            d["language"] = record[LANGUAGE_COLUMN]
+        if len(LANGUAGE_COLUMN) > 0:
+            d["language"] = record[LANGUAGE_COLUMN].strip().lower()
         data["documents"].append(d)
     try:
         r = requests.post(full_url, json=data, headers=headers)
@@ -85,7 +85,7 @@ for group in grouper(BATCH_SIZE, iterator):
     for i, record in enumerate(group):
         o = dict(record)
         try:
-            o[OUTPUT_COLUMN] = json.dumps( r.json()["documents"][i]["keyPhrases"] )
+            o[OUTPUT_COLUMN] = json.dumps( r.json()["documents"][i]["entities"] )
         except:
             o[OUTPUT_COLUMN] = json.dumps( r.json() )
             

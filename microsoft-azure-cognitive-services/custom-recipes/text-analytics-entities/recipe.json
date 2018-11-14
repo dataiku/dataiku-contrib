@@ -95,7 +95,7 @@
             "type": "STRING",
             "description":"Name of the column storing the output of the analysis",
             "mandatory" : true,
-            "defaultValue" : "keyPhrases"
+            "defaultValue" : "entities"
         },
         {
             "name": "batch-size",

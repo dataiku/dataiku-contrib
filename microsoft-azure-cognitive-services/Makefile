@@ -7,4 +7,4 @@ plugin:
 	mkdir dist
 	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json python-lib custom-recipes
 	
-include ../Makefile.inc
+#include ../Makefile.inc
