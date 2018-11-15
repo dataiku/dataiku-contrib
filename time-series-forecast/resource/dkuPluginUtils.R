@@ -22,6 +22,23 @@ map_granularity_seasonality <- list(
     hour = c(8766, 168, 24) # seasonality within year, week, day
 )
 
+trunc_to_granularity_start <- function(date, granularity) {
+    #' Truncate a date to the start of the chosen granularity
+    #'
+    #' @description This function guarantees that date_range_generate works on all granularities.
+    #' This is because the periods of month and quarters may vary across time.
+    
+    tmp_date <- as.POSIXlt(date)
+    output_date <-  switch(granularity,
+        year = as.Date(tmp_date) - tmp_date$yday,
+        quarter = as.Date(zoo::as.yearqtr(tmp_date)),
+        month = as.Date(tmp_date) - tmp_date$mday + 1,
+        week = as.Date(tmp_date) - tmp_date$wday + 1,
+        day = as.Date(tmp_date),
+        hour = as.POSIXct(trunc(tmp_date, "hour")))
+    return(output_date)
+}
+
 msts_conversion <- function(df, time_column, series_column, granularity) {
     #' Converts a univariate time series from R data.frame to forecast::msts multi-seasonal time series format
     #'

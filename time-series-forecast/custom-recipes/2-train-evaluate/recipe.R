@@ -50,6 +50,9 @@ df <- dkuReadDataset(input_dataset_name,
 # convert to R POSIX date format
 df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dku_date_format)
 
+# truncate all dates to the start of the period to avoid errors at later stages
+df[[TIME_COLUMN]] <- trunc_to_granularity_start(df[[TIME_COLUMN]], GRANULARITY)
+
 # convert to msts time series format
 ts <- msts_conversion(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
 
@@ -100,7 +103,8 @@ plugin_print("Models, time series and parameters saved to folder")
 
 plugin_print(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 
-eval_performance_df <- eval_models(ts, df, model_parameter_list, model_list, EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY)
+eval_performance_df <- eval_models(ts, df, model_parameter_list, model_list, EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY) %>%
+    mutate_all(funs(ifelse(is.infinite(.), NA, .)))
 eval_performance_df[["training_date"]] <- strftime(version_name, dku_date_format)
 
     
