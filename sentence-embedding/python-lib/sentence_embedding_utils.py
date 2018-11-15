@@ -377,6 +377,10 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             res = contruct_final_res(res,is_void)
 
         else:
+
+            is_void = map(lambda x: 1 if len(x.strip()) == 0 else 0 , clean_texts)
+            clean_texts = [x for x,y in zip(clean_texts,is_void) if y==0]
+
             batches,batches_sentence_length,weights_batchs = get_elmo_text_batches_sif(clean_texts,word_weights)
 
             logger.info("Computing weighted average embeddings for ELMO...")
@@ -384,8 +388,8 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             res = [item for sublist in res for item in sublist]
 
             #Remove empty sentences and save their indecies
-            is_void = map(lambda x: 1 if x.shape == () else 0 , res)
-            res = [x for x,y in zip(res,is_void) if y==0]
+            #is_void = map(lambda x: 1 if x.shape == () else 0 , res)
+            #res = [x for x,y in zip(res,is_void) if y==0]
 
             logger.info("Removing vectors first principal component...")
             res = remove_first_principal_component(res)
