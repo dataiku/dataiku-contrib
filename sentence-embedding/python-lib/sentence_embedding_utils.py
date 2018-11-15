@@ -15,6 +15,8 @@ import pickle
 import string
 maketrans = string.maketrans
 
+#Counter to monitor ELMO embedding comuputations
+COUNT = 0
 
 ###########################################################################
 # LOGGING CONFIG
@@ -294,20 +296,26 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
 
     def elmo_average_embedding(batch_and_len):
         """Get average word embedding from models like Word2vec, Glove or FastText."""
-        batches = batch_and_len[0]
-        batches_len = batch_and_len[1]
-        embeddings = embedding_model.get_sentence_word_vectors(batches)
+        global COUNT
+        batch = batch_and_len[0]
+        batch_len = batch_and_len[1]
+        embeddings = embedding_model.get_sentence_word_vectors(batch)
         avg_embedding = [np.mean(s_emb[0:batches_len[i]],axis=0) for i,s_emb in enumerate(embeddings)]
+        COUNT = COUNT +1
+        logger.info("Processed {} sentences".format(COUNT*len(batch)))
         return avg_embedding
 
     def elmo_weighted_average_embedding(batch_and_len):
         """Weighted average embedding for computing SIF."""
-        batches = batch_and_len[0]
-        batches_len = batch_and_len[1]
-        weights_batchs = batch_and_len[2]
+        global COUNT
+        batch = batch_and_len[0]
+        batch_len = batch_and_len[1]
+        batch_weights = batch_and_len[2]
         embeddings = embedding_model.get_weighted_sentence_word_vectors(
-            batches, weights_batchs)    
+            batch, batch_weights)    
         avg_embedding = [np.mean([a*np.asarray(b) for a,b in zip(s_emb[0:batches_len[i]],weights_batchs[i])] ,axis=0) for i,s_emb in enumerate(embeddings)]
+        COUNT = COUNT +1
+        logger.info("Processed {} sentences".format(COUNT*len(batch)))
         return avg_embedding
 
     def remove_first_principal_component(X):
@@ -334,7 +342,7 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
 
     logger.info("Pre-processing texts...")
     clean_texts = map(clean_text, texts)
-    
+        
     # Computing either simple average or weighted average embedding
     method_name = method + "_" + embedding_model.origin
 
@@ -386,10 +394,6 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             logger.info("Computing weighted average embeddings for ELMO...")
             res = map(elmo_weighted_average_embedding,zip(batches,batches_sentence_length,weights_batchs))
             res = [item for sublist in res for item in sublist]
-
-            #Remove empty sentences and save their indecies
-            #is_void = map(lambda x: 1 if x.shape == () else 0 , res)
-            #res = [x for x,y in zip(res,is_void) if y==0]
 
             logger.info("Removing vectors first principal component...")
             res = remove_first_principal_component(res)
