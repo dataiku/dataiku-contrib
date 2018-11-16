@@ -106,34 +106,6 @@ sf_schema    = find_best_property_value("schema", params, properties, components
 sf_warehouse = find_best_property_value("warehouse", params, properties, components)
 sf_account   = urlparse.urlparse(jdbc_url).path.replace("snowflake://", "").replace(".snowflakecomputing.com", "")
 
-
-if config["info"]["databaseType"] == "JDBC":
-    jdbc_url = config["info"]["connectionParams"]["jdbcurl"]
-    components = urlparse.parse_qs(urlparse.urlparse(jdbc_url).query)
-    properties = config["info"]["connectionParams"]["properties"]
-    user, password = config["info"]["connectionParams"]["user"], config["info"]["connectionParams"]["password"]
-
-    connection_settings['user'] = user
-    if not connection_settings['user']:
-        user_property = next(prop for prop in properties if prop["name"] == "user")["value"]
-    if not connection_settings['user']:
-        connection_settings['user'] = components["user"][0]
-
-    connection_settings['password'] = password
-    if not connection_settings['password']:
-        user_property = next(prop for prop in properties if prop["name"] == "password")["value"]
-    if not connection_settings['password']:
-        connection_settings['password'] = components["password"][0]
-    
-
-
-sf_user      = components["user"][0]
-sf_password  = components["password"][0]
-sf_database  = components["db"][0]
-sf_schema    = components["schema"][0]
-sf_warehouse = components["warehouse"][0]
-sf_account   = urlparse.urlparse(jdbc_url).path.replace("snowflake://", "").replace(".snowflakecomputing.com", "")
-
 output_table = config["info"]["table"].replace("${projectKey}", project_key)
 
 
