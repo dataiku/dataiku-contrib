@@ -2,9 +2,13 @@
 
 This plugin allows one to get records from a [Airtable](https://airtable.com/) table.
 
-As of November 2017, the API lacks of methods to manage the schema of a table. Hence, this plugin does not offer writing/export to Airtable.
+As of September 2018, the API lacks of methods to manage the schema of a table. Hence, this plugin does not offer writing/export to Airtable. However, you can use the update endpoint of the API to update existing fields.
 
 ## Changelog
+
+**Version 0.1.1 (2018-09-06)**
+
+* Add option to retrieve row ID
 
 **Version 0.1.0 (2017-11-17)**
 

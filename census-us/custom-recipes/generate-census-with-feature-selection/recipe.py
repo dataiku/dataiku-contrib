@@ -198,13 +198,14 @@ if s_found >0:
     
     
     ##debug
-    print '-------------- GEO HEADER -----------------'
+    #print '-------------- GEO HEADER -----------------'
     print geo_header_file_dir
-    print '=='
-    print fdef_dir
-    print geo_header_file
+    #print '=='
+    #print fdef_dir
+    #print geo_header_file
     
     geo_header = pd.read_excel(geo_header_file_dir, sheetname=0, header=0)
+
 
     
     #----------------------------------------- FEATURE SELECTION
@@ -577,7 +578,12 @@ if s_found >0:
     
         
         url_metadata = vint['variables_definitions']
-        metadata_results = census_metadata.get_metadata_sources(url_metadata)
+        
+        if url_metadata.endswith('.json'): 
+            metadata_results = census_metadata.get_metadata_sources_from_api(url_metadata)
+            
+        else:
+            metadata_results = census_metadata.get_metadata_sources(url_metadata)
 
         metadata_status = metadata_results[0]
         df_metadata_source = metadata_results[1]

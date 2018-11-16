@@ -27,6 +27,24 @@
             "type": "STRING",
             "description": "To get your API key, visit your account page",
             "mandatory": true
+        },
+        {
+            "name": "retrieve_id",
+            "label": "Add a column with the row ID?",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "yes",
+                    "label": "Yes"
+                },
+                {
+                    "value": "no",
+                    "label": "No"
+                }
+            ],
+            "defaultValue": "no",
+            "description": "Usefull when calling the Airtable API",
+            "mandatory": false
         }
     ]
 }

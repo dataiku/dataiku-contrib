@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.1.0
+PLUGIN_VERSION=0.1.1
 PLUGIN_ID=airtable
 
 all:

@@ -1,5 +1,0 @@
-{
-  "python" : [
-    {"name":"networkx", "version":">=1.9.1"}
-  ]
-}

@@ -58,7 +58,7 @@ def write_outputs(
         print "Writing metdata: %s" % df_metadata
         df_metadata = df_metadata.reset_index()
         df_metadata = df_metadata.drop('index',axis=1)
-        df_metadata = df_metadata.drop_duplicates(take_last=True)
+        df_metadata = df_metadata.drop_duplicates(keep='last') ###Old : take_last=True)
         metadata_dataset.write_with_schema(df_metadata)
 
     if geometry_dataset is not None:

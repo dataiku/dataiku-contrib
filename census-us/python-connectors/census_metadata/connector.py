@@ -48,7 +48,11 @@ class USCensusConnector(Connector):
         vint = census_resources.dict_vintage_[P_CENSUS_TYPE][self.P_CENSUS_CONTENT]
         url_metadata = vint['variables_definitions']
         
-        m = census_metadata.get_metadata_sources(url_metadata)
+        if url_metadata.endswith('.json'): 
+            m = census_metadata.get_metadata_sources_from_api(url_metadata)
+            
+        else:
+            m = census_metadata.get_metadata_sources(url_metadata)
         
         status = m[0]
         

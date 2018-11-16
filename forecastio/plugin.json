@@ -1,9 +1,9 @@
 {
 	"id" : "forecastio",
-	"version" : "0.1.0",
+	"version" : "0.2.0",
 	"meta" : {
-		"label" : "Forecast.io",
-		"description" : "Connect to Forecast.io API and get weather data.",
+		"label" : "Dark Sky (previously Forecast.io)",
+		"description" : "Connect to Dark Sky API and get weather forecasts.",
 		"author" : "Dataiku (Jérémy Grèze)",
 		"icon" : "icon-cloud",
 		"licenseInfo" : "Apache Software License version 2",

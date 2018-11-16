@@ -109,7 +109,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
 
     # Make a separate query for each country in the chunk
     # defining the country is mandatory to match the right datacollections. Each country has a specific set of datacollections and fields
-    for c in {k: list(v) for k,v in df.sort([P_COLUMN_COUNTRY],ascending=[1]).groupby(P_COLUMN_COUNTRY)[P_COLUMN_OBJECT_ID]}:
+    for c in {k: list(v) for k,v in df.sort_values([P_COLUMN_COUNTRY],ascending=[1]).groupby(P_COLUMN_COUNTRY)[P_COLUMN_OBJECT_ID]}:
         print 'Processing this country: %s' % (c)
         try:
             isocode2 = dict_esri_coverage_structure[c]['attributes'][u'isocode2']

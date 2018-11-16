@@ -1,54 +1,55 @@
 {
-    "meta" : {
-        "label" : "Forecast.io history",
-        "description" : "Get daily historical weather data for a specific location from Forecast.io API."
+    "meta": {
+        "label": "Dark Sky weather data",
+        "description": "Get past and future weather conditions data for anywhere on the globe."
     },
 
-    "readable" : true,
-    "writable" : false,
+    "readable": true,
+    "writable": false,
 
     "params": [
         {
             "name": "api_key",
-            "label": "Forecast.io API key",
+            "label": "Dark Sky API key",
             "type": "STRING",
             "description": "",
-            "mandatory" : true
+            "mandatory": true
         },
         {
             "name": "latitude",
             "label": "Latitude of the target location",
             "type": "DOUBLE",
             "description": "",
-            "mandatory" : true
+            "mandatory": true
         },
         {
             "name": "longitude",
             "label": "Longitude of the target location",
             "type": "DOUBLE",
             "description": "",
-            "mandatory" : true
+            "mandatory": true
         },
         {
             "name": "from_date",
             "label": "Starting date",
             "type": "STRING",
             "description": "YYYY-MM-DD format",
-            "mandatory" : true
+            "mandatory": true
         },
         {
             "name": "to_date",
             "label": "End date",
             "type": "STRING",
             "description": "YYYY-MM-DD format",
-            "mandatory" : true
+            "mandatory": true
         },
         {
             "name": "cache_folder",
             "label": "Cache folder",
             "type": "STRING",
             "defaultValue": "${dip.home}/tmp/forecastio",
-            "description": "To store files between runs"
+            "description": "Store historical weather conditions between runs to save API calls. If empty, no cache.",
+            "mandatory": false
         },
         {
             "name": "api_limit",

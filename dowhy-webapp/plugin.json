@@ -1,0 +1,17 @@
+
+{
+  
+    "id" : "causal",
+    "version" : "0.0.1",
+
+    "meta" : {
+
+        "label" : "Plugin Causal Inference",
+        "description" : "this plugin is a web app to design causal models and estimate causal effects",
+        "author" : "Jean-Yves Gerardy",
+        "icon" : "icon-puzzle-piece",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com",
+        "tags" : ["causal inference", "do-calculus", "causal graphs"]
+    }
+}

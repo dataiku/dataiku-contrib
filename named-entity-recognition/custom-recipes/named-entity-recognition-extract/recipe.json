@@ -1,0 +1,121 @@
+{
+    "meta" : {
+        "label" : "Extract Named Entities",
+        "description" : "Extract named entities from your texts using one of two available frameworks: SpaCy (default) or Flair (slower but more accurate).",
+        "icon" : "icon-search"        
+    },
+
+    "kind" : "PYTHON",
+
+    "selectableFromDataset": "input_dataset",
+    
+    "inputRoles" : [
+        {
+            "name": "input_dataset",
+            "label": "Input dataset",
+            "description": "The dataset that contains your texts.",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "model_folder",
+            "label": "Model folder",
+            "description": "A managed folder for saving the NER model (only required if using Flair).",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsManagedFolder": true,
+            "acceptsDataset": false
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output dataset",
+            "description": "A dataset with the input texts and their corresponding entities.",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    
+    
+    "params": [
+        {
+            "name": "text_column_name",
+            "label" : "Text column",
+            "type": "COLUMN",
+            "description": "Select a column to extract named entities.",
+            "mandatory" : true,
+            "columnRole":"input_dataset"
+        },
+        {
+            "visibilityCondition": "model.ner_model=='spacy'",
+            "name": "text_language_spacy",
+            "label" : "Text language",
+            "type": "SELECT",
+            "description": "Select the language of your texts.",
+            "selectChoices": [
+                {
+                    "value": "en",
+                    "label": "English"
+                },
+                {
+                    "value": "fr",
+                    "label": "French"
+                }
+            ], 
+            "defaultValue" : "en"
+        },        
+        {
+            "visibilityCondition": "model.ner_model=='flair'",
+            "name": "text_language_flair",
+            "label" : "Text language",
+            "type": "SELECT",
+            "description": "Select the language of your texts.",
+            "selectChoices": [
+                {
+                    "value": "en",
+                    "label": "English"
+                }
+            ], 
+            "defaultValue" : "en"
+        },        
+        {
+            "name": "advanced_settings",
+            "label" : "Advanced Settings",
+            "type": "BOOLEAN",
+            "description": "Tick this box to set some advanced settings (model & output format)",
+            "defaultValue" : false
+        },
+
+        {
+            "visibilityCondition": "model.advanced_settings",
+            "name": "output_single_json",
+            "label" : "Output JSON",
+            "type": "BOOLEAN",
+            "description": "Tick this box to output a single JSON with all the entities instead of separate columns.",
+            "defaultValue" : false
+        },
+        {
+            "visibilityCondition": "model.advanced_settings",
+            "name": "ner_model",
+            "label" : "Model",
+            "type": "SELECT",
+            "description": "Choose either SpaCy (more languages, faster, less accurate) of Flair (only english, slow, more accurate).",
+            "selectChoices": [
+                {
+                    "value": "spacy",
+                    "label": "SpaCy"
+                },
+                {
+                    "value": "flair",
+                    "label": "Flair"
+                }
+            ], 
+            "defaultValue" : "spacy"
+        }
+    ]
+}

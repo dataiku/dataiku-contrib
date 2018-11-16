@@ -1,0 +1,5 @@
+// This file is the descriptor for the Standard Web App Template named-entity-recognition_named-entity-recognition-webapp
+{
+    "libraries" : [],
+    "label" : "A webapp for testing SpaCy NER model"
+}

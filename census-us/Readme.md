@@ -1,6 +1,9 @@
-HOW TO USE IT :
+# HOW TO USE IT :
 
-0/ INTRO
+### This plugins requires to perform some actions in the data_dir/tmp using the Python os library. If this is not allowed the plugin won't work.
+### Please, create a code-env for this plugin this will keep your libraries up to date.
+
+## 0/ INTRO
 The plugin is building the US Census from raw data.
 
 The US Census data are available here with all the details. http://www.census.gov/. All the sources are downloaded from the US Census server and API. 
@@ -15,14 +18,14 @@ For keeping the sources and reuse it (beware of any US Census update...):
 1> Uncheck the deletion option, build.
 2> At the next build (of the same or another task) , check: "use previous sources".
 
-1/ US CENSUS CUSTOM DATASET:
+## 1/ US CENSUS CUSTOM DATASET:
 Enter your states in lower case separated by a comma with no space.
 Define the level required (TRACT, COUNTY, BLOCK_GROUP)
 Enter manually the Census fields you would get (ex: B00001_001E,B08534_001E). Here is the total catalog : http://api.census.gov/data/2014/acs5/variables.html 
 - For a more agnostic selection, please us the "US Census feature selection recipe".
 
 
-2/ BUILD CENSUS WITH FEATURE SELECTION:
+## 2/ BUILD CENSUS WITH FEATURE SELECTION:
 Important: 
 1/the feature selection is done state by state and not for all the states submited at the same time. 
 If a feature is selected for one state, it's for all the states.
@@ -36,7 +39,7 @@ Imputation:
 - imputation is only done for feature selection, all the output data are row data.
 
 
-3/ US CENSUS CUSTOM DATASETS 
+## 3/ US CENSUS CUSTOM DATASETS 
 
 a/STATES RESOURCES:
 - show what the exact US Census state format
@@ -62,13 +65,20 @@ https://censusreporter.org/data/table/?table=B00001&geo_ids=05000US10001,150|050
 > Dimensions must be Exactly the same, any doubt download the data from census reporter and check in excel (better...)
 
 
-Requirements note:
-This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
+## Requirements/recommendations/important note:
+
 => ! Try it on a neutral environment [dev, sandbox] before any deployment in production !
+=> This plugin might not work in Multi User Security environment since it requires the Plugin to access the data_dir and uses Python system libraries.
+
+It's highly recommended to enable the code-env provided with the plugin
+
+Otherwise, without code-envs:
+This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
+
 - idna<2.6,>=2.5
 - cryptography>=1.3.4
 - pyopenssl>=0.14
 => These dependencies can be tricky to install on Mac OS and only due to pip, not the plugin. Mind: Mac OS not officially supported by Dataiku : https://doc.dataiku.com/dss/latest/installation/index.html
 
-
+=> Please check your the results generated with the resources provided or by yourself. The plugin is delivered as-is and usage and outputs under your responsability.
 

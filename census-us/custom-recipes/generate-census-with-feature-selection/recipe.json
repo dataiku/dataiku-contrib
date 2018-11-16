@@ -75,20 +75,20 @@
            "label" : "State format:",
            "type": "SELECT",
            "description":"2letters: ca, 2Digits: 06, Fullname:California",
-           "defaultValue": "state_2letters",
+           "defaultValue": 'state_2letters',
            "mandatory" : true,
            "selectChoices": [
                  {
-                    "value": "state_2letters",
-                    "label": "state_2letters"
+                    "value": 'state_2letters',
+                    "label": 'state_2letters'
                 },
                 {
-                    "value": "state_2digits",
-                    "label": "state 2 digits code"
+                    "value": 'state_2digits',
+                    "label": 'state 2 digits code'
                 },
                 {
-                    "value": "state_fullname_w1",
-                    "label": "state fullname (census)"
+                    "value": 'state_fullname_w1',
+                    "label": 'state fullname (census)'
                 }
             ]
         },
@@ -111,17 +111,21 @@
            "type": "SELECT",
            "mandatory" : true,
            "selectChoices": [
-                {
-                    "value": "ACS5Y2015",
-                    "label": "ACS5Y2015"
+               {
+                    "value": 'ACS5Y2016',
+                    "label": 'ACS5Y2016'
                 },
                 {
-                    "value": "ACS5Y2014",
-                    "label": "ACS5Y2014"
+                    "value": 'ACS5Y2015',
+                    "label": 'ACS5Y2015'
                 },
                 {
-                    "value": "ACS5Y2013",
-                    "label": "ACS5Y2013"
+                    "value": 'ACS5Y2014',
+                    "label": 'ACS5Y2014'
+                },
+                {
+                    "value": 'ACS5Y2013',
+                    "label": 'ACS5Y2013'
                 }
             ]
         },
@@ -129,20 +133,20 @@
            "name": "param_census_level",
            "label" : "Census Level:",
            "type": "SELECT",
-           "defaultValue": "TRACT",
+           "defaultValue": 'TRACT',
            "mandatory" : true,
            "selectChoices": [
                 {
-                    "value": "COUNTY",
-                    "label": "COUNTY"
+                    "value": 'COUNTY',
+                    "label": 'COUNTY'
                 },
                 {
-                    "value": "TRACT",
-                    "label": "TRACT"
+                    "value": 'TRACT',
+                    "label": 'TRACT'
                 },
                 {
-                    "value": "BLOCK_GROUP",
-                    "label": "BLOCK_GROUP"
+                    "value": 'BLOCK_GROUP',
+                    "label": 'BLOCK_GROUP'
                 }
             ]
         },
@@ -168,16 +172,16 @@
            "mandatory" : true,
            "selectChoices": [
                 {
-                    "value": "REGRESSION - f_regression",
-                    "label": "REGRESSION - f_regression"
+                    "value": 'REGRESSION - f_regression',
+                    "label": 'REGRESSION - f_regression'
                 },
                 {
-                    "value": "CLASSIFICATION - f_classif",
-                    "label": "CLASSIFICATION - f_classif"
+                    "value": 'CLASSIFICATION - f_classif',
+                    "label": 'CLASSIFICATION - f_classif'
                 },
                 {
-                    "value": "CLASSIFICATION - chi2",
-                    "label": "CLASSIFICATION - chi2"
+                    "value": 'CLASSIFICATION - chi2',
+                    "label": 'CLASSIFICATION - chi2'
                 }
             ]
         },
@@ -215,29 +219,29 @@
            "name": "param_impute_strategy",
            "label" : "Replace missing value with:",
            "type": "SELECT",
-           "defaultValue": "No",
+           "defaultValue": 'No',
            "description":"Only for feature selection, raw data won't be modified",
            "mandatory" : true,
            "selectChoices": [
                 {
-                    "value": "No",
-                    "label": "No imputation"
+                    "value": 'No',
+                    "label": 'No imputation'
                 },
                 {
-                    "value": "dropna",
-                    "label": "Drop"
+                    "value": 'dropna',
+                    "label": 'Drop'
                 },
                 {
-                    "value": "average",
-                    "label": "Average"
+                    "value": 'average',
+                    "label": 'Average'
                 },
                 {
-                    "value": "median",
-                    "label": "Median"
+                    "value": 'median',
+                    "label": 'Median'
                 },
                 {
-                    "value": "mode",
-                    "label": "Mode"
+                    "value": 'mode',
+                    "label": 'Mode'
                 }
             ]
         },

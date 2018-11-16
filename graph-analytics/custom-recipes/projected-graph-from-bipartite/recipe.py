@@ -48,7 +48,7 @@ print "[+] Created projected graph..."
 
 
 # Outputting the corresponding data frame
-d = pd.DataFrame(graph.edges())
+d = pd.DataFrame(list(graph.edges()))
 d.columns = [CREATE_GRAPH_OF + '__1', CREATE_GRAPH_OF + '__2']
 
 

@@ -1,0 +1,21 @@
+{
+    "id" : "sentence-embedding",
+
+    "version" : "1.0.0",
+
+    "meta" : {
+    
+        "label" : "Sentence Embedding",
+
+        "description" : "This plugin provides tools to compute sentence embeddings (numerical text representations). To use this plugin you should start by downloading pre-trained word embeddings using the provided macro. Then, you can use the recipe below to score your texts using one of the available aggregation methods.",
+        "author" : "Dataiku (Hicham EL BOUKKOURI)",
+
+        "icon" : "icon-table",
+
+        "licenseInfo" : "Apache Software License",
+
+        "url" : "https://www.dataiku.com",
+
+        "tags" : ["NLP", "Feature Extraction"]
+    }
+}
