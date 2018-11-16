@@ -557,11 +557,11 @@
         {
             "name": "CROSSVAL_INITIAL",
             "label" : "Initial training",
-            "description": "Number of periods in the initial train set. If -1 or not provided, 3 * horizon is used.",
+            "description": "Number of periods in the initial train set. If -1 or not provided, 10 * horizon is used.",
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : -1,
-            "visibilityCondition": "model.VALIDATION_STRATEGY =='crossval'"
+            "visibilityCondition": "model.EVAL_STRATEGY =='crossval'"
         },
         
         {
@@ -571,7 +571,7 @@
             "type": "INT",
             "mandatory" : false,
             "defaultValue" : -1,
-            "visibilityCondition": "model.VALIDATION_STRATEGY =='crossval'"
+            "visibilityCondition": "model.EVAL_STRATEGY =='crossval'"
         }
         
 

@@ -67,6 +67,7 @@ train_forecasting_models <- function(ts, df, model_parameter_list, refit=FALSE, 
         if(model_name == "PROPHET_MODEL"){
             model_parameters[["kwargs"]][["df"]] <- df
         }
+
         plugin_print(paste0(model_name," training starting"), verbose)
         start_time = Sys.time()
         model_list[[model_name]] <- R.utils::doCall(

@@ -103,8 +103,10 @@ plugin_print("Models, time series and parameters saved to folder")
 
 plugin_print(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 
-eval_performance_df <- eval_models(ts, df, model_parameter_list, model_list, EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY) %>%
-    mutate_all(funs(ifelse(is.infinite(.), NA, .)))
+eval_performance_df <- eval_models(
+    ts, df, model_list, model_parameter_list, 
+    EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_PERIOD, CROSSVAL_INITIAL) %>%
+        mutate_all(funs(ifelse(is.infinite(.), NA, .)))
 eval_performance_df[["training_date"]] <- strftime(version_name, dku_date_format)
 
     
