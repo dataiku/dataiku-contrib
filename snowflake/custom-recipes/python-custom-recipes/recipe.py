@@ -85,9 +85,9 @@ connection_settings = {}
 def find_best_property_value(key, connectionParams, connectionProperties, urlComponents):
     if key in connectionParams and connectionParams[key]:
         return connectionParams[key]
-    propertyKv = next(prop for prop in connectionProperties if prop["name"] == key)
-    if propertyKv and propertyKv["value"]:
-        return propertyKv["value"]
+    for prop in connectionProperties:
+        if prop["name"] == key and prop["value"]:
+            return prop["value"]
     if key in urlComponents and urlComponents[key][0]:
         return urlComponents[key][0]
     return None
