@@ -25,7 +25,7 @@ The Plugin allows DSS to create new Snowflake tables and to perform a fast bulkl
  
 ## Prerequisites
 
-* [Snowflake (JDBC) Connection](https://doc.dataiku.com/dss/latest/connecting/sql/snowflake.html) set up in DSS
+* [Snowflake Connection](https://doc.dataiku.com/dss/latest/connecting/sql/snowflake.html) set up in DSS (either as a generic JDBC connection or as a Snowflake connection)
 * [Amazon S3 Connection](https://doc.dataiku.com/dss/latest/connecting/s3.html) set up in DSS
 * the corresponding AWS credentials for the S3 buckets (AWS Access Key and AWS Secret Key)
 
@@ -44,7 +44,7 @@ Finally, the Plugin has been tested with Python 3.6 and requires a valid Python 
 
 In order to use the Plugin:
 
-* Defined a DSS S3 Dataset
+* Define a DSS S3 Dataset
 * Add the Plugin to your Flow
 * Set the S3 Dataset as Input of the Plugin (mandatory - only S3 is supported)
 * Assign a name for the output Dataset, stored in your Snowflake Connection
