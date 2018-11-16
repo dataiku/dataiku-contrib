@@ -79,8 +79,53 @@ skip_rows = config["formatParams"]["skipRowsBeforeHeader"]
 config = out.get_location_info(sensitive_info=True)
 
 # Snowflake credentials & output table
-jdbc_url = config["info"]["connectionParams"]["jdbcurl"]
+
+connection_settings = {}
+
+def find_best_property_value(key, connectionParams, connectionProperties, urlComponents):
+    if key in connectionParams and connectionParams[key]:
+        return connectionParams[key]
+    propertyKv = next(prop for prop in connectionProperties if prop["name"] == key)
+    if propertyKv and propertyKv["value"]:
+        return propertyKv["value"]
+    if key in urlComponents and urlComponents[key][0]:
+        return urlComponents[key][0]
+    return None
+    
+jdbc_url = config["info"]["connectionParams"]["jdbcurl"] if "jdbcurl" in config["info"]["connectionParams"] else None
+if not jdbc_url and "url" in config["info"]["connectionParams"]:
+    jdbc_url = config["info"]["connectionParams"]["url"]
 components = urlparse.parse_qs(urlparse.urlparse(jdbc_url).query)
+properties = config["info"]["connectionParams"]["properties"]
+params = config["info"]["connectionParams"]
+
+sf_user      = find_best_property_value("user", params, properties, components)
+sf_password  = find_best_property_value("password", params, properties, components)
+sf_database  = find_best_property_value("db", params, properties, components)
+sf_schema    = find_best_property_value("schema", params, properties, components)
+sf_warehouse = find_best_property_value("warehouse", params, properties, components)
+sf_account   = urlparse.urlparse(jdbc_url).path.replace("snowflake://", "").replace(".snowflakecomputing.com", "")
+
+
+if config["info"]["databaseType"] == "JDBC":
+    jdbc_url = config["info"]["connectionParams"]["jdbcurl"]
+    components = urlparse.parse_qs(urlparse.urlparse(jdbc_url).query)
+    properties = config["info"]["connectionParams"]["properties"]
+    user, password = config["info"]["connectionParams"]["user"], config["info"]["connectionParams"]["password"]
+
+    connection_settings['user'] = user
+    if not connection_settings['user']:
+        user_property = next(prop for prop in properties if prop["name"] == "user")["value"]
+    if not connection_settings['user']:
+        connection_settings['user'] = components["user"][0]
+
+    connection_settings['password'] = password
+    if not connection_settings['password']:
+        user_property = next(prop for prop in properties if prop["name"] == "password")["value"]
+    if not connection_settings['password']:
+        connection_settings['password'] = components["password"][0]
+    
+
 
 sf_user      = components["user"][0]
 sf_password  = components["password"][0]
