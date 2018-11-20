@@ -1,5 +1,3 @@
-# WORK IN PROGRESS NOT READY!
-
 ########## LIBRARY LOADING ##########
 
 library(dataiku)
@@ -77,6 +75,9 @@ df_output[["selected_model"]] <- SELECTED_MODEL
 
 # converts the date from POSIX to a character following dataiku date format in ISO 8601 standard
 df_output[[TIME_COLUMN]] <- strftime(df_output[[TIME_COLUMN]] , dku_date_format)
+
+# removes the unnecessary floor and cap columns from prophet model if they exist
+df_output <- df_output %>% select(-one_of(c("floor", "cap")))
 
 # Recipe outputs
 write_dataset_with_partitioning_column(df_output, output_dataset_name, PARTITION_DIMENSION_NAME, check_partitioning)

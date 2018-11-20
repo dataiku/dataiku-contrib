@@ -69,6 +69,68 @@ crossval_performance_metrics <- function(df, metrics = c("ME", "RMSE", "MAE", "M
     return(stats::na.omit(df_m))
 }
 
+generate_cutoffs_date <- function(df, horizon, initial, period, granularity) {
+    
+    units <- paste0(granularity, "s")
+    plugin_print(paste0("Cross-validation initial train set at ", initial, " ", units))
+    plugin_print(paste0("Cross-validation cutoff period set at ", period, " ", units))
+    
+    error_msg_too_long <- paste("Less data than horizon after initial window.", 
+        "Make horizon or initial shorter.")
+    
+    if(granularity %in% c("hour", "day", "week")){
+        # Taken from the prophet:::generate_cutoffs function
+        horizon.dt <- as.difftime(horizon, units = units)
+        initial.dt <- as.difftime(initial, units = units)
+        period.dt <- as.difftime(period, units = units)
+        cutoff <- max(df$ds) - horizon.dt
+        result <- c(cutoff)
+        while (result[length(result)] >= min(df$ds) + initial.dt) {
+            cutoff <- cutoff - period.dt
+            if (!any((df$ds > cutoff) & (df$ds <= cutoff + horizon.dt))) {
+                closest.date <- max(df$ds[df$ds <= cutoff])
+                cutoff <- closest.date - horizon.dt
+            }
+            result <- c(result, cutoff)
+        }
+    } 
+    else {
+        # difftime does not work with monthly, quarterly or yearly data
+        # assumes that input data is regularly sampled (checks are implemented earlier)
+        if(initial + horizon > nrow(df)) {
+            stop(error_msg_too_long)
+        }
+        dates <- sort(df$ds)
+        cutoff_index <- length(dates) - horizon
+        cutoff <- dates[cutoff_index]
+        result <- c(cutoff)
+        while(result[length(result)] >= dates[initial+1]) {
+            cutoff_index <- cutoff_index - period
+            cutoff <- dates[cutoff_index]
+            if(cutoff_index <= 1) {
+                result <- c(result, NA)
+                break
+            }
+            if(!any((dates > cutoff) & (dates <= dates[cutoff_index + horizon]))) {
+                cutoff <- dates[cutoff_index - horizon] 
+            }
+            result <- c(result, cutoff)
+        }
+    }
+    
+    result <- utils::head(result, -1)
+
+    if (length(result) == 0) {
+        stop(error_msg_too_long)
+    }
+    
+    plugin_print(paste("Making", length(result), "forecasts with cutoffs between", 
+        result[length(result)], "and", result[1]))
+
+    cutoffs <- rev(result)
+    return(cutoffs)
+}
+
 eval_forecasting_df_crossval <- function(ts, df, model_list, model_parameter_list,
                                         horizon, granularity, period = NULL, initial = NULL) {
     if(is.null(period)) {
@@ -78,15 +140,7 @@ eval_forecasting_df_crossval <- function(ts, df, model_list, model_parameter_lis
         initial <- 10 * horizon
     }
     
-    units <- paste0(granularity, "s")
-    
-    plugin_print(paste0("Cross-validation initial train set at ", initial, " ", units))
-    plugin_print(paste0("Cross-validation cutoff set at ", period, " ", units))
-    
-    horizon.dt <- as.difftime(horizon, units = units)
-    initial.dt <- as.difftime(initial, units = units)
-    period.dt <- as.difftime(period, units = units)
-    cutoffs <- prophet:::generate_cutoffs(df, horizon.dt, initial.dt, period.dt)
+    cutoffs <- generate_cutoffs_date(df, horizon, initial, period, granularity)
     
     crossval_df_list <- list()
     for(model_name in names(model_list)){
@@ -101,10 +155,10 @@ eval_forecasting_df_crossval <- function(ts, df, model_list, model_parameter_lis
             stop('Less than two datapoints before cutoff. Increase initial window.')
         }
         history.ts <- head(ts, nrow(history.c))
-        plugin_print(paste0("Training cross-validation fold ", i ,"/", length(cutoffs), " for cutoff ", cutoffs[i], 
+        plugin_print(paste0("Training cross-validation step ", i ,"/", length(cutoffs), " for cutoff ", cutoffs[i], 
                             ", with ", length(history.ts), " rows in the train set"))
         
-        df.predict <- dplyr::filter(df, ds > cutoff, ds <= cutoff + horizon.dt)
+        df.predict <- head(dplyr::filter(df, ds > cutoff), horizon)
         
         eval_model_list <- train_forecasting_models(
             history.ts, history.c, model_parameter_list,
@@ -158,16 +212,11 @@ eval_models <- function(ts, df, model_list, model_parameter_list, eval_strategy,
         eval_performance_df <- eval_forecasting_df_split(eval_forecast_df_list, eval_df)
 
     } else if(eval_strategy == 'crossval') {
-        if(granularity %in% c("year", "quarter", "month")) {
-            stop(paste0("Granularity by ", GRANULARITY,
-                " is not supported by the cross-validation strategy. ",
-                "Please choose split strategy or change data to week/day/hour granularity."))
-        }
         eval_performance_df <- eval_forecasting_df_crossval(ts, df, model_list, model_parameter_list,
                                         eval_horizon, granularity, period, initial) 
     }
     eval_performance_df[["evaluation_horizon"]] <- as.integer(eval_horizon)
-    eval_performance_df[["evaluation_period"]] <- paste0(granularity,"s")
+    eval_performance_df[["evaluation_period"]] <- ifelse(eval_horizon==1, granularity, paste0(granularity,"s"))
     eval_performance_df[["evaluation_strategy"]] <- eval_strategy
     return(eval_performance_df)
 }

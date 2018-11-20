@@ -2,4 +2,5 @@
 *.pyc
 .DS_Store
 state.json
-time-series-forecast/custom-recipes/0-clean/.Rhistory
+*.Rhistory
+*.RData

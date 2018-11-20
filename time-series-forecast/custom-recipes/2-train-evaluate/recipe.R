@@ -53,6 +53,11 @@ df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dku_date_format)
 # truncate all dates to the start of the period to avoid errors at later stages
 df[[TIME_COLUMN]] <- trunc_to_granularity_start(df[[TIME_COLUMN]], GRANULARITY)
 
+date_range <- seq(min(df[[TIME_COLUMN]]), max(df[[TIME_COLUMN]]), by = GRANULARITY)
+if(length(date_range) != nrow(df)) {
+    stop(paste0("Data must be sampled at regular ", GRANULARITY, "ly granularity"))
+}
+
 # convert to msts time series format
 ts <- msts_conversion(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
 

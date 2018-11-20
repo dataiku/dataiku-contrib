@@ -162,7 +162,7 @@
         {
             "name": "INCLUDE_HISTORY",
 			"label" : "Include history",
-			"description": "Historical values and forecast residuals",
+			"description": "Historical values and residuals (historical value - one-step forecast)",
             "type": "BOOLEAN",
             "defaultValue" : true,
 			"mandatory" : true

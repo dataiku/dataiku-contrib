@@ -4,7 +4,7 @@ library(dataiku)
 library(jsonlite)
 
 plugin_print <- function(message, verbose = TRUE){
-    if(verbose) print(paste("[PLUGIN_LOG]", message))
+    if(verbose) message(paste("[PLUGIN_LOG]", message))
 }
 
 # This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard
@@ -21,6 +21,23 @@ map_granularity_seasonality <- list(
     day = c(365.25, 7), # seasonality within year, week
     hour = c(8766, 168, 24) # seasonality within year, week, day
 )
+
+date_range_generate <- function(df, time_column, granularity) {
+    #' Resample a univariate time series data.frame to a continuous date range at the chosen granularity
+    #'
+    #' @description First it generates the continuous date range.
+    #' Then it joins the original time series back to the date range.
+    #'
+    #' @details The expected structure for the input time series data.frame is to have two columns:
+    #' "time_column" of date or POSIX type 
+    #' "series_column" of numeric type
+    
+    min_date <- min(df[[time_column]])
+    max_date <- max(df[[time_column]])
+    all_times <- tibble(!!time_column := seq(min_date, max_date, by = granularity))
+    df_all_times <- merge(all_times, df, by = time_column, all.x = TRUE)
+    return(df_all_times)
+}
 
 trunc_to_granularity_start <- function(date, granularity) {
     #' Truncate a date to the start of the chosen granularity

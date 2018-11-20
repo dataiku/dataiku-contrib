@@ -56,9 +56,11 @@ predict_forecasting_models <- function(ts, df, model_list, model_parameter_list,
                         args = model_parameter_list[[model_name]][["kwargs"]],
                         .ignoreUnusedArgs = FALSE
                 )
+            } else if(model_name == "NEURALNETWORK_MODEL") {
+                f <- forecast(model, h = horizon, level = c(confidence_interval), PI = TRUE)
             } else {
                 model$h <- horizon
-                f <- forecast(ts, model=model, h = horizon, level = c(confidence_interval))
+                f <- forecast(ts, model = model, h = horizon, level = c(confidence_interval))
             }
             if(include_history) {
                 forecast_df <- tibble(

@@ -169,6 +169,7 @@
             "name": "MISSING_VALUES",
             "label" : "Imputation strategy",
             "type": "SELECT",
+            "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
             "mandatory" : true,
             "defaultValue": "interpolate",
             "selectChoices": [
@@ -231,7 +232,8 @@
             "label" : "Imputation strategy",
             "type": "SELECT",
             "mandatory" : true,
-            "defaultValue": "interpolate",
+            "defaultValue": "no",
+            "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
             "selectChoices": [
                 {
                     "value": "interpolate",
