@@ -4,7 +4,7 @@
     // This must be globally unique, and only contain A-Za-z0-9_-
     // BEWARE: Changing this value is a dangerous operation and
     // needs manual administrator intervention to fix directory names
-    "id" : "ts-forecast",
+    "id" : "time-series-forecast",
 
     // Version. It is highly recommended to use Semantic Versioning
     "version" : "0.0.3",
