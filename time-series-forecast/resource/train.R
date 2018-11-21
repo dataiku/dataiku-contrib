@@ -2,14 +2,10 @@
 
 library(forecast)
 library(prophet)
-library(R.utils)
-library(dataiku)
-library(dplyr)
-library(tibble)
 
-source(file.path(dkuCustomRecipeResource(), "dkuPluginUtils.R"))
+source(file.path(dkuCustomRecipeResource(), "io.R"))
 
-available_model_name_list <- c(
+AVAILABLE_MODEL_NAME_LIST <- c(
     "NAIVE_MODEL",
     "SEASONALTREND_MODEL",
     "PROPHET_MODEL",
@@ -19,7 +15,7 @@ available_model_name_list <- c(
     "STATESPACE_MODEL"
 )
 
-model_mapping_list <- list(
+MODEL_FUNCTION_NAME_LIST <- list(
     "NAIVE_MODEL" = list(model_function = "naive_model_wrapper"),
     "SEASONALTREND_MODEL" = list(model_function = "stlf"),
     "PROPHET_MODEL" = list(model_function = "prophet_model_wrapper"),
@@ -40,7 +36,6 @@ naive_model_wrapper <- function(y, method="simple", h=10, level=c(80,95), model=
         seasonal = forecast::snaive(y, h=h, level=level),
         drift = forecast::rwf(y, drift=TRUE, h=h, level=level)
     )
-    
     return(model)
 }
 
@@ -57,7 +52,8 @@ prophet_model_wrapper <- function(df, growth='linear', model=NULL, y=NULL, ...){
    return(m)
 }
 
-train_forecasting_models <- function(ts, df, model_parameter_list, refit=FALSE, refit_model_list=NULL, verbose=TRUE) {
+train_forecasting_models <- function(ts, df, model_parameter_list, 
+                                    refit=FALSE, refit_model_list=NULL, verbose=TRUE) {
     model_list <- list()
     for(model_name in names(model_parameter_list)){
         model_parameters <- model_parameter_list[[model_name]]
@@ -81,13 +77,4 @@ train_forecasting_models <- function(ts, df, model_parameter_list, refit=FALSE, 
                             round(end_time - start_time, 1), " seconds"), verbose)
     }
     return(model_list)
-}
-
-
-save_forecasting_objects <- function(folder_name, partition_dimension_name, version_name, ...) {
-    folder_path <- get_folder_path_with_partitioning(folder_name, partition_dimension_name)
-    # create standard directory structure
-    version_path <- file.path(folder_path, "versions", version_name)
-    dir.create(version_path, recursive = TRUE)
-    save(...,  file = file.path(version_path , "models.RData"))
 }

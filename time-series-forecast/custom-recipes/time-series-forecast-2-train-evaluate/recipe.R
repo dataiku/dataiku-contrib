@@ -1,8 +1,8 @@
 ########## LIBRARY LOADING ##########
 
 library(dataiku)
-source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTimeSeriesTrain.R"))
-source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTimeSeriesEvaluate.R"))
+source(file.path(dkuCustomRecipeResource(), "train.R"))
+source(file.path(dkuCustomRecipeResource(), "evaluate.R"))
 
 
 ########## INPUT OUTPUT CONFIGURATION ##########
@@ -14,11 +14,12 @@ eval_dataset_name = dkuCustomRecipeOutputNamesForRole('eval_dataset')[1]
 config = dkuCustomRecipeConfig()
 print(config)
 for(n in names(config)){
-    assign(n, clean_plugin_param(config[[n]]))
+    assign(n, clean_plugin_config(config[[n]]))
 }
 
 # Check that partitioning settings are correct if activated
-check_partition <- check_partitioning_setting_input_output(input_dataset_name, PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+check_partition <- check_partitioning_settings(input_dataset_name,
+    PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 # Prepare all raw parameters from plugin UI
 NAIVE_MODEL_KWARGS[["method"]] <- NAIVE_MODEL_METHOD
@@ -35,31 +36,45 @@ if(NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS != -1) {
 if(NEURALNETWORK_MODEL_SIZE != -1) {
     NEURALNETWORK_MODEL_KWARGS[["size"]] <- NEURALNETWORK_MODEL_SIZE
 }  
-if(CROSSVAL_PERIOD == -1) CROSSVAL_PERIOD <- NULL
-if(CROSSVAL_INITIAL == -1) CROSSVAL_INITIAL <- NULL 
+if(CROSSVAL_INITIAL == -1) CROSSVAL_INITIAL <- 10 * EVAL_HORIZON
+if(CROSSVAL_PERIOD == -1) CROSSVAL_PERIOD <- floor(0.5 * EVAL_HORIZON)
+
+# Bring all model parameters into a standard named list format for all models
+model_parameter_list <- list()
+for(model_name in AVAILABLE_MODEL_NAME_LIST){
+    model_activated <- get(paste0(model_name,"_ACTIVATED"))
+    if(model_activated){
+        model_parameter_list[[model_name]] <- MODEL_FUNCTION_NAME_LIST[[model_name]]
+        model_parameter_list[[model_name]][["kwargs"]] <- get(paste0(model_name,"_KWARGS"))
+    }
+}
 
 
 ########## DATA PREPARATION STAGE ##########
 
 plugin_print("Preparation stage starting...")
 
-df <- dkuReadDataset(input_dataset_name,
-                     columns = c(TIME_COLUMN, SERIES_COLUMN),
-                     colClasses = c("character","numeric")) 
+df <- dkuReadDataset(input_dataset_name, columns = c(TIME_COLUMN, SERIES_COLUMN), 
+    colClasses = c("character","numeric")) 
 
 # convert to R POSIX date format
 df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dku_date_format)
 
 # truncate all dates to the start of the period to avoid errors at later stages
-df[[TIME_COLUMN]] <- trunc_to_granularity_start(df[[TIME_COLUMN]], GRANULARITY)
+df[[TIME_COLUMN]] <- truncate_date(df[[TIME_COLUMN]], GRANULARITY)
 
 date_range <- seq(min(df[[TIME_COLUMN]]), max(df[[TIME_COLUMN]]), by = GRANULARITY)
 if(length(date_range) != nrow(df)) {
-    stop(paste0("Data must be sampled at regular ", GRANULARITY, "ly granularity"))
+    stop(paste0("[ERROR] Data must be sampled at regular ", GRANULARITY, "ly granularity"))
+}
+
+if(EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
+    stop(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
+        "Make horizon or initial shorter."))
 }
 
 # convert to msts time series format
-ts <- msts_conversion(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
+ts <- convert_df_to_ts(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
 
 # convert df to generic prophet-compatible format
 names(df) <- c('ds','y')
@@ -75,19 +90,6 @@ plugin_print("Preparation stage completed")
 
 plugin_print("Training stage starting...")
 
-# Bring all model parameters into a standard named list format for all models
-model_parameter_list <- list()
-for(model_name in available_model_name_list){
-    model_activated <- get(paste0(model_name,"_ACTIVATED"))
-    if(model_activated){
-        model_parameter_list[[model_name]] <- model_mapping_list[[model_name]]
-    }
-}
-for(model_name in names(model_parameter_list)){
-    model_parameter_list[[model_name]][["kwargs"]] <- get(paste0(model_name,"_KWARGS"))
-}
-
-# Now launch training of activated models
 model_list <- train_forecasting_models(ts, df, model_parameter_list)
 
 plugin_print("Training stage completed, saving models to output folder")
@@ -108,16 +110,16 @@ plugin_print("Models, time series and parameters saved to folder")
 
 plugin_print(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 
-eval_performance_df <- eval_models(
-    ts, df, model_list, model_parameter_list, 
+performance_df <- evaluate_models(ts, df, model_list, model_parameter_list, 
     EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_PERIOD, CROSSVAL_INITIAL) %>%
-        mutate_all(funs(ifelse(is.infinite(.), NA, .)))
-eval_performance_df[["training_date"]] <- strftime(version_name, dku_date_format)
+    mutate_all(funs(ifelse(is.infinite(.), NA, .)))
 
-    
+performance_df[["training_date"]] <- strftime(version_name, dku_date_format)
+
 plugin_print("Evaluation stage completed, saving evaluation results to output dataset")
 
 # Recipe outputs
-write_dataset_with_partitioning_column(eval_performance_df, eval_dataset_name, PARTITION_DIMENSION_NAME, check_partitioning)
+write_dataset_with_partitioning_column(performance_df, eval_dataset_name, 
+    PARTITION_DIMENSION_NAME, check_partitioning)
 
 plugin_print("All stages completed!")

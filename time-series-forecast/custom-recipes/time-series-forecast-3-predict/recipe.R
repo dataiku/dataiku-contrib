@@ -1,7 +1,7 @@
 ########## LIBRARY LOADING ##########
 
 library(dataiku)
-source(file.path(dataiku:::dkuCustomRecipeResource(), "dkuTimeSeriesPredict.R"))
+source(file.path(dkuCustomRecipeResource(), "predict.R"))
 
 
 ########## INPUT OUTPUT CONFIGURATION ##########
@@ -12,18 +12,22 @@ output_dataset_name = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
 
 config = dkuCustomRecipeConfig()
 print(config)
+
 for(n in names(config)){
-    assign(n, clean_plugin_param(config[[n]]))
+    assign(n, clean_plugin_config(config[[n]]))
+}
+if(!INCLUDE_FORECAST && !INCLUDE_HISTORY){
+    stop("[ERROR] Please include either forecast and/or history")
 }
 
 # Check that partitioning settings are correct if activated
-check_partition <- check_partitioning_setting_input_output(eval_dataset_name, PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+check_partition <- check_partitioning_settings(eval_dataset_name,
+    PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 # loads all forecasting objects from the model folder
 load_forecasting_objects(model_folder_name, partition_dimension_name)
-#print(train_config)
 for(n in names(train_config)){
-    assign(n, clean_plugin_param(train_config[[n]]))
+    assign(n, clean_plugin_config(train_config[[n]]))
 }
 
 
@@ -42,7 +46,7 @@ plugin_print(paste0(SELECTED_MODEL, " selected"))
 
 plugin_print("Forecasting stage")
 
-forecast_df_list <- predict_forecasting_models(
+forecast_df_list <- get_forecasts(
     ts, df, 
     model_list[SELECTED_MODEL], 
     model_parameter_list[SELECTED_MODEL], 
@@ -56,7 +60,7 @@ forecast_df <- forecast_df_list[[SELECTED_MODEL]]
 
 df_output <- combine_forecast_history(df, forecast_df, INCLUDE_FORECAST, INCLUDE_HISTORY)
 
-plugin_print("All stages completed, writing back forecast and/or residuals to output dataset")
+plugin_print("All stages completed, writing forecast and/or residuals to output dataset")
 
 
 ########## OUTPUT FORMATTING STAGE ##########
@@ -77,7 +81,9 @@ df_output[["selected_model"]] <- SELECTED_MODEL
 df_output[[TIME_COLUMN]] <- strftime(df_output[[TIME_COLUMN]] , dku_date_format)
 
 # removes the unnecessary floor and cap columns from prophet model if they exist
-df_output <- df_output %>% select(-one_of(c("floor", "cap")))
+df_output <- df_output %>% 
+    select(-one_of(c("floor", "cap")))
 
 # Recipe outputs
-write_dataset_with_partitioning_column(df_output, output_dataset_name, PARTITION_DIMENSION_NAME, check_partitioning)
+write_dataset_with_partitioning_column(df_output, output_dataset_name,
+    PARTITION_DIMENSION_NAME, check_partitioning)

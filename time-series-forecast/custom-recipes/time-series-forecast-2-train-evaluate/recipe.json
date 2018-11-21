@@ -274,7 +274,7 @@
         {
             "name": "PROPHET_MODEL_MINIMUM",
             "label" : "\u21B3 Minimum",
-            "description": "Saturating minimum for logistic growth (optional)",
+            "description": "Saturating minimum for logistic growth",
             "type": "DOUBLE",
             "defaultValue" : 0.0,
             "mandatory" : false,

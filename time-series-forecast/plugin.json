@@ -4,30 +4,30 @@
     // This must be globally unique, and only contain A-Za-z0-9_-
     // BEWARE: Changing this value is a dangerous operation and
     // needs manual administrator intervention to fix directory names
-    "id" : "time-series-forecast",
+    "id" : "ts-forecast",
 
     // Version. It is highly recommended to use Semantic Versioning
-    "version" : "0.0.2",
+    "version" : "0.0.3",
 
 
     // Meta data for display purposes
     "meta" : {
         // Name of this plugin that appears in the interface.
-        "label" : "Time series forecast",
+        "label" : "Time series forecasting",
 
-        "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. It cover the cycle of data cleaning, model training, evaluation, and prediction. They are based on forecasting methods described in <a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. <i>Forecasting: principles and practice.</i> OTexts, 2014.</a> and in <a href=\"https://doi.org/10.1080/00031305.2017.1380080\">Taylor, Sean J., and Benjamin Letham. <i>Forecasting at Scale.</i> The American Statistician, 2018.</a>",
+        "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. It covers the full cycle of data cleaning, model training, evaluation and prediction. They are based on forecasting methods described in <a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. <i>Forecasting: principles and practice.</i> OTexts, 2014.</a> and in <a href=\"https://doi.org/10.1080/00031305.2017.1380080\">Taylor, Sean J., and Benjamin Letham. <i>Forecasting at Scale.</i> The American Statistician, 2018.</a>",
         
-        "author" : "acombessie",
+        "author" : "Dataiku (Alex COMBESSIE)",
 
         // The icon of a plugin must be one of the FontAwesome 3.1 icons
         "icon" : "icon-calendar",
 
-        "licenseInfo" : "Apache Software License",
+        "licenseInfo" : "GPL-3",
 
         // URL where the user can learn more about the plugin
         "url" : "https://www.dataiku.com",
 
         // List of tags for filtering the list of plugins
-        "tags" : ["time series", "forecast"]
+        "tags" : ["time series", "forecasting"]
     }
 }
