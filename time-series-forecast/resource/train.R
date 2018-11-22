@@ -58,7 +58,7 @@ train_forecasting_models <- function(ts, df, model_parameter_list,
     for(model_name in names(model_parameter_list)){
         model_parameters <- model_parameter_list[[model_name]]
         if(refit && !is.null(refit_model_list)){
-            model_parameters[["kwargs"]][["model"]] = refit_model_list[[model_name]]
+            model_parameters[["kwargs"]][["model"]] <- refit_model_list[[model_name]]
         }
         if(model_name == "PROPHET_MODEL"){
             model_parameters[["kwargs"]][["df"]] <- df

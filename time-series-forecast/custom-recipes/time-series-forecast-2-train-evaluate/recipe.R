@@ -14,7 +14,7 @@ eval_dataset_name = dkuCustomRecipeOutputNamesForRole('eval_dataset')[1]
 config = dkuCustomRecipeConfig()
 print(config)
 for(n in names(config)){
-    assign(n, clean_plugin_config(config[[n]]))
+    assign(n, clean_plugin_param(config[[n]]))
 }
 
 # Check that partitioning settings are correct if activated
@@ -37,7 +37,7 @@ if(NEURALNETWORK_MODEL_SIZE != -1) {
     NEURALNETWORK_MODEL_KWARGS[["size"]] <- NEURALNETWORK_MODEL_SIZE
 }  
 if(CROSSVAL_INITIAL == -1) CROSSVAL_INITIAL <- 10 * EVAL_HORIZON
-if(CROSSVAL_PERIOD == -1) CROSSVAL_PERIOD <- floor(0.5 * EVAL_HORIZON)
+if(CROSSVAL_PERIOD == -1) CROSSVAL_PERIOD <- ceiling(0.5 * EVAL_HORIZON)
 
 # Bring all model parameters into a standard named list format for all models
 model_parameter_list <- list()
@@ -45,7 +45,7 @@ for(model_name in AVAILABLE_MODEL_NAME_LIST){
     model_activated <- get(paste0(model_name,"_ACTIVATED"))
     if(model_activated){
         model_parameter_list[[model_name]] <- MODEL_FUNCTION_NAME_LIST[[model_name]]
-        model_parameter_list[[model_name]][["kwargs"]] <- get(paste0(model_name,"_KWARGS"))
+        model_parameter_list[[model_name]][["kwargs"]] <- as.list(get(paste0(model_name,"_KWARGS")))
     }
 }
 

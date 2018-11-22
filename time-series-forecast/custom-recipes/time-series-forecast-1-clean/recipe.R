@@ -12,7 +12,7 @@ output_dataset_name = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
 config = dkuCustomRecipeConfig()
 print(config)
 for(n in names(config)){
-    assign(n, config[[n]])
+    assign(n, clean_plugin_param(config[[n]]))
 }
      
 # Check that partitioning settings are correct if activated

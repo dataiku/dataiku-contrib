@@ -175,7 +175,7 @@
         
         {
             "name": "NAIVE_MODEL_ACTIVATED",
-            "label" : "Baseline model",
+            "label" : "- Baseline",
             "description": "Based on the naive/snaive implementation in R \"forecast\" package",
             "type": "BOOLEAN",
             "defaultValue" : true,
@@ -219,32 +219,8 @@
         },
         
         {
-            "name": "SEASONALTREND_MODEL_ACTIVATED",
-            "label" : "Seasonal Trend model",
-            "description": "Based on the stlf implementation in R \"forecast\" package",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
-            "mandatory" : true
-        },
-        
-        
-       {
-            "name": "SEASONALTREND_MODEL_KWARGS",
-            "type": "MAP",
-            "label" : "\u21B3 additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/forecast.stl",
-            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
-            "mandatory" : false
-        },
-        
-        {
-            "type": "SEPARATOR",
-            "visibilityCondition": "model.AUTOML=='expert'"
-        },
-        
-        {
             "name": "PROPHET_MODEL_ACTIVATED",
-            "label" : "Prophet model",
+            "label" : "- Prophet",
             "description": "Based on the Prophet implementation in R \"prophet\" package.",
             "type": "BOOLEAN",
             "defaultValue" : true,
@@ -306,42 +282,32 @@
         },
         
         {
-            "name": "ARIMA_MODEL_ACTIVATED",
-            "label" : "ARIMA model",
-            "description": "Based on the auto.arima implementation in R \"forecast\" package. \
-                            WARNING: slow for long time series (1000+ records)",
+            "name": "SEASONALTREND_MODEL_ACTIVATED",
+            "label" : "- Seasonal Trend",
+            "description": "Based on the stlf implementation in R \"forecast\" package. WARNING: may not converge for non-seasonal data.",
             "type": "BOOLEAN",
             "defaultValue" : false,
             "mandatory" : true
         },
         
-        {
-            "name": "ARIMA_MODEL_STEPWISE",
-            "label" : "\u21B3 stepwise",
-            "description": "Use stepwise procedure to speed up the search for model parameters",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
-            "mandatory" : false,
-            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
-        },
-
-        {
-            "name": "ARIMA_MODEL_KWARGS",
+        
+       {
+            "name": "SEASONALTREND_MODEL_KWARGS",
             "type": "MAP",
-            "label" : "\u21B3  additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
-            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
+            "label" : "\u21B3 additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/forecast.stl",
+            "visibilityCondition": "model.AUTOML=='expert' && model.SEASONALTREND_MODEL_ACTIVATED",
             "mandatory" : false
         },
         
-        {
+              {
             "type": "SEPARATOR",
             "visibilityCondition": "model.AUTOML=='expert'"
         },
         
         {
             "name": "EXPONENTIALSMOOTHING_MODEL_ACTIVATED",
-            "label" : "Exponential Smoothing model",
+            "label" : "- Exponential Smoothing",
             "description": "Based on the ets implementation in R \"forecast\" package.  WARNING: slow for long time series (1000+ records)",
             "type": "BOOLEAN",
             "defaultValue" : false,
@@ -438,6 +404,63 @@
             "mandatory" : false
         },
         
+        {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
+            "name": "ARIMA_MODEL_ACTIVATED",
+            "label" : "- ARIMA",
+            "description": "Based on the auto.arima implementation in R \"forecast\" package. \
+                            WARNING: slow for long time series (1000+ records)",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+        
+        {
+            "name": "ARIMA_MODEL_STEPWISE",
+            "label" : "\u21B3 stepwise",
+            "description": "Use stepwise procedure to speed up the search for model parameters",
+            "type": "BOOLEAN",
+            "defaultValue" : true,
+            "mandatory" : false,
+            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
+        },
+
+        {
+            "name": "ARIMA_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3  additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
+            "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
+            "mandatory" : false
+        },
+        
+        {
+            "type": "SEPARATOR",
+            "visibilityCondition": "model.AUTOML=='expert'"
+        },
+        
+        {
+            "name": "STATESPACE_MODEL_ACTIVATED",
+            "label" : "- State Space",
+            "description": "Based on the tbats implementation in R \"forecast\" package. \
+                             WARNING: slow for long time series (1000+ records)",
+            "type": "BOOLEAN",
+            "defaultValue" : false,
+            "mandatory" : true
+        },
+
+        {
+            "name": "STATESPACE_MODEL_KWARGS",
+            "type": "MAP",
+            "label" : "\u21B3  additional parameters",
+            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/tbats",
+            "mandatory" : false,
+            "visibilityCondition": "model.AUTOML=='expert' && model.STATESPACE_MODEL_ACTIVATED"
+        },
         
         {
             "type": "SEPARATOR",
@@ -446,7 +469,7 @@
         
         {
             "name": "NEURALNETWORK_MODEL_ACTIVATED",
-            "label" : "Neural Network model",
+            "label" : "- Neural Network",
             "description": "Based on the nnetar implementation in R \"forecast\" package. \
             WARNING: slow for long time series (1000+ records)",
             "type": "BOOLEAN",
@@ -491,31 +514,6 @@
             "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/nnetar",
             "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED",
             "mandatory" : false
-        },
-        
-        
-        {
-            "type": "SEPARATOR",
-            "visibilityCondition": "model.AUTOML=='expert'"
-        },
-        
-        {
-            "name": "STATESPACE_MODEL_ACTIVATED",
-            "label" : "State Space model",
-            "description": "Based on the tbats implementation in R \"forecast\" package. \
-                             WARNING: slow for long time series (1000+ records)",
-            "type": "BOOLEAN",
-            "defaultValue" : false,
-            "mandatory" : true
-        },
-
-        {
-            "name": "STATESPACE_MODEL_KWARGS",
-            "type": "MAP",
-            "label" : "\u21B3  additional parameters",
-            "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/tbats",
-            "mandatory" : false,
-            "visibilityCondition": "model.AUTOML=='expert' && model.STATESPACE_MODEL_ACTIVATED"
         },
     
         

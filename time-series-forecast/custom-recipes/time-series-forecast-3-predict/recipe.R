@@ -27,7 +27,7 @@ check_partition <- check_partitioning_settings(eval_dataset_name,
 # loads all forecasting objects from the model folder
 load_forecasting_objects(model_folder_name, partition_dimension_name)
 for(n in names(train_config)){
-    assign(n, clean_plugin_config(train_config[[n]]))
+    assign(n, clean_plugin_param(train_config[[n]]))
 }
 
 

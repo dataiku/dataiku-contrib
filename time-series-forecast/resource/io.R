@@ -8,31 +8,34 @@ plugin_print <- function(message, verbose = TRUE){
     if(verbose) message(paste("[PLUGIN_LOG]", message))
 }
 
-clean_plugin_config <- function(param){
-    #' Infers types for a named list
-    #'
-    #' @description This returns a list with inferred types. 
-    #' First it checks for numeric type, then boolean, and finally defaults to character
-    if(is.list(param)){
-        cleaned_list <- list()
-        for(name in names(param)){
-            if(!is.na(as.numeric(param[[name]]))){
-                cleaned_list[[name]] <- as.numeric(param[[name]])
-            } 
-            else{
-                if(!is.na(as.logical(param[[name]]))){
-                    cleaned_list[[name]] <- as.logical(param[[name]])
-                } 
-                else{
-                    cleaned_list[[name]] <- as.character(param[[name]])
-                }
-            }
+infer_type <- function(x) {
+    if(!is.na(suppressWarnings(as.numeric(x)))){
+        x_infer <- as.numeric(x)
+    } 
+    else if(!is.na(suppressWarnings(as.logical(x)))){
+        x_infer <- as.logical(x)
+    } 
+    else{
+         x_infer <- as.character(x)
+    }
+    names(x_infer) <- names(x)
+    return(x_infer)
+}
+
+clean_plugin_param <- function(param){
+    if(length(param) > 1){
+        output <- list()
+        for(n in names(param)){
+            output[[n]] <- infer_type(param[[n]])
         }
-        return(cleaned_list)
+    }
+    else if(length(param) == 0){
+        output <- list()
     } 
     else {
-        return(param)
+        output <- infer_type(param)
     }
+    return(output)
 }
 
 check_partitioning_settings <- function(input_dataset_name, partitioning_activated, partition_dimension_name){
