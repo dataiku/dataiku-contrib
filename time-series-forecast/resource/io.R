@@ -4,142 +4,130 @@ library(dataiku)
 library(jsonlite)
 library(R.utils)
 
-plugin_print <- function(message, verbose = TRUE){
-    if(verbose) message(paste("[PLUGIN_LOG]", message))
+PrintPlugin <- function(message, verbose = TRUE) {
+  if (verbose) {
+    message(paste("[PLUGIN_LOG]", message))
+  }
 }
 
-infer_type <- function(x) {
-    if(!is.na(suppressWarnings(as.numeric(x)))){
-        x_infer <- as.numeric(x)
-    } 
-    else if(!is.na(suppressWarnings(as.logical(x)))){
-        x_infer <- as.logical(x)
-    } 
-    else{
-         x_infer <- as.character(x)
+InferType <- function(x) {
+  if (!is.na(suppressWarnings(as.numeric(x)))) {
+    xInferred <- as.numeric(x)
+  } else if (!is.na(suppressWarnings(as.logical(x)))) {
+    xInferred <- as.logical(x)
+  } else {
+     xInferred <- as.character(x)
+  }
+  names(xInferred) <- names(x)
+  return(xInferred)
+}
+
+CleanPluginParam <- function(param) {
+  if (length(param) > 1) {
+    output <- list()
+    for(n in names(param)) {
+      output[[n]] <- InferType(param[[n]])
     }
-    names(x_infer) <- names(x)
-    return(x_infer)
+  } else if (length(param) == 0) {
+    output <- list()
+  } else {
+    output <- InferType(param)
+  }
+  return(output)
 }
 
-clean_plugin_param <- function(param){
-    if(length(param) > 1){
-        output <- list()
-        for(n in names(param)){
-            output[[n]] <- infer_type(param[[n]])
+CheckPartitioningSettings <- function(inputDatasetName, partitioningActivated, partitionDimensionName) {
+  check <- 'NOK' # can be OK, NOK, or NP (not partitioned)
+  errorMsg <- ''
+  inputIsPartitioned <- dkuListDatasetPartitions(inputDatasetName)[1] !='NP' 
+  if (!partitioningActivated && !inputIsPartitioned) {
+    check <- "NP"
+  } else if (!partitioningActivated && inputIsPartitioned) {
+    errorMsg <- "Partitioning should activated in the recipe settings as input is partitioned"
+  } else { # check partitionDimensionName recipe settings if partitioning activated
+    flowVariablesAvailable <- Sys.getenv("DKU_CALL_ORIGIN") != 'notebook'
+    if (flowVariablesAvailable) {
+      flowVariables <- fromJSON(Sys.getenv("DKUFLOW_VARIABLES"))
+      outputDimensionIsValid <- paste0("DKU_DST_", partitionDimensionName) %in% names(flowVariables)
+      if (inputIsPartitioned) { 
+        if (is.null(partitionDimensionName) || partitionDimensionName == '') {
+          errorMsg <- "Partitioning dimension name is required"
+        } else if (!outputDimensionIsValid) {
+          errorMsg <- paste0("Dimension name '", partitionDimensionName,"' is invalid or output is not partitioned")
+        } else {
+          check <- "OK"
         }
-    }
-    else if(length(param) == 0){
-        output <- list()
-    } 
-    else {
-        output <- infer_type(param)
-    }
-    return(output)
-}
-
-check_partitioning_settings <- function(input_dataset_name, partitioning_activated, partition_dimension_name){
-    check <- 'NOK' # can be OK, NOK, or NP (not partitioned)
-    error_msg <- ''
-    input_is_partitioned <- dkuListDatasetPartitions(input_dataset_name)[1] !='NP' 
-    if(!partitioning_activated && !input_is_partitioned){
-        check <- "NP"
-    } 
-    else if (!partitioning_activated && input_is_partitioned){
-        error_msg <- "Partitioning should activated in the recipe settings as input is partitioned"
-    } 
-    else { # check partition_dimension_name recipe settings if partitioning activated
-        flow_variables_available <- Sys.getenv("DKU_CALL_ORIGIN") != 'notebook'
-        if(flow_variables_available){
-            flow_variables <- fromJSON(Sys.getenv("DKUFLOW_VARIABLES"))
-            output_dimension_is_valid <- paste0("DKU_DST_", partition_dimension_name) %in% names(flow_variables)
-            if(input_is_partitioned){ 
-                if(is.null(partition_dimension_name) || partition_dimension_name == ''){
-                    error_msg <- "Partitioning dimension name is required"
-                } 
-                else if(!output_dimension_is_valid) {
-                    error_msg <- paste0("Dimension name '", partition_dimension_name,"' is invalid or output is not partitioned")
-                } 
-                else {
-                    check <- "OK"
-                }
-            } else {
-                if(!is.null(partition_dimension_name) && partition_dimension_name != '') {
-                    error_msg <- "Partitioning dimension name should be left blank if input dataset is not partitioned"
-                } 
-                else if(output_dimension_is_valid) {
-                    error_msg <- "All input and output should be partitioned"
-                } 
-                else {
-                    check <- "NP"
-                }
-            }
-        } 
-        else {
-            check <- ifelse(input_is_partitioned, "OK", "NP")
+      } else {
+        if (!is.null(partitionDimensionName) && partitionDimensionName != '') {
+          errorMsg <- "Partitioning dimension name should be left blank if input dataset is not partitioned"
+        } else if (outputDimensionIsValid) {
+          errorMsg <- "All input and output should be partitioned"
+        } else {
+          check <- "NP"
         }
+      }
+    } else {
+      check <- ifelse(inputIsPartitioned, "OK", "NP")
     }
-    
-    plugin_print(paste0("Partitioning check returned ", check))
-    if(check=='NOK') {
-        stop(paste0("[ERROR] ", error_msg))
-    } 
-    else {
-        return(check)
-    }
+  }
+  
+  PrintPlugin(paste0("Partitioning check returned ", check))
+  if (check=='NOK') {
+    stop(paste0("[ERROR] ", errorMsg))
+  } else {
+    return(check)
+  }
 }
 
-write_dataset_with_partitioning_column <- function(df, output_dataset_name, partition_dimension_name, check_partitioning){
-    output_fullName <- dataiku:::dku__resolve_smart_name(output_dataset_name) # bug with naming from plugins on DSS 5.0.2
-    output_id <- dataiku:::dku__ref_to_name(output_fullName)
-    output_dataset_type <- dkuGetDatasetLocationInfo(output_id)[["locationInfoType"]]
-    if(check_partition == 'OK' && output_dataset_type != 'SQL') {
-        plugin_print("Writing partition value as new column")
-        partitioning_column_name <- paste0("_dku_partition_", partition_dimension_name)
-        df[[partitioning_column_name]] <- dkuFlowVariable(paste0("DKU_DST_", partition_dimension_name))
-        df <- df %>% select(partitioning_column_name, everything())
-    }
-    dkuWriteDataset(df, output_dataset_name)
+WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName, partitionDimensionName, checkPartitioning) {
+  outputFullName <- dataiku:::dku__resolve_smart_name(outputDatasetName) # bug with naming from plugins on DSS 5.0.2
+  outputId <- dataiku:::dku__ref_to_name(outputFullName)
+  outputDatasetType <- dkuGetDatasetLocationInfo(outputId)[["locationInfoType"]]
+  if (checkPartition == 'OK' && outputDatasetType != 'SQL') {
+    PrintPlugin("Writing partition value as new column")
+    partitioningColumnName <- paste0("_dku_partition_", partitionDimensionName)
+    df[[partitioningColumnName]] <- dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName))
+    df <- df %>% select(partitioningColumnName, everything())
+  }
+  dkuWriteDataset(df, outputDatasetName)
 }
 
-get_folder_path_with_partitioning <- function(folder_name, partition_dimension_name, check_partitioning) {
-    is_output_folder_partitioned <- dkuManagedFolderDirectoryBasedPartitioning(folder_name)
-    if(check_partition == 'OK' && is_output_folder_partitioned){
-        file_path <- file.path(
-            dkuManagedFolderPath(folder_name),
-            dkuManagedFolderPartitionFolder(folder_name, 
-                partition = dkuFlowVariable(paste0("DKU_DST_", partition_dimension_name)))
-        )
-        file_path <- normalizePath(gsub("//","/",file_path))
-    } 
-    else if(check_partition == 'OK' && ! is_output_folder_partitioned){
-        stop("[ERROR] Partitioning should be activated on all input and output")
-    } 
-    else {
-        file_path <- dkuManagedFolderPath(folder_name)
-    }
-    return(file_path)
-}
-
-save_forecasting_objects <- function(folder_name, partition_dimension_name, version_name, ...) {
-    folder_path <- get_folder_path_with_partitioning(folder_name, partition_dimension_name)
-    # create standard directory structure
-    version_path <- file.path(folder_path, "versions", version_name)
-    dir.create(version_path, recursive = TRUE)
-    save(...,  file = file.path(version_path , "models.RData"))
-}
-
-load_forecasting_objects <- function(model_folder_name, partition_dimension_name, envir = .GlobalEnv) {
-    folder_path <- get_folder_path_with_partitioning(model_folder_name, PARTITION_DIMENSION_NAME)
-    last_version_path <- max(list.dirs(file.path(folder_path, "versions"), recursive = FALSE))
-    plugin_print(paste0("Loading forecasting objects from path ", last_version_path))
-    rdata_path_list <- list.files(
-        path = last_version_path,
-        pattern = "*.RData",
-        full.names = TRUE,
-        recursive = TRUE
+GetFolderPathWithPartitioning <- function(folderName, partitionDimensionName, checkPartitioning) {
+  isOutputFolderPartitioned <- dkuManagedFolderDirectoryBasedPartitioning(folderName)
+  if (checkPartition == 'OK' && isOutputFolderPartitioned) {
+    filePath <- file.path(
+      dkuManagedFolderPath(folderName),
+      dkuManagedFolderPartitionFolder(folderName, 
+        partition = dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName)))
     )
-    for(rdata_path in rdata_path_list){
-        load(rdata_path, envir = envir)
-    }
+    filePath <- normalizePath(gsub("//","/",filePath))
+  } else if (checkPartition == 'OK' && ! isOutputFolderPartitioned) {
+    stop("[ERROR] Partitioning should be activated on all input and output")
+  } else {
+    filePath <- dkuManagedFolderPath(folderName)
+  }
+  return(filePath)
+}
+
+SaveForecastingObjects <- function(folderName, partitionDimensionName, versionName, ...) {
+  folderPath <- GetFolderPathWithPartitioning(folderName, partitionDimensionName)
+  # create standard directory structure
+  versionPath <- file.path(folderPath, "versions", versionName)
+  dir.create(versionPath, recursive = TRUE)
+  save(...,  file = file.path(versionPath , "models.RData"))
+}
+
+LoadForecastingObjects <- function(modelFolderName, partitionDimensionName, envir = .GlobalEnv) {
+  folderPath <- GetFolderPathWithPartitioning(modelFolderName, PARTITION_DIMENSION_NAME)
+  lastVersionPath <- max(list.dirs(file.path(folderPath, "versions"), recursive = FALSE))
+  PrintPlugin(paste0("Loading forecasting objects from path ", lastVersionPath))
+  rdataPathList <- list.files(
+    path = lastVersionPath,
+    pattern = "*.RData",
+    full.names = TRUE,
+    recursive = TRUE
+  )
+  for(rdataPath in rdataPathList) {
+    load(rdataPath, envir = envir)
+  }
 }

@@ -1,236 +1,236 @@
 // This file is the descriptor for the Custom code recipe clean
 {
-    // Meta data for display purposes
-    "meta" : {
-        "label" : "3. Predict",
-        "description" : "Use previously trained models to predict future values and/or get historic residuals" ,
-        "icon" : "icon-signal"
+  // Meta data for display purposes
+  "meta" : {
+    "label" : "3. Predict",
+    "description" : "Use previously trained models to predict future values and/or get historic residuals" ,
+    "icon" : "icon-signal"
+  },
+
+  "kind" : "R",
+  
+  "selectableFromDataset" : "eval_dataset",
+
+  // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+  // or more dataset to each input and output role.
+
+  // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+  // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
+  // associate no dataset with the role.
+
+  "inputRoles" : [
+    {
+      "name": "model_folder",
+      "label": "Saved model folder",
+      "description": "Contains saved models from the Train and evaluate recipe",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": false,
+      "acceptsManagedFolder": true,
+      "mustBeStrictlyType": "Filesystem"
     },
+    {
+      "name": "eval_dataset",
+      "label": "Evaluation dataset",
+      "description": "Evaluation dataset from the Train and evaluate recipe",
+      "arity": "UNARY",
+      "required": false,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    } 
+  ],
 
-    "kind" : "R",
+  "outputRoles" : [
+    {
+      "name": "output_dataset",
+      "label": "Output dataset",
+      "description": "Future values and/or historic residuals",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    } 
+    // ...
+  ],
+
+  // The field "params" holds a list of all the params
+  // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+  // The available parameter types are:
+  // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
+
+  "params": [
     
-    "selectableFromDataset" : "eval_dataset",
-
-    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
-    // or more dataset to each input and output role.
-
-    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
-    // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
-    // associate no dataset with the role.
-
-    "inputRoles" : [
-        {
-            "name": "model_folder",
-            "label": "Saved model folder",
-            "description": "Contains saved models from the Train and evaluate recipe",
-            "arity": "UNARY",
-            "required": true,
-            "acceptsDataset": false,
-            "acceptsManagedFolder": true,
-            "mustBeStrictlyType": "Filesystem"
-        },
-        {
-            "name": "eval_dataset",
-            "label": "Evaluation dataset",
-            "description": "Evaluation dataset from the Train and evaluate recipe",
-            "arity": "UNARY",
-            "required": false,
-            "acceptsDataset": true,
-            "acceptsFolder": false
-        } 
-    ],
-
-    "outputRoles" : [
-        {
-            "name": "output_dataset",
-            "label": "Output dataset",
-            "description": "Future values and/or historic residuals",
-            "arity": "UNARY",
-            "required": true,
-            "acceptsDataset": true,
-            "acceptsFolder": false
-        } 
-        // ...
-    ],
-
-    // The field "params" holds a list of all the params
-    // for wich the user will be prompted for values in the Settings tab of the recipe.
-
-    // The available parameter types are:
-    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
-
-    "params": [
-        
-        {
-            "name": "separator_model_selection",
-            "label": "Model selection",
-            "type": "SEPARATOR"
-        },
-        
-        {
-            "name": "MODEL_SELECTION",
-            "label" : "Mode",
-            "type": "SELECT",
+    {
+      "name": "separator_model_selection",
+      "label": "Model selection",
+      "type": "SEPARATOR"
+    },
+    
+    {
+      "name": "MODEL_SELECTION",
+      "label" : "Mode",
+      "type": "SELECT",
 			"mandatory" : true,
-            "defaultValue" : "auto",
-             "description": "Automatically select model with lowest error, or select manually",
-            "selectChoices": [
+      "defaultValue" : "auto",
+       "description": "Automatically select model with lowest error, or select manually",
+      "selectChoices": [
 
 				{
-                    "value": "auto",
-                    "label": "Automatic"
-                },
-                {
-                    "value": "manual",
-                    "label": "Manual"
-                }
-            ]
+          "value": "auto",
+          "label": "Automatic"
         },
-        
         {
-            "name": "ERROR_METRIC",
-            "label" : "Error metric",
-            "type": "SELECT",
+          "value": "manual",
+          "label": "Manual"
+        }
+      ]
+    },
+    
+    {
+      "name": "ERROR_METRIC",
+      "label" : "Error metric",
+      "type": "SELECT",
 			"mandatory" : false,
-            "defaultValue" : "MAE",
-            "visibilityCondition": "model.MODEL_SELECTION=='auto'",
-            "selectChoices": [
-                {
-                    "value": "MAE",
-                    "label": "Mean Absolute Error"
-                },
-                {
-                    "value": "MAPE",
-                    "label": "Mean Absolute Percentage Error"
-                },
-                {
-                    "value": "RMSE",
-                    "label": "Root Mean Squared Error"
-                }
-            ]
+      "defaultValue" : "MAE",
+      "visibilityCondition": "model.MODEL_SELECTION=='auto'",
+      "selectChoices": [
+        {
+          "value": "MAE",
+          "label": "Mean Absolute Error"
         },
+        {
+          "value": "MAPE",
+          "label": "Mean Absolute Percentage Error"
+        },
+        {
+          "value": "RMSE",
+          "label": "Root Mean Squared Error"
+        }
+      ]
+    },
 		
 		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
-        {
-            "name": "SELECTED_MODEL",
-            "label" : "Model to use",
-            "type": "SELECT",
+    {
+      "name": "SELECTED_MODEL",
+      "label" : "Model to use",
+      "type": "SELECT",
 			"mandatory" : false,
-            "defaultValue" : "PROPHET_MODEL",
-            "visibilityCondition": "model.MODEL_SELECTION=='manual'",
-            "selectChoices": [
+      "defaultValue" : "PROPHET_MODEL",
+      "visibilityCondition": "model.MODEL_SELECTION=='manual'",
+      "selectChoices": [
 
 				{
-                    "value": "NAIVE_MODEL",
-                    "label": "Baseline model"
-                },
-                {
-                    "value": "SEASONALTREND_MODEL",
-                    "label": "Seasonal Trend model"
-                },
-                {
-                    "value": "PROPHET_MODEL",
-                    "label": "Prophet model"
-                },
-                {
-                    "value": "ARIMA_MODEL",
-                    "label": "ARIMA model"
-                },
-                {
-                    "value": "EXPONENTIALSMOOTHING_MODEL",
-                    "label": "Exponential Smoothing model"
-                },
+          "value": "NAIVE_MODEL",
+          "label": "Baseline model"
+        },
+        {
+          "value": "SEASONALTREND_MODEL",
+          "label": "Seasonal Trend model"
+        },
+        {
+          "value": "PROPHET_MODEL",
+          "label": "Prophet model"
+        },
+        {
+          "value": "ARIMA_MODEL",
+          "label": "ARIMA model"
+        },
+        {
+          "value": "EXPONENTIALSMOOTHING_MODEL",
+          "label": "Exponential Smoothing model"
+        },
 				{
-                    "value": "NEURALNETWORK_MODEL",
-                    "label": "Neural Network model"
-                },
-
-                {
-                    "value": "STATESPACE_MODEL",
-                    "label": "State Space model"
-                }
-            ]
+          "value": "NEURALNETWORK_MODEL",
+          "label": "Neural Network model"
         },
 
+        {
+          "value": "STATESPACE_MODEL",
+          "label": "State Space model"
+        }
+      ]
+    },
 
-        {
-            "name": "separator_forecasting",
-            "label": "Prediction",
-            "type": "SEPARATOR"
-        },
-        
-        {
-            "name": "INCLUDE_HISTORY",
+
+    {
+      "name": "separator_forecasting",
+      "label": "Prediction",
+      "type": "SEPARATOR"
+    },
+    
+    {
+      "name": "INCLUDE_HISTORY",
 			"label" : "Include history",
 			"description": "Historical values and residuals (historical value - one-step forecast)",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
+      "type": "BOOLEAN",
+      "defaultValue" : true,
 			"mandatory" : true
-        },
-        
-        {
-            "name": "INCLUDE_FORECAST",
+    },
+    
+    {
+      "name": "INCLUDE_FORECAST",
 			"label" : "Get forecast",
 			"description": "Forecast from selected model",
-            "type": "BOOLEAN",
-            "defaultValue" : true,
+      "type": "BOOLEAN",
+      "defaultValue" : true,
 			"mandatory" : true
-        },
-        
-        {
-            "name": "FORECAST_HORIZON",
-            "label" : "Horizon",
-            "type": "INT",
-            "mandatory" : true,
-            "defaultValue" : 10,
-            "description": "in number of periods",
-            "visibilityCondition": "model.INCLUDE_FORECAST"
-        },
-        
-        {
-            "name": "CONFIDENCE_INTERVAL",
-            "label" : "Confidence interval",
-            "type": "INT",
-            "mandatory" : true,
-            "defaultValue" : 95,
-            "description": "%",
-            "visibilityCondition": "model.INCLUDE_FORECAST"
-        },
-        
-        {
-            "type": "SEPARATOR",
-            "name": "separator_partitioning",
-            "label": "Partitioning - optional"
-        },
-        
-        {
-            "name": "PARTITIONING_ACTIVATED",
-            "label" : "Activate partitioning",
-            "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
-            "type": "BOOLEAN",
-            "mandatory" : true,
-            "defaultValue": false
-        },
-        
-        {
-            "name": "PARTITION_DIMENSION_NAME",
-            "label" : "Dimension name",
-            "description": "Mandatory if partitioning is activated, else leave blank",
-            "type": "STRING",
-            "mandatory" : false,
-            "defaultValue": "",
-            "visibilityCondition": "model.PARTITIONING_ACTIVATED"
-        }
+    },
+    
+    {
+      "name": "FORECAST_HORIZON",
+      "label" : "Horizon",
+      "type": "INT",
+      "mandatory" : true,
+      "defaultValue" : 10,
+      "description": "in number of periods",
+      "visibilityCondition": "model.INCLUDE_FORECAST"
+    },
+    
+    {
+      "name": "CONFIDENCE_INTERVAL",
+      "label" : "Confidence interval",
+      "type": "INT",
+      "mandatory" : true,
+      "defaultValue" : 95,
+      "description": "%",
+      "visibilityCondition": "model.INCLUDE_FORECAST"
+    },
+    
+    {
+      "type": "SEPARATOR",
+      "name": "separator_partitioning",
+      "label": "Partitioning - optional"
+    },
+    
+    {
+      "name": "PARTITIONING_ACTIVATED",
+      "label" : "Activate partitioning",
+      "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
+      "type": "BOOLEAN",
+      "mandatory" : true,
+      "defaultValue": false
+    },
+    
+    {
+      "name": "PARTITION_DIMENSION_NAME",
+      "label" : "Dimension name",
+      "description": "Mandatory if partitioning is activated, else leave blank",
+      "type": "STRING",
+      "mandatory" : false,
+      "defaultValue": "",
+      "visibilityCondition": "model.PARTITIONING_ACTIVATED"
+    }
 
-        
-    ],
+    
+  ],
 
-    // The field "resourceKeys" holds a list of keys that allows to limit the number
-    // of concurrent executions and activities triggered by this recipe.
-    //
-    // Administrators can configure the limit per resource key in the Administration > Settings > Flow build
-    // screen.
+  // The field "resourceKeys" holds a list of keys that allows to limit the number
+  // of concurrent executions and activities triggered by this recipe.
+  //
+  // Administrators can configure the limit per resource key in the Administration > Settings > Flow build
+  // screen.
 
-    "resourceKeys" : []
+  "resourceKeys" : []
 
 }

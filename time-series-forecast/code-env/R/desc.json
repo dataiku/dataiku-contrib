@@ -5,6 +5,6 @@
   "forceConda": false,
   "deploymentMode": "DESIGN_MANAGED",
   "envSettings": {
-    "inheritGlobalSettings": true
+  "inheritGlobalSettings": true
   }
 }

@@ -1,298 +1,298 @@
 // This file is the descriptor for the Custom code recipe clean
 {
-    // Meta data for display purposes
-    "meta" : {
-        "label" : "1. Clean",
-        "description" : "Aggregate, resample and clean the time series from missing values and outliers",
-        "icon" : "icon-calendar-empty"
+  // Meta data for display purposes
+  "meta" : {
+    "label" : "1. Clean",
+    "description" : "Aggregate, resample and clean the time series from missing values and outliers",
+    "icon" : "icon-calendar-empty"
+  },
+
+  "kind" : "R",
+  
+  "selectableFromDataset" : "input_dataset",
+  
+
+  // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
+  // or more dataset to each input and output role.
+
+  // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
+  // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
+  // associate no dataset with the role.
+
+  "inputRoles" : [
+    {
+      "name": "input_dataset",
+      "label": "Input dataset",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    }
+  ],
+
+  "outputRoles" : [ 
+    {
+      "name": "output_dataset",
+      "label": "Cleaned output dataset",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    }
+  ],
+
+  // The field "params" holds a list of all the params
+  // for wich the user will be prompted for values in the Settings tab of the recipe.
+
+  // The available parameter types are:
+  // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
+
+  "params": [
+    
+    {
+      "type": "SEPARATOR",
+      "name": "separator_input",
+      "label": "Input data"
+    },
+    
+    {
+      "name": "TIME_COLUMN",
+      "label" : "Time column",
+      "description": "Required column in DSS parsed date format at timezone UTC",
+      "type": "COLUMN",
+      "columnRole":"input_dataset",
+      "mandatory" : true
+    },
+    
+
+    
+    {
+      "name": "SERIES_COLUMNS",
+      "label" : "Series columns",
+      "description":"Required numeric columns to clean",
+      "type": "COLUMNS",
+      "columnRole":"input_dataset",
+      "mandatory" : true
+    },
+    
+    {
+      "type": "SEPARATOR",
+      "name": "separator_partitioning",
+      "label": "Partitioning - optional"
+    },
+    
+    {
+      "name": "PARTITIONING_ACTIVATED",
+      "label" : "Activate partitioning",
+      "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
+      "type": "BOOLEAN",
+      "mandatory" : true,
+      "defaultValue": false
+    },
+    
+    {
+      "name": "PARTITION_DIMENSION_NAME",
+      "label" : "Dimension name",
+      "description": "Mandatory if partitioning is activated, else leave blank",
+      "type": "STRING",
+      "mandatory" : false,
+      "defaultValue": "",
+      "visibilityCondition": "model.PARTITIONING_ACTIVATED"
+    },
+    
+    {
+      "type": "SEPARATOR",
+      "name": "separator_resampling",
+      "label": "Aggregation and resampling"
     },
 
-    "kind" : "R",
+    {
+      "name": "GRANULARITY",
+      "label" : "Granularity",
+      "type": "SELECT",
+      "mandatory" : true,
+      "selectChoices": [
+        {
+          "value": "year",
+          "label": "Year"
+        },
+        {
+          "value": "quarter",
+          "label": "Quarter"
+        },
+        {
+          "value": "month",
+          "label": "Month"
+        },
+        {
+          "value": "week",
+          "label": "Week"
+        },
+        {
+          "value": "day",
+          "label": "Day"
+        },
+        {
+          "value": "hour",
+          "label": "Hour"
+        },
+      ],
+      "defaultValue": "day"
+    },
     
-    "selectableFromDataset" : "input_dataset",
     
-
-    // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
-    // or more dataset to each input and output role.
-
-    // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
-    // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
-    // associate no dataset with the role.
-
-    "inputRoles" : [
+    {
+      "name": "AGGREGATION",
+      "label" : "Aggregation",
+      "type": "SELECT",
+      "mandatory" : true,
+      "selectChoices": [
         {
-            "name": "input_dataset",
-            "label": "Input dataset",
-            "arity": "UNARY",
-            "required": true,
-            "acceptsDataset": true,
-            "acceptsFolder": false
+          "value": "sum",
+          "label": "Sum"
+        },
+        {
+          "value": "mean",
+          "label": "Average"
         }
-    ],
-
-    "outputRoles" : [ 
+      ],
+      "defaultValue": "sum"
+    },
+    
+    {
+      "type": "SEPARATOR",
+      "name": "separator_missing_values",
+      "label": "Missing values"
+    },
+    
+     {
+      "name": "MISSING_VALUES",
+      "label" : "Imputation strategy",
+      "type": "SELECT",
+      "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
+      "mandatory" : true,
+      "defaultValue": "interpolate",
+      "selectChoices": [
         {
-            "name": "output_dataset",
-            "label": "Cleaned output dataset",
-            "arity": "UNARY",
-            "required": true,
-            "acceptsDataset": true,
-            "acceptsFolder": false
+          "value": "interpolate",
+          "label": "Interpolate"
+        },
+        {
+          "value": "impute",
+          "label": "Impute ..."
+        },
+        {
+          "value": "no",
+          "label": "Do not replace"
         }
-    ],
-
-    // The field "params" holds a list of all the params
-    // for wich the user will be prompted for values in the Settings tab of the recipe.
-
-    // The available parameter types are:
-    // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
-
-    "params": [
-        
-        {
-            "type": "SEPARATOR",
-            "name": "separator_input",
-            "label": "Input data"
-        },
-        
-        {
-            "name": "TIME_COLUMN",
-            "label" : "Time column",
-            "description": "Required column in DSS parsed date format at timezone UTC",
-            "type": "COLUMN",
-            "columnRole":"input_dataset",
-            "mandatory" : true
-        },
-        
-
-        
-        {
-            "name": "SERIES_COLUMNS",
-            "label" : "Series columns",
-            "description":"Required numeric columns to clean",
-            "type": "COLUMNS",
-            "columnRole":"input_dataset",
-            "mandatory" : true
-        },
-        
-        {
-            "type": "SEPARATOR",
-            "name": "separator_partitioning",
-            "label": "Partitioning - optional"
-        },
-        
-        {
-            "name": "PARTITIONING_ACTIVATED",
-            "label" : "Activate partitioning",
-            "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
-            "type": "BOOLEAN",
-            "mandatory" : true,
-            "defaultValue": false
-        },
-        
-        {
-            "name": "PARTITION_DIMENSION_NAME",
-            "label" : "Dimension name",
-            "description": "Mandatory if partitioning is activated, else leave blank",
-            "type": "STRING",
-            "mandatory" : false,
-            "defaultValue": "",
-            "visibilityCondition": "model.PARTITIONING_ACTIVATED"
-        },
-        
-        {
-            "type": "SEPARATOR",
-            "name": "separator_resampling",
-            "label": "Aggregation and resampling"
-        },
-
-        {
-            "name": "GRANULARITY",
-            "label" : "Granularity",
-            "type": "SELECT",
-            "mandatory" : true,
-            "selectChoices": [
-                {
-                    "value": "year",
-                    "label": "Year"
-                },
-                {
-                    "value": "quarter",
-                    "label": "Quarter"
-                },
-                {
-                    "value": "month",
-                    "label": "Month"
-                },
-                {
-                    "value": "week",
-                    "label": "Week"
-                },
-                {
-                    "value": "day",
-                    "label": "Day"
-                },
-                {
-                    "value": "hour",
-                    "label": "Hour"
-                },
-            ],
-            "defaultValue": "day"
-        },
-        
-        
-        {
-            "name": "AGGREGATION",
-            "label" : "Aggregation",
-            "type": "SELECT",
-            "mandatory" : true,
-            "selectChoices": [
-                {
-                    "value": "sum",
-                    "label": "Sum"
-                },
-                {
-                    "value": "mean",
-                    "label": "Average"
-                }
-            ],
-            "defaultValue": "sum"
-        },
-        
-        {
-            "type": "SEPARATOR",
-            "name": "separator_missing_values",
-            "label": "Missing values"
-        },
-        
-         {
-            "name": "MISSING_VALUES",
-            "label" : "Imputation strategy",
-            "type": "SELECT",
-            "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
-            "mandatory" : true,
-            "defaultValue": "interpolate",
-            "selectChoices": [
-                {
-                    "value": "interpolate",
-                    "label": "Interpolate"
-                },
-                {
-                    "value": "impute",
-                    "label": "Impute ..."
-                },
-                {
-                    "value": "no",
-                    "label": "Do not replace"
-                }
-            ]
+      ]
  
-        },
-               
+    },
+         
+    {
+      "name": "MISSING_IMPUTE_WITH",
+      "label" : "Impute with",
+      "type": "SELECT",
+      "mandatory" : false,
+      "visibilityCondition": "model.MISSING_VALUES == 'impute'",
+      "defaultValue": "constant",
+      "selectChoices": [
         {
-            "name": "MISSING_IMPUTE_WITH",
-            "label" : "Impute with",
-            "type": "SELECT",
-            "mandatory" : false,
-            "visibilityCondition": "model.MISSING_VALUES == 'impute'",
-            "defaultValue": "constant",
-            "selectChoices": [
-                {
-                    "value": "average",
-                    "label": "Average of values"
-                },
-                {
-                    "value": "median",
-                    "label": "Median of values"
-                },
-                {
-                    "value": "constant",
-                    "label": "A constant value"
-                }
-            ]
+          "value": "average",
+          "label": "Average of values"
         },
-        
         {
-            "name": "MISSING_IMPUTE_CONSTANT",
-            "label" : "Value",
-            "type": "DOUBLE",
-            "defaultValue" : 0.0,
-            "mandatory" : false,
-            "visibilityCondition": "model.MISSING_VALUES == 'impute' && model.MISSING_IMPUTE_WITH == 'constant'"
+          "value": "median",
+          "label": "Median of values"
         },
-        
         {
-            "type": "SEPARATOR",
-            "name": "separator_outliers",
-            "label": "Outliers"
-        },
-        
-          {
-            "name": "OUTLIERS",
-            "label" : "Imputation strategy",
-            "type": "SELECT",
-            "mandatory" : true,
-            "defaultValue": "no",
-            "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
-            "selectChoices": [
-                {
-                    "value": "interpolate",
-                    "label": "Interpolate"
-                },
-                {
-                    "value": "impute",
-                    "label": "Impute ..."
-                },
-                {
-                    "value": "no",
-                    "label": "Do not replace"
-                }
-            ]
- 
-        },
-               
-        {
-            "name": "OUTLIERS_IMPUTE_WITH",
-            "label" : "Impute with",
-            "type": "SELECT",
-            "mandatory" : false,
-            "visibilityCondition": "model.OUTLIERS == 'impute'",
-            "defaultValue": "constant",
-            "selectChoices": [
-                {
-                    "value": "average",
-                    "label": "Average of values"
-                },
-                {
-                    "value": "median",
-                    "label": "Median of values"
-                },
-                {
-                    "value": "constant",
-                    "label": "A constant value"
-                }
-            ]
-        },
-        
-        {
-            "name": "OUTLIERS_IMPUTE_CONSTANT",
-            "label" : "Value",
-            "type": "DOUBLE",
-            "defaultValue" : 0.0,
-            "mandatory" : false,
-            "visibilityCondition": "model.OUTLIERS == 'impute' && model.OUTLIERS_IMPUTE_WITH == 'constant'"
+          "value": "constant",
+          "label": "A constant value"
         }
+      ]
+    },
+    
+    {
+      "name": "MISSING_IMPUTE_CONSTANT",
+      "label" : "Value",
+      "type": "DOUBLE",
+      "defaultValue" : 0.0,
+      "mandatory" : false,
+      "visibilityCondition": "model.MISSING_VALUES == 'impute' && model.MISSING_IMPUTE_WITH == 'constant'"
+    },
+    
+    {
+      "type": "SEPARATOR",
+      "name": "separator_outliers",
+      "label": "Outliers"
+    },
+    
+      {
+      "name": "OUTLIERS",
+      "label" : "Imputation strategy",
+      "type": "SELECT",
+      "mandatory" : true,
+      "defaultValue": "no",
+      "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
+      "selectChoices": [
+        {
+          "value": "interpolate",
+          "label": "Interpolate"
+        },
+        {
+          "value": "impute",
+          "label": "Impute ..."
+        },
+        {
+          "value": "no",
+          "label": "Do not replace"
+        }
+      ]
+ 
+    },
+         
+    {
+      "name": "OUTLIERS_IMPUTE_WITH",
+      "label" : "Impute with",
+      "type": "SELECT",
+      "mandatory" : false,
+      "visibilityCondition": "model.OUTLIERS == 'impute'",
+      "defaultValue": "constant",
+      "selectChoices": [
+        {
+          "value": "average",
+          "label": "Average of values"
+        },
+        {
+          "value": "median",
+          "label": "Median of values"
+        },
+        {
+          "value": "constant",
+          "label": "A constant value"
+        }
+      ]
+    },
+    
+    {
+      "name": "OUTLIERS_IMPUTE_CONSTANT",
+      "label" : "Value",
+      "type": "DOUBLE",
+      "defaultValue" : 0.0,
+      "mandatory" : false,
+      "visibilityCondition": "model.OUTLIERS == 'impute' && model.OUTLIERS_IMPUTE_WITH == 'constant'"
+    }
 
 
-    ],
+  ],
 
-    // The field "resourceKeys" holds a list of keys that allows to limit the number
-    // of concurrent executions and activities triggered by this recipe.
-    //
-    // Administrators can configure the limit per resource key in the Administration > Settings > Flow build
-    // screen.
+  // The field "resourceKeys" holds a list of keys that allows to limit the number
+  // of concurrent executions and activities triggered by this recipe.
+  //
+  // Administrators can configure the limit per resource key in the Administration > Settings > Flow build
+  // screen.
 
-    "resourceKeys" : []
+  "resourceKeys" : []
 
 }
 
