@@ -14,7 +14,7 @@ config = dkuCustomRecipeConfig()
 print(config)
 
 for(n in names(config)){
-    assign(n, clean_plugin_config(config[[n]]))
+    assign(n, clean_plugin_param(config[[n]]))
 }
 if(!INCLUDE_FORECAST && !INCLUDE_HISTORY){
     stop("[ERROR] Please include either forecast and/or history")
