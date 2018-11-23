@@ -10,12 +10,16 @@ library(lubridate)
 
 source(file.path(dkuCustomRecipeResource(), "io.R"))
 
-# This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard
+# This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard.
+# It is needed to parse dates from Dataiku datasets.
 dkuDateFormat = "%Y-%m-%dT%T.000Z"
+
+# Set number of digits to use when printing Sys.time.
+# It is needed to store version name in the model folder at millisecond granularity.
 op <- options(digits.secs = 3)
 
-# This fixed mapping is used to convert time series from R data.frame to forecast::msts format
-# This is needed as the forecast::msts format requires seasonality arguments
+# This fixed mapping is used to convert time series from R data.frame to forecast::msts format.
+# It is needed as the forecast::msts format requires seasonality arguments.
 mapGranularitySeasonality <- list(
   year = c(1),  
   quarter = c(4),
@@ -25,28 +29,35 @@ mapGranularitySeasonality <- list(
   hour = c(8766, 168, 24) # seasonality within year, week, day
 )
 
-GenerateDateRange <- function(df, timeColumn, granularity) {
-  #' Resample a univariate time series data.frame to a continuous date range at the chosen granularity
-  #'
-  #' @description First it generates the continuous date range.
-  #' Then it joins the original time series back to the date range.
-  #'
-  #' @details The expected structure for the input time series data.frame is to have two columns:
-  #' "timeColumn" of date or POSIX type 
-  #' "seriesColumn" of numeric type
+AggregateNa <- function(x, strategy) {
+  # Aggregates a numeric object in a way that is robust to missing values.
+  # It can be applied in a dplyr group_by pipeline.
+  #
+  # Args:
+  #   x: numerical array or matrix
+  #   strategy: Character string describing how to aggregate (one of "mean", "sum").
+  #
+  # Returns:
+  #   Sum or average of non-missing values of x (or NA if x has no values).
   
-  minDate <- min(df[[timeColumn]])
-  maxDate <- max(df[[timeColumn]])
-  allTimes <- tibble(!!timeColumn := seq(minDate, maxDate, by = granularity))
-  dfAllTimes <- merge(allTimes, df, by = timeColumn, all.x = TRUE)
-  return(dfAllTimes)
+  agg <- case_when(
+      strategy == 'mean' ~ ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)),
+      strategy == 'sum' ~  ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE))
+  )   
+  return(agg)
 }
 
 TruncateDate <- function(date, granularity) {
-  #' Truncate a date to the start of the chosen granularity
-  #'
-  #' @description This function guarantees that GenerateDateRange works on all granularities.
-  #' This is because the periods of month and quarters may vary across time.
+  # Truncates a date to the start of the chosen granularity. 
+  # It guarantees that ResampleDataframeWithTimeSeries function works at yearly/quarterly/monthly granularity.
+  # Indeed they have varying lengths contrary to week/day/hour granularity.
+  #
+  # Args:
+  #   date: Object of POSIX or Date class. It can be an atomic date or an array of dates.
+  #   granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour")
+  #
+  # Returns:
+  #   Truncated date object. For weekly granularity, we consider that weeks start on Monday.
   
   tmpDate <- as.POSIXlt(date)
   outputDate <-  switch(granularity,
@@ -59,43 +70,48 @@ TruncateDate <- function(date, granularity) {
   return(outputDate)
 }
 
-AggregateNa <- function(x, strategy) {
-  #' Aggregation function robust to missing values
-  #'
-  #' @description This returns a missing value if all input values are missing.
-  #' Otherwise, it returns the aggregate of the non-missing elements.
-  
-  agg <- case_when(
-      strategy == 'mean' ~ ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)),
-      strategy == 'sum' ~  ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE))
-  )   
-  return(agg)
-}
-
-ConvertDFtoTS <- function(df, timeColumn, seriesColumn, granularity) {
-  #' Converts a univariate time series from R data.frame to forecast::msts multi-seasonal time series format
-  #'
-  #' @description First the functions computes the start date and converts it to the numeric vector expected by the ts object.
-  #' This vector requires two numeric elements: 
-  #'
-  #' 1. The year in yyyy format
-  #'
-  #' 2. The numeric fraction of the period inside the year e.g. 3/12. for the third month of the year 
-  #' and 10/365.25 for the 10th day of the year
-  #' 
-  #' Hence, the content of this vector depends on the chosen granularity.
-  #'
-  #' Finally, it takes the original series data and builds it into a msts object.
-  #' 
-  #' @details The expected structure for the input time series data.frame is to have two columns:
-  #' "timeColumn" of date or POSIX type 
-  #' "seriesColumn" of numeric type
+ResampleDataframeWithTimeSeries <- function(df, timeColumn, granularity) {
+  # Resamples a time series data.frame to a continuous date range at the chosen granularity.
+  #
+  # Args:
+  #   df: data.frame with one time column and any number of series columns.
+  #   timeColumn: Name of the time column. Must be of POSIX or Date class.
+  #   granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour")
+  #
+  # Returns:
+  #   Resampled data.frame with a continuous date range in the time column
+  #   and missing values when there was no series data.
   
   minDate <- min(df[[timeColumn]])
+  maxDate <- max(df[[timeColumn]])
+  allTimes <- tibble(!!timeColumn := seq(minDate, maxDate, by = granularity))
+  dfAllTimes <- merge(allTimes, df, by = timeColumn, all.x = TRUE)
+  return(dfAllTimes)
+}
+
+ConvertDataFrameToTimeSeries <- function(df, timeColumn, seriesColumn, granularity) {
+  # Converts a univariate time series from data.frame to forecast::msts time series format.
+  # It assumes that the time column is a continuous date range at chosen granularity.
+  #
+  # Args:
+  #   df: data.frame with one time column and any number of series columns.
+  #   timeColumn: Name of the time column. Must be of POSIX or Date class.
+  #   seriesColumn: Name of the numeric column for the time series values.
+  #   granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #
+  # Returns:
+  #   Multi-seasonal time series for the chosen time and series columns.
+
+  minDate <- min(df[[timeColumn]])
   seasonal.periods <- mapGranularitySeasonality[[granularity]]
-  startDate <- c() # vector of two elements according to the ts object documentation
-  startDate[1] <- lubridate::year(minDate) # year
-  startDate[2] <- switch(granularity,
+
+  # Vector of two elements according to the ts object documentation:
+  # 1. The year in yyyy format,
+  # 2. The numeric fraction of the period inside the year 
+  # e.g. 10/365.25 for the 10th day of the year.
+  startDate <- c() 
+  startDate[1] <- lubridate::year(minDate) 
+  startDate[2] <- switch(granularity, # ts expects a decimal within the year
     year = 1,
     quarter = lubridate::quarter(minDate),
     month = lubridate::month(minDate),
@@ -103,7 +119,7 @@ ConvertDFtoTS <- function(df, timeColumn, seriesColumn, granularity) {
     day = lubridate::yday(minDate),
     hour = 24 * (lubridate::yday(minDate) - 1) + lubridate::hour(minDate),
   )
-  ts <- msts(
+  ts <- forecast::msts(
       data = df[[seriesColumn]],
       seasonal.periods = seasonal.periods,
       start = startDate
@@ -111,49 +127,76 @@ ConvertDFtoTS <- function(df, timeColumn, seriesColumn, granularity) {
   return(ts)
 }
 
-CleanTS <- function(ts, missingValues, missingImputeWith, missingImputeConstant, 
-               outliers, outliersImputeWith, outliersImputeConstant) {
-  if (missingValues == 'interpolate') {
-    ts <- na.interp(ts)
-  } else if (missingValues == 'impute') {
-    missingImputation <- case_when(
-      missingImputeWith == 'median' ~ median(ts, na.rm = TRUE),
-      missingImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
-      missingImputeWith == 'constant' ~ missingImputeConstant
-    )   
-    msts[which(is.na(ts))] <- missingImputation
-  }
-  
-  outliersDetected <- tsoutliers(ts)
-  if (outliers == 'interpolate') {
-    ts[outliersDetected$index] <- outliersDetected$replacements
-  } else if (outliers == 'impute') {
-    outliersImputation <- case_when(
-      outliersImputeWith == 'median' ~ median(ts, na.rm = TRUE),
-      outliersImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
-      outliersImputeWith == 'constant' ~ outliersImputeConstant
-    )   
-    ts[outliersDetected$index] <- outliersImputation
-  }
-  return(ts)
-}
-
-CleanDF <- function(df, timeColumn, seriesColumns, granularity, 
+CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granularity, 
            missingValues, missingImputeWith, missingImputeConstant, 
            outliers, outliersImputeWith, outliersImputeConstant) {
-  #' Replace missing values and/or missing values in a multivariate time series data.frame
-  #'
-  #' @description First it converts the input dataframe to forecast::msts multi-seasonal time series format. 
-  #' Then it selectively applies the missing value interpolation and outlier replacement methods from the R forecast package.
+  # Aggregates and resamples time series in the data.frame at chosen granularity.
+  # Then cleans the time series from missing values and outliers.
+  # It can use interpolation techniques from the forecast package,
+  # or simple methods like replacing with median, average or constant.
+  #
+  # Args:
+  #  df: data.frame with one time column and any number of numeric series columns.
+  #  timeColumn: Name of the time columnn. Must be of dataiku parsed Date format
+  #  seriesColumns: Name of the numeric columns for the time series values.
+  #  granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #  missingValues: Character string describing how to replace missing values
+  #                 (one of "impute", "interpolate" or else no processing is applied).
+  #  missingImputeWith: If missingValues is "impute", character string 
+  #                     describing how to replace missing values
+  #                     (one of "median", "average", "constant").
+  #  missingImputeConstant: Constant to impute missing values.
+  #  outliers: Character string describing how to replace detected outliers
+  #            (one of "impute", "interpolate" or else no processing is applied).
+  #  outliersImputeWith: If outliers is "impute", character string 
+  #                     describing how to replace outliers
+  #                     (one of "median", "average", "constant").
+  #  outliersImputeConstant: Constant to impute outliers.
+  #
+  # Returns:
+  #  Cleaned data frame with the time series
   
-  dfOutput <- tibble(!!timeColumn := df[[timeColumn]])
-  for(c in seriesColumns) {
-    ts <- ConvertDFtoTS(df, timeColumn, c, granularity)
-    dfOutput[[c]] <- as.numeric(
-      CleanTS(ts, missingValues, missingImputeWith, missingImputeConstant, 
-        outliers, outliersImputeWith, outliersImputeConstant
-      )
-    )
-  }   
+  PrintPlugin("Preparation stage: date parsing, cleaning, aggregation, resampling")
+  # convert to R POSIX date format
+  df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dkuDateFormat) 
+  # truncate all dates to avoid errors at the ResampleDataframeWithTimeSeries step
+  df[[TIME_COLUMN]] <- TruncateDate(df[[TIME_COLUMN]], GRANULARITY)
+  dfResampled <- df %>%
+    group_by_(.dots = c(TIME_COLUMN)) %>%
+    summarise_all(funs(AggregateNa(., AGGREGATION))) %>%
+    ResampleDataframeWithTimeSeries(TIME_COLUMN, GRANULARITY)
+
+
+  {PrintPlugin("Interpolation stage: finding and replacing outlier and or missing values")} 
+  dfOutput <- tibble(!!timeColumn := dfResampled[[timeColumn]])
+  for(seriesColumn in seriesColumns) {
+    ts <- ConvertDataFrameToTimeSeries(dfResampled, timeColumn, seriesColumn, granularity)
+    if (missingValues == 'interpolate') {
+      ts <- forecast::na.interp(ts) 
+    } else if (missingValues == 'impute') {
+      missingImputation <- case_when(
+        missingImputeWith == 'median' ~ median(ts, na.rm = TRUE),
+        missingImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
+        missingImputeWith == 'constant' ~ missingImputeConstant
+      )   
+      msts[which(is.na(ts))] <- missingImputation
+    }
+    outliersDetected <- forecast::tsoutliers(ts)
+    if (outliers == 'interpolate') {
+      ts[outliersDetected$index] <- outliersDetected$replacements
+    } else if (outliers == 'impute') {
+      outliersImputation <- case_when(
+        outliersImputeWith == 'median' ~ median(ts, na.rm = TRUE),
+        outliersImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
+        outliersImputeWith == 'constant' ~ outliersImputeConstant
+      )   
+      ts[outliersDetected$index] <- outliersImputation
+    }
+    dfOutput[[seriesColumn]] <- as.numeric(ts)
+  }
+  # converts the date from R POSIX class back to the dataiku date string format
+  dfOutput[[TIME_COLUMN]] <- strftime(dfOutput[[TIME_COLUMN]] , dkuDateFormat)
+
+  PrintPlugin("All stages completed!")
   return(dfOutput)
 }
