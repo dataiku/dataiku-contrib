@@ -78,7 +78,7 @@ if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df)))
 }
 
 # convert to msts time series format
-ts <- ConvertDFtoTS(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
+ts <- ConvertDataFrameToTimeSeries(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
 
 # convert df to generic prophet-compatible format
 names(df) <- c('ds','y')

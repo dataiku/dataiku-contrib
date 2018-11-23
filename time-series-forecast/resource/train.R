@@ -26,10 +26,10 @@ MODEL_FUNCTION_NAME_LIST <- list(
 )
 
 NaiveModelWrapper <- function(y, method = "simple", h = 10, level = c(80,95), model = NULL) {
-  #' Wrap naive models from the forecast package in a simpler standard way
-  #'
-  #' @description Depending on a simple "method" argument, this wrapper function switches to 
-  #' different implementations of naive models in the forecast package. 
+  # Wrap naive models from the forecast package in a simpler standard way
+  #
+  # @description Depending on a simple "method" argument, this wrapper function switches to 
+  # different implementations of naive models in the forecast package. 
   
   model <- switch(method,
     simple = forecast::naive(y, h = h, level = level),
