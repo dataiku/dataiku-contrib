@@ -27,7 +27,6 @@ columnClasses <- c("character", rep("numeric", length(SERIES_COLUMNS)))
 
 dfInput <- dkuReadDataset(inputDatasetName, columns = selectedColumns, colClasses = columnClasses) 
 
-  # replace outlier and or missing values WARNING: heavy computational load
 dfOutput <- CleanDataframeWithTimeSeries(dfInput, TIME_COLUMN, SERIES_COLUMNS, GRANULARITY, 
     MISSING_VALUES, MISSING_IMPUTE_WITH, MISSING_IMPUTE_CONSTANT, 
     OUTLIERS, OUTLIERS_IMPUTE_WITH, OUTLIERS_IMPUTE_CONSTANT)
