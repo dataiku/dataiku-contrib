@@ -4,7 +4,7 @@ library(forecast)
 library(prophet)
 
 source(file.path(dkuCustomRecipeResource(), "clean.R"))
-
+source(file.path(dkuCustomRecipeResource(), "train.R"))
 
 get_forecasts <- function(ts, df, model_list, model_parameter_list, 
                                        horizon, granularity, confidence_interval = 95, 
