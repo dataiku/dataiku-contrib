@@ -35,7 +35,7 @@ AggregateNa <- function(x, strategy) {
   #
   # Args:
   #   x: numerical array or matrix
-  #   strategy: Character string describing how to aggregate (one of "mean", "sum").
+  #   strategy: character string describing how to aggregate (one of "mean", "sum").
   #
   # Returns:
   #   Sum or average of non-missing values of x (or NA if x has no values).
@@ -53,8 +53,8 @@ TruncateDate <- function(date, granularity) {
   # Indeed they have varying lengths contrary to week/day/hour granularity.
   #
   # Args:
-  #   date: Object of POSIX or Date class. It can be an atomic date or an array of dates.
-  #   granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour")
+  #   date: object of POSIX or Date class. It can be an atomic date or an array of dates.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour")
   #
   # Returns:
   #   Truncated date object. For weekly granularity, we consider that weeks start on Monday.
@@ -70,34 +70,15 @@ TruncateDate <- function(date, granularity) {
   return(outputDate)
 }
 
-ResampleDataframeWithTimeSeries <- function(df, timeColumn, granularity) {
-  # Resamples a time series data.frame to a continuous date range at the chosen granularity.
-  #
-  # Args:
-  #   df: data.frame with one time column and any number of series columns.
-  #   timeColumn: Name of the time column. Must be of POSIX or Date class.
-  #   granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour")
-  #
-  # Returns:
-  #   Resampled data.frame with a continuous date range in the time column
-  #   and missing values when there was no series data.
-  
-  minDate <- min(df[[timeColumn]])
-  maxDate <- max(df[[timeColumn]])
-  allTimes <- tibble(!!timeColumn := seq(minDate, maxDate, by = granularity))
-  dfAllTimes <- merge(allTimes, df, by = timeColumn, all.x = TRUE)
-  return(dfAllTimes)
-}
-
 ConvertDataFrameToTimeSeries <- function(df, timeColumn, seriesColumn, granularity) {
   # Converts a univariate time series from data.frame to forecast::msts time series format.
   # It assumes that the time column is a continuous date range at chosen granularity.
   #
   # Args:
   #   df: data.frame with one time column and any number of series columns.
-  #   timeColumn: Name of the time column. Must be of POSIX or Date class.
-  #   seriesColumn: Name of the numeric column for the time series values.
-  #   granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #   timeColumn: name of the time column. Must be of POSIX or Date class.
+  #   seriesColumn: name of the numeric column for the time series values.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
   #
   # Returns:
   #   Multi-seasonal time series for the chosen time and series columns.
@@ -127,50 +108,84 @@ ConvertDataFrameToTimeSeries <- function(df, timeColumn, seriesColumn, granulari
   return(ts)
 }
 
+PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
+  granularity, aggregationStrategy = "sum", resample = TRUE) {
+  # Parses and optionally resamples time series in the data.frame at chosen granularity.
+  #
+  # Args:
+  #   df: data.frame with one time column in Dataiku parsed date format 
+  #       and any number of numeric series columns.
+  #   timeColumn: name of the time columnn. Must be of dataiku parsed Date format
+  #   seriesColumns: name of the numeric columns for the time series values.
+  #   resample: boolean, if TRUE then resample else just parse and truncate date at granularity.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #   aggregationStrategy: character string (one of "mean", "sum").
+  #
+  # Returns:
+  #   data frame with the prepared time series
+
+  # convert to R POSIX date format
+  if (granularity == "hour") {
+    df[[timeColumn]] <- as.POSIXct(df[[timeColumn]], format = dkuDateFormat) 
+  } else {
+    df[[timeColumn]] <- as.Date(df[[timeColumn]], format = dkuDateFormat)
+  }
+  # Get continuous range of dates
+  minDate <- TruncateDate(min(df[[timeColumn]]), granularity)
+  maxDate <- TruncateDate(max(df[[timeColumn]]), granularity)
+  dateRange <- tibble(!!timeColumn := seq(minDate, maxDate, by = granularity))
+  if (resample) {
+    PrintPlugin("Preparation stage: date parsing, cleaning, aggregation, resampling")
+    df[[timeColumn]] <- TruncateDate(df[[timeColumn]], granularity)
+    dfOutput <- df %>%
+      group_by_(.dots = c(timeColumn)) %>%
+      summarise_all(funs(AggregateNa(., aggregationStrategy))) %>%
+      arrange_(.dots = c(timeColumn))
+    dfOutput <- merge(dateRange, dfOutput, by = timeColumn, all.x = TRUE)
+  } else {
+    # even if we do not perform aggregation and resampling, we need to check
+    # that dataframe is not irregularly sampled which would cause models to fail
+    if (nrow(dateRange) != nrow(df)) {
+      stop(paste0("[ERROR] Data must be sampled at regular ", GRANULARITY, "ly granularity"))
+    } 
+    dfOutput <- df
+  }
+  selectedColumns <- c(timeColumn, unique(seriesColumns))
+  return(dfOutput[c(selectedColumns)])
+}
+
 CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granularity, 
-           missingValues, missingImputeWith, missingImputeConstant, 
-           outliers, outliersImputeWith, outliersImputeConstant) {
-  # Aggregates and resamples time series in the data.frame at chosen granularity.
-  # Then cleans the time series from missing values and outliers.
+  missingValues, missingImputeWith, missingImputeConstant, 
+  outliers, outliersImputeWith, outliersImputeConstant) {
+  # Cleans multiple time series in a data.frame from missing values and outliers.
   # It can use interpolation techniques from the forecast package,
   # or simple methods like replacing with median, average or constant.
   #
   # Args:
-  #  df: data.frame with one time column and any number of numeric series columns.
-  #  timeColumn: Name of the time columnn. Must be of dataiku parsed Date format
-  #  seriesColumns: Name of the numeric columns for the time series values.
-  #  granularity: Character string (one of "year", "quarter", "month", "week", "day", "hour").
-  #  missingValues: Character string describing how to replace missing values
-  #                 (one of "impute", "interpolate" or else no processing is applied).
-  #  missingImputeWith: If missingValues is "impute", character string 
-  #                     describing how to replace missing values
-  #                     (one of "median", "average", "constant").
-  #  missingImputeConstant: Constant to impute missing values.
-  #  outliers: Character string describing how to replace detected outliers
-  #            (one of "impute", "interpolate" or else no processing is applied).
-  #  outliersImputeWith: If outliers is "impute", character string 
-  #                     describing how to replace outliers
-  #                     (one of "median", "average", "constant").
-  #  outliersImputeConstant: Constant to impute outliers.
+  #   df: data.frame with one time column and any number of numeric series columns.
+  #   timeColumn: name of the time columnn. Must be of dataiku parsed Date format
+  #   seriesColumns: name of the numeric columns for the time series values.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #   missingValues: character string describing how to replace missing values
+  #                  (one of "impute", "interpolate" or else no processing is applied).
+  #   missingImputeWith: If missingValues is "impute", character string 
+  #                      describing how to replace missing values
+  #                      (one of "median", "average", "constant").
+  #   missingImputeConstant: Constant to impute missing values.
+  #   outliers: character string describing how to replace detected outliers
+  #             (one of "impute", "interpolate" or else no processing is applied).
+  #   outliersImputeWith: If outliers is "impute", character string 
+  #                      describing how to replace outliers
+  #                      (one of "median", "average", "constant").
+  #   outliersImputeConstant: Constant to impute outliers.
   #
   # Returns:
-  #  Cleaned data frame with the time series
-  
-  PrintPlugin("Preparation stage: date parsing, cleaning, aggregation, resampling")
-  # convert to R POSIX date format
-  df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dkuDateFormat) 
-  # truncate all dates to avoid errors at the ResampleDataframeWithTimeSeries step
-  df[[TIME_COLUMN]] <- TruncateDate(df[[TIME_COLUMN]], GRANULARITY)
-  dfResampled <- df %>%
-    group_by_(.dots = c(TIME_COLUMN)) %>%
-    summarise_all(funs(AggregateNa(., AGGREGATION))) %>%
-    ResampleDataframeWithTimeSeries(TIME_COLUMN, GRANULARITY)
+  #   Cleaned data frame with the time series
 
-
-  {PrintPlugin("Interpolation stage: finding and replacing outlier and or missing values")} 
-  dfOutput <- tibble(!!timeColumn := dfResampled[[timeColumn]])
+  PrintPlugin("Interpolation stage: finding and replacing outlier and/or missing values")
+  dfOutput <- tibble(!!timeColumn := df[[timeColumn]])
   for(seriesColumn in seriesColumns) {
-    ts <- ConvertDataFrameToTimeSeries(dfResampled, timeColumn, seriesColumn, granularity)
+    ts <- ConvertDataFrameToTimeSeries(df, timeColumn, seriesColumn, granularity)
     if (missingValues == 'interpolate') {
       ts <- forecast::na.interp(ts) 
     } else if (missingValues == 'impute') {
@@ -179,7 +194,7 @@ CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granular
         missingImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
         missingImputeWith == 'constant' ~ missingImputeConstant
       )   
-      msts[which(is.na(ts))] <- missingImputation
+      ts[which(is.na(ts))] <- missingImputation
     }
     outliersDetected <- forecast::tsoutliers(ts)
     if (outliers == 'interpolate') {
@@ -195,8 +210,7 @@ CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granular
     dfOutput[[seriesColumn]] <- as.numeric(ts)
   }
   # converts the date from R POSIX class back to the dataiku date string format
-  dfOutput[[TIME_COLUMN]] <- strftime(dfOutput[[TIME_COLUMN]] , dkuDateFormat)
-
+  dfOutput[[timeColumn]] <- strftime(dfOutput[[timeColumn]] , dkuDateFormat)
   PrintPlugin("All stages completed!")
   return(dfOutput)
 }

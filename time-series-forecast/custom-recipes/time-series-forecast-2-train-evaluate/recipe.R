@@ -18,7 +18,7 @@ for(n in names(config)) {
 }
 
 # Check that partitioning settings are correct if activated
-checkPartition <- CheckPartitioningSettings(inputDatasetName,
+checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 # Prepare all raw parameters from plugin UI
@@ -53,41 +53,25 @@ for(modelName in AVAILABLE_MODEL_NAME_LIST) {
   }
 }
 
-
-########## DATA PREPARATION STAGE ##########
-
-PrintPlugin("Preparation stage starting...")
-
 df <- dkuReadDataset(inputDatasetName, columns = c(TIME_COLUMN, SERIES_COLUMN), 
   colClasses = c("character","numeric")) 
-
-# convert to R POSIX date format
-df[[TIME_COLUMN]] <- as.POSIXct(df[[TIME_COLUMN]], format = dkuDateFormat)
-
-# truncate all dates to the start of the period to avoid errors at later stages
-df[[TIME_COLUMN]] <- TruncateDate(df[[TIME_COLUMN]], GRANULARITY)
-
-dateRange <- seq(min(df[[TIME_COLUMN]]), max(df[[TIME_COLUMN]]), by = GRANULARITY)
-if (length(dateRange) != nrow(df)) {
-  stop(paste0("[ERROR] Data must be sampled at regular ", GRANULARITY, "ly granularity"))
-}
 
 if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
   stop(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
     "Make horizon or initial shorter."))
 }
 
-# convert to msts time series format
-ts <- ConvertDataFrameToTimeSeries(df, TIME_COLUMN, SERIES_COLUMN, GRANULARITY)
-
 # convert df to generic prophet-compatible format
-names(df) <- c('ds','y')
+df <- PrepareDataframeWithTimeSeries(df, TIME_COLUMN, SERIES_COLUMN,
+  GRANULARITY, resample = FALSE)
+names(df) <- c('ds','y') # convention for prophet
 if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
   df[['floor']] <- PROPHET_MODEL_MINIMUM
   df[['cap']] <- PROPHET_MODEL_MAXIMUM
 }
 
-PrintPlugin("Preparation stage completed")
+# convert to msts time series format
+ts <- ConvertDataFrameToTimeSeries(df, "ds", "y", GRANULARITY)
 
 
 ########## TRAINING STAGE ##########
@@ -103,6 +87,7 @@ configTrain <- config
 SaveForecastingObjects(
   folderName = modelFolderName,
   partitionDimensionName = PARTITION_DIMENSION_NAME,
+  checkPartitioning = checkPartitioning,
   versionName = versionName, 
   ts, df, modelParameterList, modelList, configTrain
 ) 
@@ -114,16 +99,14 @@ PrintPlugin("Models, time series and parameters saved to folder")
 
 PrintPlugin(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 
-performanceDF <- EvaluateModels(ts, df, modelList, modelParameterList, 
-  EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_PERIOD, CROSSVAL_INITIAL) %>%
-  mutate_all(funs(ifelse(is.infinite(.), NA, .)))
-
-performanceDF[["training_date"]] <- strftime(versionName, dkuDateFormat)
+errorDf <- EvaluateModels(ts, df, modelList, modelParameterList, 
+  EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_INITIAL, CROSSVAL_PERIOD)
+errorDf[["training_date"]] <- strftime(versionName, dkuDateFormat)
 
 PrintPlugin("Evaluation stage completed, saving evaluation results to output dataset")
 
 # Recipe outputs
-WriteDatasetWithPartitioningColumn(performanceDF, evalDatasetName, 
+WriteDatasetWithPartitioningColumn(errorDf, evalDatasetName, 
   PARTITION_DIMENSION_NAME, checkPartitioning)
 
 PrintPlugin("All stages completed!")

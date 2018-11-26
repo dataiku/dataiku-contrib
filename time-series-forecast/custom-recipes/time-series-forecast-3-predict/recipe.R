@@ -21,11 +21,11 @@ if (!INCLUDE_FORECAST && !INCLUDE_HISTORY) {
 }
 
 # Check that partitioning settings are correct if activated
-checkPartition <- CheckPartitioningSettings(evalDatasetName,
+checkPartitioning <- CheckPartitioningSettings(evalDatasetName,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 # loads all forecasting objects from the model folder
-LoadForecastingObjects(modelFolderName, partitionDimensionName)
+LoadForecastingObjects(modelFolderName, partitionDimensionName, checkPartitioning)
 for(n in names(configTrain)) {
   assign(n, CleanPluginParam(configTrain[[n]]))
 }
@@ -36,8 +36,8 @@ for(n in names(configTrain)) {
 PrintPlugin("Model selection stage")
 
 if (MODEL_SELECTION == "auto") {
-  evalDF <- dkuReadDataset(evalDatasetName, columns = c("model", ERROR_METRIC))
-  SELECTED_MODEL <- evalDF[[which.min(evalDF[[ERROR_METRIC]]), "model"]]
+  evalDf <- dkuReadDataset(evalDatasetName, columns = c("model", ERROR_METRIC))
+  SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]]
 } 
 PrintPlugin(paste0(SELECTED_MODEL, " selected"))
 
@@ -56,9 +56,9 @@ forecastDfList <- GetForecasts(
   INCLUDE_HISTORY
 )
 
-forecastDF <- forecastDfList[[SELECTED_MODEL]]
+forecastDf <- forecastDfList[[SELECTED_MODEL]]
 
-dfOutput <- CombineForecastHistory(df, forecastDF, INCLUDE_FORECAST, INCLUDE_HISTORY)
+dfOutput <- CombineForecastHistory(df, forecastDf, INCLUDE_FORECAST, INCLUDE_HISTORY)
 
 PrintPlugin("All stages completed, writing forecast and/or residuals to output dataset")
 

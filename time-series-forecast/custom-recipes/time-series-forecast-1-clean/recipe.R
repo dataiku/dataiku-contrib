@@ -16,7 +16,7 @@ for(n in names(config)) {
 }
    
 # Check that partitioning settings are correct if activated
-checkPartition <- CheckPartitioningSettings(inputDatasetName,
+checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 selectedColumns <- c(TIME_COLUMN, SERIES_COLUMNS)
@@ -27,7 +27,10 @@ columnClasses <- c("character", rep("numeric", length(SERIES_COLUMNS)))
 
 dfInput <- dkuReadDataset(inputDatasetName, columns = selectedColumns, colClasses = columnClasses) 
 
-dfOutput <- CleanDataframeWithTimeSeries(dfInput, TIME_COLUMN, SERIES_COLUMNS, GRANULARITY, 
+dfOutput <- dfInput %>%
+  PrepareDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMNS, 
+  	GRANULARITY, AGGREGATION_STRATEGY) %>%
+  CleanDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMNS, GRANULARITY, 
     MISSING_VALUES, MISSING_IMPUTE_WITH, MISSING_IMPUTE_CONSTANT, 
     OUTLIERS, OUTLIERS_IMPUTE_WITH, OUTLIERS_IMPUTE_CONSTANT)
 

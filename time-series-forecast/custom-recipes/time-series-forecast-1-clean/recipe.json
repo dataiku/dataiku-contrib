@@ -142,7 +142,7 @@
     
     
     {
-      "name": "AGGREGATION",
+      "name": "AGGREGATION_STRATEGY",
       "label" : "Aggregation",
       "type": "SELECT",
       "mandatory" : true,
@@ -295,4 +295,3 @@
   "resourceKeys" : []
 
 }
-

@@ -1,67 +1,81 @@
-# Functions used for the train and evaluate recipe
+# Functions used for the Train and Evaluate recipe
 
 source(file.path(dkuCustomRecipeResource(), "train.R"))
 source(file.path(dkuCustomRecipeResource(), "predict.R"))
 
-ME <- function(df, w) {
-  e <- df$y - df$yhat
-  return(prophet:::rolling_mean(e, w))
-}
+ComputeErrorMetricsSplit <- function(forecastDfList, historyDf) {
+  # Computes error metrics from the forecast and history data.frames on the same dates.
+  # Utility function used inside the EvaluateModelsSplit function.
+  #
+  # Args:
+  #   forecastDfList: named list of forecasts dataframes 
+  #                   (result of a call to the GetForecasts function).
+  #   historyDf: data.frame of historical values.
+  #
+  # Returns:
+  #   Data.frame with the evaluation of all models' split errors 
 
-MSE <- function(df, w) {
-  se <- (df$y - df$yhat) ** 2
-  return(prophet:::rolling_mean(se, w))
-}
-
-RMSE <- function(df, w) {
-  return(sqrt(MSE(df, w)))
-}
-
-MAE <- function(df, w) {
-  ae <- abs(df$y - df$yhat)
-  return(prophet:::rolling_mean(ae, w))
-}
-
-MAPE <- function(df, w) {
-  ape <- abs((df$y - df$yhat) / df$y)
-  return(prophet:::rolling_mean(ape, w))
-}
-
-MPE <- function(df, w) {
-  pe <- (df$y - df$yhat) / df$y
-  return(prophet:::rolling_mean(pe, w))
-}
-
-ComputePerformanceMetricsSplit <- function(forecastDfList, historyDF) {
-  dfList <- list()
+  errorDfList <- list()
   for(modelName in names(forecastDfList)) {
-    forecastDF <- forecastDfList[[modelName]]
-    dfList[[modelName]] <- as.data.frame(forecast::accuracy(f = forecastDF$yhat, x = historyDF$y))
-    dfList[[modelName]]$model <- modelName
+    forecastDf <- forecastDfList[[modelName]]
+    errorDfList[[modelName]] <- as.data.frame(
+      forecast::accuracy(f = forecastDf$yhat, x = historyDf$y))
+    errorDfList[[modelName]]$model <- modelName
   }
-  performanceDF <- do.call("rbind", dfList) %>%
-    select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE"))
-  rownames(performanceDF) <- NULL
-  return(performanceDF)
+  errorDf <- do.call("rbind", errorDfList)
+  rownames(errorDf) <- NULL
+  return(errorDf)
 }
 
 EvaluateModelsSplit <- function(ts, df, modelList, modelParameterList, horizon, granularity) {
-  trainTS <- head(ts, length(ts) - horizon)
-  evalTS <- tail(ts, horizon)
-  trainDF <- head(df, nrow(df) - horizon)
-  evalDF <- tail(df, horizon)
+  # Evaluates forecasting models on a time series according to the split strategy.
+  #
+  # Args:
+  #   ts: input time series of R ts or msts class.
+  #   df: input data frame following the Prophet format 
+  #       ("ds" column for time, "y" for series).
+  #   modelList: named list of models (output of a call to the TrainForecastingModels function).
+  #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
+  #   horizon: number of periods to evaluate the models.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #
+  # Returns:
+  #   Data.frame with the evaluation of all models' split errors 
+
+  trainTs <- head(ts, length(ts) - horizon)
+  evalTs <- tail(ts, horizon)
+  trainDf <- head(df, nrow(df) - horizon)
+  evalDf <- tail(df, horizon)
   evalModelList <- TrainForecastingModels(
-    trainTS, trainDF, modelParameterList,
+    trainTs, trainDf, modelParameterList,
     refit = TRUE, refitModelList = modelList,
     verbose = FALSE
   )
-  evalForecastDfList <- GetForecasts(trainTS, trainDF, 
+  evalForecastDfList <- GetForecasts(trainTs, trainDf, 
     evalModelList, modelParameterList, horizon, granularity)
-  performanceDF <- ComputePerformanceMetricsSplit(evalForecastDfList, evalDF)
-  return(performanceDF)
+  errorDf <- ComputeErrorMetricsSplit(evalForecastDfList, evalDf)
+  return(errorDf)
 }
 
-GenerateCutoffsDate <- function(df, horizon, initial, period, granularity) {
+GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, period) {
+  # Generates list of cutoff dates for the cross-validation evaluation strategy.
+  # It is required to get rolling time series splits across time.
+  # Utility function used inside the EvaluateModelsCrossval function.
+  # The last cutoff date is the last-horizon-th value,
+  # then a cutoff is made every cutoff period,
+  # until it reaches the initial training set size.
+  #
+  # Args:
+  #   df: input data frame following the Prophet format 
+  #       ("ds" column for time, "y" for series).
+  #   horizon: number of periods to evaluate the models.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #   initial: number of periods in the initial train set.
+  #   period: number of periods between cutoff dates.
+  #
+  # Returns:
+  #   List of cutoff dates
+
   units <- paste0(granularity, "s")
   PrintPlugin(paste0("Cross-validation initial train set at ", initial, " ", units))
   PrintPlugin(paste0("Cross-validation cutoff period set at ", period, " ", units))
@@ -70,10 +84,10 @@ GenerateCutoffsDate <- function(df, horizon, initial, period, granularity) {
     horizon.dt <- as.difftime(horizon, units = units)
     initial.dt <- as.difftime(initial, units = units)
     period.dt <- as.difftime(period, units = units)
-    cutoff <- max(df$ds) - horizon.dt
+    cutoff <- max(df$ds) - horizon.dt # last cutoff point
     result <- c(cutoff)
     while (result[length(result)] >= min(df$ds) + initial.dt) {
-      cutoff <- cutoff - period.dt
+      cutoff <- cutoff - period.dt # moves the prince back in time by horizon
       if (!any((df$ds > cutoff) & (df$ds <= cutoff + horizon.dt))) {
         closest.date <- max(df$ds[df$ds <= cutoff])
         cutoff <- closest.date - horizon.dt
@@ -81,21 +95,21 @@ GenerateCutoffsDate <- function(df, horizon, initial, period, granularity) {
       result <- c(result, cutoff)
     }
   } else {
-    # difftime does not work with monthly, quarterly or yearly data
-    # assumes that input data is regularly sampled (checks are implemented earlier)
+    # difftime does not work with monthly/quarterly/yearly data so this is another implementation
+    # it assumes that input data is sorted and resampled at the given granularity
     dates <- sort(df$ds)
     cutoffIndex <- length(dates) - horizon
     cutoff <- dates[cutoffIndex]
     result <- c(cutoff)
-    while(result[length(result)] >= dates[initial+1]) {
-      cutoffIndex <- cutoffIndex - period
-      cutoff <- dates[cutoffIndex]
+    while(result[length(result)] >= dates[initial+1]) { 
+      cutoffIndex <- cutoffIndex - period 
+      cutoff <- dates[cutoffIndex] # last cutoff point
       if (cutoffIndex <= 1) {
         result <- c(result, NA)
-        break
+        break # stop when reaching the start of the time series
       }
       if (!any((dates > cutoff) & (dates <= dates[cutoffIndex + horizon]))) {
-        cutoff <- dates[cutoffIndex - horizon] 
+        cutoff <- dates[cutoffIndex - horizon] # moves the prince back in time by horizon
       }
       result <- c(result, cutoff)
     }
@@ -103,12 +117,25 @@ GenerateCutoffsDate <- function(df, horizon, initial, period, granularity) {
   result <- utils::head(result, -1)
   PrintPlugin(paste("Making", length(result), "forecasts with cutoffs between", 
     result[length(result)], "and", result[1]))
-  cutoffs <- rev(result)
+  cutoffs <- rev(result) # restores the natural order of time after the backwards while
   return(cutoffs)
 }
 
-ComputePerformanceMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
-  perfDfList <- list()
+ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
+  # Computes error metrics from crossvalidation dataframes using rolling windows.
+  # Utility function used inside the EvaluateModelsCrossval function.
+  #
+  # Args:
+  #   crossvalDfList: named list of crossvalidation dataframes according to
+  #                   the prophet::cross_validation output format.
+  #   rollingWindow: proportion of data to use in each rolling window for
+  #                  computing the metrics. Should be in [0, 1].
+  #                  1.0 (default) will output a single value for the entire horizon. 
+  #
+  # Returns:
+  #   Data.frame with the evaluation of all models' cross-validation errors 
+
+  errorDfList <- list()
   for(modelName in names(crossvalDfList)) {
     tmpDf <- crossvalDfList[[modelName]]
     tmpDf[["horizon"]] <- tmpDf$ds - tmpDf$cutoff
@@ -117,33 +144,43 @@ ComputePerformanceMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.
     w <- as.integer(rollingWindow * nrow(tmpDf))
     w <- max(w, 1)
     w <- min(w, nrow(tmpDf))
-    cols <- c('horizon')
-    for(metric in c("ME", "RMSE", "MAE", "MPE", "MAPE")) {
-      tmpDf[[metric]] <- get(metric)(tmpDf, w)
-      cols <- c(cols, metric)
-    }
-    tmpDf <- tmpDf[cols]
+    # ME and MPE are not implemented in Prophet
+    tmpDf[["ME"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
+    tmpDf[["MPE"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
+    # Other error metrics have built-in prophet implementations
+    tmpDf[["MAE"]] <- prophet:::mae(tmpDf, w)
+    tmpDf[["MAPE"]] <- prophet:::mape(tmpDf, w)
+    tmpDf[["RMSE"]] <- prophet:::rmse(tmpDf, w)
     tmpDf <- stats::na.omit(tmpDf)
     if (nrow(tmpDf) > 0) {
-      perfDfList[[modelName]] <- tmpDf
-      perfDfList[[modelName]]$model <- modelName
+      errorDfList[[modelName]] <- tmpDf
+      errorDfList[[modelName]]$model <- modelName
     }
   }
-  performanceDF <- do.call("rbind", perfDfList) %>%
-    select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE"))
-  rownames(performanceDF) <- NULL
-  return(performanceDF)
+  errorDf <- do.call("rbind", errorDfList)
+  rownames(errorDf) <- NULL
+  return(errorDf)
 }
 
 EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
-                    horizon, granularity, period = NULL, initial = NULL) {
-  if (is.null(period)) {
-    period <- 0.5 * horizon
-  }
-  if (is.null(initial)) {
-    initial <- 10 * horizon
-  }
-  cutoffs <- GenerateCutoffsDate(df, horizon, initial, period, granularity)
+  horizon, granularity, initial, period) {
+  # Evaluates forecasting models on a time series according to the cross-validation strategy.
+  #
+  # Args:
+  #   ts: input time series of R ts or msts class.
+  #   df: input data frame following the Prophet format 
+  #       ("ds" column for time, "y" for series).
+  #   modelList: named list of models (output of a call to the TrainForecastingModels function).
+  #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
+  #   horizon: number of periods to evaluate the models.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #   initial: number of periods in the initial train set.
+  #   period: number of periods between cutoff dates.
+  #
+  # Returns:
+  #   Data.frame with the evaluation of all models' cross-validation errors 
+
+  cutoffs <- GenerateCutoffDatesCrossval(df, horizon, granularity, initial, period)
   crossvalDfList <- list()
   for(modelName in names(modelList)) {
     crossvalDfList[[modelName]] <- data.frame()
@@ -173,21 +210,43 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
       crossvalDfList[[modelName]] <- rbind(crossvalDfList[[modelName]] , tmpDf)
     }
   }
-  performanceDF <- ComputePerformanceMetricsCrossval(crossvalDfList)
-  return(performanceDF)
+  errorDf <- ComputeErrorMetricsCrossval(crossvalDfList)
+  return(errorDf)
 }
 
 EvaluateModels <- function(ts, df, modelList, modelParameterList, evalStrategy, 
-            horizon,  granularity, period = NULL, initial = NULL) {
+  horizon, granularity, initial = NULL, period = NULL) {
+  # Evaluates multiple forecasting models on a time series according to
+  # the specified evaluation strategy.
+  #
+  # Args:
+  #   ts: input time series of R ts or msts class.
+  #   df: input data frame following the Prophet format 
+  #       ("ds" column for time, "y" for series).
+  #   modelList: named list of models (output of a call to the TrainForecastingModels function).
+  #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
+  #   evalStrategy: character string describing which evaluation strategy to use
+  #                 (one of "split", "crossval").
+  #   horizon: number of periods to evaluate the models.
+  #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
+  #   initial: number of periods in the initial train set.
+  #   period: number of periods between cutoff dates.
+  #
+  # Returns:
+  #   Data.frame with the evaluation of all models' errors
+
   if (evalStrategy == 'split') {
-    performanceDF <- EvaluateModelsSplit(ts, df, modelList, modelParameterList, 
+    errorDf <- EvaluateModelsSplit(ts, df, modelList, modelParameterList, 
       horizon, granularity)
   } else if (evalStrategy == 'crossval') {
-    performanceDF <- EvaluateModelsCrossval(ts, df, modelList, modelParameterList,
-      horizon, granularity, period, initial) 
+    errorDf <- EvaluateModelsCrossval(ts, df, modelList, modelParameterList,
+      horizon, granularity, initial, period) 
   }
-  performanceDF[["evaluation_horizon"]] <- as.integer(horizon)
-  performanceDF[["evaluation_period"]] <- ifelse(horizon==1, granularity, paste0(granularity,"s"))
-  performanceDF[["evaluation_strategy"]] <- evalStrategy
-  return(performanceDF)
+  errorDf <- errorDf %>% 
+    select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE")) %>%
+    mutate_all(funs(ifelse(is.infinite(.), NA, .)))
+  errorDf[["evaluation_horizon"]] <- as.integer(horizon)
+  errorDf[["evaluation_period"]] <- ifelse(horizon==1, granularity, paste0(granularity,"s"))
+  errorDf[["evaluation_strategy"]] <- evalStrategy
+  return(errorDf)
 }
