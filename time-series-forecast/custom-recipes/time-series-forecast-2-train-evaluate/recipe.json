@@ -522,16 +522,7 @@
       "label": "Evaluation",
       "type": "SEPARATOR"
     },
-    
-    {
-      "name": "EVAL_HORIZON",
-      "label" : "Horizon",
-      "description": "Number of periods to evaluate the models",
-      "type": "INT",
-      "defaultValue" : 10,
-      "mandatory" : true
-    },
-    
+
     {
       "name": "EVAL_STRATEGY",
       "label" : "Strategy",
@@ -550,7 +541,15 @@
       ],
       "defaultValue": "split"
     },
-
+    
+    {
+      "name": "EVAL_HORIZON",
+      "label" : "Horizon",
+      "description": "Number of periods to evaluate the models",
+      "type": "INT",
+      "defaultValue" : 10,
+      "mandatory" : true
+    },
     
     {
       "name": "CROSSVAL_INITIAL",
