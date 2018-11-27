@@ -29,17 +29,17 @@ checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
 # Naive model method, see train plugin library
 NAIVE_MODEL_KWARGS[["method"]] <- NAIVE_MODEL_METHOD
 
-# See auto.arima doc in www.rdocumentation.org/packages/forecast/versions/8.3/topics/auto.arima
+# See auto.arima doc in www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima
 ARIMA_MODEL_KWARGS[["stepwise"]] <- ARIMA_MODEL_STEPWISE
 
-# See ets doc in https://www.rdocumentation.org/packages/forecast/versions/8.3/topics/ets
+# See ets doc in https://www.rdocumentation.org/packages/forecast/versions/8.4/topics/ets
 EXPONENTIALSMOOTHING_MODEL_KWARGS[["model"]] <- paste0(
   EXPONENTIALSMOOTHING_MODEL_ERROR_TYPE, 
   EXPONENTIALSMOOTHING_MODEL_TREND_TYPE, 
   EXPONENTIALSMOOTHING_MODEL_SEASONALITY_TYPE
 ) 
 
-# See nnetar doc www.rdocumentation.org/packages/forecast/versions/8.3/topics/nnetar
+# See nnetar doc www.rdocumentation.org/packages/forecast/versions/8.4/topics/nnetar
 NEURALNETWORK_MODEL_KWARGS[["P"]] <- NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS
 if (NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS != -1) {
   NEURALNETWORK_MODEL_KWARGS[["p"]] <- NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS
