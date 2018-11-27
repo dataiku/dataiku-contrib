@@ -26,6 +26,8 @@ dfInput <- dkuReadDataset(inputDatasetName, columns = selectedColumns, colClasse
 
 ########## DATA PREPARATION STAGE ##########
 
+PrintPlugin("Data preparation stage starting...")
+
 dfOutput <- dfInput %>%
   PrepareDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMNS, 
   	GRANULARITY, AGGREGATION_STRATEGY) %>%
@@ -33,7 +35,8 @@ dfOutput <- dfInput %>%
     MISSING_VALUES, MISSING_IMPUTE_WITH, MISSING_IMPUTE_CONSTANT, 
     OUTLIERS, OUTLIERS_IMPUTE_WITH, OUTLIERS_IMPUTE_CONSTANT)
 
-# Recipe outputs
+PrintPlugin("Data preparation stage completed, saving prepared data to output dataset.")
+
 WriteDatasetWithPartitioningColumn(dfOutput, outputDatasetName, 
   PARTITION_DIMENSION_NAME, checkPartitioning)
 

@@ -40,7 +40,7 @@ if (MODEL_SELECTION == "auto") {
   SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]]
 } 
 
-PrintPlugin(paste0(SELECTED_MODEL, " selected"))
+PrintPlugin(paste0("Model selection stage completed: ", SELECTED_MODEL, " selected."))
 
 
 ########## FORECASTING STAGE ##########
@@ -80,7 +80,8 @@ dfOutput[[TIME_COLUMN]] <- strftime(dfOutput[[TIME_COLUMN]] , dkuDateFormat)
 dfOutput <- dfOutput %>% 
   select(-one_of(c("floor", "cap")))
 
-# Recipe outputs
+PrintPlugin("Forecasting stage completed, saving forecasts to output dataset.")
+
 WriteDatasetWithPartitioningColumn(dfOutput, outputDatasetName,
   PARTITION_DIMENSION_NAME, checkPartitioning)
 

@@ -93,7 +93,7 @@ PrintPlugin("Training stage starting...")
 
 modelList <- TrainForecastingModels(ts, df, modelParameterList)
 
-PrintPlugin("Training stage completed, saving models to output folder")
+PrintPlugin("Training stage completed, saving models to output folder.")
 
 versionName <- as.character(Sys.time())
 configTrain <- config
@@ -105,8 +105,6 @@ SaveForecastingObjects(
   ts, df, modelParameterList, modelList, configTrain
 ) 
 
-PrintPlugin("Models, time series and parameters saved to folder")
-
 
 ########## EVALUATION STAGE ##########
 
@@ -116,9 +114,8 @@ errorDf <- EvaluateModels(ts, df, modelList, modelParameterList,
   EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_INITIAL, CROSSVAL_PERIOD)
 errorDf[["training_date"]] <- strftime(versionName, dkuDateFormat)
 
-PrintPlugin("Evaluation stage completed, saving evaluation results to output dataset")
+PrintPlugin("Evaluation stage completed, saving evaluation results to output dataset.")
 
-# Recipe outputs
 WriteDatasetWithPartitioningColumn(errorDf, evalDatasetName, 
   PARTITION_DIMENSION_NAME, checkPartitioning)
 
