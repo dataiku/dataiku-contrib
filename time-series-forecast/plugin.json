@@ -7,7 +7,7 @@
   "id" : "time-series-forecast",
 
   // Version. It is highly recommended to use Semantic Versioning
-  "version" : "0.0.3",
+  "version" : "0.1",
 
 
   // Meta data for display purposes
@@ -15,7 +15,7 @@
     // name of this plugin that appears in the interface.
     "label" : "Time series forecasting",
 
-    "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. It covers the full cycle of data cleaning, model training, evaluation and prediction. They are based on forecasting methods described in <a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. <i>Forecasting: principles and practice.</i> OTexts, 2014.</a> and in <a href=\"https://doi.org/10.1080/00031305.2017.1380080\">Taylor, Sean J., and Benjamin Letham. <i>Forecasting at Scale.</i> The American Statistician, 2018.</a>",
+    "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly time series. It covers the full cycle of data cleaning, model training, evaluation and prediction. They are based on forecasting methods described in <a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. <i>Forecasting: principles and practice.</i> OTexts, 2018.</a> and in <a href=\"https://doi.org/10.1080/00031305.2017.1380080\">Taylor, Sean J., and Benjamin Letham. <i>Forecasting at Scale.</i> The American Statistician, 2018.</a>",
     
     "author" : "Dataiku (Alex COMBESSIE)",
 
