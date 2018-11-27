@@ -5,7 +5,7 @@
 ### 1. The use of forecasting
 
 >Forecasting is required in many situations: deciding whether to build another power generation plant in the next five years requires forecasts of future demand; scheduling staff in a call centre next week requires forecasts of call volumes; stocking an inventory requires forecasts of stock requirements. Forecasts can be required several years in advance (for the case of capital investments), or only a few minutes beforehand (for telecommunication routing). Whatever the circumstances or time horizons involved, forecasting is an important aid to effective and efficient planning.
-<div style="text-align: right"> - Hyndman, Rob J. and George Athanasopoulos</div>
+<p style="text-align: right"> - Hyndman, Rob J. and George Athanasopoulos</p>
 
 
 Forecasting is a branch of Machine Learning where:
