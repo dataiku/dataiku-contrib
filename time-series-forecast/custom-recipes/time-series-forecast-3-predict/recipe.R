@@ -24,7 +24,7 @@ if (!INCLUDE_FORECAST && !INCLUDE_HISTORY) {
 checkPartitioning <- CheckPartitioningSettings(evalDatasetName,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
-# loads all forecasting objects from the model folder
+# Loads all forecasting objects from the model folder
 LoadForecastingObjects(modelFolderName, partitionDimensionName, checkPartitioning)
 for(n in names(configTrain)) {
   assign(n, CleanPluginParam(configTrain[[n]]))
@@ -39,6 +39,7 @@ if (MODEL_SELECTION == "auto") {
   evalDf <- dkuReadDataset(evalDatasetName, columns = c("model", ERROR_METRIC))
   SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]]
 } 
+
 PrintPlugin(paste0(SELECTED_MODEL, " selected"))
 
 
@@ -59,12 +60,9 @@ forecastDfList <- GetForecasts(
 forecastDf <- forecastDfList[[SELECTED_MODEL]]
 
 dfOutput <- CombineForecastHistory(df, forecastDf, INCLUDE_FORECAST, INCLUDE_HISTORY)
+dfOutput[["selected_model"]] <- SELECTED_MODEL
 
-PrintPlugin("All stages completed, writing forecast and/or residuals to output dataset")
-
-
-########## OUTPUT FORMATTING STAGE ##########
-
+# Standardises column names
 names(dfOutput) <- dplyr::recode(
   .x = names(dfOutput),
   ds = TIME_COLUMN,
@@ -74,8 +72,6 @@ names(dfOutput) <- dplyr::recode(
   yhat_upper = "forecast_upper_confidence_interval",
   residuals = "forecast_residuals"
 )
-
-dfOutput[["selected_model"]] <- SELECTED_MODEL
 
 # converts the date from POSIX to a character following dataiku date format in ISO 8601 standard
 dfOutput[[TIME_COLUMN]] <- strftime(dfOutput[[TIME_COLUMN]] , dkuDateFormat)
@@ -87,3 +83,5 @@ dfOutput <- dfOutput %>%
 # Recipe outputs
 WriteDatasetWithPartitioningColumn(dfOutput, outputDatasetName,
   PARTITION_DIMENSION_NAME, checkPartitioning)
+
+PrintPlugin("All stages completed!")

@@ -19,7 +19,7 @@ dkuDateFormat = "%Y-%m-%dT%T.000Z"
 op <- options(digits.secs = 3)
 
 # This fixed mapping is used to convert time series from R data.frame to forecast::msts format.
-# It is needed as the forecast::msts format requires seasonality arguments.
+# It is needed as forecast::msts format requires seasonality arguments.
 mapGranularitySeasonality <- list(
   year = c(1),  
   quarter = c(4),
@@ -124,7 +124,6 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
   # Returns:
   #   data frame with the prepared time series
 
-  # convert to R POSIX date format
   if (granularity == "hour") {
     df[[timeColumn]] <- as.POSIXct(df[[timeColumn]], format = dkuDateFormat) 
   } else {
@@ -211,6 +210,5 @@ CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granular
   }
   # converts the date from R POSIX class back to the dataiku date string format
   dfOutput[[timeColumn]] <- strftime(dfOutput[[timeColumn]] , dkuDateFormat)
-  PrintPlugin("All stages completed!")
   return(dfOutput)
 }

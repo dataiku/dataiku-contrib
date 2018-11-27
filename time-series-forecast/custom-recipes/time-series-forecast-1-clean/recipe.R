@@ -21,11 +21,10 @@ checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
 
 selectedColumns <- c(TIME_COLUMN, SERIES_COLUMNS)
 columnClasses <- c("character", rep("numeric", length(SERIES_COLUMNS)))
+dfInput <- dkuReadDataset(inputDatasetName, columns = selectedColumns, colClasses = columnClasses) 
 
 
 ########## DATA PREPARATION STAGE ##########
-
-dfInput <- dkuReadDataset(inputDatasetName, columns = selectedColumns, colClasses = columnClasses) 
 
 dfOutput <- dfInput %>%
   PrepareDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMNS, 
@@ -37,3 +36,5 @@ dfOutput <- dfInput %>%
 # Recipe outputs
 WriteDatasetWithPartitioningColumn(dfOutput, outputDatasetName, 
   PARTITION_DIMENSION_NAME, checkPartitioning)
+
+PrintPlugin("All stages completed!")

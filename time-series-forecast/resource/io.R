@@ -108,8 +108,8 @@ WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName, partitionD
   # Writes a data.frame to a Dataiku dataset with a column to store the partition identifier
   # in case partitioning is activated, else writes the dataset without changes.
   # Needed for filesystem partioning when the partition identifier is not in the data itself. 
-  # It is very useful to have the partition written in the data 
-  # in order to build charts on the whole dataset. Could be an option in the native dataiku API?
+  # It is very useful to have the partition written in the data in order to 
+  # build charts on the whole dataset. Could be an option in the native dataiku API?
   #
   # Args:
   #   df: data.frame to write
@@ -176,6 +176,7 @@ SaveForecastingObjects <- function(folderName, partitionDimensionName,
   #   partitionDimensionName: partition dimension name specified in the plugin UI.
   #   checkPartitioning: output of a call to the CheckPartitioningSettings function.
   #   versionName: identifier of the version of the forecasting objects
+  #   ...: objects to save to the folder
   #
   # Returns:
   #   Nothing, simply writes RData file to folder

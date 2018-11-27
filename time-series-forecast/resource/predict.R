@@ -8,7 +8,7 @@ source(file.path(dkuCustomRecipeResource(), "train.R"))
 
 GetForecasts <- function(ts, df, modelList, modelParameterList, 
   horizon, granularity, confidenceInterval = 95, includeHistory = FALSE) {
-  # Gets future forecasts and/or historical residuals from forecasting models
+  # Gets forecast values from forecasting models
   #
   # Args:
   #   ts: input time series of R ts or msts class.
@@ -22,7 +22,7 @@ GetForecasts <- function(ts, df, modelList, modelParameterList,
   #   includeHistory: boolean, if TRUE then include historical one-step forecasts
   #
   # Returns:
-  #   Data.frame with forecast values (forecast value and confidence intervals)
+  #   Data.frame with forecast values and confidence intervals
 
   forecastDfList <- list()
   # generate date range for history and/or future
@@ -54,7 +54,7 @@ GetForecasts <- function(ts, df, modelList, modelParameterList,
             .ignoreUnusedArgs = FALSE
         )
       } else if (modelName == "NEURALNETWORK_MODEL") {
-        # neural networks in forecast need a special argument to get confidence intervals
+        # neural networks in forecast need a special PI argument to get confidence intervals
         f <- forecast(model, h = horizon, level = c(confidenceInterval), PI = TRUE)
       } else {
         # general case for other model types

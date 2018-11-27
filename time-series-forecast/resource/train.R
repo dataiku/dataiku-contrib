@@ -5,24 +5,26 @@ library(prophet)
 
 source(file.path(dkuCustomRecipeResource(), "io.R"))
 
+# Identifiers for models. Used as a naming convention for all lists storing forecasting objects.
 AVAILABLE_MODEL_NAME_LIST <- c(
   "NAIVE_MODEL",
-  "SEASONALTREND_MODEL",
   "PROPHET_MODEL",
-  "ARIMA_MODEL",
+  "SEASONALTREND_MODEL",
   "EXPONENTIALSMOOTHING_MODEL",
-  "NEURALNETWORK_MODEL",
-  "STATESPACE_MODEL"
+  "ARIMA_MODEL",
+  "STATESPACE_MODEL",
+  "NEURALNETWORK_MODEL"
 )
 
+# Maps each model name to the actual function used for model training.
 MODEL_FUNCTION_NAME_LIST <- list(
-  "NAIVE_MODEL" = list(modelFunction = "NaiveModelWrapper"),
-  "SEASONALTREND_MODEL" = list(modelFunction = "stlf"),
-  "PROPHET_MODEL" = list(modelFunction = "ProphetModelWrapper"),
-  "ARIMA_MODEL" = list(modelFunction = "auto.arima"),
-  "EXPONENTIALSMOOTHING_MODEL" = list(modelFunction = "ets"), 
-  "NEURALNETWORK_MODEL" = list(modelFunction = "nnetar"),
-  "STATESPACE_MODEL" = list(modelFunction = "tbats")
+  "NAIVE_MODEL" = list(modelFunction = "NaiveModelWrapper"), # wrapper around forecast package
+  "PROPHET_MODEL" = list(modelFunction = "ProphetModelWrapper"), # wrapper around prophet package
+  "SEASONALTREND_MODEL" = list(modelFunction = "stlf"), # forecast package
+  "EXPONENTIALSMOOTHING_MODEL" = list(modelFunction = "ets"), # forecast package
+  "ARIMA_MODEL" = list(modelFunction = "auto.arima"), # forecast package
+  "STATESPACE_MODEL" = list(modelFunction = "tbats"), # forecast package
+  "NEURALNETWORK_MODEL" = list(modelFunction = "nnetar") # forecast package
 )
 
 NaiveModelWrapper <- function(y, method = "simple", h = 10, level = c(80,95), model = NULL) {
@@ -48,7 +50,6 @@ NaiveModelWrapper <- function(y, method = "simple", h = 10, level = c(80,95), mo
   return(model)
 }
 
-
 ProphetModelWrapper <- function(df, growth = "linear", model = NULL, y = NULL, ...) {
   # Wraps Facebook Prophet model in a single standard function.
   #
@@ -61,6 +62,7 @@ ProphetModelWrapper <- function(df, growth = "linear", model = NULL, y = NULL, .
   #          refit an existing model without re-estimating its parameters.
   #   y: added for compatibility with others model types but unused
   #      since prophet uses the df argument as data input.
+  #   ...: additional arguments passed to the original prophet function
   #
   # Returns:
   #   Fitted Prophet model

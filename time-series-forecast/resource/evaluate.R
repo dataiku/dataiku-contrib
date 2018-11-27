@@ -87,7 +87,7 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
     cutoff <- max(df$ds) - horizon.dt # last cutoff point
     result <- c(cutoff)
     while (result[length(result)] >= min(df$ds) + initial.dt) {
-      cutoff <- cutoff - period.dt # moves the prince back in time by horizon
+      cutoff <- cutoff - period.dt # moves back in time by horizon
       if (!any((df$ds > cutoff) & (df$ds <= cutoff + horizon.dt))) {
         closest.date <- max(df$ds[df$ds <= cutoff])
         cutoff <- closest.date - horizon.dt
@@ -95,8 +95,9 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
       result <- c(result, cutoff)
     }
   } else {
-    # difftime does not work with monthly/quarterly/yearly data so this is another implementation
-    # it assumes that input data is sorted and resampled at the given granularity
+    # difftime does not work with monthly/quarterly/yearly data so this is another implementation.
+    # It assumes that input data is sorted and resampled at the given granularity.
+    # This is OK provided the data has been cleaned with the Clean plugin recipe beforehand.
     dates <- sort(df$ds)
     cutoffIndex <- length(dates) - horizon
     cutoff <- dates[cutoffIndex]
@@ -109,15 +110,15 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
         break # stop when reaching the start of the time series
       }
       if (!any((dates > cutoff) & (dates <= dates[cutoffIndex + horizon]))) {
-        cutoff <- dates[cutoffIndex - horizon] # moves the prince back in time by horizon
+        cutoff <- dates[cutoffIndex - horizon] # moves back in time by horizon
       }
       result <- c(result, cutoff)
     }
   }
-  result <- utils::head(result, -1)
+  result <- utils::head(result, -1) # the last element of the while loop needs to be removed
   PrintPlugin(paste("Making", length(result), "forecasts with cutoffs between", 
     result[length(result)], "and", result[1]))
-  cutoffs <- rev(result) # restores the natural order of time after the backwards while
+  cutoffs <- rev(result) # restores the natural order of time since the while loop is backwards
   return(cutoffs)
 }
 

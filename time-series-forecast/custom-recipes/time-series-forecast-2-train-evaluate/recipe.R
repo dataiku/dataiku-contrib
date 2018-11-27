@@ -21,27 +21,32 @@ for(n in names(config)) {
 checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
-# Prepare all raw parameters from plugin UI
+
+# Insert all raw parameters for models from plugin UI into each model KWARGS parameter.
+# This facilitates the generic calling of forecasting functions with
+# a flexible number of keyword arguments.
+
+# Naive model method, see train plugin library
 NAIVE_MODEL_KWARGS[["method"]] <- NAIVE_MODEL_METHOD
+
+# See auto.arima doc in www.rdocumentation.org/packages/forecast/versions/8.3/topics/auto.arima
 ARIMA_MODEL_KWARGS[["stepwise"]] <- ARIMA_MODEL_STEPWISE
+
+# See ets doc in https://www.rdocumentation.org/packages/forecast/versions/8.3/topics/ets
 EXPONENTIALSMOOTHING_MODEL_KWARGS[["model"]] <- paste0(
   EXPONENTIALSMOOTHING_MODEL_ERROR_TYPE, 
   EXPONENTIALSMOOTHING_MODEL_TREND_TYPE, 
   EXPONENTIALSMOOTHING_MODEL_SEASONALITY_TYPE
-)
+) 
+
+# See nnetar doc www.rdocumentation.org/packages/forecast/versions/8.3/topics/nnetar
 NEURALNETWORK_MODEL_KWARGS[["P"]] <- NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS
 if (NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS != -1) {
   NEURALNETWORK_MODEL_KWARGS[["p"]] <- NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS
 } 
 if (NEURALNETWORK_MODEL_SIZE != -1) {
   NEURALNETWORK_MODEL_KWARGS[["size"]] <- NEURALNETWORK_MODEL_SIZE
-}  
-if (CROSSVAL_INITIAL == -1) {
-  CROSSVAL_INITIAL <- 10 * EVAL_HORIZON
-}
-if (CROSSVAL_PERIOD == -1) {
-  CROSSVAL_PERIOD <- ceiling(0.5 * EVAL_HORIZON)
-}
+} 
 
 # Bring all model parameters into a standard named list format for all models
 modelParameterList <- list()
@@ -53,24 +58,32 @@ for(modelName in AVAILABLE_MODEL_NAME_LIST) {
   }
 }
 
-df <- dkuReadDataset(inputDatasetName, columns = c(TIME_COLUMN, SERIES_COLUMN), 
-  colClasses = c("character","numeric")) 
-
-if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
-  stop(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
-    "Make horizon or initial shorter."))
+# Handles default options for the cross-validation evaluation strategy
+if (CROSSVAL_INITIAL == -1) {
+  CROSSVAL_INITIAL <- 10 * EVAL_HORIZON 
+}
+if (CROSSVAL_PERIOD == -1) {
+  CROSSVAL_PERIOD <- ceiling(0.5 * EVAL_HORIZON)
 }
 
-# convert df to generic prophet-compatible format
-df <- PrepareDataframeWithTimeSeries(df, TIME_COLUMN, SERIES_COLUMN,
-  GRANULARITY, resample = FALSE)
-names(df) <- c('ds','y') # convention for prophet
+
+# Reads input dataset
+df <- dkuReadDataset(inputDatasetName, columns = c(TIME_COLUMN, SERIES_COLUMN), 
+    colClasses = c("character","numeric")) %>%
+  PrepareDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMN, GRANULARITY, resample = FALSE)
+names(df) <- c('ds','y') # Converts df to generic prophet-compatible format
 if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
   df[['floor']] <- PROPHET_MODEL_MINIMUM
   df[['cap']] <- PROPHET_MODEL_MAXIMUM
 }
 
-# convert to msts time series format
+# Additional check on the number of rows of the input for the cross-validation evaluation strategy
+if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
+  stop(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
+    "Make horizon or initial shorter."))
+}
+
+# Converts df to msts time series format
 ts <- ConvertDataFrameToTimeSeries(df, "ds", "y", GRANULARITY)
 
 
