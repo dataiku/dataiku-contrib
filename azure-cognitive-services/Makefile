@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.3.0
+PLUGIN_VERSION=0.4.0
 PLUGIN_ID=azure-cognitive-services
 
 plugin:
