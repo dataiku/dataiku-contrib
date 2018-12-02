@@ -8,7 +8,7 @@ Plugin that creates and attach to an HDI cluster
 
 You need DSS to run on a VM that is compatible and configured to run with HDI.
 
-Follow the [following post](https://www.microsoft.com/developerblog/2018/08/20/attaching-and-detaching-an-edge-node-from-a-hdinsight-spark-cluster-when-running-dataiku-data-science-studio-dss/) for details
+Follow this [post](https://www.microsoft.com/developerblog/2018/08/20/attaching-and-detaching-an-edge-node-from-a-hdinsight-spark-cluster-when-running-dataiku-data-science-studio-dss/) for details
 
 
 # Limitations
