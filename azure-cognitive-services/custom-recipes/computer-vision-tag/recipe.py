@@ -34,7 +34,7 @@ folder_path = folder_info["path"]
 #==============================================================================
 
 # Building base query URL and headers
-endpoint = "https://westeurope.api.cognitive.microsoft.com/vision/v2.0"
+endpoint = "https://{}.api.cognitive.microsoft.com/vision/v2.0".format(AZURE_LOCATION)
 service  = "/tag"
 full_url =  endpoint + service
 
