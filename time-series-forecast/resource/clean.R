@@ -145,7 +145,7 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
     # even if we do not perform aggregation and resampling, we need to check
     # that dataframe is not irregularly sampled which would cause models to fail
     if (nrow(dateRange) != nrow(df)) {
-      stop(paste0("[ERROR] Data must be sampled at regular ", GRANULARITY, "ly granularity"))
+      stop(paste0("[ERROR] Data must be sampled at regular ", GRANULARITY, " granularity"))
     } 
     dfOutput <- df
   }
