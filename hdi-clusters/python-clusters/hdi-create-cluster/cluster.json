@@ -14,16 +14,52 @@
             "type": "SEPARATOR"
         },
         {
+            "name": "aadAuth",
+            "label": "AAD auth mode",
+            "type": "SELECT",
+            "selectChoices" : [
+                {"value" : "service_principal", "label" : "Service Principal"},
+                {"value" : "user_pass", "label" : "User Password"}
+            ],
+            "defaultValue": "service_principal",
+            "description":"Authentication mode to your Azure active directory",
+            "mandatory" : true
+            
+        },
+        {
+            "name": "client_id",
+            "label": "Client ID",
+            "type": "STRING",
+            "mandatory": true,
+            "visibilityCondition": "model.aadAuth == 'service_principal'"
+        },
+        {
+            "name": "client_secret",
+            "label": "Client Secret",
+            "type": "PASSWORD",
+            "mandatory": true,
+            "visibilityCondition": "model.aadAuth == 'service_principal'"
+        },
+        {
+           "name": "tenant_id",
+            "label": "Tenant ID",
+            "type": "STRING",
+            "mandatory": true,
+            "visibilityCondition": "model.aadAuth == 'service_principal'"            
+        },
+        {
             "name": "aad_username",
             "label": "Azure AD login",
             "type": "STRING",
-            "mandatory": true
+            "mandatory": true,
+            "visibilityCondition": "model.aadAuth == 'user_pass'"
         },
         {
             "name": "aad_password",
             "label": "Azure AD password",
             "type": "PASSWORD",
-            "mandatory": true
+            "mandatory": true,
+            "visibilityCondition": "model.aadAuth == 'user_pass'"
         },
         {
             "name": "subscription_id",

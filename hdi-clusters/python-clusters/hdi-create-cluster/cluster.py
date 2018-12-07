@@ -94,9 +94,24 @@ class MyCluster(Cluster):
         self.config = config
         self.plugin_config = plugin_config
         
+        self.aad_client_credentials = None
+        
+        #TODO: check when credentials are not the right way or incorrect
+        if config['aadAuth'] == "user_pass":
+            print("Using User Password authentication")
+            self.aad_username = config['aad_username']
+            self.aad_password = config['aad_password']
+            self.aad_client_credentials = UserPassCredentials(username=self.aad_username, password=self.aad_password)
+        elif config['aadAuth'] == "service_principal":
+            print('Using Service Principal for authentication')
+            self.client_id = config['client_id']
+            self.client_secret = config['client_secret']
+            self.tenant_id = config['tenant_id']
+            self.aad_client_credentials = ServicePrincipalCredentials(self.client_id, self.client_secret, tenant=self.tenant_id)
+        else:
+            raise ValueError('Unsupported authentication method')
+        
         #params
-        self.aad_username = config['aad_username']
-        self.aad_password = config['aad_password']
         self.subscription_id = config['subscription_id']
         self.cluster_version = config['cluster_version']
         self.hdi_cluster_name = config['basename']
@@ -132,9 +147,6 @@ class MyCluster(Cluster):
             subnet=self.subnet_id
         )
         
-        
-        #TODO: check when credentials are not the right way or incorrect
-        self.aad_client_credentials = UserPassCredentials(username=self.aad_username, password=self.aad_password)
         #TODO: better test the subscription_id here ?
         self.hdi_client = HDInsightManagementClient(self.aad_client_credentials, self.subscription_id)
         

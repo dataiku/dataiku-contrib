@@ -2,7 +2,12 @@ import copy
 import logging
 from collections import OrderedDict
 from pprint import pprint
-from urlparse import urlparse, urlsplit
+
+try:
+    from urlparse import urlparse, urlsplit
+except ImportError:
+    #python3
+    from urllib.parse import urlparse, urlsplit
 
 from .templates import DSS_CONFIG_TMPL, DSS_CLUSTER_TMPL
 
