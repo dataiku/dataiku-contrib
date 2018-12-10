@@ -495,7 +495,7 @@
     
     {
       "name": "separator_evaluation",
-      "label": "Evaluation of errors on historical data",
+      "label": "Error Evaluation",
       "type": "SEPARATOR"
     },
 
@@ -530,7 +530,7 @@
     {
       "name": "CROSSVAL_INITIAL",
       "label" : "- Initial training",
-      "description": "Number of observations in the initial cross-validation train set. If -1, 10 * Horizon is used.",
+      "description": "Number of observations in the initial train set. If -1, 10 * Horizon is used.",
       "type": "INT",
       "mandatory" : false,
       "defaultValue" : -1,
