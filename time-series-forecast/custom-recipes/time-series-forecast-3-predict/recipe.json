@@ -3,7 +3,7 @@
   // Meta data for display purposes
   "meta" : {
     "label" : "3. Forecast future values and get historical residuals",
-    "description" : "Use previously trained models to predict future values and/or get historic residuals" ,
+    "description" : "Use previously trained models to predict future values and/or get historical residuals" ,
     "icon" : "icon-signal"
   },
 
@@ -21,8 +21,8 @@
   "inputRoles" : [
     {
       "name": "MODEL_FOLDER_NAME",
-      "label": "Saved model folder",
-      "description": "Contains saved models from the Train and evaluate recipe",
+      "label": "Trained model folder",
+      "description": "Folder with models saved by the previous \"Train models\" recipe",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": false,
@@ -32,7 +32,7 @@
     {
       "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation dataset",
-      "description": "Evaluation dataset from the Train and evaluate recipe",
+      "description": "Dataset with the error evaluation results computed by the previous \"Train models\" recipe",
       "arity": "UNARY",
       "required": false,
       "acceptsDataset": true,
@@ -43,8 +43,8 @@
   "outputRoles" : [
     {
       "name": "OUTPUT_DATASET_NAME",
-      "label": "Output dataset",
-      "description": "Future values and/or historic residuals",
+      "label": "Forecast dataset",
+      "description": "Output dataset with future values and/or historical residuals",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": true,

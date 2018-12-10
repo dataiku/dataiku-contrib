@@ -34,6 +34,7 @@
      {
       "name": "MODEL_FOLDER_NAME",
       "label": "Trained models folder",
+      "description": "Local filesystem folder to save the trained models as RData files",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": false,
@@ -43,6 +44,7 @@
     {
       "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation results",
+      "description": "Dataset with the error evaluation results on historical data",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": true,

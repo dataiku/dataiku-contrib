@@ -8,7 +8,7 @@ PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
   # Makes it easier to identify custom logging messages from the plugin.
   msg = paste0(
      "###########################################################\n",
-     "########### [PLUGIN LOG] ", message, " ###########\n",
+     "# [PLUGIN LOG] ", message, "\n",
      "###########################################################"
   )
   if (verbose) {
