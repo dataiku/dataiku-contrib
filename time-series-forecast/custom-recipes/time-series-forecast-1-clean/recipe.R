@@ -21,6 +21,7 @@ selectedColumns <- c(TIME_COLUMN, SERIES_COLUMNS)
 columnClasses <- c("character", rep("numeric", length(SERIES_COLUMNS)))
 dfInput <- dkuReadDataset(INPUT_DATASET_NAME, columns = selectedColumns, colClasses = columnClasses) 
 
+print(head(dfInput))
 
 ########## DATA PREPARATION STAGE ##########
 

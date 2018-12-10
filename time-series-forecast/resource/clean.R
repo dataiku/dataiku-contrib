@@ -138,7 +138,7 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
       group_by_(.dots = c(timeColumn)) %>%
       summarise_all(funs(AggregateNa(., aggregationStrategy))) %>%
       arrange_(.dots = c(timeColumn))
-    dfOutput <- merge(dateRange, dfOutput, by = timeColumn, all.x = TRUE)
+    dfOutput <- merge(dateRange, dfOutput, by = timeColumn)
   } else {
     # even if we do not perform aggregation and resampling, we need to check
     # that dataframe is not irregularly sampled which would cause models to fail
