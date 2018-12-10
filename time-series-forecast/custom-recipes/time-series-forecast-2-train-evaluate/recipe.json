@@ -495,7 +495,7 @@
     
     {
       "name": "separator_evaluation",
-      "label": "Evaluation",
+      "label": "Evaluation of errors on historical data",
       "type": "SEPARATOR"
     },
 
@@ -504,15 +504,15 @@
       "label" : "Strategy",
       "type": "SELECT",
       "mandatory" : true,
-      "description": "Cross-validation is more robust but increases training time",
+      "description": "Time series cross-validation is more robust but increases training time",
       "selectChoices": [
         {
           "value": "split",
-          "label": "Split"
+          "label": "Train/Test split"
         },
         {
           "value": "crossval",
-          "label": "Cross-validation"
+          "label": "Time series cross-validation"
         }
       ],
       "defaultValue": "split"
@@ -520,8 +520,8 @@
     
     {
       "name": "EVAL_HORIZON",
-      "label" : "Horizon",
-      "description": "Number of periods to evaluate the models",
+      "label" : "- Evaluation horizon",
+      "description": "Number of observations in the test split(s)",
       "type": "INT",
       "defaultValue" : 10,
       "mandatory" : true
@@ -529,8 +529,8 @@
     
     {
       "name": "CROSSVAL_INITIAL",
-      "label" : "Initial training",
-      "description": "Number of periods in the initial train set. If -1 or not provided, 10 * horizon is used.",
+      "label" : "- Initial training",
+      "description": "Number of observations in the initial cross-validation train set. If -1, 10 * Horizon is used.",
       "type": "INT",
       "mandatory" : false,
       "defaultValue" : -1,
@@ -539,8 +539,8 @@
     
     {
       "name": "CROSSVAL_PERIOD",
-      "label" : "Cutoff period",
-      "description": "Number of periods between cutoff dates. If -1 or not provided, 0.5 * horizon is used.",
+      "label" : "- Cutoff period",
+      "description": "How often to create cross-validation splits. If -1, 0.5 * Horizon is used.",
       "type": "INT",
       "mandatory" : false,
       "defaultValue" : -1,
