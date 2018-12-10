@@ -33,6 +33,8 @@ dfOutput <- dfInput %>%
     MISSING_VALUES, MISSING_IMPUTE_WITH, MISSING_IMPUTE_CONSTANT, 
     OUTLIERS, OUTLIERS_IMPUTE_WITH, OUTLIERS_IMPUTE_CONSTANT)
 
+print(head(dfOutput))
+
 if (nrow(dfOutput) > 3 * nrow(dfInput)) {
  	PrintPlugin(paste0("Resampled data is 3 times longer than input data. ", 
  	  "Please check time granularity setting."), stop = TRUE)

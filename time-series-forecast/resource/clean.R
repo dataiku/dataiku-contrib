@@ -147,6 +147,7 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
     } 
     dfOutput <- df
   }
+  print(head(dfOutput))
   return(dfOutput)
 }
 
