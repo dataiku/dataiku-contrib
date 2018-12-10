@@ -31,16 +31,6 @@
   ],
 
   "outputRoles" : [ 
-     {
-      "name": "MODEL_FOLDER_NAME",
-      "label": "Trained models folder",
-      "description": "Local filesystem folder to save the trained models as RData files",
-      "arity": "UNARY",
-      "required": true,
-      "acceptsDataset": false,
-      "acceptsManagedFolder": true,
-      "mustBeStrictlyType": "Filesystem"
-    },
     {
       "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation results",
@@ -49,6 +39,16 @@
       "required": true,
       "acceptsDataset": true,
       "acceptsFolder": false
+    },
+    {
+      "name": "MODEL_FOLDER_NAME",
+      "label": "Trained models folder",
+      "description": "Local filesystem folder to save the trained models as RData files",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": false,
+      "acceptsManagedFolder": true,
+      "mustBeStrictlyType": "Filesystem"
     }
   ],
 

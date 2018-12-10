@@ -33,6 +33,11 @@ dfOutput <- dfInput %>%
     MISSING_VALUES, MISSING_IMPUTE_WITH, MISSING_IMPUTE_CONSTANT, 
     OUTLIERS, OUTLIERS_IMPUTE_WITH, OUTLIERS_IMPUTE_CONSTANT)
 
+if (nrow(dfOutput) > 3 * nrow(dfInput)) {
+ 	PrintPlugin(paste0("[ERROR] Resampled data is 3 times longer than input data. ", 
+ 	  "Please check time granularity setting."), stop = TRUE)
+ }
+
 PrintPlugin("Data preparation stage completed, saving prepared data to output dataset.")
 
 WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME)

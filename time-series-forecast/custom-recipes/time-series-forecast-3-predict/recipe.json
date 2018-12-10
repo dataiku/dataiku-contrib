@@ -19,25 +19,25 @@
   // associate no dataset with the role.
 
   "inputRoles" : [
-    {
-      "name": "MODEL_FOLDER_NAME",
-      "label": "Trained model folder",
-      "description": "Folder with models saved by the previous \"Train models\" recipe",
-      "arity": "UNARY",
-      "required": true,
-      "acceptsDataset": false,
-      "acceptsManagedFolder": true,
-      "mustBeStrictlyType": "Filesystem"
-    },
-    {
+      {
       "name": "EVALUATION_DATASET_NAME",
-      "label": "Evaluation dataset",
+      "label": "Evaluation results",
       "description": "Dataset with the error evaluation results computed by the previous \"Train models\" recipe",
       "arity": "UNARY",
       "required": false,
       "acceptsDataset": true,
       "acceptsFolder": false
-    } 
+    },
+    {
+      "name": "MODEL_FOLDER_NAME",
+      "label": "Trained models folder",
+      "description": "Folder with trained models saved by the previous \"Train models\" recipe",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": false,
+      "acceptsManagedFolder": true,
+      "mustBeStrictlyType": "Filesystem"
+    }
   ],
 
   "outputRoles" : [
