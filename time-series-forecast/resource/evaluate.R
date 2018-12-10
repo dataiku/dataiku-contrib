@@ -244,8 +244,7 @@ EvaluateModels <- function(ts, df, modelList, modelParameterList, evalStrategy,
   errorDf <- errorDf %>% 
     select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE")) %>%
     rename(mean_error = ME, root_mean_square_error = RMSE, mean_absolute_error = MAE,
-      mean_percentage_error = MPE, mean_absolute_percentage_error = MAPE
-    )
+      mean_percentage_error = MPE, mean_absolute_percentage_error = MAPE) %>%
     mutate_all(funs(ifelse(is.infinite(.), NA, .)))
   errorDf[["evaluation_horizon"]] <- as.integer(horizon)
   errorDf[["evaluation_period"]] <- ifelse(horizon==1, granularity, paste0(granularity,"s"))
