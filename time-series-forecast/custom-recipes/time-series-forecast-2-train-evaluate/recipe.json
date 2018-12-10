@@ -504,7 +504,7 @@
       "label" : "Strategy",
       "type": "SELECT",
       "mandatory" : true,
-      "description": "Time series cross-validation is more robust but increases training time",
+      "description": "Cross-validation is based on R \"Prophet\" implementation. Robust but slower.",
       "selectChoices": [
         {
           "value": "split",
