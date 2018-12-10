@@ -1,5 +1,3 @@
-# Functions used for the Predict recipe
-
 library(forecast)
 library(prophet)
 

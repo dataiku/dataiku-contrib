@@ -1,5 +1,3 @@
-# Functions used for the Train and Evaluate recipe
-
 library(forecast)
 library(prophet)
 

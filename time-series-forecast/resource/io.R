@@ -1,5 +1,3 @@
-# Functions used across the plugin for Input/Output reading and writing
-
 library(dataiku)
 library(jsonlite)
 library(R.utils)

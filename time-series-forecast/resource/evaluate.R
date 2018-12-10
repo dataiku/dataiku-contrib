@@ -1,5 +1,3 @@
-# Functions used for the Train and Evaluate recipe
-
 source(file.path(dkuCustomRecipeResource(), "train.R"))
 source(file.path(dkuCustomRecipeResource(), "predict.R"))
 

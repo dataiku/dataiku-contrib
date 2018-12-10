@@ -1,5 +1,3 @@
-# Functions used for the Clean recipe
-
 library(zoo)
 library(timeDate)
 library(dplyr)
