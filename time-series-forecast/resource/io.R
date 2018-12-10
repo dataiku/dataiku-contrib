@@ -63,21 +63,17 @@ CleanPluginParam <- function(param) {
   return(output)
 }
 
-CheckPartitioningSettings <- function(inputDatasetName) {
-  # Checks that partitioning settings are correct in case it is activated.
+GetPartitioningDimension <- function() {
+  # Gets the partition dimension name from the flow variables for recipe destinations.
+  # Stops if there is more than one partitioning dimension.
   #
   # Args:
-  #   inputDatasetName: name of the input Dataiku dataset.
+  #   None
   #
   # Returns:
-  #   c("OK"  when partitioning is activated with correct settings,
-  #   "NOK" when settings are incorrect,
-  #   "NP"  when no partitioning is used.
+  #   Partitioning dimension name
 
-  check <- 'NOK' # can be OK, NOK, or NP (not partitioned)
-  errorMsg <- ''
-  inputIsPartitioned <- dkuListDatasetPartitions(inputDatasetName)[1] !='NP' 
-  flowVariables <- fromJSON(Sys.getenv("DKUFLOW_VARIABLES"))
+  flowVariables <- fromJSON(Sys.getenv("DKUFLOW_VARIABLES")) # not available in notebooks
   partitionDimensionName <- c()
   for (v in names(flowVariables)){
       if (substr(v, 1, 8) == "DKU_DST_"){
@@ -85,47 +81,41 @@ CheckPartitioningSettings <- function(inputDatasetName) {
       }
   } 
   if (length(partitionDimensionName) > 1) {
-      PrintPlugin("[ERROR] Output must be partitioned by only one discrete dimension", stop = TRUE)
+     PrintPlugin("[ERROR] Output must be partitioned by only one discrete dimension", stop = TRUE)
   } else if (length(partitionDimensionName) == 1){
       partitionDimensionName <- partitionDimensionName[1]
-      partitioningActivated <- TRUE
   } else {
-      partitioningActivated <- FALSE
+      partitionDimensionName <- ''
   }
-  if (!partitioningActivated && !inputIsPartitioned) {
-    check <- "NP"
-  } else if (!partitioningActivated && inputIsPartitioned) {
-    errorMsg <- "Partitioning should activated in the recipe settings as input is partitioned"
-  } else { 
-    flowVariables <- fromJSON(Sys.getenv("DKUFLOW_VARIABLES"))
-    outputDimensionIsValid <- paste0("DKU_DST_", partitionDimensionName) %in% names(flowVariables)
-    if (inputIsPartitioned) {  # case when input dataset is partitioned
-      if (is.null(partitionDimensionName) || partitionDimensionName == '') {
-        errorMsg <- "Partitioning dimension name is required"
-      } else if (!outputDimensionIsValid) {
-        errorMsg <- paste0("Dimension name '", partitionDimensionName,
-          "' is invalid or output is not partitioned")
-      } else {
-        check <- "OK"
-      }
-    } else { # case when input dataset is not partitioned
-      if (!is.null(partitionDimensionName) && partitionDimensionName != '') {
-        errorMsg <- "Partitioning dimension name should be left blank if input dataset is not partitioned"
-      } else if (outputDimensionIsValid) {
-        errorMsg <- "All input and output should be partitioned"
-      } else {
-        check <- "NP"
-      }
-    }
-  }
-  PrintPlugin(paste0("Partitioning check returned ", check))
-  return(check)
-  if (check == 'NOK') {
-    PrintPlugin(paste0("[ERROR] ", errorMsg), stop = TRUE)
-  }
+  return(partitionDimensionName)
 }
 
-WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName, partitionDimensionName, checkPartitioning) {
+CheckPartitioningSettings <- function(inputDatasetName) {
+  # Checks that partitioning settings are correct in case it is activated.
+  #
+  # Args:
+  #   inputDatasetName: name of the input Dataiku dataset.
+  #
+  # Returns:
+  #   "OK"  when partitioning is activated with correct settings,
+  #   "NOK" when settings are incorrect,
+  #   "NP"  when no partitioning is used.
+
+  inputIsPartitioned <- dkuListDatasetPartitions(inputDatasetName)[1] != 'NP'
+  partitionDimensionName <- GetPartitioningDimension()
+  partitioningIsActivated <- partitionDimensionName != ''
+  if (inputIsPartitioned && partitioningIsActivated) {
+    check <- 'OK'
+  } else if (!inputIsPartitioned && !partitioningIsActivated) {
+    check <- "NP"
+  } else {
+    check <- "NOK"
+    PrintPlugin("[ERROR] Partitioning should be activated on all input and output", stop = TRUE)
+  }
+  return(check)
+}
+
+WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName) {
   # Writes a data.frame to a Dataiku dataset with a column to store the partition identifier
   # in case partitioning is activated, else writes the dataset without changes.
   # Needed for filesystem partioning when the partition identifier is not in the data itself. 
@@ -135,8 +125,6 @@ WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName, partitionD
   # Args:
   #   df: data.frame to write
   #   outputDatasetName: name of the output Dataiku dataset.
-  #   partitionDimensionName: partition dimension name specified in the plugin UI.
-  #   checkPartitioning: output of a call to the CheckPartitioningSettings function.
   #
   # Returns:
   #   Nothing, simply writes dataframe to dataset
@@ -144,8 +132,9 @@ WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName, partitionD
   outputFullName <- dataiku:::dku__resolve_smart_name(outputDatasetName) # bug with naming from plugins on DSS 5.0.2
   outputId <- dataiku:::dku__ref_to_name(outputFullName)
   outputDatasetType <- dkuGetDatasetLocationInfo(outputId)[["locationInfoType"]]
-  if (checkPartitioning == 'OK' && outputDatasetType != 'SQL') { # Filesystem partitioning
-    PrintPlugin("Writing partition value as new column")
+  partitionDimensionName <- GetPartitioningDimension()
+  partitioningIsActivated <- partitionDimensionName != ''
+  if (partitioningIsActivated && outputDatasetType != 'SQL') { # Filesystem partitioning
     partitioningColumnName <- paste0("_dku_partition_", partitionDimensionName)
     # writes partition identifier to the dataframe as a new column
     df[[partitioningColumnName]] <- dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName))
@@ -153,10 +142,9 @@ WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName, partitionD
       select(partitioningColumnName, everything())
   }
   dkuWriteDataset(df, outputDatasetName)
-  PrintPlugin(paste0("Wrote dataframe to dataset ", outputDatasetName))
 }
 
-GetFolderPathWithPartitioning <- function(folderName, partitionDimensionName, checkPartitioning) {
+GetFolderPathWithPartitioning <- function(folderName) {
   # Gets path to the folder partition if partitioning is activated, else path to the whole folder. 
   # This is needed to write to a specific folder partition, as there are no dataiku R method
   # to get the *current* folder partition path with respect to a Build job.
@@ -165,30 +153,29 @@ GetFolderPathWithPartitioning <- function(folderName, partitionDimensionName, ch
   #
   # Args:
   #   folderName: dataiku folder name. Has to be on a local filesystem (enforced at recipe creation).
-  #   partitionDimensionName: partition dimension name specified in the plugin UI.
-  #   checkPartitioning: output of a call to the CheckPartitioningSettings function.
   #
   # Returns:
   #   Folder path with or without partitioning
 
-  isOutputFolderPartitioned <- dkuManagedFolderDirectoryBasedPartitioning(folderName)
-  if (checkPartitioning == 'OK' && isOutputFolderPartitioned) {
+  outputFolderIsPartitioned <- dkuManagedFolderDirectoryBasedPartitioning(folderName)
+  partitionDimensionName <- GetPartitioningDimension()
+  partitioningIsActivated <- partitionDimensionName != ''
+  if (partitioningIsActivated && isOutputFolderPartitioned) {
     filePath <- file.path(
       dkuManagedFolderPath(folderName),
       dkuManagedFolderPartitionFolder(folderName, 
         partition = dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName)))
     )
     filePath <- normalizePath(gsub("//","/",filePath))
-  } else if (checkPartitioning == 'OK' && ! isOutputFolderPartitioned) {
-    PrintPlugin("[ERROR] Partitioning should be activated on all input and output", stop = TRUE)
+  } else if (partitioningIsActivated && ! isOutputFolderPartitioned) {
+    PrintPlugin("[ERROR] Partitioning should be activated on output folder", stop = TRUE)
   } else {
     filePath <- dkuManagedFolderPath(folderName)
   }
   return(filePath)
 }
 
-SaveForecastingObjects <- function(folderName, partitionDimensionName, 
-  checkPartitioning, versionName, ...) {
+SaveForecastingObjects <- function(folderName, versionName, ...) {
   # Saves forecasting objects to a single Rdata file in an output folder.
   # Creates a standard directory structure folderpath/(partitionid/)versions/models.RData.
   #
@@ -202,15 +189,14 @@ SaveForecastingObjects <- function(folderName, partitionDimensionName,
   # Returns:
   #   Nothing, simply writes RData file to folder
 
-  folderPath <- GetFolderPathWithPartitioning(folderName, partitionDimensionName, checkPartitioning)
+  folderPath <- GetFolderPathWithPartitioning(folderName)
   # create standard directory structure
   versionPath <- file.path(folderPath, "versions", versionName)
   dir.create(versionPath, recursive = TRUE)
   save(...,  file = file.path(versionPath , "models.RData"))
 }
 
-LoadForecastingObjects <- function(folderName, partitionDimensionName, 
-  checkPartitioning, versionName = NULL) {
+LoadForecastingObjects <- function(folderName, versionName = NULL) {
   # Loads forecasting objects from the folder with saved forecasting objects
   # written by the SaveForecastingObjects function.
   #
@@ -223,7 +209,7 @@ LoadForecastingObjects <- function(folderName, partitionDimensionName,
   # Returns:
   #   Nothing, simply loads RData file from folder to the global R environment
 
-  folderPath <- GetFolderPathWithPartitioning(folderName, PARTITION_DIMENSION_NAME, checkPartitioning)
+  folderPath <- GetFolderPathWithPartitioning(folderName)
   if (is.null(versionName)) {
     lastVersionPath <- max(list.dirs(file.path(folderPath, "versions"), recursive = FALSE))
   } else {
@@ -236,7 +222,10 @@ LoadForecastingObjects <- function(folderName, partitionDimensionName,
     full.names = TRUE,
     recursive = TRUE
   )
-  for(rdataPath in rdataPathList) {
+  if (length(rdataPathList) == 0) {
+    PrintPlugin("[ERROR] No Rdata files found in the model folder", stop = TRUE)
+  }
+  for (rdataPath in rdataPathList) {
     load(rdataPath, envir = .GlobalEnv)
   }
 }
