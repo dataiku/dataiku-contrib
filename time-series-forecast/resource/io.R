@@ -89,6 +89,7 @@ GetPartitioningDimension <- function() {
       partitionDimensionName <- ''
   }
   return(partitionDimensionName)
+  print(partitionDimensionName)
 }
 
 CheckPartitioningSettings <- function(inputDatasetName) {
