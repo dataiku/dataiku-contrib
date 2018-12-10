@@ -15,15 +15,14 @@ for(n in names(config)) {
   assign(n, CleanPluginParam(config[[n]]))
 }
 if (!INCLUDE_FORECAST && !INCLUDE_HISTORY) {
-  stop("[ERROR] Please include either forecast and/or history")
+  PrintPlugin("[ERROR] Please include either forecast and/or history", stop = TRUE)
 }
 
 # Check that partitioning settings are correct if activated
-checkPartitioning <- CheckPartitioningSettings(EVALUATION_DATASET_NAME,
-  PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+checkPartitioning <- CheckPartitioningSettings(EVALUATION_DATASET_NAME)
 
 # Loads all forecasting objects from the model folder
-LoadForecastingObjects(MODEL_FOLDER_NAME, partitionDimensionName, checkPartitioning)
+LoadForecastingObjects(MODEL_FOLDER_NAME)
 for(n in names(configTrain)) {
   assign(n, CleanPluginParam(configTrain[[n]]))
 }
@@ -80,7 +79,6 @@ dfOutput <- dfOutput %>%
 
 PrintPlugin("Forecasting stage completed, saving forecasts to output dataset.")
 
-WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME,
-  PARTITION_DIMENSION_NAME, checkPartitioning)
+WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME)
 
 PrintPlugin("All stages completed!")

@@ -15,8 +15,7 @@ for(n in names(config)) {
 }
    
 # Check that partitioning settings are correct if activated
-checkPartitioning <- CheckPartitioningSettings(INPUT_DATASET_NAME,
-  PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
+checkPartitioning <- CheckPartitioningSettings(INPUT_DATASET_NAME)
 
 selectedColumns <- c(TIME_COLUMN, SERIES_COLUMNS)
 columnClasses <- c("character", rep("numeric", length(SERIES_COLUMNS)))
@@ -36,7 +35,6 @@ dfOutput <- dfInput %>%
 
 PrintPlugin("Data preparation stage completed, saving prepared data to output dataset.")
 
-WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME, 
-  PARTITION_DIMENSION_NAME, checkPartitioning)
+WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME)
 
 PrintPlugin("All stages completed!")

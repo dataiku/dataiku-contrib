@@ -17,9 +17,7 @@ for(n in names(config)) {
 }
 
 # Check that partitioning settings are correct if activated
-checkPartitioning <- CheckPartitioningSettings(INPUT_DATASET_NAME,
-  PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
-
+checkPartitioning <- CheckPartitioningSettings(INPUT_DATASET_NAME)
 
 # Insert all raw parameters for models from plugin UI into each model KWARGS parameter.
 # This facilitates the generic calling of forecasting functions with
@@ -78,8 +76,8 @@ if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
 
 # Additional check on the number of rows of the input for the cross-validation evaluation strategy
 if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
-  stop(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
-    "Make horizon or initial shorter."))
+  PrintPlugin(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
+    "Make horizon or initial shorter."), stop = TRUE)
 }
 
 # Converts df to msts time series format
@@ -98,8 +96,6 @@ versionName <- as.character(Sys.time())
 configTrain <- config
 SaveForecastingObjects(
   folderName = MODEL_FOLDER_NAME,
-  partitionDimensionName = PARTITION_DIMENSION_NAME,
-  checkPartitioning = checkPartitioning,
   versionName = versionName, 
   ts, df, modelParameterList, modelList, configTrain
 ) 
@@ -115,7 +111,6 @@ errorDf[["training_date"]] <- strftime(versionName, dkuDateFormat)
 
 PrintPlugin("Evaluation stage completed, saving evaluation results to output dataset.")
 
-WriteDatasetWithPartitioningColumn(errorDf, EVAL_DATASET_NAME, 
-  PARTITION_DIMENSION_NAME, checkPartitioning)
+WriteDatasetWithPartitioningColumn(errorDf, EVAL_DATASET_NAME)
 
 PrintPlugin("All stages completed!")
