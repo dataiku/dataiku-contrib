@@ -91,7 +91,7 @@
       "label" : "Error metric",
       "type": "SELECT",
       "mandatory" : false,
-      "defaultValue" : "MAE",
+      "defaultValue" : "mean_absolute_error",
       "visibilityCondition": "model.MODEL_SELECTION=='auto'",
       "selectChoices": [
         {
