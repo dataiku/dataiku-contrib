@@ -146,12 +146,12 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
     w <- max(w, 1)
     w <- min(w, nrow(tmpDf))
     # ME and MPE are not implemented in Prophet
-    tmpDf[["mean_error"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
-    tmpDf[["mean_percentage_error"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
+    tmpDf[["ME"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
+    tmpDf[["MPE"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
     # Other error metrics have built-in prophet implementations
-    tmpDf[["mean_absolute_error"]] <- prophet:::mae(tmpDf, w)
-    tmpDf[["mean_absolute_percentage_error"]] <- prophet:::mape(tmpDf, w)
-    tmpDf[["root_mean_square_error"]] <- prophet:::rmse(tmpDf, w)
+    tmpDf[["MAE"]] <- prophet:::mae(tmpDf, w)
+    tmpDf[["MAPE"]] <- prophet:::mape(tmpDf, w)
+    tmpDf[["RMSE"]] <- prophet:::rmse(tmpDf, w)
     tmpDf <- stats::na.omit(tmpDf)
     if (nrow(tmpDf) > 0) {
       errorDfList[[modelName]] <- tmpDf
@@ -245,6 +245,9 @@ EvaluateModels <- function(ts, df, modelList, modelParameterList, evalStrategy,
   }
   errorDf <- errorDf %>% 
     select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE")) %>%
+    rename(mean_error = ME, root_mean_square_error = RMSE, mean_absolute_error = MAE,
+      mean_percentage_error = MPE, mean_absolute_percentage_error = MAPE
+    )
     mutate_all(funs(ifelse(is.infinite(.), NA, .)))
   errorDf[["evaluation_horizon"]] <- as.integer(horizon)
   errorDf[["evaluation_period"]] <- ifelse(horizon==1, granularity, paste0(granularity,"s"))
