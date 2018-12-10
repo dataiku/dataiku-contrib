@@ -4,10 +4,18 @@ library(dataiku)
 library(jsonlite)
 library(R.utils)
 
-PrintPlugin <- function(message, verbose = TRUE) {
+PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
   # Makes it easier to identify custom logging messages from the plugin.
+  msg = paste0(
+     "###########################################################\n",
+     "########### [PLUGIN LOG] ", message, " ###########\n",
+     "###########################################################"
+  )
   if (verbose) {
-    message(paste("[PLUGIN_LOG]", message))
+    cat(msg)
+  }
+  if (stop) {
+    stop(message)
   }
 }
 
@@ -55,22 +63,35 @@ CleanPluginParam <- function(param) {
   return(output)
 }
 
-CheckPartitioningSettings <- function(inputDatasetName, partitioningActivated, partitionDimensionName) {
+CheckPartitioningSettings <- function(inputDatasetName) {
   # Checks that partitioning settings are correct in case it is activated.
   #
   # Args:
   #   inputDatasetName: name of the input Dataiku dataset.
-  #   partitioningActivated: boolean if partitioning is activated in the plugin UI.
-  #   partitionDimensionName: partition dimension name specified in the plugin UI.
   #
   # Returns:
-  #   "OK"  when partitioning is activated with correct settings,
+  #   c("OK"  when partitioning is activated with correct settings,
   #   "NOK" when settings are incorrect,
   #   "NP"  when no partitioning is used.
 
   check <- 'NOK' # can be OK, NOK, or NP (not partitioned)
   errorMsg <- ''
   inputIsPartitioned <- dkuListDatasetPartitions(inputDatasetName)[1] !='NP' 
+  flowVariables <- fromJSON(Sys.getenv("DKUFLOW_VARIABLES"))
+  partitionDimensionName <- c()
+  for (v in names(flowVariables)){
+      if (substr(v, 1, 8) == "DKU_DST_"){
+          partitionDimensionName <- c(partitionDimensionName, substr(v, 9, nchar(v)))
+      }
+  } 
+  if (length(partitionDimensionName) > 1) {
+      PrintPlugin("[ERROR] Output must be partitioned by only one discrete dimension", stop = TRUE)
+  } else if (length(partitionDimensionName) == 1){
+      partitionDimensionName <- partitionDimensionName[1]
+      partitioningActivated <- TRUE
+  } else {
+      partitioningActivated <- FALSE
+  }
   if (!partitioningActivated && !inputIsPartitioned) {
     check <- "NP"
   } else if (!partitioningActivated && inputIsPartitioned) {
@@ -100,7 +121,7 @@ CheckPartitioningSettings <- function(inputDatasetName, partitioningActivated, p
   PrintPlugin(paste0("Partitioning check returned ", check))
   return(check)
   if (check == 'NOK') {
-    stop(paste0("[ERROR] ", errorMsg))
+    PrintPlugin(paste0("[ERROR] ", errorMsg), stop = TRUE)
   }
 }
 
@@ -159,7 +180,7 @@ GetFolderPathWithPartitioning <- function(folderName, partitionDimensionName, ch
     )
     filePath <- normalizePath(gsub("//","/",filePath))
   } else if (checkPartitioning == 'OK' && ! isOutputFolderPartitioned) {
-    stop("[ERROR] Partitioning should be activated on all input and output")
+    PrintPlugin("[ERROR] Partitioning should be activated on all input and output", stop = TRUE)
   } else {
     filePath <- dkuManagedFolderPath(folderName)
   }

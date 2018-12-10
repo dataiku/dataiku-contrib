@@ -2,14 +2,14 @@
 {
   // Meta data for display purposes
   "meta" : {
-    "label" : "1. Clean",
-    "description" : "Aggregate, resample and clean the time series from missing values and outliers",
+    "label" : "1. Clean time series",
+    "description" : "Resample, aggregate and clean the time series from missing values and outliers",
     "icon" : "icon-calendar-empty"
   },
 
   "kind" : "R",
   
-  "selectableFromDataset" : "input_dataset",
+  "selectableFromDataset" : "INPUT_DATASET_NAME",
   
 
   // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
@@ -21,7 +21,7 @@
 
   "inputRoles" : [
     {
-      "name": "input_dataset",
+      "name": "INPUT_DATASET_NAME",
       "label": "Input dataset",
       "arity": "UNARY",
       "required": true,
@@ -32,7 +32,7 @@
 
   "outputRoles" : [ 
     {
-      "name": "output_dataset",
+      "name": "OUTPUT_DATASET_NAME",
       "label": "Cleaned output dataset",
       "arity": "UNARY",
       "required": true,
@@ -58,18 +58,16 @@
     {
       "name": "TIME_COLUMN",
       "label" : "Time column",
-      "description": "Required column in DSS parsed date format at timezone UTC",
+      "description": "Must be of DATE type. Use a Prepare recipe to parse the date if needed.",
       "type": "COLUMN",
       "columnRole":"input_dataset",
       "mandatory" : true
     },
     
-
-    
     {
       "name": "SERIES_COLUMNS",
       "label" : "Series columns",
-      "description":"Required numeric columns to clean",
+      "description": "Must be of NUMERIC type",
       "type": "COLUMNS",
       "columnRole":"input_dataset",
       "mandatory" : true
@@ -77,38 +75,14 @@
     
     {
       "type": "SEPARATOR",
-      "name": "separator_partitioning",
-      "label": "Partitioning - optional"
-    },
-    
-    {
-      "name": "PARTITIONING_ACTIVATED",
-      "label" : "Activate partitioning",
-      "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
-      "type": "BOOLEAN",
-      "mandatory" : true,
-      "defaultValue": false
-    },
-    
-    {
-      "name": "PARTITION_DIMENSION_NAME",
-      "label" : "Dimension name",
-      "description": "Mandatory if partitioning is activated, else leave blank",
-      "type": "STRING",
-      "mandatory" : false,
-      "defaultValue": "",
-      "visibilityCondition": "model.PARTITIONING_ACTIVATED"
-    },
-    
-    {
-      "type": "SEPARATOR",
       "name": "separator_resampling",
-      "label": "Aggregation and resampling"
+      "label": "Resampling and aggregation"
     },
 
     {
       "name": "GRANULARITY",
-      "label" : "Granularity",
+      "label" : "Time granularity",
+      "description": "How often data needs to be resampled",
       "type": "SELECT",
       "mandatory" : true,
       "selectChoices": [
@@ -143,7 +117,7 @@
     
     {
       "name": "AGGREGATION_STRATEGY",
-      "label" : "Aggregation",
+      "label" : "Aggregation method",
       "type": "SELECT",
       "mandatory" : true,
       "selectChoices": [

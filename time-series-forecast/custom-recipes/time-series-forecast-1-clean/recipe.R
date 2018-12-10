@@ -6,22 +6,21 @@ source(file.path(dkuCustomRecipeResource(), "clean.R"))
 
 ########## INPUT OUTPUT CONFIGURATION ##########
 
-inputDatasetName = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
-outputDatasetName = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
+INPUT_DATASET_NAME = dkuCustomRecipeInputNamesForRole('INPUT_DATASET_NAME')[1]
+OUTPUT_DATASET_NAME = dkuCustomRecipeOutputNamesForRole('OUTPUT_DATASET_NAME')[1]
 
 config = dkuCustomRecipeConfig()
-print(config)
 for(n in names(config)) {
   assign(n, CleanPluginParam(config[[n]]))
 }
    
 # Check that partitioning settings are correct if activated
-checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
+checkPartitioning <- CheckPartitioningSettings(INPUT_DATASET_NAME,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 selectedColumns <- c(TIME_COLUMN, SERIES_COLUMNS)
 columnClasses <- c("character", rep("numeric", length(SERIES_COLUMNS)))
-dfInput <- dkuReadDataset(inputDatasetName, columns = selectedColumns, colClasses = columnClasses) 
+dfInput <- dkuReadDataset(INPUT_DATASET_NAME, columns = selectedColumns, colClasses = columnClasses) 
 
 
 ########## DATA PREPARATION STAGE ##########
@@ -37,7 +36,7 @@ dfOutput <- dfInput %>%
 
 PrintPlugin("Data preparation stage completed, saving prepared data to output dataset.")
 
-WriteDatasetWithPartitioningColumn(dfOutput, outputDatasetName, 
+WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME, 
   PARTITION_DIMENSION_NAME, checkPartitioning)
 
 PrintPlugin("All stages completed!")

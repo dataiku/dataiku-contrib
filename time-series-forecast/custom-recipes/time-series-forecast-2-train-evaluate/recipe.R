@@ -7,18 +7,17 @@ source(file.path(dkuCustomRecipeResource(), "evaluate.R"))
 
 ########## INPUT OUTPUT CONFIGURATION ##########
 
-inputDatasetName = dkuCustomRecipeInputNamesForRole('input_dataset')[1]
-modelFolderName = dkuCustomRecipeOutputNamesForRole('model_folder')[1]
-evalDatasetName = dkuCustomRecipeOutputNamesForRole('eval_dataset')[1]
+INPUT_DATASET_NAME = dkuCustomRecipeInputNamesForRole('INPUT_DATASET_NAME')[1]
+MODEL_FOLDER_NAME = dkuCustomRecipeOutputNamesForRole('MODEL_FOLDER_NAME')[1]
+EVAL_DATASET_NAME = dkuCustomRecipeOutputNamesForRole('EVALUATION_DATASET_NAME')[1]
 
 config = dkuCustomRecipeConfig()
-print(config)
 for(n in names(config)) {
   assign(n, CleanPluginParam(config[[n]]))
 }
 
 # Check that partitioning settings are correct if activated
-checkPartitioning <- CheckPartitioningSettings(inputDatasetName,
+checkPartitioning <- CheckPartitioningSettings(INPUT_DATASET_NAME,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 
@@ -68,7 +67,7 @@ if (CROSSVAL_PERIOD == -1) {
 
 
 # Reads input dataset
-df <- dkuReadDataset(inputDatasetName, columns = c(TIME_COLUMN, SERIES_COLUMN), 
+df <- dkuReadDataset(INPUT_DATASET_NAME, columns = c(TIME_COLUMN, SERIES_COLUMN), 
     colClasses = c("character","numeric")) %>%
   PrepareDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMN, GRANULARITY, resample = FALSE)
 names(df) <- c('ds','y') # Converts df to generic prophet-compatible format
@@ -98,7 +97,7 @@ PrintPlugin("Training stage completed, saving models to output folder.")
 versionName <- as.character(Sys.time())
 configTrain <- config
 SaveForecastingObjects(
-  folderName = modelFolderName,
+  folderName = MODEL_FOLDER_NAME,
   partitionDimensionName = PARTITION_DIMENSION_NAME,
   checkPartitioning = checkPartitioning,
   versionName = versionName, 
@@ -116,7 +115,7 @@ errorDf[["training_date"]] <- strftime(versionName, dkuDateFormat)
 
 PrintPlugin("Evaluation stage completed, saving evaluation results to output dataset.")
 
-WriteDatasetWithPartitioningColumn(errorDf, evalDatasetName, 
+WriteDatasetWithPartitioningColumn(errorDf, EVAL_DATASET_NAME, 
   PARTITION_DIMENSION_NAME, checkPartitioning)
 
 PrintPlugin("All stages completed!")

@@ -6,13 +6,11 @@ source(file.path(dkuCustomRecipeResource(), "predict.R"))
 
 ########## INPUT OUTPUT CONFIGURATION ##########
 
-modelFolderName = dkuCustomRecipeInputNamesForRole('model_folder')[1]
-evalDatasetName = dkuCustomRecipeInputNamesForRole('eval_dataset')[1]
-outputDatasetName = dkuCustomRecipeOutputNamesForRole('output_dataset')[1]
+MODEL_FOLDER_NAME = dkuCustomRecipeInputNamesForRole('MODEL_FOLDER_NAME')[1]
+EVALUATION_DATASET_NAME = dkuCustomRecipeInputNamesForRole('EVALUATION_DATASET_NAME')[1]
+OUTPUT_DATASET_NAME = dkuCustomRecipeOutputNamesForRole('OUTPUT_DATASET_NAME')[1]
 
 config = dkuCustomRecipeConfig()
-print(config)
-
 for(n in names(config)) {
   assign(n, CleanPluginParam(config[[n]]))
 }
@@ -21,11 +19,11 @@ if (!INCLUDE_FORECAST && !INCLUDE_HISTORY) {
 }
 
 # Check that partitioning settings are correct if activated
-checkPartitioning <- CheckPartitioningSettings(evalDatasetName,
+checkPartitioning <- CheckPartitioningSettings(EVALUATION_DATASET_NAME,
   PARTITIONING_ACTIVATED, PARTITION_DIMENSION_NAME)
 
 # Loads all forecasting objects from the model folder
-LoadForecastingObjects(modelFolderName, partitionDimensionName, checkPartitioning)
+LoadForecastingObjects(MODEL_FOLDER_NAME, partitionDimensionName, checkPartitioning)
 for(n in names(configTrain)) {
   assign(n, CleanPluginParam(configTrain[[n]]))
 }
@@ -36,7 +34,7 @@ for(n in names(configTrain)) {
 PrintPlugin("Model selection stage")
 
 if (MODEL_SELECTION == "auto") {
-  evalDf <- dkuReadDataset(evalDatasetName, columns = c("model", ERROR_METRIC))
+  evalDf <- dkuReadDataset(EVALUATION_DATASET_NAME, columns = c("model", ERROR_METRIC))
   SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]]
 } 
 
@@ -67,7 +65,7 @@ names(dfOutput) <- dplyr::recode(
   .x = names(dfOutput),
   ds = TIME_COLUMN,
   y = SERIES_COLUMN,
-  yhat = "forecast_mean",
+  yhat = "forecast",
   yhat_lower = "forecast_lower_confidence_interval",
   yhat_upper = "forecast_upper_confidence_interval",
   residuals = "forecast_residuals"
@@ -82,7 +80,7 @@ dfOutput <- dfOutput %>%
 
 PrintPlugin("Forecasting stage completed, saving forecasts to output dataset.")
 
-WriteDatasetWithPartitioningColumn(dfOutput, outputDatasetName,
+WriteDatasetWithPartitioningColumn(dfOutput, OUTPUT_DATASET_NAME,
   PARTITION_DIMENSION_NAME, checkPartitioning)
 
 PrintPlugin("All stages completed!")

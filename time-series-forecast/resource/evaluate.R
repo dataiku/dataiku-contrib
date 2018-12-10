@@ -107,7 +107,7 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
       cutoff <- dates[cutoffIndex] # last cutoff point
       if (cutoffIndex <= 1) {
         result <- c(result, NA)
-        break # stop when reaching the start of the time series
+        break # break while loop when reaching the start of the time series
       }
       if (!any((dates > cutoff) & (dates <= dates[cutoffIndex + horizon]))) {
         cutoff <- dates[cutoffIndex - horizon] # moves back in time by horizon
@@ -146,12 +146,12 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
     w <- max(w, 1)
     w <- min(w, nrow(tmpDf))
     # ME and MPE are not implemented in Prophet
-    tmpDf[["ME"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
-    tmpDf[["MPE"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
+    tmpDf[["mean_error"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
+    tmpDf[["mean_percentage_error"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
     # Other error metrics have built-in prophet implementations
-    tmpDf[["MAE"]] <- prophet:::mae(tmpDf, w)
-    tmpDf[["MAPE"]] <- prophet:::mape(tmpDf, w)
-    tmpDf[["RMSE"]] <- prophet:::rmse(tmpDf, w)
+    tmpDf[["mean_absolute_error"]] <- prophet:::mae(tmpDf, w)
+    tmpDf[["mean_absolute_percentage_error"]] <- prophet:::mape(tmpDf, w)
+    tmpDf[["root_mean_square_error"]] <- prophet:::rmse(tmpDf, w)
     tmpDf <- stats::na.omit(tmpDf)
     if (nrow(tmpDf) > 0) {
       errorDfList[[modelName]] <- tmpDf
@@ -191,7 +191,7 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
     cutoff <- cutoffs[i]
     history.df <- dplyr::filter(df, ds <= cutoff)
     if (nrow(history.df) < 2) {
-      stop("[ERROR] Less than two datapoints before cutoff. Please increase initial window.")
+      PrintPlugin("[ERROR] Less than two datapoints before cutoff. Please increase initial window.", stop = TRUE)
     }
     history.ts <- head(ts, nrow(history.df))
     PrintPlugin(paste0("Training cross-validation step ", i ,"/", length(cutoffs), " for cutoff ", cutoffs[i], 

@@ -2,7 +2,7 @@
 {
   // Meta data for display purposes
   "meta" : {
-    "label" : "3. Predict",
+    "label" : "3. Forecast future values and get historical residuals",
     "description" : "Use previously trained models to predict future values and/or get historic residuals" ,
     "icon" : "icon-signal"
   },
@@ -20,7 +20,7 @@
 
   "inputRoles" : [
     {
-      "name": "model_folder",
+      "name": "MODEL_FOLDER_NAME",
       "label": "Saved model folder",
       "description": "Contains saved models from the Train and evaluate recipe",
       "arity": "UNARY",
@@ -30,7 +30,7 @@
       "mustBeStrictlyType": "Filesystem"
     },
     {
-      "name": "eval_dataset",
+      "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation dataset",
       "description": "Evaluation dataset from the Train and evaluate recipe",
       "arity": "UNARY",
@@ -42,7 +42,7 @@
 
   "outputRoles" : [
     {
-      "name": "output_dataset",
+      "name": "OUTPUT_DATASET_NAME",
       "label": "Output dataset",
       "description": "Future values and/or historic residuals",
       "arity": "UNARY",
@@ -71,12 +71,11 @@
       "name": "MODEL_SELECTION",
       "label" : "Mode",
       "type": "SELECT",
-			"mandatory" : true,
+      "mandatory" : true,
       "defaultValue" : "auto",
        "description": "Automatically select model with lowest error, or select manually",
       "selectChoices": [
-
-				{
+        {
           "value": "auto",
           "label": "Automatic"
         },
@@ -91,7 +90,7 @@
       "name": "ERROR_METRIC",
       "label" : "Error metric",
       "type": "SELECT",
-			"mandatory" : false,
+      "mandatory" : false,
       "defaultValue" : "MAE",
       "visibilityCondition": "model.MODEL_SELECTION=='auto'",
       "selectChoices": [
@@ -105,22 +104,22 @@
         },
         {
           "value": "RMSE",
-          "label": "Root Mean Squared Error"
+          "label": "Root Mean Square Error"
         }
       ]
     },
-		
-		// A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
+    
+    // A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
     {
       "name": "SELECTED_MODEL",
       "label" : "Model to use",
       "type": "SELECT",
-			"mandatory" : false,
+      "mandatory" : false,
       "defaultValue" : "PROPHET_MODEL",
       "visibilityCondition": "model.MODEL_SELECTION=='manual'",
       "selectChoices": [
 
-				{
+        {
           "value": "NAIVE_MODEL",
           "label": "Baseline model"
         },
@@ -140,7 +139,7 @@
           "value": "EXPONENTIALSMOOTHING_MODEL",
           "label": "Exponential Smoothing model"
         },
-				{
+        {
           "value": "NEURALNETWORK_MODEL",
           "label": "Neural Network model"
         },
@@ -161,25 +160,25 @@
     
     {
       "name": "INCLUDE_HISTORY",
-			"label" : "Include history",
-			"description": "Historical values and residuals (historical value - one-step forecast)",
+      "label" : "Include history",
+      "description": "Historical values and residuals (historical value - one-step forecast)",
       "type": "BOOLEAN",
       "defaultValue" : true,
-			"mandatory" : true
+      "mandatory" : true
     },
     
     {
       "name": "INCLUDE_FORECAST",
-			"label" : "Get forecast",
-			"description": "Forecast from selected model",
+      "label" : "Include forecast",
+      "description": "Forecast from selected model",
       "type": "BOOLEAN",
       "defaultValue" : true,
-			"mandatory" : true
+      "mandatory" : true
     },
     
     {
       "name": "FORECAST_HORIZON",
-      "label" : "Horizon",
+      "label" : "Forecast horizon",
       "type": "INT",
       "mandatory" : true,
       "defaultValue" : 10,
@@ -195,33 +194,7 @@
       "defaultValue" : 95,
       "description": "%",
       "visibilityCondition": "model.INCLUDE_FORECAST"
-    },
-    
-    {
-      "type": "SEPARATOR",
-      "name": "separator_partitioning",
-      "label": "Partitioning - optional"
-    },
-    
-    {
-      "name": "PARTITIONING_ACTIVATED",
-      "label" : "Activate partitioning",
-      "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
-      "type": "BOOLEAN",
-      "mandatory" : true,
-      "defaultValue": false
-    },
-    
-    {
-      "name": "PARTITION_DIMENSION_NAME",
-      "label" : "Dimension name",
-      "description": "Mandatory if partitioning is activated, else leave blank",
-      "type": "STRING",
-      "mandatory" : false,
-      "defaultValue": "",
-      "visibilityCondition": "model.PARTITIONING_ACTIVATED"
     }
-
     
   ],
 

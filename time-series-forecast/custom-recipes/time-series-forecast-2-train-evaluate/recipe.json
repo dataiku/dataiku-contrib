@@ -2,14 +2,14 @@
 {
   // Meta data for display purposes
   "meta" : {
-    "label" : "2. Train and Evaluate",
-    "description" : "Train forecasting models and evaluate them on cleaned historical data",
+    "label" : "2. Train models and evaluate errors on historical data",
+    "description" : "Train forecasting models and evaluate them on historical data using temporal split or cross-validation",
     "icon" : "icon-calendar"
   },
 
   "kind" : "R",
   
-  "selectableFromDataset" : "input_dataset",
+  "selectableFromDataset" : "INPUT_DATASET_NAME",
   
 
   // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
@@ -21,7 +21,7 @@
 
   "inputRoles" : [
     {
-      "name": "input_dataset",
+      "name": "INPUT_DATASET_NAME",
       "label": "Input dataset",
       "arity": "UNARY",
       "required": true,
@@ -32,7 +32,7 @@
 
   "outputRoles" : [ 
      {
-      "name": "model_folder",
+      "name": "MODEL_FOLDER_NAME",
       "label": "Trained models folder",
       "arity": "UNARY",
       "required": true,
@@ -41,7 +41,7 @@
       "mustBeStrictlyType": "Filesystem"
     },
     {
-      "name": "eval_dataset",
+      "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation results",
       "arity": "UNARY",
       "required": true,
@@ -67,7 +67,7 @@
     {
       "name": "TIME_COLUMN",
       "label" : "Time column",
-      "description":"Must be a parsed date",
+      "description": "Must be of DATE type. Use a Prepare recipe to parse the date if needed.",
       "type": "COLUMN",
       "columnRole":"input_dataset",
       "mandatory" : true
@@ -76,7 +76,7 @@
     {
       "name": "SERIES_COLUMN",
       "label" : "Target series column",
-      "description":"Must be numeric",
+      "description": "Must be of NUMERIC type",
       "type": "COLUMN",
       "columnRole":"input_dataset",
       "mandatory" : true
@@ -85,7 +85,8 @@
     
     {
       "name": "GRANULARITY",
-      "label" : "Granularity",
+      "label" : "Time granularity",
+      "description": "How often data is measured",
       "type": "SELECT",
       "mandatory" : true,
       "selectChoices": [
@@ -116,33 +117,6 @@
       ],
       "defaultValue": "day"
     },
-    
-    
-    {
-      "type": "SEPARATOR",
-      "name": "separator_partitioning",
-      "label": "Partitioning - optional"
-    },
-    
-    {
-      "name": "PARTITIONING_ACTIVATED",
-      "label" : "Activate partitioning",
-      "description": "Example: multiple time series by group. Requires input and ouput to be partitioned by the group identifier as dimension.",
-      "type": "BOOLEAN",
-      "mandatory" : true,
-      "defaultValue": false
-    },
-    
-    {
-      "name": "PARTITION_DIMENSION_NAME",
-      "label" : "Dimension name",
-      "description": "Mandatory if partitioning is activated, else leave blank",
-      "type": "STRING",
-      "mandatory" : false,
-      "defaultValue": "",
-      "visibilityCondition": "model.PARTITIONING_ACTIVATED"
-    },
-    
     
     {
       "name": "separator_modeling",
