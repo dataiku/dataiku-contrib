@@ -58,9 +58,9 @@
     {
       "name": "TIME_COLUMN",
       "label" : "Time column",
-      "description": "Must be of DATE type. Use a Prepare recipe to parse the date if needed.",
+      "description": "Must be of parsed DATE type. Use a Prepare recipe to parse the date if needed.",
       "type": "COLUMN",
-      "columnRole":"input_dataset",
+      "columnRole": "INPUT_DATASET_NAME",
       "mandatory" : true
     },
     
@@ -69,7 +69,7 @@
       "label" : "Series columns",
       "description": "Must be of NUMERIC type",
       "type": "COLUMNS",
-      "columnRole":"input_dataset",
+      "columnRole": "INPUT_DATASET_NAME",
       "mandatory" : true
     },
     

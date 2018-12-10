@@ -9,7 +9,7 @@
 
   "kind" : "R",
   
-  "selectableFromDataset" : "eval_dataset",
+  "selectableFromDataset" : "EVALUATION_DATASET_NAME",
 
   // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
   // or more dataset to each input and output role.
