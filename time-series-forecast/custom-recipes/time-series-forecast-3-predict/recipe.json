@@ -95,15 +95,15 @@
       "visibilityCondition": "model.MODEL_SELECTION=='auto'",
       "selectChoices": [
         {
-          "value": "MAE",
+          "value": "mean_absolute_error",
           "label": "Mean Absolute Error"
         },
         {
-          "value": "MAPE",
+          "value": "mean_absolute_percentage_error",
           "label": "Mean Absolute Percentage Error"
         },
         {
-          "value": "RMSE",
+          "value": "root_mean_square_error",
           "label": "Root Mean Square Error"
         }
       ]
@@ -170,7 +170,7 @@
     {
       "name": "INCLUDE_FORECAST",
       "label" : "Include forecast",
-      "description": "Forecast from selected model",
+      "description": "Forecast values from selected model",
       "type": "BOOLEAN",
       "defaultValue" : true,
       "mandatory" : true
