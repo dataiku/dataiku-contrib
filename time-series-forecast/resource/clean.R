@@ -147,9 +147,6 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
     } 
     dfOutput <- df
   }
-  selectedColumns <- c(timeColumn, unique(seriesColumns))
-  dfOutput <- dfOutput %>%
-    select_(.dots = selectedColumns)
   return(dfOutput)
 }
 
