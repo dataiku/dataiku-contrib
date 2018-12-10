@@ -4,17 +4,21 @@ library(R.utils)
 
 PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
   # Makes it easier to identify custom logging messages from the plugin.
-  msg = paste0(
-     "#################################################\n",
-     "# [PLUGIN LOG] ", message, "\n",
-     "#################################################"
+  msg <- paste0(
+    "############################################\n",
+    "[PLUGIN LOG] ", message, "\n",
+    "############################################"
   )
   if (verbose) {
-    cat(msg)
+    if (stop) {
+      msg <- gsub("PLUGIN LOG", "PLUGIN ERROR", msg)
+      cat(msg)
+      stop()
+    } else {
+      cat(msg)
+    }
   }
-  if (stop) {
-    stop()
-  }
+
 }
 
 InferType <- function(x) {
@@ -79,7 +83,7 @@ GetPartitioningDimension <- function() {
       }
   } 
   if (length(partitionDimensionName) > 1) {
-     PrintPlugin("[ERROR] Output must be partitioned by only one discrete dimension", stop = TRUE)
+     PrintPlugin("Output must be partitioned by only one discrete dimension", stop = TRUE)
   } else if (length(partitionDimensionName) == 1){
       partitionDimensionName <- partitionDimensionName[1]
   } else {
@@ -108,7 +112,7 @@ CheckPartitioningSettings <- function(inputDatasetName) {
     check <- "NP"
   } else {
     check <- "NOK"
-    PrintPlugin("[ERROR] Partitioning should be activated on all input and output", stop = TRUE)
+    PrintPlugin("Partitioning should be activated on all input and output", stop = TRUE)
   }
   return(check)
 }
@@ -166,7 +170,7 @@ GetFolderPathWithPartitioning <- function(folderName) {
     )
     filePath <- normalizePath(gsub("//","/",filePath))
   } else if (partitioningIsActivated && ! isOutputFolderPartitioned) {
-    PrintPlugin("[ERROR] Partitioning should be activated on output folder", stop = TRUE)
+    PrintPlugin("Partitioning should be activated on output folder", stop = TRUE)
   } else {
     filePath <- dkuManagedFolderPath(folderName)
   }
@@ -221,7 +225,7 @@ LoadForecastingObjects <- function(folderName, versionName = NULL) {
     recursive = TRUE
   )
   if (length(rdataPathList) == 0) {
-    PrintPlugin("[ERROR] No Rdata files found in the model folder", stop = TRUE)
+    PrintPlugin("No Rdata files found in the model folder", stop = TRUE)
   }
   for (rdataPath in rdataPathList) {
     load(rdataPath, envir = .GlobalEnv)

@@ -76,7 +76,7 @@ if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
 
 # Additional check on the number of rows of the input for the cross-validation evaluation strategy
 if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
-  PrintPlugin(paste("[ERROR] Less data than horizon after initial cross-validation window.", 
+  PrintPlugin(paste("Less data than horizon after initial cross-validation window.", 
     "Make horizon or initial shorter."), stop = TRUE)
 }
 

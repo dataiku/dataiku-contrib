@@ -189,7 +189,7 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
     cutoff <- cutoffs[i]
     history.df <- dplyr::filter(df, ds <= cutoff)
     if (nrow(history.df) < 2) {
-      PrintPlugin("[ERROR] Less than two datapoints before cutoff. Please increase initial window.", stop = TRUE)
+      PrintPlugin("Less than two datapoints before cutoff. Please increase initial window.", stop = TRUE)
     }
     history.ts <- head(ts, nrow(history.df))
     PrintPlugin(paste0("Training cross-validation step ", i ,"/", length(cutoffs), " for cutoff ", cutoffs[i], 

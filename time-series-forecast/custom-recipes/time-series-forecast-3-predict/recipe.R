@@ -15,7 +15,7 @@ for(n in names(config)) {
   assign(n, CleanPluginParam(config[[n]]))
 }
 if (!INCLUDE_FORECAST && !INCLUDE_HISTORY) {
-  PrintPlugin("[ERROR] Please include either forecast and/or history", stop = TRUE)
+  PrintPlugin("Please include either forecast and/or history", stop = TRUE)
 }
 
 # Check that partitioning settings are correct if activated
