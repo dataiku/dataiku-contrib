@@ -16,7 +16,7 @@ This bundles a project and imports it onto another Dataiku automation or design 
 
 To do this, click on the "Bundles" tab of the project, then "More", then "Configure Bundles Content".
 
-![Configure_bundles_content](doc/Configure_bundles_content.png)
+![Configure_bundles_content](doc/Configure_bundles_content)
 
 Add all uploaded files, server_filesystem files, and deployed models using the +Add button.
 
