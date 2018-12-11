@@ -15,7 +15,6 @@ Forecasting is a branch of Machine Learning where:
 
 A time series is simply a variable that changes and is measured across time.
 
-
 ### 2. The problem we are trying to solve
 
 Forecasting is slightly different from "classic" Machine Learning (ML)  as currently available visually in Dataiku. It is mainly different because:
@@ -41,17 +40,16 @@ The plugin can be installed from the public [dataiku-contrib](https://github.com
 
 Note that the plugin uses an R code environment so R must be installed and integrated with Dataiku on your machine. 
 
-You may encounter issues with the installation of the RStan package in the code environment on some operating systems . RStan has some system-level dependencies that may require additional setup. In this case, please see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) wiki.
+You may encounter issues with the installation of the RStan package in the code environment on some operating systems . RStan has some system-level dependencies (C++) that may require additional setup. In this case, please see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) wiki.
 
-### 1. Clean
-*Goal: Aggregate, resample and clean the time series from missing values and outliers*
+### 1. Clean time series
+*Resample, aggregate and clean the time series from missing values and outliers*
 
 #### Input/output
 Takes as input one dataset with time series data and outputs one dataset with the cleaned time series.
 
-#### Configuration
-
-![Clean recipe screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1543345705/clean_recipe_screenshot_end4ql.png)
+#### Settings
+![Clean recipe screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1544558081/clean_olpo1a.png)
 
 1. Choose your input columns:
     - the column with time information in Dataiku date format (may need parsing beforehand in a Prepare recipe),
@@ -71,16 +69,14 @@ Takes as input one dataset with time series data and outputs one dataset with th
 Outliers are detected by fitting a simple seasonal trend decomposition model using the [tsclean method](https://www.rdocumentation.org/packages/forecast/versions/8.4/topics/tsclean) from the forecast package.
 
 
-
-### 2. Train and Evaluate
-*Goal: Train forecasting models and evaluate them on cleaned historical data*
+### 2. Train models and evaluate errors on historical data
+*Train forecasting models and evaluate them on historical data using temporal split or cross-validation*
 
 #### Input/output
 Takes as input one dataset with time series data (preferably the output of the previous Clean recipe) and outputs one folder to store forecasting R objects and one dataset with the evaluation results. 
 
-#### Configuration
-
-![Train and evaluate recipe screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1543345525/trainevaluate_recipe_screenshot_abqfoj.png)
+#### Settings
+![Train and evaluate recipe screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1544558081/trainevaluate_qkaboo.png)
 
 1. Choose your input columns:
     - the column with time information in Dataiku date format,
@@ -97,19 +93,14 @@ The exact method used for cross-validation  is described in the [Prophet documen
 Note that cross-validation takes more time to compute since it involves as multiple retraining and evaluation of models. In contrast, the Split strategy only requires one retraining and evaluation. In order to alleviate that problem, we implemented retraining so that models are refit to each training split but hyperparameters are not re-estimated. This is done on purpose to accelerate the computation. 
 
 
-
-### 3. Predict
-*Goal: Use previously trained models to predict future values and/or get historic residuals*
+### 3. Forecast future values and get historical residuals
+*Use previously trained models to predict future values and/or get historical residuals*
 
 #### Input/output
-Takes as input the model folder and the evaluation dataset from the previous Train and Evaluate recipe, and outputs one dataset with forecasts. This output dataset is a good candidate for the user to build charts to visually inspect the forecast results. Please see examples of such charts below:
+Takes as input the model folder and the evaluation dataset from the previous Train and Evaluate recipe, and outputs one dataset with forecasts.
 
-![History and forecast screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1543354646/Screenshot_2018-11-27_at_21.36.55_ay8ccd.png)
-![History and residuals screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1543354646/Screenshot_2018-11-27_at_21.36.46_k33xlb.png)
-
-#### Configuration
-
-![Train and evaluate recipe screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1543345629/predict_recipe_screenshot_undgx4.png)
+#### Settings
+![Forecast recipe screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1544558081/forecast_wlk93n.png)
 
 1. Choose how to select the model used for prediction:
     - Automatic if you want to select the best model according to an error metric computed in the evaluation dataset input,
@@ -117,12 +108,16 @@ Takes as input the model folder and the evaluation dataset from the previous Tra
 2. Choose whether you want to include the history, the forecast, or both.
 3. If you are including the forecast, specify the horizon and the probability percentage for the confidence interval.
 
+#### Visualization
+
+The output dataset of this recipe is a good candidate for the user to build charts to visually inspect the forecast results. Please see an example of such chart below:
+![History and forecast screenshot](https://res.cloudinary.com/alexcbs/image/upload/v1543354646/Screenshot_2018-11-27_at_21.36.55_ay8ccd.png)
+
 
 ### Note on partitioning (advanced usage)
 
-If you want run the recipes to get multiple forecasting models per category (e.g. per product or store), you will need partitioning. That requires:
-1. To have all datasets partitioned by one dimension for the category, using the [discrete dimension](https://doc.dataiku.com/dss/latest/partitions/identifiers.html#discrete-dimension-identifiers) feature in Dataiku. If the input data is not partitioned, you can use a Sync recipe to repartition it, as explained in [this article](https://www.dataiku.com/learn/guide/other/partitioning/partitioning-redispatch.html).
-2. To click on the "Activate partitioning" buttons and to specify the partitioning dimension name  *in all recipes*. Multiple checks are implemented in the plugin to validate the partitioning settings based on these parameters.
+If you want run the recipes to get multiple forecasting models per category (e.g. per product or store), you will need partitioning. That requires to have all datasets partitioned by 1 dimension for the category, using the [discrete dimension](https://doc.dataiku.com/dss/latest/partitions/identifiers.html#discrete-dimension-identifiers) feature in Dataiku. If the input data is not partitioned, you can use a Sync recipe to repartition it, as explained in [this article](https://www.dataiku.com/learn/guide/other/partitioning/partitioning-redispatch.html).
+
 
 ### To infinity and beyond
 
