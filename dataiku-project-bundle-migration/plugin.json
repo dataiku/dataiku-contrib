@@ -1,9 +1,9 @@
 {
     "id" : "Project_Bundle_Migration",
-    "version" : "0.0.1",
+    "version" : "0.0.2",
     "meta" : {
         "label" : "Bundle Project and Push to Automation Node",
-        "description" : "Bundle a project and migrate it from a design instance to an automation instance.",
+        "description" : "Bundle a project and migrate it from a design instance to an automation instance (or another design instance).",
         "author" : "Dataiku (Guilherme and Patrick)",
         "icon" : "icon-share-alt",
         "licenseInfo" : "Apache Software License",

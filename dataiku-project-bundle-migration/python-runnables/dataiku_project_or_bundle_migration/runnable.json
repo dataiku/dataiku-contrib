@@ -1,7 +1,7 @@
 {
     "meta": {
         "label": "Bundle Project and Push to Automation Node",
-        "description": "Bundle a project and migrate it from a design instance to an automation instance.",
+        "description": "Bundle a project and migrate it from a design instance to a remote automation (or design) instance.",
         "icon": "icon-share-alt"
     },
     "impersonate": false,
