@@ -69,7 +69,7 @@
     {
       "name": "TIME_COLUMN",
       "label" : "Time column",
-      "description": "Must be of parsed DATE type. Use a Prepare recipe to parse the date if needed.",
+      "description": "Must be of parsed DATE type.",
       "type": "COLUMN",
       "columnRole": "INPUT_DATASET_NAME",
       "mandatory" : true
@@ -88,7 +88,7 @@
     {
       "name": "GRANULARITY",
       "label" : "Time granularity",
-      "description": "How often data is measured",
+      "description": "How often data is sampled",
       "type": "SELECT",
       "mandatory" : true,
       "selectChoices": [
@@ -249,6 +249,59 @@
       "label" : "\u21B3  additional parameters",
       "description":"Optional additional parameters cf. cran.r-project.org/web/packages/prophet/prophet.pdf",
       "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
+      "mandatory" : false
+    },
+      
+    {
+      "type": "SEPARATOR",
+      "visibilityCondition": "model.AUTOML=='expert'"
+    },
+    
+    {
+      "name": "NEURALNETWORK_MODEL_ACTIVATED",
+      "label" : "- Neural Network",
+      "description": "Based on the nnetar implementation in R \"forecast\" package.",
+      "type": "BOOLEAN",
+      "defaultValue" : true,
+      "mandatory" : true
+    },
+    
+    {
+      "name": "NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS",
+      "label" : "\u21B3 seasonal lags",
+      "description": "Number of seasonal lags used as inputs. Default is 1.",
+      "type": "INT",
+      "mandatory" : false,
+      "defaultValue" : 1,
+      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
+    },
+
+    {
+      "name": "NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS",
+      "label" : "\u21B3 non-seasonal lags",
+      "description": "Number of non-seasonal lags used as inputs. Leave -1 for automatic selection.",
+      "type": "INT",
+      "mandatory" : false,
+      "defaultValue" : -1,
+      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
+    },
+    
+    {
+      "name": "NEURALNETWORK_MODEL_SIZE",
+      "label" : "\u21B3 number of neurons",
+      "description": "Number of neurons in the hidden layer. Leave -1 for automatic selection.",
+      "type": "INT",
+      "mandatory" : false,
+      "defaultValue" : -1,
+      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
+    },
+         
+    {
+      "name": "NEURALNETWORK_MODEL_KWARGS",
+      "type": "MAP",
+      "label" : "\u21B3 additional parameters",
+      "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/nnetar",
+      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED",
       "mandatory" : false
     },
     
@@ -439,61 +492,6 @@
     },
     
     {
-      "type": "SEPARATOR",
-      "visibilityCondition": "model.AUTOML=='expert'"
-    },
-    
-    {
-      "name": "NEURALNETWORK_MODEL_ACTIVATED",
-      "label" : "- Neural Network",
-      "description": "Based on the nnetar implementation in R \"forecast\" package. \
-      WARNING: slow for long time series (1000+ records)",
-      "type": "BOOLEAN",
-      "defaultValue" : false,
-      "mandatory" : true
-    },
-    
-    {
-      "name": "NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS",
-      "label" : "\u21B3 seasonal lags",
-      "description": "Number of seasonal lags used as inputs. Default is 1.",
-      "type": "INT",
-      "mandatory" : false,
-      "defaultValue" : 1,
-      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
-    },
-
-    {
-      "name": "NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS",
-      "label" : "\u21B3 non-seasonal lags",
-      "description": "Number of non-seasonal lags used as inputs. Leave -1 for automatic selection.",
-      "type": "INT",
-      "mandatory" : false,
-      "defaultValue" : -1,
-      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
-    },
-    
-    {
-      "name": "NEURALNETWORK_MODEL_SIZE",
-      "label" : "\u21B3 number of neurons",
-      "description": "Number of neurons in the hidden layer. Leave -1 for automatic selection.",
-      "type": "INT",
-      "mandatory" : false,
-      "defaultValue" : -1,
-      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED"
-    },
-         
-    {
-      "name": "NEURALNETWORK_MODEL_KWARGS",
-      "type": "MAP",
-      "label" : "\u21B3 additional parameters",
-      "description":"Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/nnetar",
-      "visibilityCondition": "model.AUTOML=='expert' && model.NEURALNETWORK_MODEL_ACTIVATED",
-      "mandatory" : false
-    },
-  
-    
-    {
       "name": "separator_evaluation",
       "label": "Error Evaluation",
       "type": "SEPARATOR"
@@ -520,7 +518,7 @@
     
     {
       "name": "EVAL_HORIZON",
-      "label" : "- Evaluation horizon",
+      "label" : "- Horizon",
       "description": "Number of observations in the test split(s)",
       "type": "INT",
       "defaultValue" : 10,

@@ -75,8 +75,6 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
   #   List of cutoff dates
 
   units <- paste0(granularity, "s")
-  PrintPlugin(paste0("Cross-validation initial train set at ", initial, " ", units))
-  PrintPlugin(paste0("Cross-validation cutoff period set at ", period, " ", units))
   if (granularity %in% c("hour", "day", "week")) {
     # Taken from the prophet:::generate_cutoffs function
     horizon.dt <- as.difftime(horizon, units = units)
@@ -189,11 +187,11 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
     cutoff <- cutoffs[i]
     history.df <- dplyr::filter(df, ds <= cutoff)
     if (nrow(history.df) < 2) {
-      PrintPlugin("Less than two datapoints before cutoff. Please increase initial window.", stop = TRUE)
+      PrintPlugin("Less than two datapoints before cutoff. Please increase initial training.", stop = TRUE)
     }
     history.ts <- head(ts, nrow(history.df))
-    PrintPlugin(paste0("Training cross-validation step ", i ,"/", length(cutoffs), " for cutoff ", cutoffs[i], 
-              ", with ", length(history.ts), " rows in the train set"))
+    PrintPlugin(paste0("Crossval split ", i ,"/", length(cutoffs), " at cutoff ", cutoffs[i], 
+              " with ", length(history.ts), " training rows"))
     df.predict <- head(dplyr::filter(df, ds > cutoff), horizon)
     evalModelList <- TrainForecastingModels(
       history.ts, history.df, modelParameterList,
@@ -245,6 +243,7 @@ EvaluateModels <- function(ts, df, modelList, modelParameterList, evalStrategy,
     select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE")) %>%
     rename(mean_error = ME, root_mean_square_error = RMSE, mean_absolute_error = MAE,
       mean_percentage_error = MPE, mean_absolute_percentage_error = MAPE) %>%
+    mutate(model = recode(model, !!!MODEL_UI_NAME_LIST)) %>%
     mutate_all(funs(ifelse(is.infinite(.), NA, .)))
   errorDf[["evaluation_horizon"]] <- as.integer(horizon)
   errorDf[["evaluation_period"]] <- ifelse(horizon==1, granularity, paste0(granularity,"s"))

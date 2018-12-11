@@ -1,14 +1,14 @@
-########## LIBRARY LOADING ##########
+##### LIBRARY LOADING #####
 
 library(dataiku)
 source(file.path(dkuCustomRecipeResource(), "predict.R"))
 
 
-########## INPUT OUTPUT CONFIGURATION ##########
+##### INPUT OUTPUT CONFIGURATION #####
 
-MODEL_FOLDER_NAME = dkuCustomRecipeInputNamesForRole('MODEL_FOLDER_NAME')[1]
-EVALUATION_DATASET_NAME = dkuCustomRecipeInputNamesForRole('EVALUATION_DATASET_NAME')[1]
-OUTPUT_DATASET_NAME = dkuCustomRecipeOutputNamesForRole('OUTPUT_DATASET_NAME')[1]
+MODEL_FOLDER_NAME <- dkuCustomRecipeInputNamesForRole('MODEL_FOLDER_NAME')[1]
+EVALUATION_DATASET_NAME <- dkuCustomRecipeInputNamesForRole('EVALUATION_DATASET_NAME')[1]
+OUTPUT_DATASET_NAME <- dkuCustomRecipeOutputNamesForRole('OUTPUT_DATASET_NAME')[1]
 
 config = dkuCustomRecipeConfig()
 for(n in names(config)) {
@@ -28,19 +28,20 @@ for(n in names(configTrain)) {
 }
 
 
-########## MODEL SELECTION ##########
+##### MODEL SELECTION #####
 
 PrintPlugin("Model selection stage")
 
 if (MODEL_SELECTION == "auto") {
   evalDf <- dkuReadDataset(EVALUATION_DATASET_NAME, columns = c("model", ERROR_METRIC))
-  SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]]
+  SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]] %>%
+    recode(!!!MODEL_UI_NAME_LIST_REV)
 } 
 
 PrintPlugin(paste0("Model selection stage completed: ", SELECTED_MODEL, " selected."))
 
 
-########## FORECASTING STAGE ##########
+##### FORECASTING STAGE #####
 
 PrintPlugin("Forecasting stage")
 
@@ -57,7 +58,7 @@ forecastDfList <- GetForecasts(
 forecastDf <- forecastDfList[[SELECTED_MODEL]]
 
 dfOutput <- CombineForecastHistory(df, forecastDf, INCLUDE_FORECAST, INCLUDE_HISTORY)
-dfOutput[["selected_model"]] <- SELECTED_MODEL
+dfOutput[["selected_model"]] <- recode(SELECTED_MODEL, !!!MODEL_UI_NAME_LIST)
 
 # Standardises column names
 names(dfOutput) <- dplyr::recode(

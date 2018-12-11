@@ -23,6 +23,7 @@
     {
       "name": "INPUT_DATASET_NAME",
       "label": "Input dataset",
+      "description": "Input dataset with time series data",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": true,
@@ -34,6 +35,7 @@
     {
       "name": "OUTPUT_DATASET_NAME",
       "label": "Cleaned output dataset",
+      "description": "Output dataset with the cleaned time series",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": true,

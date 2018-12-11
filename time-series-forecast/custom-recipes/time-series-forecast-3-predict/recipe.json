@@ -22,7 +22,7 @@
       {
       "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation results",
-      "description": "Dataset with the error evaluation results computed by the previous \"Train models\" recipe",
+      "description": "Dataset with the error evaluation results computed by the previous \"Train models...\" recipe",
       "arity": "UNARY",
       "required": false,
       "acceptsDataset": true,
@@ -31,7 +31,7 @@
     {
       "name": "MODEL_FOLDER_NAME",
       "label": "Trained models folder",
-      "description": "Folder with trained models saved by the previous \"Train models\" recipe",
+      "description": "Folder with trained models saved by the previous \"Train models...\" recipe",
       "arity": "UNARY",
       "required": true,
       "acceptsDataset": false,
@@ -73,7 +73,7 @@
       "type": "SELECT",
       "mandatory" : true,
       "defaultValue" : "auto",
-       "description": "Automatically select model with lowest error, or select manually",
+       "description": "Select manually or automatically select model with lowest error",
       "selectChoices": [
         {
           "value": "auto",
@@ -121,32 +121,31 @@
 
         {
           "value": "NAIVE_MODEL",
-          "label": "Baseline model"
-        },
-        {
-          "value": "SEASONALTREND_MODEL",
-          "label": "Seasonal Trend model"
+          "label": "Baseline"
         },
         {
           "value": "PROPHET_MODEL",
-          "label": "Prophet model"
-        },
-        {
-          "value": "ARIMA_MODEL",
-          "label": "ARIMA model"
-        },
-        {
-          "value": "EXPONENTIALSMOOTHING_MODEL",
-          "label": "Exponential Smoothing model"
+          "label": "Prophet"
         },
         {
           "value": "NEURALNETWORK_MODEL",
-          "label": "Neural Network model"
+          "label": "Neural Network"
         },
-
+        {
+          "value": "SEASONALTREND_MODEL",
+          "label": "Seasonal Trend"
+        },
+        {
+          "value": "EXPONENTIALSMOOTHING_MODEL",
+          "label": "Exponential Smoothing"
+        },
+        {
+          "value": "ARIMA_MODEL",
+          "label": "ARIMA"
+        },
         {
           "value": "STATESPACE_MODEL",
-          "label": "State Space model"
+          "label": "State Space"
         }
       ]
     },
@@ -161,7 +160,7 @@
     {
       "name": "INCLUDE_HISTORY",
       "label" : "Include history",
-      "description": "Historical values and residuals (historical value - one-step forecast)",
+      "description": "Historical values, one-step forecasts and residuals (historical value - forecast)",
       "type": "BOOLEAN",
       "defaultValue" : true,
       "mandatory" : true
@@ -170,7 +169,7 @@
     {
       "name": "INCLUDE_FORECAST",
       "label" : "Include forecast",
-      "description": "Forecast values from selected model",
+      "description": "Forecasts along the horizon",
       "type": "BOOLEAN",
       "defaultValue" : true,
       "mandatory" : true

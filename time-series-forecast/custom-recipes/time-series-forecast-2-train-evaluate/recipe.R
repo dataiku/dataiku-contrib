@@ -1,15 +1,15 @@
-########## LIBRARY LOADING ##########
+##### LIBRARY LOADING #####
 
 library(dataiku)
 source(file.path(dkuCustomRecipeResource(), "train.R"))
 source(file.path(dkuCustomRecipeResource(), "evaluate.R"))
 
 
-########## INPUT OUTPUT CONFIGURATION ##########
+##### INPUT OUTPUT CONFIGURATION #####
 
-INPUT_DATASET_NAME = dkuCustomRecipeInputNamesForRole('INPUT_DATASET_NAME')[1]
-MODEL_FOLDER_NAME = dkuCustomRecipeOutputNamesForRole('MODEL_FOLDER_NAME')[1]
-EVAL_DATASET_NAME = dkuCustomRecipeOutputNamesForRole('EVALUATION_DATASET_NAME')[1]
+INPUT_DATASET_NAME <- dkuCustomRecipeInputNamesForRole('INPUT_DATASET_NAME')[1]
+MODEL_FOLDER_NAME <- dkuCustomRecipeOutputNamesForRole('MODEL_FOLDER_NAME')[1]
+EVAL_DATASET_NAME <- dkuCustomRecipeOutputNamesForRole('EVALUATION_DATASET_NAME')[1]
 
 config = dkuCustomRecipeConfig()
 for(n in names(config)) {
@@ -84,7 +84,7 @@ if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df)))
 ts <- ConvertDataFrameToTimeSeries(df, "ds", "y", GRANULARITY)
 
 
-########## TRAINING STAGE ##########
+##### TRAINING STAGE #####
 
 PrintPlugin("Training stage starting...")
 
@@ -101,7 +101,7 @@ SaveForecastingObjects(
 ) 
 
 
-########## EVALUATION STAGE ##########
+##### EVALUATION STAGE #####
 
 PrintPlugin(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 

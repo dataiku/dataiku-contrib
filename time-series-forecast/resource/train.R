@@ -25,6 +25,18 @@ MODEL_FUNCTION_NAME_LIST <- list(
   "NEURALNETWORK_MODEL" = list(modelFunction = "nnetar") # forecast package
 )
 
+# Maps each model name to the name used in the UI
+MODEL_UI_NAME_LIST <- list(
+  "NAIVE_MODEL" = "Baseline",
+  "PROPHET_MODEL" = "Prophet",
+  "SEASONALTREND_MODEL" = "Seasonal Trend",
+  "EXPONENTIALSMOOTHING_MODEL" = "Exponential Smoothing",
+  "ARIMA_MODEL" = "ARIMA",
+  "STATESPACE_MODEL" = "State Space",
+  "NEURALNETWORK_MODEL" = "Neural Network"
+)
+MODEL_UI_NAME_LIST_REV <- split(names(MODEL_UI_NAME_LIST), unlist(MODEL_UI_NAME_LIST))
+
 NaiveModelWrapper <- function(y, method = "simple", h = 10, level = c(80,95), model = NULL) {
   # Wraps naive models implementations in the forecast package in a single standard function.
   #

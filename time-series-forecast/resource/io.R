@@ -7,15 +7,15 @@ PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
   if (verbose) {
     if (stop) {
       msg <- paste0(
-        "#######################\n",
+        "###########################################################\n",
         "[PLUGIN ERROR] ", message, "\n",
-        "#######################"
+        "###########################################################"
       )
       cat(msg)
       stop()
     } else {
       msg <- paste0("[PLUGIN LOG] ", message)
-      cat(msg)
+      message(msg)
     }
   }
 }
@@ -51,10 +51,14 @@ CleanPluginParam <- function(param) {
   # Returns:
   #   Parameter of inferred type
 
-  if (length(param) > 1) { # if the parameter is MAP and non-empty
-    output <- list()
-    for(n in names(param)) {
-      output[[n]] <- InferType(param[[n]])
+  if (length(param) > 1) { # if the parameter has multiple values
+    if (!is.null(names(param))) { # if parameter is a MAP
+      output <- list()
+      for(n in names(param)) {
+        output[[n]] <- InferType(param[[n]])
+      }
+    } else { # if parameter is a COLUMNS list
+        output <- param
     }
   } else if (length(param) == 0) { # if MAP parameter is empty
     output <- list()
@@ -82,14 +86,15 @@ GetPartitioningDimension <- function() {
       }
   } 
   if (length(partitionDimensionName) > 1) {
-     PrintPlugin("Output must be partitioned by only one discrete dimension", stop = TRUE)
+    PrintPlugin("Output must be partitioned by only one discrete dimension", stop = TRUE)
+  } else if ("date" %in% partitionDimensionName) {
+    PrintPlugin("Date dimension is not supported, please use only one discrete dimension", stop = TRUE)
   } else if (length(partitionDimensionName) == 1){
-      partitionDimensionName <- partitionDimensionName[1]
+    partitionDimensionName <- partitionDimensionName[1]
   } else {
-      partitionDimensionName <- ''
+    partitionDimensionName <- ''
   }
   return(partitionDimensionName)
-  print(partitionDimensionName)
 }
 
 CheckPartitioningSettings <- function(inputDatasetName) {
@@ -162,14 +167,14 @@ GetFolderPathWithPartitioning <- function(folderName) {
   outputFolderIsPartitioned <- dkuManagedFolderDirectoryBasedPartitioning(folderName)
   partitionDimensionName <- GetPartitioningDimension()
   partitioningIsActivated <- partitionDimensionName != ''
-  if (partitioningIsActivated && isOutputFolderPartitioned) {
+  if (partitioningIsActivated && outputFolderIsPartitioned) {
     filePath <- file.path(
       dkuManagedFolderPath(folderName),
       dkuManagedFolderPartitionFolder(folderName, 
         partition = dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName)))
     )
     filePath <- normalizePath(gsub("//","/",filePath))
-  } else if (partitioningIsActivated && ! isOutputFolderPartitioned) {
+  } else if (partitioningIsActivated && ! outputFolderIsPartitioned) {
     PrintPlugin("Partitioning should be activated on output folder", stop = TRUE)
   } else {
     filePath <- dkuManagedFolderPath(folderName)

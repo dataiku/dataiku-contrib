@@ -138,16 +138,15 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
       group_by_(.dots = c(timeColumn)) %>%
       summarise_all(funs(AggregateNa(., aggregationStrategy))) %>%
       arrange_(.dots = c(timeColumn))
-    dfOutput <- merge(dateRange, dfOutput, by = timeColumn)
+    dfOutput <- merge(dateRange, dfOutput, by = timeColumn, all.x = TRUE)
   } else {
     # even if we do not perform aggregation and resampling, we need to check
     # that dataframe is not irregularly sampled which would cause models to fail
     if (nrow(dateRange) != nrow(df)) {
-      PrintPlugin(paste0("Data must be sampled at regular ", GRANULARITY, " granularity"), stop = TRUE)
+      PrintPlugin(paste0("Data is not sampled at ", GRANULARITY, " granularity"), stop = TRUE)
     } 
     dfOutput <- df
   }
-  print(head(dfOutput))
   return(dfOutput)
 }
 
