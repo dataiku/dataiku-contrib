@@ -1,25 +1,13 @@
-// This file is the descriptor for the Custom code recipe clean
 {
-  // Meta data for display purposes
-  "meta" : {
-    "label" : "3. Forecast future values and get historical residuals",
-    "description" : "Use previously trained models to predict future values and/or get historical residuals" ,
-    "icon" : "icon-signal"
+  "meta": {
+    "label": "3. Forecast future values and get historical residuals",
+    "description": "Use previously trained models to predict future values and/or get historical residuals",
+    "icon": "icon-signal"
   },
-
-  "kind" : "R",
-  
-  "selectableFromDataset" : "EVALUATION_DATASET_NAME",
-
-  // Inputs and outputs are defined by roles. In the recipe's I/O tab, the user can associate one
-  // or more dataset to each input and output role.
-
-  // The "arity" field indicates whether the user can associate several datasets to the role ('NARY')
-  // or at most one ('UNARY'). The "required" field indicates whether the user is allowed to
-  // associate no dataset with the role.
-
-  "inputRoles" : [
-      {
+  "kind": "R",
+  "selectableFromDataset": "EVALUATION_DATASET_NAME",
+  "inputRoles": [
+    {
       "name": "EVALUATION_DATASET_NAME",
       "label": "Evaluation results",
       "description": "Dataset with the error evaluation results computed by the previous \"Train models...\" recipe",
@@ -39,8 +27,7 @@
       "mustBeStrictlyType": "Filesystem"
     }
   ],
-
-  "outputRoles" : [
+  "outputRoles": [
     {
       "name": "OUTPUT_DATASET_NAME",
       "label": "Forecast dataset",
@@ -49,31 +36,21 @@
       "required": true,
       "acceptsDataset": true,
       "acceptsFolder": false
-    } 
-    // ...
+    }
   ],
-
-  // The field "params" holds a list of all the params
-  // for wich the user will be prompted for values in the Settings tab of the recipe.
-
-  // The available parameter types are:
-  // STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, COLUMN, COLUMNS, TEXTAREA
-
   "params": [
-    
     {
       "name": "separator_model_selection",
       "label": "Model selection",
       "type": "SEPARATOR"
     },
-    
     {
       "name": "MODEL_SELECTION",
-      "label" : "Mode",
+      "label": "Mode",
       "type": "SELECT",
-      "mandatory" : true,
-      "defaultValue" : "auto",
-       "description": "Select manually or automatically select model with lowest error",
+      "mandatory": true,
+      "defaultValue": "auto",
+      "description": "Select manually or automatically select model with lowest error",
       "selectChoices": [
         {
           "value": "auto",
@@ -85,13 +62,12 @@
         }
       ]
     },
-    
     {
       "name": "ERROR_METRIC",
-      "label" : "Error metric",
+      "label": "Error metric",
       "type": "SELECT",
-      "mandatory" : false,
-      "defaultValue" : "mean_absolute_error",
+      "mandatory": false,
+      "defaultValue": "mean_absolute_error",
       "visibilityCondition": "model.MODEL_SELECTION=='auto'",
       "selectChoices": [
         {
@@ -108,17 +84,14 @@
         }
       ]
     },
-    
-    // A "SELECT" parameter is a multi-choice selector. Choices are specified using the selectChoice field
     {
       "name": "SELECTED_MODEL",
-      "label" : "Model to use",
+      "label": "Model to use",
       "type": "SELECT",
-      "mandatory" : false,
-      "defaultValue" : "PROPHET_MODEL",
+      "mandatory": false,
+      "defaultValue": "PROPHET_MODEL",
       "visibilityCondition": "model.MODEL_SELECTION=='manual'",
       "selectChoices": [
-
         {
           "value": "NAIVE_MODEL",
           "label": "Baseline"
@@ -149,60 +122,45 @@
         }
       ]
     },
-
-
     {
       "name": "separator_forecasting",
       "label": "Prediction",
       "type": "SEPARATOR"
     },
-    
     {
       "name": "INCLUDE_HISTORY",
-      "label" : "Include history",
+      "label": "Include history",
       "description": "Historical values, one-step forecasts and residuals (historical value - forecast)",
       "type": "BOOLEAN",
-      "defaultValue" : true,
-      "mandatory" : true
+      "defaultValue": true,
+      "mandatory": true
     },
-    
     {
       "name": "INCLUDE_FORECAST",
-      "label" : "Include forecast",
+      "label": "Include forecast",
       "description": "Forecasts along the horizon",
       "type": "BOOLEAN",
-      "defaultValue" : true,
-      "mandatory" : true
+      "defaultValue": true,
+      "mandatory": true
     },
-    
     {
       "name": "FORECAST_HORIZON",
-      "label" : "Forecast horizon",
+      "label": "Forecast horizon",
       "type": "INT",
-      "mandatory" : true,
-      "defaultValue" : 10,
+      "mandatory": true,
+      "defaultValue": 10,
       "description": "in number of periods",
       "visibilityCondition": "model.INCLUDE_FORECAST"
     },
-    
     {
       "name": "CONFIDENCE_INTERVAL",
-      "label" : "Confidence interval",
+      "label": "Confidence interval",
       "type": "INT",
-      "mandatory" : true,
-      "defaultValue" : 95,
+      "mandatory": true,
+      "defaultValue": 95,
       "description": "%",
       "visibilityCondition": "model.INCLUDE_FORECAST"
     }
-    
   ],
-
-  // The field "resourceKeys" holds a list of keys that allows to limit the number
-  // of concurrent executions and activities triggered by this recipe.
-  //
-  // Administrators can configure the limit per resource key in the Administration > Settings > Flow build
-  // screen.
-
-  "resourceKeys" : []
-
+  "resourceKeys": []
 }

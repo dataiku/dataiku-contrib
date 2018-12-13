@@ -1,33 +1,13 @@
-// This file is the descriptor for the DSS Plugin time_series_forecast
 {
-  // The identifier of the plugin.
-  // This must be globally unique, and only contain A-Za-z0-9_-
-  // BEWARE: Changing this value is a dangerous operation and
-  // needs manual administrator intervention to fix directory names
-  "id" : "time-series-forecast",
-
-  // Version. It is highly recommended to use Semantic Versioning
-  "version" : "0.1",
-
-
-  // Meta data for display purposes
-  "meta" : {
-    // name of this plugin that appears in the interface.
-    "label" : "Forecast",
-
-    "description" : "This plugin offers a set of visual recipes to forecast yearly to hourly univariate time series. It covers the full cycle of data cleaning, model training, evaluation and prediction. They are based on forecasting methods described in <a href=\"https://otexts.org/fpp2\">Hyndman, Rob J., and George Athanasopoulos. <i>Forecasting: principles and practice.</i> OTexts, 2018.</a> and in <a href=\"https://doi.org/10.1080/00031305.2017.1380080\">Taylor, Sean J., and Benjamin Letham. <i>Forecasting at Scale.</i> The American Statistician, 2018.</a>",
-    
-    "author" : "Dataiku (Alex COMBESSIE)",
-
-    // The icon of a plugin must be one of the FontAwesome 3.1 icons
-    "icon" : "icon-calendar",
-
-    "licenseInfo" : "GPL-3",
-
-    // URL where the user can learn more about the plugin
-    "url" : "https://www.dataiku.com",
-
-    // List of tags for filtering the list of plugins
-    "tags" : ["time series", "forecasting"]
+  "id": "time-series-forecast",
+  "version": "0.1.0",
+  "meta": {
+    "label": "Forecast",
+    "description": "This plugin offers a set of visual recipes to forecast yearly to hourly univariate time series. It covers the full cycle of data cleaning, model training, evaluation and prediction.",
+    "author": "Dataiku (Alex Combessie)",
+    "icon": "icon-calendar",
+    "licenseInfo": "GPL-3",
+    "url": "https://www.dataiku.com/dss/plugins/info/forecast.html",
+    "tags": ["Time series"]
   }
 }
