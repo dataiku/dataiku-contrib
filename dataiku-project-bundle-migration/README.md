@@ -8,6 +8,8 @@ Status:  **experimental**
 
 This bundles a project and imports it onto another Dataiku automation or design instance.
 
+Use this macro to push projects from one DSS node to another without having to download a zip file of the project locally. It can be used in a production setting to go from design -> automation node or just to copy over projects between design nodes.
+
 ## Before Running this Plugin
 
 1. Make sure that any external connections used in the initial project also exist on the remote node instance. These connections must have the same names, but do not have to point to the same paths.
