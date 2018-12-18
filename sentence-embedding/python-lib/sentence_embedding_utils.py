@@ -229,16 +229,14 @@ class EmbeddingModel():
             embeddings = self.sess.run(tensors)
             return embeddings.tolist()
 
+        #Check if sentence contains at least one token and return None if not
         indices = [self.word2idx[w]
                    for w in batch.split() if w in self.word2idx]
         embeddings = self.embedding_matrix[indices]
         weights = [weights[w] for w in batch.split() if w in self.word2idx]
         return [w * e for w, e in zip(weights, embeddings)]
 
-
-
-
-
+      
 ###########################################################################
 # SENTENCE EMBEDDING COMPUTATION
 ###########################################################################
@@ -342,7 +340,7 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
 
     logger.info("Pre-processing texts...")
     clean_texts = map(clean_text, texts)
-        
+
     # Computing either simple average or weighted average embedding
     method_name = method + "_" + embedding_model.origin
 
