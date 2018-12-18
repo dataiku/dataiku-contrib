@@ -4,47 +4,26 @@ This plugin provides a read and write connector to interact with [Google Sheets]
 
 ## How to set-up
 
-* Install the plugin in Dataiku DSS.
-* Install python dependencies in the UI of Dataiku DSS, or manually with the [pip of the DSS virtualenv](http://learn.dataiku.com/howto/code/python/install-python-packages.html): `data_dir/bin/pip install --upgrade gspread oauth2client PyOpenSSL awesome-slugify`
-* Get a JSON file containing a `Service account` from the [Google Developers Console](https://console.developers.google.com/project) with the `Drive API` enabled.
+* Install the plugin in Dataiku DSS. The plugin requires the installation of a code env.
+* Get a `Service account` from the Google API Console with the `Sheets API` enabled. Export the credentials as a `JSON` file.
 * Create a new dataset with this connector. Fill the 4 parameters and click on the `Test & Get schema` button. Then, `save` and `explore`.
-* Remember to share the spreadsheet with the email of the service account (`536772...-fezerf...@developer.gserviceaccount.com`).
+* Share the spreadsheet with the email of the service account (likely in a similar form of `...@developer.gserviceaccount.com`).
 
-## Improvement ideas
+## How to get the JSON Service Account
 
-* Add ability to import all sheets from a unique spreadsheet
-* Add a new connector to list all worksheets available from an account
+The plugin uses the protocol [OAuth 2.0 for Server to Server Applications](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) to connect to the Google Sheets API.
 
-## Know issues
-
-**I get some errors when installing Python dependencies.**
-
-For example, I get this:
-
-![Screenshot](https://raw.githubusercontent.com/dataiku/dataiku-contrib/master/googlesheets/dss-4-2-error.png)
-
-Try the following:
-
-* [Dataiku doc - Troubleshooting Python H not found](https://doc.dataiku.com/dss/latest/code-envs/troubleshooting.html#python-h-not-found)
-* [Stackoverflow - Failed to install Python Cryptography package with PIP and setup.py](http://stackoverflow.com/questions/22073516/failed-to-install-python-cryptography-package-with-pip-and-setup-py).
-
-**Even with dependencies installed, there are missing modules.**
-
-Try to upgrade your pip: `data_dir/bin/pip install --upgrade pip`
-
-**I get an error `WorksheetNotFound`.**
-
-Check the document id, the sheet name (probably different from the worksheet name) and that you shared the document with the service account email.
-
-**I get an error `com.google.gson.stream.MalformedJsonException: Unterminated object at line 1 column ...`.**
-
-It is a bug in DSS 2.1.x. Upgrade to DSS 2.2.0 or later.
-
-**Some old and empty columns remain in my dataset.**
-
-Try to delete all the columns in `Settings>Schema` then click on `Test & Get schema` again in `Settings>Connector` to regenerate a new schema.
+In order to use the plugin, you will need service account's credentials exported in a JSON file with the Sheets API enabled. To generate this JSON, you can follow [the instructions on the plugin page](https://www.dataiku.com/community/plugins/info/googlesheets.html).
 
 ## Changelog
+
+* 1.0.0 - December 18th, 2018
+
+    - [New] The plugin now uses a [Code env](https://doc.dataiku.com/dss/latest/code-envs/index.html) so that required libraries are isolated.
+    - [Fix] The order of the columns is now preserved
+    - [Enhancement] The plugin relies on Google Sheets API v4 and does not have hard-coded limits on volume any more (ie. it handles what the API can handle)
+    - [Enhancement] More understandable errors messages (for example, the plugin will let the user know if the spreadsheet has not been shared with the service account, or if the sheet name is invalid)
+    - [Enhancement] Instructions on the plugin page to get the service account's credentials
 
 * 0.1.0 - February 20th, 2017
 
@@ -54,6 +33,11 @@ Try to delete all the columns in `Settings>Schema` then click on `Test & Get sch
 * 0.0.1 - November 5th, 2015
 
 	Initial release
+
+## Improvement ideas
+
+* Add ability to import all sheets from a unique spreadsheet
+* Add a new connector to list all spreadsheets available from an account
 
 ## Need help?
 
