@@ -15,6 +15,8 @@ import pickle
 import string
 maketrans = string.maketrans
 
+#Counter to monitor ELMO embedding comuputations
+COUNT = 0
 
 ###########################################################################
 # LOGGING CONFIG
@@ -85,7 +87,6 @@ def clean_text(text):
     else:
         for c in filters:
             text = text.replace(c, split)
-
     return text
 
 
@@ -207,29 +208,35 @@ class EmbeddingModel():
         else:
             raise Exception("Something is wrong with the embedding origin.")
 
-    def get_sentence_word_vectors(self, sentence):
+    def get_sentence_word_vectors(self, batch):
 
         if self.origin == "elmo":
-            raise NotImplementedError
+            tensors = self.elmo(
+                batch, signature="default", as_dict=True)["word_emb"]
+            embeddings = self.sess.run(tensors)
+            return embeddings.tolist()
 
-        indices = [self.word2idx[w]
-                   for w in sentence.split() if w in self.word2idx]
-        return self.embedding_matrix[indices]
+        else:    
+            indices = [self.word2idx[w]
+                       for w in batch.split() if w in self.word2idx]
+            return self.embedding_matrix[indices]
 
-    def get_weighted_sentence_word_vectors(self, sentence, weights):
+    def get_weighted_sentence_word_vectors(self, batch, weights):
 
         if self.origin == "elmo":
-            raise NotImplementedError
+            tensors = self.elmo(
+                batch, signature="default", as_dict=True)["word_emb"]
+            embeddings = self.sess.run(tensors)
+            return embeddings.tolist()
 
         #Check if sentence contains at least one token and return None if not
         indices = [self.word2idx[w]
-                   for w in sentence.split() if w in self.word2idx]
+                   for w in batch.split() if w in self.word2idx]
         embeddings = self.embedding_matrix[indices]
-        weights = [weights[w] for w in sentence.split() if w in self.word2idx]
+        weights = [weights[w] for w in batch.split() if w in self.word2idx]
         return [w * e for w, e in zip(weights, embeddings)]
 
-
-
+      
 ###########################################################################
 # SENTENCE EMBEDDING COMPUTATION
 ###########################################################################
@@ -240,7 +247,7 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
     method then returns a sentence embeddings using the chosen method.
     """
 
-    def elmo_batch_average(texts):
+    def get_elmo_text_batches(texts):
         max_sequence_length = 100
         batch_size = 32
 
@@ -252,18 +259,25 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             [texts[i * batch_size: (i + 1) * batch_size]
              for i in range(n_texts // batch_size)]
             + [texts[(n_texts // batch_size)*batch_size:]])
+        text_batches_len = [map(lambda x: len(x.split(" ")), batch) for batch in text_batches]
+        return text_batches,text_batches_len
 
-        logger.info("Computing sentence embeddings using ELMo...")
-        text_embeddings = []
-        for batch in text_batches:
-            tensors = embedding_model.elmo(
-                batch, signature="default", as_dict=True)["default"]
-            embeddings = embedding_model.sess.run(tensors)
-            text_embeddings.extend(embeddings.tolist())
-            logger.info("Done {} over {} texts...".format(
-                len(text_embeddings), n_texts))
+    def get_elmo_text_batches_sif(texts,word_weights):
+        max_sequence_length = 100
+        batch_size = 32
 
-        return text_embeddings
+        logger.info("Creating text batches for ELMo")
+        texts = [' '.join(s.split()[:max_sequence_length]) for s in texts]
+        n_texts = len(texts)
+
+        text_batches = (
+            [texts[i * batch_size: (i + 1) * batch_size]
+             for i in range(n_texts // batch_size)]
+            + [texts[(n_texts // batch_size)*batch_size:]])
+        text_batches_len = [map(lambda x: len(x.split(" ")), batch) for batch in text_batches]
+        weights_batchs = [[[word_weights[x] for x in s.split(" ")] for s in batch] for batch in text_batches]
+
+        return text_batches,text_batches_len,weights_batchs
 
     def average_embedding(text):
         """Get average word embedding from models like Word2vec, Glove or FastText."""
@@ -276,6 +290,30 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
         embeddings = embedding_model.get_weighted_sentence_word_vectors(
             text, weights)    
         avg_embedding = np.mean(embeddings, axis=0)
+        return avg_embedding
+
+    def elmo_average_embedding(batch_and_len):
+        """Get average word embedding from models like Word2vec, Glove or FastText."""
+        global COUNT
+        batch = batch_and_len[0]
+        batch_len = batch_and_len[1]
+        embeddings = embedding_model.get_sentence_word_vectors(batch)
+        avg_embedding = [np.mean(s_emb[0:batches_len[i]],axis=0) for i,s_emb in enumerate(embeddings)]
+        COUNT = COUNT +1
+        logger.info("Processed {} sentences".format(COUNT*len(batch)))
+        return avg_embedding
+
+    def elmo_weighted_average_embedding(batch_and_len):
+        """Weighted average embedding for computing SIF."""
+        global COUNT
+        batch = batch_and_len[0]
+        batch_len = batch_and_len[1]
+        batch_weights = batch_and_len[2]
+        embeddings = embedding_model.get_weighted_sentence_word_vectors(
+            batch, batch_weights)    
+        avg_embedding = [np.mean([a*np.asarray(b) for a,b in zip(s_emb[0:batches_len[i]],weights_batchs[i])] ,axis=0) for i,s_emb in enumerate(embeddings)]
+        COUNT = COUNT +1
+        logger.info("Processed {} sentences".format(COUNT*len(batch)))
         return avg_embedding
 
     def remove_first_principal_component(X):
@@ -302,7 +340,7 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
 
     logger.info("Pre-processing texts...")
     clean_texts = map(clean_text, texts)
-    
+
     # Computing either simple average or weighted average embedding
     method_name = method + "_" + embedding_model.origin
 
@@ -312,23 +350,25 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             logger.info("Computing simple average embeddings...")
             res = map(average_embedding, clean_texts)
         else:
-            res = elmo_batch_average(clean_texts)
+            logger.info("Computing simple average embeddings for ELMO...")
+            batches,batches_sentence_length = get_elmo_text_batches(clean_texts)
+            res = map(elmo_average_embedding,zip(batches,batches_sentence_length))
+            res = [item for sublist in res for item in sublist]
 
     elif method == 'SIF':
 
-        if embedding_model.origin != "elmo":
+        # Compute word weights
+        word_weights = Counter()
+        for s in clean_texts:
+            word_weights.update(s.split())
 
-            # Compute word weights
-            word_weights = Counter()
-            for s in clean_texts:
-                word_weights.update(s.split())
+        n_words = float(sum(word_weights.values()))
+        for k, v in word_weights.items():
+            word_weights[k] /= n_words
+            word_weights[k] = float(
+                smoothing_parameter) / (smoothing_parameter + word_weights[k])
 
-            n_words = float(sum(word_weights.values()))
-            for k, v in word_weights.items():
-                word_weights[k] /= n_words
-                word_weights[k] = float(
-                    smoothing_parameter) / (smoothing_parameter + word_weights[k])
-
+        if embedding_model.origin != "elmo":        
             # Compute SIF
             logger.info("Computing weighted average embeddings...")
             res = map(lambda s: weighted_average_embedding(
@@ -343,8 +383,19 @@ def preprocess_and_compute_sentence_embedding(texts, embedding_model, method, sm
             res = contruct_final_res(res,is_void)
 
         else:
-            raise NotImplementedError(
-                "SIF is not implemented for ELMo. Please choose 'Simple Average' instead.")
+
+            is_void = map(lambda x: 1 if len(x.strip()) == 0 else 0 , clean_texts)
+            clean_texts = [x for x,y in zip(clean_texts,is_void) if y==0]
+
+            batches,batches_sentence_length,weights_batchs = get_elmo_text_batches_sif(clean_texts,word_weights)
+
+            logger.info("Computing weighted average embeddings for ELMO...")
+            res = map(elmo_weighted_average_embedding,zip(batches,batches_sentence_length,weights_batchs))
+            res = [item for sublist in res for item in sublist]
+
+            logger.info("Removing vectors first principal component...")
+            res = remove_first_principal_component(res)
+            res = contruct_final_res(res,is_void)
 
     else:
         raise NotImplementedError(

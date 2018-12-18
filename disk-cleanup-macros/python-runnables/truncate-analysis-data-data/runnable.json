@@ -1,0 +1,83 @@
+{
+    "meta" : {
+        "label" : "Truncate analysis split data",
+        "description" : "Truncates \"old\" train and test split data stored in analysis to the first x lines. This can strongly reduce disk space usage but will prevent from using \"Predicted data\" and \"Charts\" on predicted data",
+        "category" : "Disk space maintenance",
+        "icon" : "icon-trash"
+    },
+
+    "impersonate" : false,
+
+    "permissions" : ["ADMIN"],
+
+    "resultType" : "RESULT_TABLE",
+
+    "resultLabel" : "Deleted data",
+
+    "params": [
+        {
+            "name": "age",
+            "label" : "Max age (days)",
+            "type": "INT",
+            "description":"Truncate splits data for models older than this",
+            "mandatory" : true,
+            "defaultValue" : 15
+        },
+        {
+            "name": "lines",
+            "label" : "Number of rows",
+            "type": "INT",
+            "description":"Truncate data to this many rows",
+            "mandatory" : true,
+            "defaultValue" : 5
+        },
+        {
+            "name": "performDeletion",
+            "label" : "Perform deletion",
+            "type": "BOOLEAN",
+            "description":"If not checked, only lists what would be touched",
+            "mandatory" : true,
+            "defaultValue" : false
+        }
+    ],
+
+    "adminParams": [
+        {
+            "name": "projectsMode",
+            "label" : "Projects to consider",
+            "type": "SELECT",
+            "description":"Projects to apply to",
+            "mandatory" : false,
+            "defaultValue" : "CURRENT",
+            "selectChoices" : [
+                {"value" : "CURRENT", "label" : "Current project"},
+                {"value" : "ALL_BUT_IGNORED", "label" : "All projects (except ignored)"},
+                {"value" : "INCLUDED", "label" : "Explicit list of projects"}
+            ]
+        },
+        {
+            "name": "ignoredProjects",
+            "label" : "Ignored projects",
+            "type": "STRING",
+            "visibilityCondition": "model.projectsMode == 'ALL_BUT_IGNORED'",
+            "description":"Projects to ignore. Separate project keys by ','",
+            "mandatory" : false
+        },
+        {
+            "name": "includedProjects",
+            "label" : "Included projects",
+            "type": "STRING",
+            "visibilityCondition": "model.projectsMode == 'INCLUDED'",
+            "description":"Projects to include. Separate project keys by ','",
+            "mandatory" : false
+        },
+        {
+            "name": "orphansOnly",
+            "label" : "Only delete orphaned splits",
+            "type": "BOOLEAN",
+            "description":"Checked, only splits not refered from any session will be deleted, and none truncated. There should not be orphans with recent DSS, but some can exist from older versions.",
+            "mandatory" : false,
+            "defaultValue" : false
+        }
+    ]
+}

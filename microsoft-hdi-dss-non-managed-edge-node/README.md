@@ -24,15 +24,15 @@ Changes in HDI engineering are likely to break the solution. Additionally it is 
 
 ## Limitations
 
-  -	Ubuntu Azure VM 16.04 or 17.10
+  -	Ubuntu Azure VM 16.04
   -	Same VNET for HDI cluster and Dataiku DSS VM
   -	Matching HDP repository versions
   -	Password-less SSH key deployed with sudo permissions on HDI head node
-  -	HDI  v3.5 and v3.6 non-secured Spark clusters with Spark 2.x
+  -	HDI v3.6 non-secured Spark clusters with Spark 2.x
 
 ## <a name="prerequisites"> Prerequisites </a>
 
-1. Verify that Dataiku DSS is up and running on an Ubuntu 16.04 or 17.10 Azure Virtual Machine
+1. Verify that Dataiku DSS is up and running on an Ubuntu 16.04 Azure Virtual Machine
 
 2. Retrieve the name of the Virtual Network the Azure VM is attached to _(it will be necessary at HDI cluster provisioning)_. You can find this in the Azure Portal
 ![Find VM Virtual Network](images/virtualnetwork.JPG)
