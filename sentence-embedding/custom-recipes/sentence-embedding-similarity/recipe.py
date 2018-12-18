@@ -90,20 +90,6 @@ for name in text_column_names:
         smoothing_parameter=smoothing_parameter,
         npc=npc)
 
-    # Checking for existing columns with same name
-    new_column_name = "{}-{}".format(name, aggregation_method)
-    if new_column_name in df.columns:
-        j = 1
-        while new_column_name + "_{}".format(j) in df.columns:
-            j += 1
-        new_column_name += "_{}".format(j)
-
-    # Adding a new column with computed embeddings
-    if embedding_model.origin == "elmo":
-        df[new_column_name] = [str(v) for v in sentence_embeddings]
-    else:
-        df[new_column_name] = [str(v.tolist()) for v in sentence_embeddings]
-
     embeddings_list.append(sentence_embeddings)
     
         
@@ -115,7 +101,7 @@ if distance == "cosine":
     distance_function = cosine
 
 elif distance == "euclidian":
-    distance_function = euclidian
+    distance_function = euclidean
 
 elif distance == "absolute":
     def distance_function(x, y):
@@ -128,10 +114,9 @@ elif distance == "wasserstein":
 
 
 # Computing distances between all couples of sentences
-distances = np.fromiter(
-    (distance_function(e1, e2)
-     for (e1, e2) in zip(*embeddings_list)), float)
-    
+#distances = np.fromiter( map(lambda x: distance_function(x[0],x[1]) if (x[0] is not None and x[1] is not None) else None ,zip(*embeddings_list)) , float)
+distances = np.fromiter( map(lambda x: distance_function(x[0],x[1]) if (np.sum(np.isnan(x[0]))==0 and np.sum(np.isnan(x[1]))==0) else np.nan ,zip(*embeddings_list)) , float)
+   
 logger.info("Computed similarity scores.")
 
     

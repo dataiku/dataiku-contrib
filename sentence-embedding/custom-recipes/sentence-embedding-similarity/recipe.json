@@ -115,7 +115,7 @@
             "defaultValue" : false
         },
         {
-            "visibilityCondition": "model.advanced_settings",
+            "visibilityCondition": "model.advanced_settings && model.aggregation_method=='SIF'",
             "name": "smoothing_parameter",
             "label" : "[SIF] Smoothing Parameter",
             "description": "Used for computing SIF weights.",
@@ -123,7 +123,7 @@
             "defaultValue" : 0.001
         },
         {
-            "visibilityCondition": "model.advanced_settings",
+            "visibilityCondition": "model.advanced_settings && model.aggregation_method=='SIF'",
             "name": "n_principal_components",
             "label" : "[SIF] Principal Components",
             "description": "Number of components to remove in SIF computation.",
