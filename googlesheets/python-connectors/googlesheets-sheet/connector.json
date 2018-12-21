@@ -11,8 +11,8 @@
     "params": [
         {
             "name": "credentials",
-            "label": "Service Account JSON",
-            "description": "File provided by Google. Read more here: http://gspread.readthedocs.io/en/latest/oauth2.html",
+            "label": "JSON Service Account",
+            "description": "Copy/paste the JSON provided by Google, or a path to a file containing the JSON. Click on the 'Learn more' above to read how to get this JSON.",
             "type": "TEXTAREA",
             "mandatory" : true
         },
