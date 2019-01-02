@@ -3,21 +3,27 @@ from dataiku.runnables import Runnable
 import requests
 import dataiku
 import os
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
+                    format='image-segmentation plugin %(levelname)s - %(message)s')
 
 try :
     import pycocotools
-except : 
-    print("##### WARNING ##### Couldn't find pycocotools in installed packages : will proceed to installing the package in plugin codenv")
+except :
+    with open('../../../../../../config/plugins/image-segmentation/settings.json','r') as f:
+        codenv_name = json.load(f).get('codeEnvName')
+    logger.warning("##### WARNING ##### Couldn't find pycocotools in installed packages : will proceed to installing the package in plugin codenv")
     client = dataiku.api_client()
-    codenv = client.get_code_env('python','plugin_image-segmentation_managed')
+    codenv = client.get_code_env('python',
+                                 codenv_name)
     codenv_def = codenv.get_definition()
     codenv_def['specPackageList'] = 'git+https://github.com/waleedka/coco.git#subdirectory=PythonAPI'
     codenv.set_definition(codenv_def)
     
-    print('#'*50)
-    print('Start updating codenv plugin_image-segmentation_managed with git+https://github.com/waleedka/coco.git#subdirectory=PythonAPI')
+    logger.info('Start updating codenv plugin_image-segmentation_managed with git+https://github.com/waleedka/coco.git#subdirectory=PythonAPI')
     codenv.update_packages()
-    print ('Codenv updated')
+    logger.info('Codenv updated')
     
 class MyRunnable(Runnable):
     """The base interface for a Python runnable"""
@@ -55,19 +61,28 @@ class MyRunnable(Runnable):
                 break
         
         if not output_folder_found:
+            if output_folder_name == '':
+                raise ValueError('The model folder name is empty, please name the folder')
+            
             output_folder = project.create_managed_folder(output_folder_name)
 
-        output_folder_path = dataiku.Folder(output_folder.get_definition()["id"], project_key=self.project_key).get_path()
+        output_folder_path = dataiku.Folder(output_folder.get_definition()["id"],
+                                            project_key=self.project_key).get_path()
         
-        os.chmod(output_folder_path,0o755)
+        os.chmod(output_folder_path,
+                 0o755)
+        
         for root, dirs, files in os.walk(output_folder_path):  
             for momo in dirs:  
-                os.chmod(os.path.join(root, momo), 0o644)
+                os.chmod(os.path.join(root, momo),
+                         0o644)
             for momo in files:
-                os.chmo(os.path.join(root, momo), 0o644)
+                os.chmo(os.path.join(root, momo), 
+                        0o644)
         
         def download_weights (folder, weights_url, name):
-            r = requests.get(weights_url, allow_redirects=True)
+            r = requests.get(weights_url, 
+                             allow_redirects=True)
             folder.put_file(name,r.content)
                 
         model_urls =['https://github.com/matterport/Mask_RCNN/releases/download/v2.0/mask_rcnn_coco.h5',\
@@ -75,7 +90,9 @@ class MyRunnable(Runnable):
                 
         for url in model_urls:
             name = url.split('/')[-1]
-            download_weights(output_folder, url, name)            
+            download_weights(output_folder,
+                             url,
+                             name)            
         
             
         return "<span>DONE</span>"

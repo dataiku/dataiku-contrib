@@ -15,7 +15,7 @@
         // Name of this plugin that appears in the interface.
         "label" : "Plugin image-segmentation",
 
-        "description" : "A longer string explaining what the plugin does",
+        "description" : "This plugin uses Mask-RCNN to apply image segmentation to one or several images in a folder",
         "author" : "vhoudebine",
 
         // The icon of a plugin must be one of the FontAwesome 3.1 icons
@@ -27,6 +27,6 @@
         "url" : "https://www.dataiku.com",
 
         // List of tags for filtering the list of plugins
-        "tags" : ["nicedataset", "dev"]
+        "tags" : ["computer vision", "deep-learning","image","segmentation"]
     }
 }
