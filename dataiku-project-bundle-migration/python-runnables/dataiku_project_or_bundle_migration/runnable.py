@@ -1,11 +1,10 @@
-# This file is the actual code for the Python runnable project_or_bundle_migration
-from dataiku.runnables import Runnable
+import time
+import os.path
+import datetime
 import dataiku
 import dataikuapi
+from dataiku.runnables import Runnable
 from dataikuapi.utils import DataikuException
-import datetime
-import os.path
-import time
 
 
 class MyRunnable(Runnable):

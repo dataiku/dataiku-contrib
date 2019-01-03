@@ -1,7 +1,7 @@
 {
     "meta": {
         "label": "Bundle Project and Push to Automation Node",
-        "description": "Bundle a project and migrate it from a design instance to a remote automation (or design) instance.",
+        "description": "Bundle a Dataiku project and migrate it from a Design instance to a remote Automation (or Design) instance.",
         "icon": "icon-share-alt"
     },
     "impersonate": false,
@@ -30,14 +30,15 @@
             "name": "remote_host",
             "label": "Destination Instance Address",
             "type": "STRING",
-            "description": "Specify the location of the instance to copy the project to. (Required)",
+            "description": "Specify the location (URL) of the instance to copy the project to. (Required)",
             "mandatory": true
         },
         {
             "name": "api_key",
             "label": "Remote API key",
             "type": "STRING",
-            "description": "Specify the API key of the destination instance. (Required)"
+            "description": "Specify the API key of the destination instance. (Required)",
+            "mandatory": true
         },
         {
             "name": "activate_scenarios",

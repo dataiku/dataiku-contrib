@@ -18,7 +18,7 @@ Use this macro to push projects from one DSS node to another without having to d
 
 To do this, click on the "Bundles" tab of the project, then "More", then "Configure Bundles Content".
 
-![Configure_bundles_content](doc/Configure_bundles_content)
+![Configure_bundles_content](doc/Configure_bundles_content.png)
 
 Add all uploaded files, server_filesystem files, and deployed models using the +Add button.
 
@@ -30,7 +30,7 @@ Add all uploaded files, server_filesystem files, and deployed models using the +
 
 1. Navigate to the project you'd like to bundle. Then click on "Macros" from the top menu.
 
-![Macros_menu](doc/Macros_menu)
+![Macros_menu](doc/Macros_menu.png)
 
 2. Find the Bundle Project and Push to Automation Node macro.
 
@@ -38,7 +38,7 @@ Add all uploaded files, server_filesystem files, and deployed models using the +
 
 3. Configure your settings. The "Previously Used Bundle IDs" list tells you which bundle IDs you have used in the past. The new Bundle ID chosen here cannot be a repeat of one of these. Enter the remote DSS instance address and API key. Select "Activate Scenarios" if you'd like to keep all active scenarios from the initial project as active in the remote project.
 
-![Macro_options](doc/Macro_options)
+![Macro_options](doc/Macro_options.png)
 
 4. Once the macro finishes running, you'll see a list of plugins which are installed in the initial instance, but not installed in the remote instance. Check your project on the initial instance to see if it uses any of these plugins. If so, install them on the remote instance.
 
