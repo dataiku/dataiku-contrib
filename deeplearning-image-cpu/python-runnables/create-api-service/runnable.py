@@ -5,6 +5,8 @@ import os
 import sys
 import shutil
 
+
+
 def get_params(config, client, project):
     """
     Check the macro input parameters and return them as a dict.
@@ -29,12 +31,13 @@ def get_params(config, client, project):
         service_id = config.get("service_id_new")
         assert service_id, "Service ID is empty"
         assert service_id not in list_service, "Service ID %s already in use, find a new id or uncheck the create new service option to use an existing service" % service_id
+        project.create_api_service(service_id)
     else :
         service_id = config.get("service_id_existing")
         assert service_id, "Service ID is empty"
         assert service_id in list_service, "Service ID : %s not found" % service_id
-    params["service_id"] = service_id
-     
+    
+    params["service_id"] = service_id 
     list_endpoints = [endpoint.get("id") for endpoint in project.get_api_service(service_id).get_settings().get_raw()["endpoints"]]
     endpoint_id = config.get("endpoint_id")
     assert endpoint_id, "Endpoint ID is empty"
@@ -56,21 +59,7 @@ def get_params(config, client, project):
         assert package_id not in list_packages, "Package ID already in use"
         params["package_id"] = package_id
     #TO-DO custom html select to get the list of API service packages
-    
-    code_env_mode = config.get("code_env_mode")
-    assert code_env_mode, "Code-env selection behaviour is empty"
-    assert code_env_mode in ["INHERIT", "USE_BUILTIN_MODE", "EXPLICIT_ENV"], "code-env selection behaviour unknown : %s"%code_env_mode
-    params["code_env_mode"] = code_env_mode
-    
-    
-    if code_env_mode == "EXPLICIT_ENV":
-        code_env_name = config.get("code_env_name")
-        list_code_envs = [code_env.get("envName") for code_env in client.list_code_envs()]
-        assert code_env_name, "Code-env name is empty"
-        assert code_env_name in list_code_envs, "Python code-env %s not available within the existing code-env"%code_env_name
-        params["code_env_name"] = code_env_name
-    #TO-DO custom html select to get the list of code-envs
-    
+        
     max_nb_labels = config.get("max_nb_labels")
     assert max_nb_labels, "Max number of labels is empty"
     assert type(max_nb_labels) is int, "Max number of labels is not an int : %s "%type(max_nb_labels)
@@ -83,6 +72,9 @@ def get_params(config, client, project):
     assert (min_threshold >= 0) and (min_threshold <= 1)  , "Min threshold must be between 0 and 1"
     params["min_threshold"] = min_threshold
         
+    env_name = 'plugin_deeplearning-image-cpu_api_node'
+    params['code_env_name'] = env_name
+
     return params
 
 def copy_plugin_to_dss_folder(plugin_id, folder_id, project_key, force_copy=False):    
@@ -91,8 +83,8 @@ def copy_plugin_to_dss_folder(plugin_id, folder_id, project_key, force_copy=Fals
     """
     
     root_path = dataiku.get_custom_variables(project_key=project_key)['dip.home']
-    plugin_lib_path = os.path.join(root_path, 'plugins', 'dev', plugin_id, 'python-lib')
-    
+    plugin_lib_path = os.path.join(root_path, 'plugins', 'installed', plugin_id, 'python-lib') # TODO change this to plugins/installed/...
+     
     folder_path = dataiku.Folder(folder_id, project_key=project_key).get_path()
     lib_folder_path = os.path.join(folder_path, 'python-lib')
     
@@ -126,6 +118,22 @@ def get_api_service(params, project):
     return api_service
 
 
+def create_api_code_env(client, env_name):
+    
+    already_exist = env_name in [env.get('envName') for env in client.list_code_envs()]
+    
+    if not already_exist:
+        _ = client.create_code_env(env_lang='PYTHON', env_name = env_name, deployment_mode = 'DESIGN_MANAGED')
+
+    my_env = client.get_code_env('PYTHON', env_name)
+    env_def = my_env.get_definition()
+    env_def['specPackageList'] = 'boto3\nscipy'
+    env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1'
+    env_def['desc']['installCorePackages'] = True
+    my_env.set_definition(env_def)
+    my_env.update_packages()
+
+
 def get_model_endpoint_settings(params):
     """
     Create a endpoints dict that will be added to a list of endpoints of an api service
@@ -136,11 +144,9 @@ def get_model_endpoint_settings(params):
     endpoint_settings["type"] = "PY_FUNCTION"
     endpoint_settings["userFunctionName"] = "api_py_function"
 
-    codeenv_dict = dict()
-    codeenv_dict["envMode"] = params.get("code_env_mode")
-    if params.get("code_env_mode") == "EXPLICIT_ENV":
-        codeenv_dict["envName"] = params.get("code_env_name")
-    endpoint_settings["envSelection"] = codeenv_dict
+    code_env = {u'envMode': u'EXPLICIT_ENV', u'envName': params.get('code_env_name')} 
+    endpoint_settings['envSelection'] = code_env
+
 
     folder_list = []
     folder_list.append({"ref": params.get("model_folder_id")})
@@ -273,7 +279,6 @@ class MyRunnable(Runnable):
         #TO-DO way of getting the plugin_id within the macro? plugin_config seems empty
 
         
-        
     def get_progress_target(self):
         """
         If the runnable will return some progress info, have this function return a tuple of 
@@ -289,6 +294,7 @@ class MyRunnable(Runnable):
         """
         params = get_params(self.config, self.client, self.project)
         copy_plugin_to_dss_folder(self.plugin_id, params.get("model_folder_id"), self.project_key)
+        create_api_code_env(self.client, params.get('code_env_name'))
         api_service = get_api_service(params, self.project)            
         endpoint_settings = get_model_endpoint_settings(params)
         create_python_endpoint(api_service, endpoint_settings)

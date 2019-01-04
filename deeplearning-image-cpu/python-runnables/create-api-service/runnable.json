@@ -107,27 +107,6 @@
             "visibilityCondition" : "model.create_package"
         },
         {
-            "name": "sep3",
-            "label": "Python environment",
-            "type": "SEPARATOR"
-        },
-        {
-            "name" : "code_env_mode",
-            "label" : "Selection behavior",
-            "type" : "SELECT",
-            "selectChoices" : [
-                { "value" : "INHERIT", "label" : "Inherit project default"},
-                { "value" : "EXPLICIT_ENV", "label" : "Select an environment"},
-                { "value" : "USE_BUILTIN_MODE", "label" : "Use DSS buildin env"}
-            ]
-        },
-        {
-            "name": "code_env_name",
-            "type": "STRING",
-            "label": "Environment",
-            "visibilityCondition" : "model.code_env_mode == 'EXPLICIT_ENV'"
-        },
-        {
             "name": "sep4",
             "label": "Params model results",
             "type": "SEPARATOR"
@@ -144,7 +123,7 @@
             "type": "DOUBLE",
             "label": "Min probability threshold",
             "description": "Class labels less probable than this threshold (between 0 and 1) will not be output",
-            "defaultValue": 0,
+            "defaultValue": 0.1,
             "mandatory": true
         }
         
