@@ -4,7 +4,7 @@ from dataiku.runnables import Runnable
 import os
 import sys
 import shutil
-
+import constants
 
 
 def get_params(config, client, project):
@@ -48,6 +48,8 @@ def get_params(config, client, project):
     params["endpoint_id"] = config.get("endpoint_id")
     #TO-DO custom html select to get the list of endpoints
     
+
+    """
     create_package = config.get("create_package")
     assert type(create_new_service) is bool, "create_package is not bool: %r" % create_package
     params["create_package"] = create_package
@@ -59,7 +61,8 @@ def get_params(config, client, project):
         assert package_id not in list_packages, "Package ID already in use"
         params["package_id"] = package_id
     #TO-DO custom html select to get the list of API service packages
-        
+    """
+            
     max_nb_labels = config.get("max_nb_labels")
     assert max_nb_labels, "Max number of labels is empty"
     assert type(max_nb_labels) is int, "Max number of labels is not an int : %s "%type(max_nb_labels)

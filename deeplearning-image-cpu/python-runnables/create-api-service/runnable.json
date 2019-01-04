@@ -94,19 +94,6 @@
             "mandatory": true
         },
         {
-            "name": "create_package",
-            "type": "BOOLEAN",
-            "label": "Create API package",
-            "mandatory": true,
-            "defaultValue": false
-        },
-        {
-            "name": "package_id",
-            "type": "STRING",
-            "label": "API package ID",
-            "visibilityCondition" : "model.create_package"
-        },
-        {
             "name": "sep4",
             "label": "Params model results",
             "type": "SEPARATOR"
