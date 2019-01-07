@@ -7,7 +7,7 @@
         "author" : "Dataiku (Guilherme and Patrick)",
         "icon" : "icon-share-alt",
         "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins",
+        "url" : "https://github.com/dataiku/dataiku-contrib/tree/master/dataiku-project-bundle-migration",
         "tags" : ["migration", "bundles"]
     }
 }
