@@ -176,7 +176,7 @@
             "name": "batch_size_bing",
             "type": "INT",
             "label" : "Bing batch size",
-            "description": "50 for free basic keys, 200 000 for entreprise ones",
+            "description": "50 for free basic keys, 200 000 for enterprise ones",
             "defaultValue": 50,
             "visibilityCondition" : "model.provider == 'bing' && model.batch_enabled"
         },
