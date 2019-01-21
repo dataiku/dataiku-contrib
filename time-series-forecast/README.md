@@ -41,3 +41,10 @@ It follows classic forecasting methods described in Hyndman, Rob J., and George 
 Please read [the plugin page](https://www.dataiku.com/plugins/) on Dataiku's website for more instructions on the usage of the plugin.
 
 You can also ask your questions on our Q&A, [answers.dataiku.com](https://answers.dataiku.com), or open an [Github issue](https://github.com/dataiku/dataiku-contrib/issues).
+
+# License
+
+The Forecast plugin is:
+
+   Copyright (c) 2018 Dataiku SAS
+   Licensed under the [MIT License](LICENSE.md).

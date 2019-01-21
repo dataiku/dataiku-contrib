@@ -31,7 +31,7 @@ If your issue is with one of the existing plugins, please [file an issue here](h
 
 ## License
 
-All plugins in this repository are:
+All plugins in this repository, unless otherwise stipulated, are:
 
    Copyright (c) 2015 Dataiku SAS
 

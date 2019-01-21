@@ -6,7 +6,7 @@
     "description": "This plugin offers a set of visual recipes to forecast yearly to hourly univariate time series. It covers the full cycle of data cleaning, model training, evaluation and prediction.",
     "author": "Dataiku (Alex Combessie)",
     "icon": "icon-calendar",
-    "licenseInfo": "GPL-3",
+    "licenseInfo": "MIT License",
     "url": "https://www.dataiku.com/dss/plugins/info/forecast.html",
     "tags": ["Time series"]
   }
