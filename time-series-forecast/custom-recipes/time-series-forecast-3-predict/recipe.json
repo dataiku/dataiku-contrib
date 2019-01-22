@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "label": "3. Forecast future values and get historical residuals",
+    "description": "Use previously trained models to predict future values and/or get historical residuals",
+    "icon": "icon-signal"
+  },
+  "kind": "R",
+  "selectableFromDataset": "EVALUATION_DATASET_NAME",
+  "inputRoles": [
+    {
+      "name": "EVALUATION_DATASET_NAME",
+      "label": "Evaluation results",
+      "description": "Dataset with the error evaluation results computed by the previous \"Train models...\" recipe",
+      "arity": "UNARY",
+      "required": false,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    },
+    {
+      "name": "MODEL_FOLDER_NAME",
+      "label": "Trained models folder",
+      "description": "Folder with trained models saved by the previous \"Train models...\" recipe",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": false,
+      "acceptsManagedFolder": true,
+      "mustBeStrictlyType": "Filesystem"
+    }
+  ],
+  "outputRoles": [
+    {
+      "name": "OUTPUT_DATASET_NAME",
+      "label": "Forecast dataset",
+      "description": "Output dataset with future values and/or historical residuals",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    }
+  ],
+  "params": [
+    {
+      "name": "separator_model_selection",
+      "label": "Model selection",
+      "type": "SEPARATOR"
+    },
+    {
+      "name": "MODEL_SELECTION",
+      "label": "Mode",
+      "type": "SELECT",
+      "mandatory": true,
+      "defaultValue": "auto",
+      "description": "Select manually or automatically select model with lowest error",
+      "selectChoices": [
+        {
+          "value": "auto",
+          "label": "Automatic"
+        },
+        {
+          "value": "manual",
+          "label": "Manual"
+        }
+      ]
+    },
+    {
+      "name": "ERROR_METRIC",
+      "label": "Error metric",
+      "type": "SELECT",
+      "mandatory": false,
+      "defaultValue": "mean_absolute_error",
+      "visibilityCondition": "model.MODEL_SELECTION=='auto'",
+      "selectChoices": [
+        {
+          "value": "mean_absolute_error",
+          "label": "Mean Absolute Error"
+        },
+        {
+          "value": "mean_absolute_percentage_error",
+          "label": "Mean Absolute Percentage Error"
+        },
+        {
+          "value": "root_mean_square_error",
+          "label": "Root Mean Square Error"
+        }
+      ]
+    },
+    {
+      "name": "SELECTED_MODEL",
+      "label": "Model to use",
+      "type": "SELECT",
+      "mandatory": false,
+      "defaultValue": "PROPHET_MODEL",
+      "visibilityCondition": "model.MODEL_SELECTION=='manual'",
+      "selectChoices": [
+        {
+          "value": "NAIVE_MODEL",
+          "label": "Baseline"
+        },
+        {
+          "value": "PROPHET_MODEL",
+          "label": "Prophet"
+        },
+        {
+          "value": "NEURALNETWORK_MODEL",
+          "label": "Neural Network"
+        },
+        {
+          "value": "SEASONALTREND_MODEL",
+          "label": "Seasonal Trend"
+        },
+        {
+          "value": "EXPONENTIALSMOOTHING_MODEL",
+          "label": "Exponential Smoothing"
+        },
+        {
+          "value": "ARIMA_MODEL",
+          "label": "ARIMA"
+        },
+        {
+          "value": "STATESPACE_MODEL",
+          "label": "State Space"
+        }
+      ]
+    },
+    {
+      "name": "separator_forecasting",
+      "label": "Prediction",
+      "type": "SEPARATOR"
+    },
+    {
+      "name": "INCLUDE_HISTORY",
+      "label": "Include history",
+      "description": "Historical values, one-step forecasts and residuals (historical value - forecast)",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "mandatory": true
+    },
+    {
+      "name": "INCLUDE_FORECAST",
+      "label": "Include forecast",
+      "description": "Forecasts along the horizon",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "mandatory": true
+    },
+    {
+      "name": "FORECAST_HORIZON",
+      "label": "Forecast horizon",
+      "type": "INT",
+      "mandatory": true,
+      "defaultValue": 10,
+      "description": "in number of periods",
+      "visibilityCondition": "model.INCLUDE_FORECAST"
+    },
+    {
+      "name": "CONFIDENCE_INTERVAL",
+      "label": "Confidence interval",
+      "type": "INT",
+      "mandatory": true,
+      "defaultValue": 95,
+      "description": "%",
+      "visibilityCondition": "model.INCLUDE_FORECAST"
+    }
+  ],
+  "resourceKeys": []
+}

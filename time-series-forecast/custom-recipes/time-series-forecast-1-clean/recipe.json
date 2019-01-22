@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "label": "1. Clean time series",
+    "description": "Resample, aggregate and clean the time series from missing values and outliers",
+    "icon": "icon-calendar-empty"
+  },
+  "kind": "R",
+  "selectableFromDataset": "INPUT_DATASET_NAME",
+  "inputRoles": [
+    {
+      "name": "INPUT_DATASET_NAME",
+      "label": "Input dataset",
+      "description": "Input dataset with time series data",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    }
+  ],
+  "outputRoles": [
+    {
+      "name": "OUTPUT_DATASET_NAME",
+      "label": "Cleaned output dataset",
+      "description": "Output dataset with the cleaned time series",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": true,
+      "acceptsFolder": false
+    }
+  ],
+  "params": [
+    {
+      "type": "SEPARATOR",
+      "name": "separator_input",
+      "label": "Input data"
+    },
+    {
+      "name": "TIME_COLUMN",
+      "label": "Time column",
+      "description": "Must be of parsed DATE type. Use a Prepare recipe to parse the date if needed.",
+      "type": "COLUMN",
+      "columnRole": "INPUT_DATASET_NAME",
+      "mandatory": true
+    },
+    {
+      "name": "SERIES_COLUMNS",
+      "label": "Series columns",
+      "description": "Must be of NUMERIC type",
+      "type": "COLUMNS",
+      "columnRole": "INPUT_DATASET_NAME",
+      "mandatory": true
+    },
+    {
+      "type": "SEPARATOR",
+      "name": "separator_resampling",
+      "label": "Resampling and aggregation"
+    },
+    {
+      "name": "GRANULARITY",
+      "label": "Time granularity",
+      "description": "How often data needs to be resampled",
+      "type": "SELECT",
+      "mandatory": true,
+      "selectChoices": [
+        {
+          "value": "year",
+          "label": "Year"
+        },
+        {
+          "value": "quarter",
+          "label": "Quarter"
+        },
+        {
+          "value": "month",
+          "label": "Month"
+        },
+        {
+          "value": "week",
+          "label": "Week"
+        },
+        {
+          "value": "day",
+          "label": "Day"
+        },
+        {
+          "value": "hour",
+          "label": "Hour"
+        }
+      ],
+      "defaultValue": "day"
+    },
+    {
+      "name": "AGGREGATION_STRATEGY",
+      "label": "Aggregation method",
+      "type": "SELECT",
+      "mandatory": true,
+      "selectChoices": [
+        {
+          "value": "sum",
+          "label": "Sum"
+        },
+        {
+          "value": "mean",
+          "label": "Average"
+        }
+      ],
+      "defaultValue": "sum"
+    },
+    {
+      "type": "SEPARATOR",
+      "name": "separator_missing_values",
+      "label": "Missing values"
+    },
+    {
+      "name": "MISSING_VALUES",
+      "label": "Imputation strategy",
+      "type": "SELECT",
+      "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
+      "mandatory": true,
+      "defaultValue": "interpolate",
+      "selectChoices": [
+        {
+          "value": "interpolate",
+          "label": "Interpolate"
+        },
+        {
+          "value": "impute",
+          "label": "Impute ..."
+        },
+        {
+          "value": "no",
+          "label": "Do not replace"
+        }
+      ]
+    },
+    {
+      "name": "MISSING_IMPUTE_WITH",
+      "label": "Impute with",
+      "type": "SELECT",
+      "mandatory": false,
+      "visibilityCondition": "model.MISSING_VALUES == 'impute'",
+      "defaultValue": "constant",
+      "selectChoices": [
+        {
+          "value": "average",
+          "label": "Average of values"
+        },
+        {
+          "value": "median",
+          "label": "Median of values"
+        },
+        {
+          "value": "constant",
+          "label": "A constant value"
+        }
+      ]
+    },
+    {
+      "name": "MISSING_IMPUTE_CONSTANT",
+      "label": "Value",
+      "type": "DOUBLE",
+      "defaultValue": 0.0,
+      "mandatory": false,
+      "visibilityCondition": "model.MISSING_VALUES == 'impute' && model.MISSING_IMPUTE_WITH == 'constant'"
+    },
+    {
+      "type": "SEPARATOR",
+      "name": "separator_outliers",
+      "label": "Outliers"
+    },
+    {
+      "name": "OUTLIERS",
+      "label": "Imputation strategy",
+      "type": "SELECT",
+      "mandatory": true,
+      "defaultValue": "no",
+      "description": "Interpolation is based on tsclean implementation in R \"forecast\" package",
+      "selectChoices": [
+        {
+          "value": "interpolate",
+          "label": "Interpolate"
+        },
+        {
+          "value": "impute",
+          "label": "Impute ..."
+        },
+        {
+          "value": "no",
+          "label": "Do not replace"
+        }
+      ]
+    },
+    {
+      "name": "OUTLIERS_IMPUTE_WITH",
+      "label": "Impute with",
+      "type": "SELECT",
+      "mandatory": false,
+      "visibilityCondition": "model.OUTLIERS == 'impute'",
+      "defaultValue": "constant",
+      "selectChoices": [
+        {
+          "value": "average",
+          "label": "Average of values"
+        },
+        {
+          "value": "median",
+          "label": "Median of values"
+        },
+        {
+          "value": "constant",
+          "label": "A constant value"
+        }
+      ]
+    },
+    {
+      "name": "OUTLIERS_IMPUTE_CONSTANT",
+      "label": "Value",
+      "type": "DOUBLE",
+      "defaultValue": 0.0,
+      "mandatory": false,
+      "visibilityCondition": "model.OUTLIERS == 'impute' && model.OUTLIERS_IMPUTE_WITH == 'constant'"
+    }
+  ],
+  "resourceKeys": []
+}
