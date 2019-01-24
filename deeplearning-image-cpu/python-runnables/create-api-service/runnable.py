@@ -25,21 +25,22 @@ class MyRunnable(Runnable):
         self.client = dataiku.api_client()
         self.project = self.client.get_project(self.project_key)
         self.plugin_id = "deeplearning-image-cpu"
-        #TODO way of getting the plugin_id within the macro? plugin_config seems empty
+        # TODO way of getting the plugin_id within the macro? plugin_config
+        # seems empty
 
-        
     def get_progress_target(self):
         return None
-    
 
     def run(self, progress_callback):
 
         params = get_params(self.config, self.client, self.project)
-        copy_plugin_to_dss_folder(self.plugin_id, params.get("model_folder_id"), self.project_key)
-        create_api_code_env(self.client, params.get('code_env_name'), params.get('use_gpu'))
-        api_service = get_api_service(params, self.project)            
+        copy_plugin_to_dss_folder(self.plugin_id, params.get(
+            "model_folder_id"), self.project_key)
+        create_api_code_env(self.client, params.get(
+            'code_env_name'), params.get('use_gpu'))
+        api_service = get_api_service(params, self.project)
         endpoint_settings = get_model_endpoint_settings(params)
-        create_python_endpoint(api_service, endpoint_settings) 
+        create_python_endpoint(api_service, endpoint_settings)
         html_str = get_html_result(params)
-        
+
         return html_str
