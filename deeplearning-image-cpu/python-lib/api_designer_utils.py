@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
-        			format='deeplearning-image-cpu macro %(levelname)s - %(message)s')
+        			format='deeplearning-image-macro %(levelname)s - %(message)s')
 
 
 def get_params(config, client, project):
@@ -50,6 +50,11 @@ def get_params(config, client, project):
     else :
         logger.info("Create new endpoint %s in service %s" % (endpoint_id, service_id))
     params["endpoint_id"] = config.get("endpoint_id")
+
+
+    use_gpu = config.get("use_gpu")
+    assert type(use_gpu) is bool, "use_gpu is not bool: %r" % create_new_service
+    params["use_gpu"] = use_gpu
     #TO-DO custom html select to get the list of endpoints
     
 
@@ -79,7 +84,12 @@ def get_params(config, client, project):
     assert (min_threshold >= 0) and (min_threshold <= 1)  , "Min threshold must be between 0 and 1"
     params["min_threshold"] = min_threshold
         
-    env_name = 'plugin_deeplearning-image-cpu_api_node'
+
+    if use_gpu:
+        env_name = 'plugin_deeplearning-image-gpu-api_node'
+    else:
+        env_name = 'plugin_deeplearning-image-cpu-api_node'
+        
     params['code_env_name'] = env_name
 
     return params
@@ -125,7 +135,7 @@ def get_api_service(params, project):
     return api_service
 
 
-def create_api_code_env(client, env_name):
+def create_api_code_env(client, env_name, use_gpu):
     
     already_exist = env_name in [env.get('envName') for env in client.list_code_envs()]
     
@@ -134,8 +144,10 @@ def create_api_code_env(client, env_name):
 
     my_env = client.get_code_env('PYTHON', env_name)
     env_def = my_env.get_definition()
-    env_def['specPackageList'] = 'boto3\nscipy'
-    env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1'
+    if use_gpu:
+        env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow-gpu==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1' 
+    else:
+        env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1'
     env_def['desc']['installCorePackages'] = True
     my_env.set_definition(env_def)
     my_env.update_packages()
@@ -182,7 +194,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
-                    format="deeplearning-image-cpu-api-node \%(levelname)s - \%(message)s") 
+                    format="deeplearning-image-api-node \%(levelname)s - \%(message)s") 
 
 model_folder_path = folders[0]
 

@@ -94,6 +94,13 @@
             "mandatory": true
         },
         {
+            "name": "use_gpu",
+            "type": "BOOLEAN",
+            "label": "GPU deployment mode",
+            "mandatory": true,
+            "defaultValue": false
+        },
+        {
             "name": "sep4",
             "label": "Params model results",
             "type": "SEPARATOR"
