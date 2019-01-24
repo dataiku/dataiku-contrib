@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
-        			format='deeplearning-image-macro %(levelname)s - %(message)s')
+                    format='deeplearning-image-macro %(levelname)s - %(message)s')
 
 
 def get_params(config, client, project):
@@ -17,20 +17,23 @@ def get_params(config, client, project):
     Depending on the option, we set service_id as service_id_existing or service_id_new, that's why this function is a get_params, not just check_params.
     Some checks are done to make sure the input is in the dedicated DSS object list : code-env, managed_folder, api service, endpoint.
     """
-    
+
     params = {}
-    
+
     model_folder_id = config.get("model_folder_id")
-    list_folders = [folder.get("id") for folder in project.list_managed_folders()]
+    list_folders = [folder.get("id")
+                    for folder in project.list_managed_folders()]
     assert model_folder_id, "Folder ID is empty"
     assert model_folder_id in list_folders, "Folder ID %s must be the id of a managed folder containing a model trained with the deeplearning-image plugin. The folder must belong to the project in which is executed the macro" % model_folder_id
     params["model_folder_id"] = model_folder_id
-    
+
     create_new_service = config.get("create_new_service")
-    assert type(create_new_service) is bool, "create_new_service is not bool: %r" % create_new_service
+    assert type(
+        create_new_service) is bool, "create_new_service is not bool: %r" % create_new_service
     params["create_new_service"] = create_new_service
-    
-    list_service = [service.get("id") for service in project.list_api_services()]
+
+    list_service = [service.get("id")
+                    for service in project.list_api_services()]
 
     if create_new_service:
         service_id = config.get("service_id_new")
@@ -52,12 +55,11 @@ def get_params(config, client, project):
     params["service_id"] = service_id
     params["endpoint_id"] = config.get("endpoint_id")
 
-
     use_gpu = config.get("use_gpu")
     assert type(use_gpu) is bool, "use_gpu is not bool: %r" % create_new_service
     params["use_gpu"] = use_gpu
-    #TO-DO custom html select to get the list of endpoints
-    
+    # TO-DO custom html select to get the list of endpoints
+
     """
     create_package = config.get("create_package")
     assert type(create_new_service) is bool, "create_package is not bool: %r" % create_package
@@ -74,39 +76,46 @@ def get_params(config, client, project):
 
     max_nb_labels = config.get("max_nb_labels")
     assert max_nb_labels, "Max number of labels is empty"
-    assert type(max_nb_labels) is int, "Max number of labels is not an int : %s "%type(max_nb_labels)
-    assert max_nb_labels > 0 , "Max number of labels must be strictly greater than 0"
+    assert type(max_nb_labels) is int, "Max number of labels is not an int : %s " % type(
+        max_nb_labels)
+    assert max_nb_labels > 0, "Max number of labels must be strictly greater than 0"
     params["max_nb_labels"] = max_nb_labels
-    
+
     min_threshold = config.get("min_threshold")
     assert min_threshold, "Min threshold is empty"
-    assert type(min_threshold) is float, "Min threshold is not a float : %s "%type(min_threshold)
-    assert (min_threshold >= 0) and (min_threshold <= 1)  , "Min threshold must be between 0 and 1"
+    assert type(min_threshold) is float, "Min threshold is not a float : %s " % type(
+        min_threshold)
+    assert (min_threshold >= 0) and (min_threshold <=
+                                     1), "Min threshold must be between 0 and 1"
     params["min_threshold"] = min_threshold
 
     if use_gpu:
         env_name = 'plugin_deeplearning-image-gpu-api_node'
     else:
         env_name = 'plugin_deeplearning-image-cpu-api_node'
-        
+
     params['code_env_name'] = env_name
 
     return params
 
-def copy_plugin_to_dss_folder(plugin_id, folder_id, project_key, force_copy=False):    
+
+def copy_plugin_to_dss_folder(plugin_id, folder_id, project_key, force_copy=False):
     """
     Copy python-lib from a plugin to a managed folder
     """
-    
-    root_path = dataiku.get_custom_variables(project_key=project_key)['dip.home']
-    plugin_lib_path = os.path.join(root_path, 'plugins', 'installed', plugin_id, 'python-lib') # TODO change this to plugins/installed/...
-     
+
+    root_path = dataiku.get_custom_variables(
+        project_key=project_key)['dip.home']
+    # TODO change this to plugins/installed/...
+    plugin_lib_path = os.path.join(
+        root_path, 'plugins', 'installed', plugin_id, 'python-lib')
+
     folder_path = dataiku.Folder(folder_id, project_key=project_key).get_path()
     lib_folder_path = os.path.join(folder_path, 'python-lib')
-    
+
     if os.path.isdir(lib_folder_path) and force_copy:
         shutil.rmtree(lib_folder_path)
-    
+
     if not os.path.isdir(lib_folder_path):
         os.mkdir(lib_folder_path)
         sys.path.append(lib_folder_path)
@@ -126,25 +135,27 @@ def get_api_service(params, project):
     """
     Create or get an api service dss object and return it
     """
-    
-    if params.get('create_new_service') :
-        api_service = project.create_api_service(params.get("service_id"))    
-    else :
+
+    if params.get('create_new_service'):
+        api_service = project.create_api_service(params.get("service_id"))
+    else:
         api_service = project.get_api_service(params.get("service_id"))
     return api_service
 
 
 def create_api_code_env(client, env_name, use_gpu):
-    
-    already_exist = env_name in [env.get('envName') for env in client.list_code_envs()]
-    
+
+    already_exist = env_name in [
+        env.get('envName') for env in client.list_code_envs()]
+
     if not already_exist:
-        _ = client.create_code_env(env_lang='PYTHON', env_name = env_name, deployment_mode = 'DESIGN_MANAGED')
+        _ = client.create_code_env(
+            env_lang='PYTHON', env_name=env_name, deployment_mode='DESIGN_MANAGED')
 
     my_env = client.get_code_env('PYTHON', env_name)
     env_def = my_env.get_definition()
     if use_gpu:
-        env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow-gpu==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1' 
+        env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow-gpu==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1'
     else:
         env_def['specPackageList'] = 'scikit-learn==0.19\ntensorflow==1.4.0\nkeras==2.1.2\nh5py>=2.7.1\nPillow\npip==9.0.1'
     env_def['desc']['installCorePackages'] = True
@@ -156,15 +167,15 @@ def get_model_endpoint_settings(params):
     """
     Create a endpoints dict that will be added to a list of endpoints of an api service
     """
-    
+
     endpoint_settings = dict()
     endpoint_settings["id"] = params.get("endpoint_id")
     endpoint_settings["type"] = "PY_FUNCTION"
     endpoint_settings["userFunctionName"] = "api_py_function"
 
-    code_env = {u'envMode': u'EXPLICIT_ENV', u'envName': params.get('code_env_name')} 
+    code_env = {u'envMode': u'EXPLICIT_ENV',
+                u'envName': params.get('code_env_name')}
     endpoint_settings['envSelection'] = code_env
-
 
     folder_list = []
     folder_list.append({"ref": params.get("model_folder_id")})
@@ -242,41 +253,41 @@ def api_py_function(img_b64):
 
     return literal_eval(prediction_batch[0])"""
 
-    endpoint_settings["code"] = code_template.format(params.get("max_nb_labels"), params.get("min_threshold"))
+    endpoint_settings["code"] = code_template.format(
+        params.get("max_nb_labels"), params.get("min_threshold"))
 
     return endpoint_settings
-     
-        
+
+
 def create_python_endpoint(api_service, setting_dict):
     """
     Create or update an endpoint to the API service DSS object api_service.
     """
-    
+
     api_setting = api_service.get_settings()
     api_setting_details = api_setting.get_raw()
-    
-    
+
     new_endpoints = []
     for endpoint in api_setting_details['endpoints']:
         if endpoint.get('id') != setting_dict.get('id'):
             new_endpoints.append(endpoint)
-    
+
     new_endpoints.append(setting_dict)
-    
+
     api_setting_details['endpoints'] = new_endpoints
     api_setting.save()
-    
+
 
 def get_html_result(params):
     """
     Get the result html string of the macro
     """
-    
+
     html_str = """<div> Model succesfully deployed to API designer </div>
 <div>Model folder : %s</div>
 <div>API service : %s</div>
 <div>Endpoint : %s</div>
 <a href="https://www.w3schools.com">See Service in API designer</a>
-"""%(params.get('model_folder_id'), params.get('service_id'), params.get('endpoint_id'))
-    
+""" % (params.get('model_folder_id'), params.get('service_id'), params.get('endpoint_id'))
+
     return html_str
