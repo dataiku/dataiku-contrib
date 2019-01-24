@@ -31,24 +31,25 @@ def get_params(config, client, project):
     params["create_new_service"] = create_new_service
     
     list_service = [service.get("id") for service in project.list_api_services()]
+
     if create_new_service:
         service_id = config.get("service_id_new")
         assert service_id, "Service ID is empty"
         assert service_id not in list_service, "Service ID %s already in use, find a new id or uncheck the create new service option to use an existing service" % service_id
-        project.create_api_service(service_id)
-    else :
+
+    else:
         service_id = config.get("service_id_existing")
         assert service_id, "Service ID is empty"
         assert service_id in list_service, "Service ID : %s not found" % service_id
-    
-    params["service_id"] = service_id 
-    list_endpoints = [endpoint.get("id") for endpoint in project.get_api_service(service_id).get_settings().get_raw()["endpoints"]]
-    endpoint_id = config.get("endpoint_id")
-    assert endpoint_id, "Endpoint ID is empty"
-    if endpoint_id in list_endpoints:
-        logger.info("Will override endpoint %s" % endpoint_id)
-    else :
-        logger.info("Create new endpoint %s in service %s" % (endpoint_id, service_id))
+
+        list_endpoints = [endpoint.get("id") for endpoint in project.get_api_service(
+            service_id).get_settings().get_raw()["endpoints"]]
+        if endpoint_id in list_endpoints:
+            print("Will override endpoint %s" % endpoint_id)
+        else:
+            print("Create new endpoint %s in service %s" %
+                  (endpoint_id, service_id))
+    params["service_id"] = service_id
     params["endpoint_id"] = config.get("endpoint_id")
 
 
@@ -57,7 +58,6 @@ def get_params(config, client, project):
     params["use_gpu"] = use_gpu
     #TO-DO custom html select to get the list of endpoints
     
-
     """
     create_package = config.get("create_package")
     assert type(create_new_service) is bool, "create_package is not bool: %r" % create_package
@@ -83,7 +83,6 @@ def get_params(config, client, project):
     assert type(min_threshold) is float, "Min threshold is not a float : %s "%type(min_threshold)
     assert (min_threshold >= 0) and (min_threshold <= 1)  , "Min threshold must be between 0 and 1"
     params["min_threshold"] = min_threshold
-        
 
     if use_gpu:
         env_name = 'plugin_deeplearning-image-gpu-api_node'
