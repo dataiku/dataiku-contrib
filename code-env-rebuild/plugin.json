@@ -13,10 +13,10 @@
     // Meta data for display purposes
     "meta" : {
         // Name of this plugin that appears in the interface.
-        "label" : "Plugin code-env-rebuild",
+        "label" : "Code-env rebuild macro",
 
         "description" : "Rebuild plugin managed code envs",
-        "author" : "duphan",
+        "author" : "Dataiku (Du Phan)",
 
         // The icon of a plugin must be one of the FontAwesome 3.1 icons
         "icon" : "icon-puzzle-piece",
@@ -27,6 +27,6 @@
         "url" : "https://www.dataiku.com",
 
         // List of tags for filtering the list of plugins
-        "tags" : ["nicedataset", "dev"]
+        "tags" : ["macro", "code-env"]
     }
 }

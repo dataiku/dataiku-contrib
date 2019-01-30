@@ -1,60 +1,14 @@
-/* This file is the descriptor for the python runnable rebuild-code-env */
 {
-    /* Meta data for display purposes */
     "meta": {
         "label": "Rebuild code-envs",
         "description": "Rebuild all plugin managed code-envs to avoid version conflict of base packages when upgrading DSS.",
-        "icon": "icon-puzzle-piece"
+        "icon": "icon-wrench"
     },
-
-    /* whether the runnable's code is untrusted */
     "impersonate": false,
     "requiresGlobalAdmin": true,
-    /* list of required permissions on the project to see/run the runnable */
     "permissions": ["ADMIN"],
-
-    /* what the code's run() returns:
-       - NONE : no result
-       - HTML : a string that is a html (utf8 encoded)
-       - FOLDER_FILE : a (folderId, path) pair to a file in a folder of this project (json-encoded)
-       - FILE : raw data (as a python string) that will be stored in a temp file by DSS
-       - URL : a url
-     */
     "resultType": "RESULT_TABLE",
-
-    /* label to use when the runnable's result is not inlined in the UI (ex: for urls) */
     "resultLabel": "Result",
-
-    /* for FILE resultType, the extension to use for the temp file */
-    "extension": "txt",
-
-    /* for FILE resultType, the type of data stored in the temp file */
-    "mimeType": "text/plain",
-
-    /* Macro roles define where this macro will appear in DSS GUI. They are used to pre-fill a macro parameter with context.
-
-       Each role consists of:
-        - type: where the macro will be shown
-            * when selecting DSS object(s): DATASET, DATASETS, API_SERVICE, API_SERVICE_VERSION, BUNDLE, VISUAL_ANALYSIS, SAVED_MODEL, MANAGED_FOLDER
-            * in the global project list: PROJECT_MACROS
-        - targetParamsKey(s): name of the parameter(s) that will be filled with the selected object
-    */
-    "macroRoles": [
-     /* {
-            "type": "DATASET",
-            "targetParamsKey": "input_dataset"
-        } */
-    ],
-
-    /* The field "params" holds a list of all the params
-       for wich the user will be prompted for values:
-
-       The available parameter types are:
-       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA,
-       DATASET, DATASETS, API_SERVICE, API_SERVICE_VERSION, BUNDLE, VISUAL_ANALYSIS, SAVED_MODEL, MANAGED_FOLDER
-    */
-    
-    "params": [
-                {}
-    ]
+    "macroRoles": [],
+    "params": [{}]
 }

@@ -1,4 +1,3 @@
-# This file is the actual code for the Python runnable rebuild-code-env
 from dataiku.runnables import Runnable, ResultTable
 import dataiku
 import time
@@ -10,14 +9,9 @@ logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party modu
 
 
 class MyRunnable(Runnable):
-    """The base interface for a Python runnable"""
 
     def __init__(self, project_key, config, plugin_config):
-        """
-        :param project_key: the project in which the runnable executes
-        :param config: the dict of the configuration of the object
-        :param plugin_config: contains the plugin settings
-        """
+
         self.project_key = project_key
         self.config = config
         self.plugin_config = plugin_config
@@ -25,18 +19,11 @@ class MyRunnable(Runnable):
         self.plugin_managed_envs = [c for c in self.client.list_code_envs() if c.get('deploymentMode') == 'PLUGIN_MANAGED']
         
     def get_progress_target(self):
-        """
-        If the runnable will return some progress info, have this function return a tuple of 
-        (target, unit) where unit is one of: SIZE, FILES, RECORDS, NONE
-        """
 
         return (len(self.plugin_managed_envs), "RECORDS")
 
     def run(self, progress_callback):
-        """
-        Do stuff here. Can return a string or raise an exception.
-        The progress_callback is a function expecting 1 value: current progress
-        """
+
         rt = ResultTable()
         rt.add_column("code_env", "Code-env", "STRING")
         rt.add_column("status", "Status", "STRING")
