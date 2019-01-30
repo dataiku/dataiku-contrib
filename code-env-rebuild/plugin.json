@@ -15,7 +15,7 @@
         // Name of this plugin that appears in the interface.
         "label" : "Plugin code-env-rebuild",
 
-        "description" : "A longer string explaining what the plugin does",
+        "description" : "Rebuild plugin managed code envs",
         "author" : "duphan",
 
         // The icon of a plugin must be one of the FontAwesome 3.1 icons

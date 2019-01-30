@@ -22,13 +22,15 @@ class MyRunnable(Runnable):
         self.config = config
         self.plugin_config = plugin_config
         self.client = dataiku.api_client()
+        self.plugin_managed_envs = [c for c in self.client.list_code_envs() if c.get('deploymentMode') == 'PLUGIN_MANAGED']
         
     def get_progress_target(self):
         """
         If the runnable will return some progress info, have this function return a tuple of 
         (target, unit) where unit is one of: SIZE, FILES, RECORDS, NONE
         """
-        return (len(self.client.list_code_envs()), "RECORDS")
+
+        return (len(self.plugin_managed_envs), "RECORDS")
 
     def run(self, progress_callback):
         """
@@ -39,7 +41,7 @@ class MyRunnable(Runnable):
         rt.add_column("code_env", "Code-env", "STRING")
         rt.add_column("status", "Status", "STRING")
         
-        for index, c in enumerate(self.client.list_code_envs()):
+        for index, c in enumerate(self.plugin_managed_envs):
             
             env_name = c.get('envName')
             env_lang = c.get('envLang')
@@ -59,7 +61,7 @@ class MyRunnable(Runnable):
                 #rebuild the code-env
                 new_env = self.client.create_code_env(env_lang=env_lang, 
                                                      env_name=env_name, 
-                                                     deployment_mode=env_def.get('desc').get('deploymentMode'), 
+                                                     deployment_mode='PLUGIN_MANAGED',
                                                      params=env_def.get('desc'))
                 new_env.set_definition(env_def)
                 new_env.update_packages()

@@ -3,7 +3,7 @@
     /* Meta data for display purposes */
     "meta": {
         "label": "Rebuild code-envs",
-        "description": "Rebuild all code-envs to avoid version conflict of base packages when upgrading DSS.",
+        "description": "Rebuild all plugin managed code-envs to avoid version conflict of base packages when upgrading DSS.",
         "icon": "icon-puzzle-piece"
     },
 
