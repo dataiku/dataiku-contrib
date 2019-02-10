@@ -1,22 +1,13 @@
-// This file is the descriptor for the DSS Plugin clear-intermediate-datasets
 {
     "id": "clear-intermediate-datasets",
-    "version" : "1.0.0",
-
-    // Meta data for display purposes
-    "meta" : {
-        // Name of this plugin that appears in the interface.
-        "label" : "Clear intermediate datasets",
-        "description" : "This macro allows users to clear datasets that are intermediate steps in a Flow. Options are available for persisting also partitioned and shared datasets.",
-        "author" : "Dataiku",
-        "icon" : "icon-trash",
-
-        "licenseInfo" : "Apache Software License",
-
-        // URL where the user can learn more about the plugin
-        "url" : "https://www.dataiku.com",
-
-        // List of tags for filtering the list of plugins
-        "tags" : ["cleanup", "prod"]
+    "version": "1.0.0",
+    "meta": {
+        "label": "Clear intermediate datasets",
+        "description": "Save disk space by clearing intermediate datasets in the flow.",
+        "author": "Dataiku (Pierre Pfennig & Harizo Rajaona)",
+        "icon": "icon-trash",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/clear-intermediate-datasets.html",
+        "tags": ["Admin"]
     }
 }
