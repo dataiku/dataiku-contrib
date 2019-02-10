@@ -8,6 +8,6 @@
 		"icon" : "icon-cloud",
 		"licenseInfo" : "Apache Software License version 2",
 		"url" : "https://www.dataiku.com/dss/plugins/info/forecastio.html",
-		"tags" : ["API", "Geospatial"]
+		"tags" : ["Geospatial", "Forecasting", "Enrichment", "Connector"]
 	}
 }

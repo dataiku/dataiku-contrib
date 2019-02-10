@@ -7,7 +7,7 @@
 		"author" : "Dataiku (Jérémy Grèze)",
 		"icon" : "icon-dollar",
 		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/info/pipedrive.html",
-		"tags" : ["CRM", "API"]
+		"url" : "https://www.dataiku.com/dss/plugins/info/pipedrive-import.html",
+		"tags" : ["CRM", "SaaS", "Connector"]
 	}
 }

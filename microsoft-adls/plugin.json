@@ -1,13 +1,13 @@
 {
-    "id" : "microsoft-adls",
-    "version" : "1.0.0",
-    "meta" : {
-        "label" : "Azure Data Lake Store",
-        "description" : "This Plugin contains a custom DSS file system provider to access data stored in Azure Data Lake Store.",
-        "author" : "Dataiku",
-        "icon" : "icon-cloud",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/",
-        "tags" : ["Storage"]
+    "id": "microsoft-adls",
+    "version": "1.0.1",
+    "meta": {
+        "label": "Microsoft ADLS",
+        "description": "Access data stored in Azure Data Lake Store (Gen1)",
+        "author": "Dataiku (Thomas Cabrol)",
+        "icon": "icon-cloud",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/microsoft-adls.html",
+        "tags": ["Microsoft Azure", "Cloud", "Connector"]
     }
 }

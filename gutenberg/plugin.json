@@ -1,20 +1,13 @@
 {
-	"id" : "gutenberg",
-
-	"version" : "0.0.3",
-
-	"meta" : {
-		"label" : "Project Gutenberg",
-
-	    "description" : "This plugin provides a dataset to download any english book from Project Gutenberg (https://www.gutenberg.org)",
-		"author" : "Dataiku (Hanna Julienne)",
-
-		"icon" : "icon-book",
-
-		"licenseInfo" : "Apache Software License",
-
-		"url" : "https://www.dataiku.com/community/plugins/info/gutenberg.html",
-
-	    "tags" : ["Open Data", "NLP"]
+	"id": "gutenberg",
+	"version": "0.0.4",
+	"meta": {
+		"label": "Project Gutenberg",
+	    "description": "Download books in English from Project Gutenberg (https://www.gutenberg.org)",
+		"author": "Dataiku (Hanna Julienne)",
+		"icon": "icon-book",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/gutenberg.html",
+	    "tags": ["Open Data", "NLP"]
 	}
 }

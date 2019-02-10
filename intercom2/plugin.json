@@ -1,13 +1,13 @@
 {
-	"id" : "intercom2",
-	"version" : "1.0.0",
-	"meta" : {
-		"label" : "Intercom",
-		"description" : "Connectors to read data from Intercom, a SaaS customer messaging platform.",
-		"author" : "Dataiku (Jérémy Grèze)",
-		"icon" : "icon-envelope",
-		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/info/intercom.html",
-		"tags" : ["Intercom", "SaaS"]
+	"id": "intercom2",
+	"version": "1.0.1",
+	"meta": {
+		"label": "Intercom",
+		"description": "Read data from Intercom, a SaaS customer messaging platform.",
+		"author": "Dataiku (Jérémy Grèze)",
+		"icon": "icon-envelope",
+		"licenseInfo": "Apache Software License version 2",
+		"url": "https://www.dataiku.com/dss/plugins/info/intercom2.html",
+		"tags": ["CRM", "SaaS", "Connector"]
 	}
 }

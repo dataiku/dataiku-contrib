@@ -1,13 +1,13 @@
 {
-	"id" : "wunderground",
-	"version" : "0.0.1",
-	"meta" : {
-		"label" : "Wunderground",
-		"description" : "Connect to Wunderground API and get weather data.",
-		"author" : "Dataiku (Jérémy Grèze)",
-		"icon" : "icon-cloud",
-		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/",
-		"tags" : ["Wunderground", "weather", "API"]
+	"id": "wunderground",
+	"version": "0.0.2",
+	"meta": {
+		"label": "Wunderground",
+		"description": "Connect to Wunderground API and get weather data.",
+		"author": "Dataiku (Jérémy Grèze)",
+		"icon": "icon-cloud",
+		"licenseInfo": "Apache Software License version 2",
+		"url": "https://www.dataiku.com/dss/plugins/info/wunderground.html",
+		"tags": ["Enrichment", "Connector", "Forecasting"]
 	}
 }

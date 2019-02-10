@@ -1,20 +1,13 @@
 {
-	"id" : "word2vec",
-
-	"version" : "0.0.2",
-
-	"meta" : {
-		"label" : "Word2Vec",
-
-		"description" : "Recipes to train and apply word embedding models (ie, reconstructing the linguistic context of words",
-		"author" : "Dataiku (Pierre Gutierrez)",
-
-		"icon" : "icon-comments",
-
-		"licenseInfo" : "Apache Software License",
-
-		"url" : "https://www.dataiku.com/dss/plugins/info/word2vec.html",
-
-		"tags" : ["NLP", "Machine Learning"]
+	"id": "word2vec",
+	"version": "0.0.2",
+	"meta": {
+		"label": "Word2Vec",
+		"description": "Train and apply word embedding models",
+		"author": "Dataiku (Pierre Gutierrez)",
+		"icon": "icon-comments",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/word2vec.html",
+		"tags": ["NLP", "Machine Learning", "Feature Generation"]
 	}
 }

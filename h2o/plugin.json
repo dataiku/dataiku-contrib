@@ -7,8 +7,8 @@
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
         "icon" : "icon-tint",
         "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/community/plugins/info/h2o.html",
-        "tags" : ["API", "Machine Learning"]
+        "url" : "https://www.dataiku.com/dss/plugins/info/h2o.html",
+        "tags" : ["Machine Learning"]
     },
     "params": [
         {

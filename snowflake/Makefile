@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.1.1
+PLUGIN_VERSION=0.1.2
 PLUGIN_ID=snowflake
 
 plugin:
@@ -6,5 +6,5 @@ plugin:
 	rm -rf dist
 	mkdir dist
 	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json custom-recipes code-env
-	
+
 include ../Makefile.inc

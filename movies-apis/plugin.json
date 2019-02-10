@@ -1,22 +1,22 @@
 {
-  "id" : "movies-apis",
-  "version" : "0.0.2",
-  "meta" : {
-    "label" : "Enrich from Movies APIs",
-    "description" : "Enrich datasets with data about movies (ratings, runlength, IMDb id...) from the Open Movie Database and The Movie DB",
-    "author" : "Dataiku (Jean-Baptiste Rouquier)",
-    "icon" : "icon-film",
-    "licenseInfo" : "Apache Software License",
-    "url" : "https://www.dataiku.com/community/plugins/info/movies-apis.html",
-    "tags" : ["Enrichment", "Open Data", "API"]
+  "id": "movies-apis",
+  "version": "0.0.3",
+  "meta": {
+    "label": "Enrich from Movies APIs",
+    "description": "Enrich datasets with data about movies (ratings, runlength, IMDb id...) from the Open Movie Database and The Movie DB",
+    "author": "Dataiku (Jean-Baptiste Rouquier)",
+    "icon": "icon-film",
+    "licenseInfo": "Apache Software License",
+    "url": "https://www.dataiku.com/dss/plugins/info/movies-apis.html",
+    "tags": ["Enrichment", "Open Data"]
   },
-  "params": [
+  "params":  [
       {
-          "name":"tmdb_api_key",
-          "label":"TMDb API key",
-          "type": "STRING",
-          "mandatory":false,
-          "description":"API key for The Movies DB - only required for TMDb recipes"
+          "name": "tmdb_api_key",
+          "label": "TMDb API key",
+          "type":  "STRING",
+          "mandatory": false,
+          "description": "API key for The Movies DB - only required for TMDb recipes"
       }
   ]
 }

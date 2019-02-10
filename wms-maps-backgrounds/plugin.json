@@ -1,16 +1,16 @@
 {
-    "id" : "wms-maps-backgrounds",
-    "version" : "0.0.1",
-    "meta" : {
-        "label" : "WMS maps backgrounds",
-        "description" : "Makes custom map backgrounds usable in charts from any WMS (Web Map Service) server",
-        "author" : "Dataiku",
-        "icon" : "icon-globe",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
-        "tags" : ["charts", "geo"]
+    "id": "wms-maps-backgrounds",
+    "version": "0.0.2",
+    "meta": {
+        "label": "WMS maps backgrounds",
+        "description": "Makes custom map backgrounds usable in charts from any WMS (Web Map Service) server",
+        "author": "Dataiku",
+        "icon": "icon-globe",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/wms-maps-backgrounds.html",
+        "tags": ["Geospatial", "Maps"]
     },
-    "params" : [
+    "params": [
         {
             "name": "wmsResources",
             "type": "TEXTAREA",

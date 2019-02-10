@@ -1,13 +1,13 @@
 {
-    "id" : "libsvm-format",
-    "version" : "1.0.0",
-    "meta" : {
-        "label" : "LIBSVM format",
-        "description" : "Lets you import LIBSVM files.",
-        "author" : "Dataiku (Thomas Labadie)",
-        "icon" : "icon-rocket",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins/info/libsvm-format.html",
-        "tags" : ["Format", "Productivity"]
+    "id": "libsvm-format",
+    "version": "1.0.1",
+    "meta": {
+        "label": "LIBSVM format",
+        "description": "Lets you import LIBSVM files.",
+        "author": "Dataiku (Thomas Labadie)",
+        "icon": "icon-rocket",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/libsvm-format.html",
+        "tags": ["Format", "Machine Learning"]
     }
 }

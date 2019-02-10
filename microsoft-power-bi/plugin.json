@@ -1,13 +1,13 @@
 {
     "id" : "microsoft-power-bi",
-    "version" : "1.1.0",
+    "version" : "1.1.1",
     "meta" : {
         "label" : "Microsoft Power BI",
-        "description" : "This Plugin contains a set of components that will let DSS interacts with Microsoft Power BI (online version)",
+        "description" : "Toolbox for Microsoft Power BI (online version)",
         "author" : "Dataiku",
         "icon" : "icon-cloud",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/dss/plugins/info/microsoft-power-bi.html",
-        "tags" : ["Vizualisation"]
+        "tags" : ["Visualization", "Connector"]
     }
 }

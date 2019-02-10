@@ -1,13 +1,13 @@
 {
-    "id" : "tableau-hyper-export",
-    "version" : "0.0.1",
-    "meta" : {
-        "label" : "Tableau Hyper format",
-        "description" : "This Plugin takes a Dataiku Dataset as an input and export it to the Tableau .hyper format. Note: requires DSS 5.0.2 or higher",
-        "author" : "Dataiku",
-        "icon" : "icon-tableau",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins/info/tableau-hyper-export.html",
-        "tags" : ["Vizualisation"]
+    "id": "tableau-hyper-export",
+    "version": "0.0.2",
+    "meta": {
+        "label": "Tableau Hyper format",
+        "description": "Export datasets into Tableau .hyper format.",
+        "author": "Dataiku",
+        "icon": "icon-tableau",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/tableau-hyper-export.html",
+        "tags": ["Visualization", "Format"]
     }
 }

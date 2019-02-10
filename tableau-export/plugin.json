@@ -1,13 +1,13 @@
 {
-  "id" : "tableau-export",
-  "version" : "0.0.9",
-  "meta" : {
-    "label" : "Tableau export (old)",
-    "description" : "Export DSS datasets to Tableau Extracts (TDE) or Tableau Server (old version)",
-    "author" : "Dataiku (Jean-Baptiste Rouquier)",
-    "icon" : "icon-signin",
-    "licenseInfo" : "Apache Software License",
-    "url" : "https://www.dataiku.com/community/plugins/info/tableau.html",
-    "tags" : ["API", "Vizualisation"]
+  "id": "tableau-export",
+  "version": "0.1.0",
+  "meta": {
+    "label": "Tableau export (old)",
+    "description": "Export DSS datasets to Tableau Extracts (TDE) or Tableau Server (old version)",
+    "author": "Dataiku (Jean-Baptiste Rouquier)",
+    "icon": "icon-signin",
+    "licenseInfo": "Apache Software License",
+    "url": "https://www.dataiku.com/dss/plugins/info/tableau-export.html",
+    "tags": ["Visualization", "Format"]
   }
 }
