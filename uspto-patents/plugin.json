@@ -2,8 +2,8 @@
 	"id": "uspto-patents",
 	"version": "0.0.2",
 	"meta": {
-		"label": "USPTO (patents) Data connector",
-		"description": "Connect to USPTO patents XML Bulk files",
+		"label": "USPTO (patents)",
+		"description": "Connect to USPTO patents XML bulk files",
 		"author": "Dataiku (Florian Douetteau)",
 		"icon": "icon-legal",
 		"licenseInfo": "Apache Software License",

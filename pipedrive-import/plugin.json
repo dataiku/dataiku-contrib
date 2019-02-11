@@ -1,13 +1,13 @@
 {
-	"id" : "pipedrive-import",
-	"version" : "1.0.2",
-	"meta" : {
-		"label" : "Pipedrive Import",
-		"description" : "Connectors to read data from Pipedrive, a SaaS Sales CRM.",
-		"author" : "Dataiku (Jérémy Grèze)",
-		"icon" : "icon-dollar",
-		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/dss/plugins/info/pipedrive-import.html",
-		"tags" : ["CRM", "SaaS", "Connector"]
+	"id": "pipedrive-import",
+	"version": "1.0.2",
+	"meta": {
+		"label": "Pipedrive Import",
+		"description": "Fetch data from Pipedrive (a SaaS CRM)",
+		"author": "Dataiku (Jérémy Grèze)",
+		"icon": "icon-dollar",
+		"licenseInfo": "Apache Software License version 2",
+		"url": "https://www.dataiku.com/dss/plugins/info/pipedrive-import.html",
+		"tags": ["CRM", "SaaS", "Connector"]
 	}
 }

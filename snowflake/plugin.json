@@ -3,7 +3,7 @@
     "version": "0.1.2",
     "meta": {
         "label": "Snowflake",
-        "description": "This Plugin allows a user to bulk load data stored in S3 (in a DSS S3 Managed Dataset) to a Snowflake table.\tTo avoid to put your AWS credential at each usage, define AWS_KEY_ID and AWS_SECRET_KEY as Global Variables in the settings of the Project.",
+        "description": "Bulk load data stored in S3 to a Snowflake table",
         "author": "Dataiku (Thomas Cabrol)",
         "icon": "icon-cloud",
         "licenseInfo": "Apache Software License",

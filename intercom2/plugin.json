@@ -3,7 +3,7 @@
 	"version": "1.0.1",
 	"meta": {
 		"label": "Intercom",
-		"description": "Read data from Intercom, a SaaS customer messaging platform.",
+		"description": "Fetch data from Intercom (a customer messaging platform)",
 		"author": "Dataiku (Jérémy Grèze)",
 		"icon": "icon-envelope",
 		"licenseInfo": "Apache Software License version 2",

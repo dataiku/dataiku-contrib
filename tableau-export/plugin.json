@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "meta": {
     "label": "Tableau export (old)",
-    "description": "Export DSS datasets to Tableau Extracts (TDE) or Tableau Server (old version)",
+    "description": "Export datasets to Tableau Extracts (TDE) or Tableau Server (old version)",
     "author": "Dataiku (Jean-Baptiste Rouquier)",
     "icon": "icon-signin",
     "licenseInfo": "Apache Software License",

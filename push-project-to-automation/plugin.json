@@ -3,11 +3,11 @@
     "version": "0.0.3",
     "meta": {
         "label": "Push projects to automation",
-        "description": "Bundle projects and push them to a Dataiku DSS automation node (or another Design instance).",
+        "description": "Bundle projects and push them to an automation node (or another Design node).",
         "author": "Dataiku (Guilherme De Oliveira & Patrick Masi-Phelps)",
-        "icon": "icon-share-alt",
+        "icon": "icon-upload-alt",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/push-project-to-automation.html",
-        "tags": ["Automation"]
+        "tags": ["Automation", "Admin"]
     }
 }

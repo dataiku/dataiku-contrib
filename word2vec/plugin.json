@@ -3,7 +3,7 @@
 	"version": "0.0.2",
 	"meta": {
 		"label": "Word2Vec",
-		"description": "Train and apply word embedding models",
+		"description": "Train and apply word embeddings models",
 		"author": "Dataiku (Pierre Gutierrez)",
 		"icon": "icon-comments",
 		"licenseInfo": "Apache Software License",

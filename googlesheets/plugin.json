@@ -2,8 +2,8 @@
 	"id": "googlesheets",
 	"version": "1.0.1",
 	"meta": {
-		"label": "Google Sheets connector",
-		"description": "Connector to spreadsheets hosted by Google Sheets",
+		"label": "Google Sheets",
+		"description": "Fetch data from Google Sheets",
 		"author": "Dataiku (Jérémy Grèze)",
 		"icon": "icon-file-text",
 		"licenseInfo": "Apache Software License version 2",

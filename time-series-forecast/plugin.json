@@ -3,7 +3,7 @@
     "version": "0.1.1",
     "meta": {
         "label": "Forecast",
-        "description": "Visual recipes to forecast univariate time series. It covers the full cycle of data cleaning, model training, evaluation and prediction.",
+        "description": "Forecast univariate time series. This plugin covers the full cycle of data cleaning, model training, evaluation and prediction.",
         "author": "Dataiku (Alex Combessie)",
         "icon": "icon-calendar",
         "licenseInfo": "MIT License",

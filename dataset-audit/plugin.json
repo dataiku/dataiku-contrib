@@ -2,12 +2,12 @@
 	"id": "dataset-audit",
 	"version": "0.0.3",
 	"meta": {
-		"label": "Audits a dataset (SQL, HDFS)",
-		"description": "This plugin contains a recipe to perform audit of data in a dataset and output a summary dataset. This is able to perform audits on SQL or HDFS datasets. The summary contains basic info about each column and basic descriptive statistics",
+		"label": "Audits a dataset",
+		"description": "Audit data in a dataset (SQL or HDFS). The report contains basic info about each column and basic descriptive statistics",
 		"author": "Dataiku (Clément Stenac)",
 		"icon": "icon-search",
 		"licenseInfo": "Apache Software License",
 		"url": "https://www.dataiku.com/dss/plugins/info/dataset-audit.html",
-		"tags": ["Data Quality", "Admin"]
+		"tags": ["Data Quality", "Statistics", "Admin"]
 	}
 }

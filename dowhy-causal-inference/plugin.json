@@ -3,7 +3,7 @@
     "version": "0.0.2",
     "meta": {
         "label": "Causal Inference (dowhy)",
-        "description": "Provides a webapp to design causal models and estimate causal effects",
+        "description": "Design causal models and estimate causal effects",
         "author": "Dataiku (Jean-Yves Gerardy)",
         "icon": "icon-exchange",
         "licenseInfo": "Apache Software License",

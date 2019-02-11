@@ -3,7 +3,7 @@
     "version": "0.9.2",
     "meta": {
         "label": "Instagram",
-        "description": "Use Instagram public API",
+        "description": "Fetch data from Instagram public API",
         "author": "Dataiku",
         "icon": "icon-instagram",
         "licenseInfo": "Apache Software License",

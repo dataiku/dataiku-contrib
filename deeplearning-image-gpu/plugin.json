@@ -3,7 +3,7 @@
     "version": "0.1.5",
     "meta": {
         "label": "Deep learning on images (GPU)",
-        "description": "Use a pre trained model to score images and obtain classes, or use it to extract its antepenultimate layer for each image.\nA macro lets you download some popular pretrained models to a folder.\nYou can retrain a model to specialize it on a particular set of images.<p><b>Requirements</b>: Access to a NVIDIA graphics card, with CUDA 8.0 and cudNN 6.0 installed.</p>",
+        "description": "Use a pre-trained model to score images or extract features. You can retrain generic models to specialize them on a particular set of images. <p>This GPU version requires an NVIDIA GPU with CUDA 8.0 and cudNN 6.0 installed</p>",
         "author": "Dataiku (Nicolas Servel)",
         "icon": "icon-picture",
         "licenseInfo": "Apache Software License",

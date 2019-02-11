@@ -8,6 +8,6 @@
 		"icon": "icon-location-arrow",
 		"licenseInfo": "Apache Software License",
 		"url": "https://www.dataiku.com/dss/plugins/info/get-us-census-block.html",
-		"tags": ["Enrichment", "Open Data"]
+		"tags": ["Enrichment", "Open Data", "Connector"]
 	}
 }

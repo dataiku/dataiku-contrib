@@ -3,7 +3,7 @@
     "version": "0.0.2",
     "meta": {
         "label": "Tableau Hyper format",
-        "description": "Export datasets into Tableau .hyper format.",
+        "description": "Export datasets to Tableau .hyper format.",
         "author": "Dataiku",
         "icon": "icon-tableau",
         "licenseInfo": "Apache Software License",

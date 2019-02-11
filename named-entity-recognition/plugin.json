@@ -3,9 +3,9 @@
     "version": "1.0.6",
     "meta": {
         "label": "Named Entity Recognition",
-        "description": "Perform Named Entity Recognition on English texts.",
+        "description": "Perform named entity recognition on English texts (i.e. identify people names, dates, places, etc)",
         "author": "Dataiku (Hicham El Boukkouri)",
-        "icon": "icon-search",
+        "icon": "icon-tag",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/named-entity-recognition.html",
         "tags": ["NLP"]

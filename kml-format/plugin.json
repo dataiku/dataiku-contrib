@@ -3,7 +3,7 @@
 	"version": "0.0.2",
 	"meta": {
 		"label": "KML Format extractor",
-		"description": "Reads Google Earth KML files",
+		"description": "Read Google Earth KML files",
 		"author": "Dataiku (Clément Stenac)",
 		"icon": "icon-globe",
 		"licenseInfo": "Apache Software License",

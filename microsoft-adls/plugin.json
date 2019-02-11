@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "meta": {
         "label": "Microsoft ADLS",
-        "description": "Access data stored in Azure Data Lake Store (Gen1)",
+        "description": "Fetch data from Azure Data Lake Store (Gen1)",
         "author": "Dataiku (Thomas Cabrol)",
         "icon": "icon-cloud",
         "licenseInfo": "Apache Software License",

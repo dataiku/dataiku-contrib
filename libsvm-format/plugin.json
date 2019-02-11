@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "meta": {
         "label": "LIBSVM format",
-        "description": "Lets you import LIBSVM files.",
+        "description": "Import LIBSVM files (LIBSVM is a machine learning ibrary for support vector machines: https://www.csie.ntu.edu.tw/~cjlin/libsvm/)",
         "author": "Dataiku (Thomas Labadie)",
         "icon": "icon-rocket",
         "licenseInfo": "Apache Software License",

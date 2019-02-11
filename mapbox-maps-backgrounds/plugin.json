@@ -4,12 +4,12 @@
 
     "meta": {
         "label": "Mapbox map backgrounds",
-        "description": "Makes Mapbox map backgrounds usable in charts",
+        "description": "Use map backgrounds from Mapbox",
         "author": "Dataiku (Julien Lambert)",
         "icon": "icon-globe",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/mapbox-maps-backgrounds.html",
-        "tags": ["Geospatial", "Maps"]
+        "tags": ["Geospatial", "Maps", "Visualization"]
     },
 
     "params": [
