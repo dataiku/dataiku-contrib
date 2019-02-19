@@ -11,10 +11,7 @@ source(file.path(dkuCustomRecipeResource(), "io.R"))
 # This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard.
 # It is needed to parse dates from Dataiku datasets.
 dkuDateFormat = "%Y-%m-%dT%T.000Z"
-
-# Set number of digits to use when printing Sys.time.
-# It is needed to store version name in the model folder at millisecond granularity.
-op <- options(digits.secs = 3)
+alternativeDateFormats = c(dkuDateFormat, "%Y-%m-%dT%T.000000Z", "%Y-%m-%dT%T")
 
 # This fixed mapping is used to convert time series from R data.frame to forecast::msts format.
 # It is needed as forecast::msts format requires seasonality arguments.
@@ -66,7 +63,6 @@ TruncateDate <- function(date, granularity) {
     day = as.Date(tmpDate),
     hour = as.POSIXct(trunc(tmpDate, "hour")))
   return(outputDate)
-  print(outputDate)
 }
 
 ConvertDataFrameToTimeSeries <- function(df, timeColumn, seriesColumn, granularity) {
@@ -124,18 +120,14 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
   #   data frame with the prepared time series
 
   if (granularity == "hour") {
-    df[[timeColumn]] <- as.POSIXct(df[[timeColumn]], format = dkuDateFormat)
+    df[[timeColumn]] <- as.POSIXct(df[[timeColumn]], tryFormats = alternativeDateFormats)
   } else {
-    df[[timeColumn]] <- as.Date(df[[timeColumn]], format = dkuDateFormat)
+    df[[timeColumn]] <- as.Date(df[[timeColumn]], tryFormats = alternativeDateFormats)
   }
   # Get continuous range of dates
-  print(min(df[[timeColumn]]))
   minDate <- TruncateDate(min(df[[timeColumn]]), granularity)
-  print(minDate)
   maxDate <- TruncateDate(max(df[[timeColumn]]), granularity)
-  print(maxDate)
   dateRange <- tibble(!!timeColumn := seq(minDate, maxDate, by = granularity))
-  print(dateRange)
   if (resample) {
     PrintPlugin("Preparation stage: date parsing, cleaning, aggregation, resampling")
     df[[timeColumn]] <- TruncateDate(df[[timeColumn]], granularity)
