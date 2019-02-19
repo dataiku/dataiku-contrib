@@ -66,6 +66,7 @@ TruncateDate <- function(date, granularity) {
     day = as.Date(tmpDate),
     hour = as.POSIXct(trunc(tmpDate, "hour")))
   return(outputDate)
+  print(outputDate)
 }
 
 ConvertDataFrameToTimeSeries <- function(df, timeColumn, seriesColumn, granularity) {
@@ -128,6 +129,7 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
     df[[timeColumn]] <- as.Date(df[[timeColumn]], format = dkuDateFormat)
   }
   # Get continuous range of dates
+  print(min(df[[timeColumn]]))
   minDate <- TruncateDate(min(df[[timeColumn]]), granularity)
   print(minDate)
   maxDate <- TruncateDate(max(df[[timeColumn]]), granularity)
