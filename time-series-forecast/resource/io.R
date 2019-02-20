@@ -16,7 +16,7 @@ PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
         "###########################################################"
       )
       cat(msg)
-      stop()
+      stop(message)
     } else {
       msg <- paste0("[PLUGIN LOG] ", message)
       message(msg)

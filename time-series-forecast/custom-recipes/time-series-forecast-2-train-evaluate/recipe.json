@@ -53,11 +53,19 @@
     },
     {
       "name": "SERIES_COLUMN",
-      "label": "Target series column",
-      "description": "Must be of NUMERIC type",
+      "label": "Target column",
+      "description": "Series to forecast - Must be of NUMERIC type",
       "type": "COLUMN",
       "columnRole": "INPUT_DATASET_NAME",
       "mandatory": true
+    },
+    {
+      "name": "EXT_SERIES_COLUMNS",
+      "label": "Feature columns",
+      "description": "Optional external regressors - Must be of NUMERIC type",
+      "type": "COLUMNS",
+      "columnRole": "INPUT_DATASET_NAME",
+      "mandatory": false
     },
     {
       "name": "GRANULARITY",

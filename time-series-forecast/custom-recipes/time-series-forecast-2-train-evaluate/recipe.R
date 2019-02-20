@@ -31,19 +31,19 @@ ARIMA_MODEL_KWARGS[["stepwise"]] <- ARIMA_MODEL_STEPWISE
 
 # See ets doc in https://www.rdocumentation.org/packages/forecast/versions/8.4/topics/ets
 EXPONENTIALSMOOTHING_MODEL_KWARGS[["model"]] <- paste0(
-  EXPONENTIALSMOOTHING_MODEL_ERROR_TYPE, 
-  EXPONENTIALSMOOTHING_MODEL_TREND_TYPE, 
+  EXPONENTIALSMOOTHING_MODEL_ERROR_TYPE,
+  EXPONENTIALSMOOTHING_MODEL_TREND_TYPE,
   EXPONENTIALSMOOTHING_MODEL_SEASONALITY_TYPE
-) 
+)
 
 # See nnetar doc www.rdocumentation.org/packages/forecast/versions/8.4/topics/nnetar
 NEURALNETWORK_MODEL_KWARGS[["P"]] <- NEURALNETWORK_MODEL_NUMBER_SEASONAL_LAGS
 if (NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS != -1) {
   NEURALNETWORK_MODEL_KWARGS[["p"]] <- NEURALNETWORK_MODEL_NUMBER_NON_SEASONAL_LAGS
-} 
+}
 if (NEURALNETWORK_MODEL_SIZE != -1) {
   NEURALNETWORK_MODEL_KWARGS[["size"]] <- NEURALNETWORK_MODEL_SIZE
-} 
+}
 
 # Bring all model parameters into a standard named list format for all models
 modelParameterList <- list()
@@ -57,7 +57,7 @@ for(modelName in AVAILABLE_MODEL_NAME_LIST) {
 
 # Handles default options for the cross-validation evaluation strategy
 if (CROSSVAL_INITIAL == -1) {
-  CROSSVAL_INITIAL <- 10 * EVAL_HORIZON 
+  CROSSVAL_INITIAL <- 10 * EVAL_HORIZON
 }
 if (CROSSVAL_PERIOD == -1) {
   CROSSVAL_PERIOD <- ceiling(0.5 * EVAL_HORIZON)
@@ -65,10 +65,19 @@ if (CROSSVAL_PERIOD == -1) {
 
 
 # Reads input dataset
-df <- dkuReadDataset(INPUT_DATASET_NAME, columns = c(TIME_COLUMN, SERIES_COLUMN), 
-    colClasses = c("character","numeric")) %>%
-  PrepareDataframeWithTimeSeries(TIME_COLUMN, SERIES_COLUMN, GRANULARITY, resample = FALSE)
-names(df) <- c('ds','y') # Converts df to generic prophet-compatible format
+selectedColumns <- c(TIME_COLUMN, SERIES_COLUMN, EXT_SERIES_COLUMNS)
+forbiddenExternalColumnNames <- c("ds", "y")
+if(length(intersect(EXT_SERIES_COLUMNS, forbiddenExternalColumnNames)) != 0) {
+  errorMsg <- paste0("Feature columns cannot be named '",
+                paste(forbiddenExternalColumnNames, collapse = ", "),
+                "', please rename them")
+  PrintPlugin(errorMsg, stop = TRUE)
+}
+columnClasses <- c("character", rep("numeric", 1 + length(EXT_SERIES_COLUMNS)))
+df <- dkuReadDataset(INPUT_DATASET_NAME, columns = selectedColumns, colClasses = columnClasses) %>%
+  PrepareDataframeWithTimeSeries(TIME_COLUMN, c(SERIES_COLUMN, EXT_SERIES_COLUMNS),
+                                 GRANULARITY, resample = FALSE)
+names(df) <- c('ds','y', EXT_SERIES_COLUMNS) # Converts df to generic prophet-compatible format
 if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
   df[['floor']] <- PROPHET_MODEL_MINIMUM
   df[['cap']] <- PROPHET_MODEL_MAXIMUM
@@ -76,19 +85,25 @@ if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
 
 # Additional check on the number of rows of the input for the cross-validation evaluation strategy
 if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {
-  PrintPlugin(paste("Less data than horizon after initial cross-validation window.", 
+  PrintPlugin(paste("Less data than horizon after initial cross-validation window.",
     "Make horizon or initial shorter."), stop = TRUE)
 }
 
 # Converts df to msts time series format
 ts <- ConvertDataFrameToTimeSeries(df, "ds", "y", GRANULARITY)
 
+# Computes external regressor matrix for forecast models
+externalRegressorMatrix <- NULL
+if(length(EXT_SERIES_COLUMNS) != 0) {
+  externalRegressorMatrix <- as.matrix(df[EXT_SERIES_COLUMNS])
+}
+
 
 ##### TRAINING STAGE #####
 
 PrintPlugin("Training stage starting...")
 
-modelList <- TrainForecastingModels(ts, df, modelParameterList)
+modelList <- TrainForecastingModels(ts, df, modelParameterList, externalRegressorMatrix)
 
 PrintPlugin("Training stage completed, saving models to output folder.")
 
@@ -96,16 +111,16 @@ versionName <- as.character(Sys.time())
 configTrain <- config
 SaveForecastingObjects(
   folderName = MODEL_FOLDER_NAME,
-  versionName = versionName, 
+  versionName = versionName,
   ts, df, modelParameterList, modelList, configTrain
-) 
+)
 
 
 ##### EVALUATION STAGE #####
 
 PrintPlugin(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 
-errorDf <- EvaluateModels(ts, df, modelList, modelParameterList, 
+errorDf <- EvaluateModels(ts, df, modelList, modelParameterList,
   EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_INITIAL, CROSSVAL_PERIOD)
 errorDf[["training_date"]] <- strftime(versionName, dkuDateFormat)
 
