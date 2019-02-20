@@ -70,7 +70,7 @@ forbiddenExternalColumnNames <- c("ds", "y")
 if(length(intersect(EXT_SERIES_COLUMNS, forbiddenExternalColumnNames)) != 0) {
   errorMsg <- paste0("Feature columns cannot be named '",
                 paste(forbiddenExternalColumnNames, collapse = ", "),
-                "', please rename them")
+                "', please rename them.")
   PrintPlugin(errorMsg, stop = TRUE)
 }
 columnClasses <- c("character", rep("numeric", 1 + length(EXT_SERIES_COLUMNS)))
@@ -112,7 +112,7 @@ configTrain <- config
 SaveForecastingObjects(
   folderName = MODEL_FOLDER_NAME,
   versionName = versionName,
-  ts, df, modelParameterList, modelList, configTrain
+  ts, df, externalRegressorMatrix, modelParameterList, modelList, configTrain
 )
 
 
@@ -120,7 +120,7 @@ SaveForecastingObjects(
 
 PrintPlugin(paste0("Evaluation stage starting with ", EVAL_STRATEGY, " strategy..."))
 
-errorDf <- EvaluateModels(ts, df, modelList, modelParameterList,
+errorDf <- EvaluateModels(ts, df, externalRegressorMatrix, modelList, modelParameterList,
   EVAL_STRATEGY, EVAL_HORIZON,  GRANULARITY, CROSSVAL_INITIAL, CROSSVAL_PERIOD)
 errorDf[["training_date"]] <- strftime(versionName, dkuDateFormat)
 

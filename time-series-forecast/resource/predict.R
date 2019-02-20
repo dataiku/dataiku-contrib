@@ -4,13 +4,13 @@ library(prophet)
 source(file.path(dkuCustomRecipeResource(), "clean.R"))
 source(file.path(dkuCustomRecipeResource(), "train.R"))
 
-GetForecasts <- function(ts, df, modelList, modelParameterList, 
+GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   horizon, granularity, confidenceInterval = 95, includeHistory = FALSE) {
   # Gets forecast values from forecasting models
   #
   # Args:
   #   ts: input time series of R ts or msts class.
-  #   df: input data frame following the Prophet format 
+  #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
@@ -22,7 +22,10 @@ GetForecasts <- function(ts, df, modelList, modelParameterList,
   # Returns:
   #   Data.frame with forecast values and confidence intervals
 
-  forecastDfList <- list()
+
+  if (!is.null(xreg) && nrow(xreg) != 0) {
+    horizon <- nrow(xreg)
+  }
   # generate date range for history and/or future
   if (includeHistory) {
     dateRange <- seq(min(df$ds), by = granularity, length = nrow(df) + horizon)
@@ -30,17 +33,31 @@ GetForecasts <- function(ts, df, modelList, modelParameterList,
     dateRange <- tail(seq(max(df$ds), by = granularity, length = horizon + 1), -1)
   }
   dateRange <- TruncateDate(dateRange, granularity)
+  forecastDfList <- list()
   for(modelName in names(modelList)) {
     model <- modelList[[modelName]]
     if (modelName == "PROPHET_MODEL") {
       freq <- ifelse(granularity == "hour", 3600, granularity)
       future <- make_future_dataframe(model, horizon, freq, include_history = includeHistory)
+      PrintPlugin("DEBUG future df before")
+      print(head(future))
+      if (!is.null(xreg)) {
+        for (c in colnames(xreg)) {
+          if (includeHistory) {
+            future[,c] <- c(df[,c], xreg[,c])
+          } else {
+            future[,c] <- xreg[,c]
+          }
+        }
+      }
+      PrintPlugin("DEBUG future df after")
+      print(head(future))
       model$interval.width <- confidenceInterval / 100.0
       forecastDf <- stats::predict(model, future) %>%
         select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))
       forecastDf$ds <- dateRange # harmonizes dates with other model types
     } else {
-      # special cases for naive and seasonal trend model which cannot use forecast(model, h) 
+      # special cases for naive and seasonal trend model which cannot use forecast(model, h)
       # they can only be called directly with a horizon argument
       if (modelName %in% c("NAIVE_MODEL","SEASONALTREND_MODEL")) {
         f <- R.utils::doCall(
@@ -53,7 +70,17 @@ GetForecasts <- function(ts, df, modelList, modelParameterList,
         )
       } else if (modelName == "NEURALNETWORK_MODEL") {
         # neural networks in forecast need a special PI argument to get confidence intervals
-        f <- forecast(model, h = horizon, level = c(confidenceInterval), PI = TRUE)
+        if (!is.null(xreg)) {
+          f <- forecast(model, xreg = xreg, level = c(confidenceInterval), PI = TRUE)
+        } else {
+          f <- forecast(model, h = horizon, level = c(confidenceInterval), PI = TRUE)
+        }
+      } else if (modelName == "ARIMA_MODEL") {
+        if (!is.null(xreg)) {
+          f <- forecast(model, xreg = xreg, level = c(confidenceInterval))
+        } else {
+          f <- forecast(model, h = horizon, level = c(confidenceInterval))
+        }
       } else {
         # general case for other model types
         model$h <- horizon
@@ -81,7 +108,7 @@ GetForecasts <- function(ts, df, modelList, modelParameterList,
 }
 
 
-CombineForecastHistory <- function(historyDf = NULL, forecastDf = NULL, 
+CombineForecastHistory <- function(historyDf = NULL, forecastDf = NULL,
   includeForecast = TRUE, includeHistory = FALSE) {
   # Combines historical and forecast data.frames
   #
@@ -102,7 +129,7 @@ CombineForecastHistory <- function(historyDf = NULL, forecastDf = NULL,
     dfOutput <- forecastDf
     dfOutput["origin"] <- "forecast"
   } else if (!includeForecast && includeHistory) {
-    dfOutput <- merge(historyDf, forecastDf, by = "ds", all.y = FALSE) %>% 
+    dfOutput <- merge(historyDf, forecastDf, by = "ds", all.y = FALSE) %>%
       select_(.dots = c("ds", "y", "yhat"))
     dfOutput["residuals"] <- dfOutput["y"] - dfOutput["yhat"]
     dfOutput["origin"] <- "history"

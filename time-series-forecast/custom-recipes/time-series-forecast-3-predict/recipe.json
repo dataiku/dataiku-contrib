@@ -12,7 +12,7 @@
       "label": "Evaluation results",
       "description": "Dataset with the error evaluation results computed by the previous \"Train models...\" recipe",
       "arity": "UNARY",
-      "required": false,
+      "required": true,
       "acceptsDataset": true,
       "acceptsFolder": false
     },
@@ -25,6 +25,15 @@
       "acceptsDataset": false,
       "acceptsManagedFolder": true,
       "mustBeStrictlyType": "Filesystem"
+    },
+    {
+      "name": "FUTURE_XREG_DATASET_NAME",
+      "label": "Future external regressors (optional)",
+      "description": "Dataset with the date column and future values of external regressors if used in the previous \"Train models...\" recipe",
+      "arity": "UNARY",
+      "required": false,
+      "acceptsDataset": true,
+      "acceptsFolder": false
     }
   ],
   "outputRoles": [
@@ -149,7 +158,7 @@
       "type": "INT",
       "mandatory": true,
       "defaultValue": 10,
-      "description": "in number of periods",
+      "description": "in number of periods  - will be overriden if you provided external regressors",
       "visibilityCondition": "model.INCLUDE_FORECAST"
     },
     {

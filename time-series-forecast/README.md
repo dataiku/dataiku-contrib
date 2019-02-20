@@ -28,7 +28,7 @@ With this plugin, we want to offer a simple and visual way to build a forecastin
 
 # How to use it?
 
-This plugin offers a set of 3 visual recipes to forecast yearly to hourly time series.  It covers the full cycle of data cleaning, model training, evaluation and prediction.
+This plugin offers a set of 3 visual recipes to forecast yearly to hourly multivariate time series.  It covers the full cycle of data cleaning, model training, evaluation and prediction.
 
 It follows classic forecasting methods described in Hyndman, Rob J., and George Athanasopoulos. *[Forecasting: principles and practice](https://otexts.org/fpp2)*. OTexts, 2018. and in Taylor, Sean J., and Benjamin Letham. *[Forecasting at Scale](https://doi.org/10.1080/00031305.2017.1380080)*. The American Statistician, 2018.
 

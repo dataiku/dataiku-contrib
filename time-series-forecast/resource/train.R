@@ -124,8 +124,6 @@ TrainForecastingModels <- function(ts, df, modelParameterList, xreg = NULL,
     }
     if(modelName %in% MODELS_WITH_XREG_SUPPORT) {
       modelParameters[["kwargs"]][["xreg"]] <- xreg
-      PrintPlugin(modelName)
-      print(head(xreg))
     }
     PrintPlugin(paste0(modelName," training starting"), verbose)
     startTime = Sys.time()

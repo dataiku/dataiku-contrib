@@ -8,6 +8,7 @@ source(file.path(dkuCustomRecipeResource(), "predict.R"))
 
 MODEL_FOLDER_NAME <- dkuCustomRecipeInputNamesForRole('MODEL_FOLDER_NAME')[1]
 EVALUATION_DATASET_NAME <- dkuCustomRecipeInputNamesForRole('EVALUATION_DATASET_NAME')[1]
+FUTURE_XREG_DATASET_NAME <- dkuCustomRecipeInputNamesForRole('FUTURE_XREG_DATASET_NAME')[1]
 OUTPUT_DATASET_NAME <- dkuCustomRecipeOutputNamesForRole('OUTPUT_DATASET_NAME')[1]
 
 config = dkuCustomRecipeConfig()
@@ -36,7 +37,7 @@ if (MODEL_SELECTION == "auto") {
   evalDf <- dkuReadDataset(EVALUATION_DATASET_NAME, columns = c("model", ERROR_METRIC))
   SELECTED_MODEL <- evalDf[[which.min(evalDf[[ERROR_METRIC]]), "model"]] %>%
     recode(!!!MODEL_UI_NAME_LIST_REV)
-} 
+}
 
 PrintPlugin(paste0("Model selection stage completed: ", SELECTED_MODEL, " selected."))
 
@@ -45,11 +46,37 @@ PrintPlugin(paste0("Model selection stage completed: ", SELECTED_MODEL, " select
 
 PrintPlugin("Forecasting stage")
 
+externalRegressorMatrix <- NULL
+if (SELECTED_MODEL %in% MODELS_WITH_XREG_SUPPORT) {
+  if (!is.na(FUTURE_XREG_DATASET_NAME) && !is.null(FUTURE_XREG_DATASET_NAME)) {
+    if (is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) == 0 || is.na(EXT_SERIES_COLUMNS)) {
+      PrintPlugin("Future external regressors dataset provided but no external regressors \
+                  were provided at training time. Please re-run the Train and Evaluate recipe \
+                  with external regressors specified in the recipe settings.", stop = TRUE)
+    }
+    PrintPlugin("Including the future values of external regressors")
+    selectedColumns <- c(TIME_COLUMN, EXT_SERIES_COLUMNS)
+    columnClasses <- c("character", rep("numeric", length(EXT_SERIES_COLUMNS)))
+    dfXreg <- dkuReadDataset(FUTURE_XREG_DATASET_NAME, columns = selectedColumns, colClasses = columnClasses) %>%
+      PrepareDataframeWithTimeSeries(TIME_COLUMN, EXT_SERIES_COLUMNS,
+        GRANULARITY, AGGREGATION_STRATEGY, resample = FALSE)
+    externalRegressorMatrix <- as.matrix(dfXreg[EXT_SERIES_COLUMNS])
+  } else {
+    if(!is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) != 0 || !is.na(EXT_SERIES_COLUMNS)) {
+      PrintPlugin("External regressors were used at training time but \
+                  no dataset for future values of regressors has been provided. \
+                  Please add the dataset for future values in the Input / Output tab of the recipe. \
+                  If no future values are availables, please re-run the Train and Evaluate recipe \
+                  without external regressors", stop = TRUE)
+    }
+  }
+}
+
 forecastDfList <- GetForecasts(
-  ts, df, 
-  modelList[SELECTED_MODEL], 
-  modelParameterList[SELECTED_MODEL], 
-  FORECAST_HORIZON, 
+  ts, df, externalRegressorMatrix,
+  modelList[SELECTED_MODEL],
+  modelParameterList[SELECTED_MODEL],
+  FORECAST_HORIZON,
   GRANULARITY,
   CONFIDENCE_INTERVAL,
   INCLUDE_HISTORY
@@ -57,7 +84,7 @@ forecastDfList <- GetForecasts(
 
 forecastDf <- forecastDfList[[SELECTED_MODEL]]
 
-dfOutput <- CombineForecastHistory(df, forecastDf, INCLUDE_FORECAST, INCLUDE_HISTORY)
+dfOutput <- CombineForecastHistory(df[c("ds", "y")], forecastDf, INCLUDE_FORECAST, INCLUDE_HISTORY)
 dfOutput[["selected_model"]] <- recode(SELECTED_MODEL, !!!MODEL_UI_NAME_LIST)
 
 # Standardises column names
@@ -75,7 +102,7 @@ names(dfOutput) <- dplyr::recode(
 dfOutput[[TIME_COLUMN]] <- strftime(dfOutput[[TIME_COLUMN]] , dkuDateFormat)
 
 # removes the unnecessary floor and cap columns from prophet model if they exist
-dfOutput <- dfOutput %>% 
+dfOutput <- dfOutput %>%
   select(-one_of(c("floor", "cap")))
 
 PrintPlugin("Forecasting stage completed, saving forecasts to output dataset.")
