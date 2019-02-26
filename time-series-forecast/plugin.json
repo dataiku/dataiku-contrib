@@ -1,6 +1,6 @@
 {
   "id": "time-series-forecast",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "meta": {
     "label": "Forecast",
     "description": "This plugin offers a set of visual recipes to forecast yearly to hourly multivariate time series. It covers the full cycle of data cleaning, model training, evaluation and prediction.",
