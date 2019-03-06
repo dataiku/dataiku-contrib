@@ -6,7 +6,7 @@ by [Dataiku](https://www.dataiku.com)
 
 ## How can I create a plugin ?
 
-[Follow our Howto](https://learn.dataiku.com/howto/code/plugins/writing-your-first-dss-plugin.html)
+[Follow our Howto](https://www.dataiku.com/learn/guide/code/plugins/writing-your-first-dss-plugin.html)
 
 ## How can I share my plugin ?
 
