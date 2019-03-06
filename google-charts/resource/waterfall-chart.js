@@ -55,7 +55,11 @@ function initSankey(onReady) {
         dataiku.fetch(dataset, sampling, function(dataFrame) {
 
             allRows = dataFrame.mapRecords(transform_record);
-            //allRows = dataFrame.mapRecords(r => [r[unit], r[value]]); 
+
+            var last_index = allRows.length - 1;
+            console.log(allRows[last_index]);
+            var final_row = ["final", "0", "0", allRows[last_index][4], allRows[last_index][4]];
+            allRows.push(final_row);
             console.log(allRows);
             dataReady = true;
             drawAppIfEverythingReady();
