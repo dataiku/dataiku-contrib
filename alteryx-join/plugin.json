@@ -1,0 +1,13 @@
+{
+    "id" : "alteryx-join",
+    "version" : "0.0.1",
+    "meta" : {
+        "label" : "Join",
+        "description" : "A join recipe with selection of the output (possibly in several datasets) : a union of left excluding, inner, right excluding",
+        "author" : "Dataiku (Du Phan)",
+        "icon" : "icon-cloud",
+        "licenseInfo" : "Apache Software License",
+        "url" : "https://www.dataiku.com/dss/plugins/info/azure-cognitive-services.html",
+        "tags" : ["data preparation"]
+    }
+}

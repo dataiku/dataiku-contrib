@@ -1,0 +1,43 @@
+{
+    
+    "meta" : {
+        "label" : "Join two tables",
+        "description" : "Join 2 tables with selection of the output (possibly in several datasets) : a union of left excluding, inner, right excluding.",
+        "icon" : "icon-cloud"
+    },
+    
+    "kind" : "PYTHON",
+    
+    "inputRoles" : [
+        {
+            "name": "first_dataset",
+            "label": "First dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "second_dataset",
+            "label": "Second dataset",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles" : [
+        {
+            "name": "output_dataset",
+            "label": "Output Dataset",
+            "description": "",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+
+    "params": [
+    ]
+
+}
