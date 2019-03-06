@@ -1,0 +1,10 @@
+@import '/static/public/styles/1.0.0/dku-styles.css';
+
+.sankey-chart {
+    width: 90vw;
+    height: 90vh;
+    margin: 0 auto;
+}
+.sankey-chart g.google-visualization-tooltip {
+    opacity: 0.7;
+}
