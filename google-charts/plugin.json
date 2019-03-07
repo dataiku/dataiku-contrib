@@ -1,0 +1,13 @@
+{
+    "id": "google-charts",
+    "version": "0.1.0",
+    "meta": {
+        "label": "Google charts",
+        "description": "Set of visualization webapps with Google Charts",
+        "author": "Dataiku (Du Phan)",
+        "icon": "icon-bar-chart",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/google-charts.html",
+        "tags": ["Visualization"]
+    }
+}
