@@ -28,7 +28,7 @@ function draw() {
     chart.draw(data, options);
 }
     
-initSankey( (data) => {
+initWaterfall( (data) => {
     allRows = data;
     draw(); 
 });
