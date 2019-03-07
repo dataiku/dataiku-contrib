@@ -18,7 +18,7 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
   #   confidenceInterval: confidence interval in percentage.
   #   includeHistory: boolean, if TRUE then include historical one-step forecasts
-  #
+  #   TODO add xreg
   # Returns:
   #   Data.frame with forecast values and confidence intervals
 

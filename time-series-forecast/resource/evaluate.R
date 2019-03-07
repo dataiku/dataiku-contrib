@@ -39,23 +39,25 @@ EvaluateModelsSplit <- function(ts, df, xreg, modelList, modelParameterList, hor
   #
   # Returns:
   #   Data.frame with the evaluation of all models' split errors
-
-  trainTs <- head(ts, length(ts) - horizon)
+  trainRows <- length(ts) - horizon
+  trainTs <- head(ts, trainRows)
   evalTs <- tail(ts, horizon)
-  trainDf <- head(df, nrow(df) - horizon)
+  trainDf <- head(df, trainRows)
   evalDf <- tail(df, horizon)
+  trainXreg <- head(xreg, trainRows)
+  evalXreg <- tail(xreg, horizon)
   evalModelList <- TrainForecastingModels(
-    trainTs, trainDf, modelParameterList,
+    trainTs, trainDf, trainXreg, modelParameterList,
     refit = TRUE, refitModelList = modelList,
     verbose = FALSE
   )
-  evalForecastDfList <- GetForecasts(trainTs, trainDf,
+  evalForecastDfList <- GetForecasts(trainTs, trainDf, evalXreg,
     evalModelList, modelParameterList, horizon, granularity)
   errorDf <- ComputeErrorMetricsSplit(evalForecastDfList, evalDf)
   return(errorDf)
 }
 
-GenerateCutoffDatesCrossval <- function(df, xreg, horizon, granularity, initial, period) {
+GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, period) {
   # Generates list of cutoff dates for the cross-validation evaluation strategy.
   # It is required to get rolling time series splits across time.
   # Utility function used inside the EvaluateModelsCrossval function.
@@ -185,23 +187,26 @@ EvaluateModelsCrossval <- function(ts, df, xreg, modelList, modelParameterList,
   # compute forecasts for all cutoffs
   for(i in 1:length(cutoffs)) {
     cutoff <- cutoffs[i]
-    history.df <- dplyr::filter(df, ds <= cutoff)
-    if (nrow(history.df) < 2) {
+    trainDf <- dplyr::filter(df, ds <= cutoff)
+    trainRows <- nrow(trainDf)
+    if (trainRows < 2) {
       PrintPlugin("Less than two datapoints before cutoff. Please increase initial training.", stop = TRUE)
     }
-    history.ts <- head(ts, nrow(history.df))
+    trainTs <- head(ts, trainRows)
+    trainXreg <- head(xreg, trainRows)
+    evalDf <- head(dplyr::filter(df, ds > cutoff), horizon)
+    evalXreg <- xreg[(trainRows + 1):(trainRows + horizon),]
     PrintPlugin(paste0("Crossval split ", i ,"/", length(cutoffs), " at cutoff ", cutoffs[i],
-              " with ", length(history.ts), " training rows"))
-    df.predict <- head(dplyr::filter(df, ds > cutoff), horizon)
+      " with ", length(trainTs), " training rows"))
     evalModelList <- TrainForecastingModels(
-      history.ts, history.df, modelParameterList,
+      trainTs, trainDf, trainXreg, modelParameterList,
       refit = TRUE, refitModelList = modelList,
       verbose = FALSE
     )
-    forecastDfList <- GetForecasts(history.ts, history.df,
+    forecastDfList <- GetForecasts(trainTs, trainDf, evalXreg,
       evalModelList, modelParameterList, horizon, granularity)
     for(modelName in names(forecastDfList)) {
-      tmpDf <- dplyr::inner_join(df.predict, forecastDfList[[modelName]], by = "ds") %>%
+      tmpDf <- dplyr::inner_join(evalDf, forecastDfList[[modelName]], by = "ds") %>%
         select(ds, y, yhat, yhat_lower, yhat_upper)
       tmpDf$cutoff <- cutoff
       crossvalDfList[[modelName]] <- rbind(crossvalDfList[[modelName]] , tmpDf)

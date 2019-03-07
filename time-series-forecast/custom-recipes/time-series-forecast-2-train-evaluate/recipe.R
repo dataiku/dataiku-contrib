@@ -103,7 +103,7 @@ if(length(EXT_SERIES_COLUMNS) != 0) {
 
 PrintPlugin("Training stage starting...")
 
-modelList <- TrainForecastingModels(ts, df, modelParameterList, externalRegressorMatrix)
+modelList <- TrainForecastingModels(ts, df, externalRegressorMatrix, modelParameterList)
 
 PrintPlugin("Training stage completed, saving models to output folder.")
 

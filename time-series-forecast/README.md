@@ -1,5 +1,5 @@
 # Forecast plugin
-
+# TODO add multivariate support and update screenshots
 **TL;DR:  Why? To empower all Dataiku users to work on time series data to solve forecasting problems**
 
 ### 1. The use of forecasting
@@ -126,5 +126,5 @@ Anomaly detection can also be performed using clustering in the Visual ML. The i
 
 The Forecast plugin is:
 
-   Copyright (c) 2018 Dataiku SAS
+   Copyright (c) 2019 Dataiku SAS
    Licensed under the [MIT License](LICENSE.md).

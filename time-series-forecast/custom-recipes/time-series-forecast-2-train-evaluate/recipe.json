@@ -445,7 +445,7 @@
       "label": "Strategy",
       "type": "SELECT",
       "mandatory": true,
-      "description": "Cross-validation is based on R \"Prophet\" implementation. Robust but slower.",
+      "description": "Time-based split or cross-validation based on R \"Prophet\" method (slower)",
       "selectChoices": [
         {
           "value": "split",
@@ -453,23 +453,23 @@
         },
         {
           "value": "crossval",
-          "label": "Time series cross-validation"
+          "label": "Time Series Cross-Validation"
         }
       ],
       "defaultValue": "split"
     },
     {
       "name": "EVAL_HORIZON",
-      "label": "- Horizon",
-      "description": "Number of observations in the test split(s)",
+      "label": "Horizon",
+      "description": "Number of time steps to evaluate the forecast error",
       "type": "INT",
       "defaultValue": 10,
       "mandatory": true
     },
     {
       "name": "CROSSVAL_INITIAL",
-      "label": "- Initial training",
-      "description": "Number of observations in the initial train set. If -1, 10 * Horizon is used.",
+      "label": "Initial training",
+      "description": "Number of time steps in the initial train set. If -1, 10 * Horizon is used.",
       "type": "INT",
       "mandatory": false,
       "defaultValue": -1,
@@ -477,8 +477,8 @@
     },
     {
       "name": "CROSSVAL_PERIOD",
-      "label": "- Cutoff period",
-      "description": "How often to create cross-validation splits. If -1, 0.5 * Horizon is used.",
+      "label": "Cutoff period",
+      "description": "Number of time steps between each split. If -1, 0.5 * Horizon is used.",
       "type": "INT",
       "mandatory": false,
       "defaultValue": -1,
