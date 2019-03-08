@@ -40,6 +40,7 @@ EvaluateModelsSplit <- function(ts, df, xreg = NULL, modelList, modelParameterLi
   #
   # Returns:
   #   Data.frame with the evaluation of all models' split errors
+
   trainRows <- length(ts) - horizon
   trainTs <- head(ts, trainRows)
   evalTs <- tail(ts, horizon)
@@ -197,7 +198,8 @@ EvaluateModelsCrossval <- function(ts, df, xreg = NULL, modelList, modelParamete
     trainTs <- head(ts, trainRows)
     trainXreg <- head(xreg, trainRows)
     evalDf <- head(dplyr::filter(df, ds > cutoff), horizon)
-    evalXreg <- xreg[(trainRows + 1):(trainRows + horizon),]
+    evalXreg <- as.matrix(xreg[(trainRows + 1):(trainRows + horizon),])
+    colnames(evalXreg) <- colnames(xreg)
     PrintPlugin(paste0("Crossval split ", i ,"/", length(cutoffs), " at cutoff ", cutoffs[i],
       " with ", length(trainTs), " training rows"))
     evalModelList <- TrainForecastingModels(

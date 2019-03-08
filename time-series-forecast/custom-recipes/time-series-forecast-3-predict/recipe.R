@@ -47,28 +47,28 @@ PrintPlugin(paste0("Model selection stage completed: ", SELECTED_MODEL, " select
 PrintPlugin("Forecasting stage")
 
 externalRegressorMatrix <- NULL
-if (SELECTED_MODEL %in% MODELS_WITH_XREG_SUPPORT) {
-  if (!is.na(FUTURE_XREG_DATASET_NAME) && !is.null(FUTURE_XREG_DATASET_NAME)) {
-    if (is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) == 0 || is.na(EXT_SERIES_COLUMNS)) {
-      PrintPlugin("Future external regressors dataset provided but no external regressors \
-                  were provided at training time. Please re-run the Train and Evaluate recipe \
-                  with external regressors specified in the recipe settings.", stop = TRUE)
-    }
-    PrintPlugin("Including the future values of external regressors")
-    selectedColumns <- c(TIME_COLUMN, EXT_SERIES_COLUMNS)
-    columnClasses <- c("character", rep("numeric", length(EXT_SERIES_COLUMNS)))
-    dfXreg <- dkuReadDataset(FUTURE_XREG_DATASET_NAME, columns = selectedColumns, colClasses = columnClasses) %>%
-      PrepareDataframeWithTimeSeries(TIME_COLUMN, EXT_SERIES_COLUMNS,
-        GRANULARITY, AGGREGATION_STRATEGY, resample = FALSE)
-    externalRegressorMatrix <- as.matrix(dfXreg[EXT_SERIES_COLUMNS])
-  } else {
-    if(!is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) != 0 || !is.na(EXT_SERIES_COLUMNS)) {
-      PrintPlugin("External regressors were used at training time but \
-                  no dataset for future values of regressors has been provided. \
-                  Please add the dataset for future values in the Input / Output tab of the recipe. \
-                  If no future values are availables, please re-run the Train and Evaluate recipe \
-                  without external regressors", stop = TRUE)
-    }
+if (!is.na(FUTURE_XREG_DATASET_NAME) && !is.null(FUTURE_XREG_DATASET_NAME)) {
+  if (is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) == 0 || is.na(EXT_SERIES_COLUMNS)) {
+    PrintPlugin("Future external regressors dataset provided but no external regressors \
+                were provided at training time. Please re-run the Train and Evaluate recipe \
+                with external regressors specified in the recipe settings.", stop = TRUE)
+  }
+  PrintPlugin("Including the future values of external regressors")
+  selectedColumns <- c(TIME_COLUMN, EXT_SERIES_COLUMNS)
+  columnClasses <- c("character", rep("numeric", length(EXT_SERIES_COLUMNS)))
+  dfXreg <- dkuReadDataset(FUTURE_XREG_DATASET_NAME, columns = selectedColumns, colClasses = columnClasses) %>%
+    PrepareDataframeWithTimeSeries(TIME_COLUMN, EXT_SERIES_COLUMNS,
+      GRANULARITY, AGGREGATION_STRATEGY, resample = FALSE)
+  FORECAST_HORIZON <- nrow(dfXreg)
+  externalRegressorMatrix <- as.matrix(dfXreg[EXT_SERIES_COLUMNS])
+  colnames(externalRegressorMatrix) <- EXT_SERIES_COLUMNS
+} else {
+  if(!is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) != 0 || !is.na(EXT_SERIES_COLUMNS)) {
+    PrintPlugin("External regressors were used at training time but \
+                no dataset for future values of regressors has been provided. \
+                Please add the dataset for future values in the Input / Output tab of the recipe. \
+                If no future values are availables, please re-run the Train and Evaluate recipe \
+                without external regressors", stop = TRUE)
   }
 }
 

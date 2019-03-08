@@ -96,8 +96,8 @@ ts <- ConvertDataFrameToTimeSeries(df, "ds", "y", GRANULARITY)
 externalRegressorMatrix <- NULL
 if(length(EXT_SERIES_COLUMNS) != 0) {
   externalRegressorMatrix <- as.matrix(df[EXT_SERIES_COLUMNS])
+  colnames(externalRegressorMatrix) <- EXT_SERIES_COLUMNS
 }
-
 
 ##### TRAINING STAGE #####
 

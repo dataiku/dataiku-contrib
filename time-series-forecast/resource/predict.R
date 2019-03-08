@@ -23,7 +23,6 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   # Returns:
   #   Data.frame with forecast values and confidence intervals
 
-
   if (!is.null(xreg) && nrow(xreg) != 0) {
     horizon <- nrow(xreg)
   }
@@ -40,19 +39,16 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
     if (modelName == "PROPHET_MODEL") {
       freq <- ifelse(granularity == "hour", 3600, granularity)
       future <- make_future_dataframe(model, horizon, freq, include_history = includeHistory)
-      PrintPlugin("DEBUG future df before")
-      print(head(future))
       if (!is.null(xreg)) {
         for (c in colnames(xreg)) {
           if (includeHistory) {
             future[,c] <- c(df[,c], xreg[,c])
           } else {
+            print(xreg[,c])
             future[,c] <- xreg[,c]
           }
         }
       }
-      PrintPlugin("DEBUG future df after")
-      print(head(future))
       model$interval.width <- confidenceInterval / 100.0
       forecastDf <- stats::predict(model, future) %>%
         select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))

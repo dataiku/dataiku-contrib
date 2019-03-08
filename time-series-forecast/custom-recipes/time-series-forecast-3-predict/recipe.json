@@ -158,7 +158,7 @@
       "type": "INT",
       "mandatory": true,
       "defaultValue": 10,
-      "description": "in number of periods  - will be overriden if you provided external regressors",
+      "description": "in number of time steps  - will be overriden if you provided external regressors",
       "visibilityCondition": "model.INCLUDE_FORECAST"
     },
     {
