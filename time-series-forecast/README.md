@@ -43,7 +43,7 @@ This plugin offers a set of 3 visual recipes to forecast yearly to hourly time s
 
 It follows classic forecasting methods described in:
 - Hyndman, Rob J., and George Athanasopoulos. *[Forecasting: principles and practice](https://otexts.org/fpp2)*. OTexts, 2018.
- - Taylor, Sean J., and Benjamin Letham. *[Forecasting at Scale](https://doi.org/10.1080/00031305.2017.1380080)*. The American Statistician, 2018.
+- Taylor, Sean J., and Benjamin Letham. *[Forecasting at Scale](https://doi.org/10.1080/00031305.2017.1380080)*. The American Statistician, 2018.
 
 This plugin does NOT work on narrow temporal dimensions (data must be at least at the hourly level) and does not provide signal processing techniques (Fourier Transform…).
 

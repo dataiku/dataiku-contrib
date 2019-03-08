@@ -46,8 +46,8 @@ EvaluateModelsSplit <- function(ts, df, xreg = NULL, modelList, modelParameterLi
   evalTs <- tail(ts, horizon)
   trainDf <- head(df, trainRows)
   evalDf <- tail(df, horizon)
-  trainXreg <- head(xreg, trainRows)
-  evalXreg <- tail(xreg, horizon)
+  trainXreg <- head(xreg, trainRows) # NULL if xreg is NULL
+  evalXreg <- tail(xreg, horizon) # NULL if xreg is NULL
   evalModelList <- TrainForecastingModels(
     trainTs, trainDf, trainXreg, modelParameterList,
     refit = TRUE, refitModelList = modelList,
@@ -196,10 +196,13 @@ EvaluateModelsCrossval <- function(ts, df, xreg = NULL, modelList, modelParamete
       PrintPlugin("Less than two datapoints before cutoff. Please increase initial training.", stop = TRUE)
     }
     trainTs <- head(ts, trainRows)
-    trainXreg <- head(xreg, trainRows)
+    trainXreg <- head(xreg, trainRows) # NULL if xreg is NULL
     evalDf <- head(dplyr::filter(df, ds > cutoff), horizon)
-    evalXreg <- as.matrix(xreg[(trainRows + 1):(trainRows + horizon),])
-    colnames(evalXreg) <- colnames(xreg)
+    evalXreg <- NULL
+    if (!is.null(xreg)) {
+      evalXreg <- as.matrix(xreg[(trainRows + 1):(trainRows + horizon),])
+      colnames(evalXreg) <- colnames(xreg)
+    }
     PrintPlugin(paste0("Crossval split ", i ,"/", length(cutoffs), " at cutoff ", cutoffs[i],
       " with ", length(trainTs), " training rows"))
     evalModelList <- TrainForecastingModels(
