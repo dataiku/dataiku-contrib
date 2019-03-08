@@ -114,16 +114,16 @@
           "label": "Neural Network"
         },
         {
+          "value": "ARIMA_MODEL",
+          "label": "ARIMA"
+        },
+        {
           "value": "SEASONALTREND_MODEL",
           "label": "Seasonal Trend"
         },
         {
           "value": "EXPONENTIALSMOOTHING_MODEL",
           "label": "Exponential Smoothing"
-        },
-        {
-          "value": "ARIMA_MODEL",
-          "label": "ARIMA"
         },
         {
           "value": "STATESPACE_MODEL",

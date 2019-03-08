@@ -8,6 +8,6 @@
     "icon": "icon-calendar",
     "licenseInfo": "MIT License",
     "url": "https://www.dataiku.com/dss/plugins/info/forecast.html",
-    "tags": ["Time series"]
+    "tags": ["time-series", "forecast"]
   }
 }

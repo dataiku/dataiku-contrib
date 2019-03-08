@@ -6,19 +6,20 @@ source(file.path(dkuCustomRecipeResource(), "train.R"))
 
 GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   horizon, granularity, confidenceInterval = 95, includeHistory = FALSE) {
-  # Gets forecast values from forecasting models
+  # Gets forecast values from forecast models
   #
   # Args:
   #   ts: input time series of R ts or msts class.
   #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   horizon: horizon of the forecast steps.
   #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
   #   confidenceInterval: confidence interval in percentage.
   #   includeHistory: boolean, if TRUE then include historical one-step forecasts
-  #   TODO add xreg
+  #
   # Returns:
   #   Data.frame with forecast values and confidence intervals
 

@@ -25,13 +25,14 @@ ComputeErrorMetricsSplit <- function(forecastDfList, historyDf) {
   return(errorDf)
 }
 
-EvaluateModelsSplit <- function(ts, df, xreg, modelList, modelParameterList, horizon, granularity) {
-  # Evaluates forecasting models on a time series according to the split strategy.
+EvaluateModelsSplit <- function(ts, df, xreg = NULL, modelList, modelParameterList, horizon, granularity) {
+  # Evaluates forecast models on a time series according to the split strategy.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
   #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   horizon: number of periods to evaluate the models.
@@ -161,14 +162,15 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
   return(errorDf)
 }
 
-EvaluateModelsCrossval <- function(ts, df, xreg, modelList, modelParameterList,
+EvaluateModelsCrossval <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   horizon, granularity, initial, period) {
-  # Evaluates forecasting models on a time series according to the cross-validation strategy.
+  # Evaluates forecast models on a time series according to the cross-validation strategy.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
   #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   horizon: number of periods to evaluate the models.
@@ -218,13 +220,14 @@ EvaluateModelsCrossval <- function(ts, df, xreg, modelList, modelParameterList,
 
 EvaluateModels <- function(ts, df, xreg = NULL, modelList, modelParameterList, evalStrategy,
   horizon, granularity, initial = NULL, period = NULL) {
-  # Evaluates multiple forecasting models on a time series according to
+  # Evaluates multiple forecast models on a time series according to
   # the specified evaluation strategy.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
   #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   evalStrategy: character string describing which evaluation strategy to use

@@ -1,7 +1,7 @@
 {
   "meta": {
     "label": "2. Train models and evaluate errors on historical data",
-    "description": "Train forecasting models and evaluate them on historical data using temporal split or cross-validation",
+    "description": "Train forecast models and evaluate them on historical data using temporal split or cross-validation",
     "icon": "icon-calendar"
   },
   "kind": "R",
@@ -273,6 +273,35 @@
       "visibilityCondition": "model.AUTOML=='expert'"
     },
     {
+      "name": "ARIMA_MODEL_ACTIVATED",
+      "label": "- ARIMA",
+      "description": "Based on the auto.arima implementation in R \"forecast\" package.\nWARNING: slow for long time series (1000+ records)",
+      "type": "BOOLEAN",
+      "defaultValue": false,
+      "mandatory": true
+    },
+    {
+      "name": "ARIMA_MODEL_STEPWISE",
+      "label": "↳ stepwise",
+      "description": "Use stepwise procedure to speed up the search for model parameters",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "mandatory": false,
+      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
+    },
+    {
+      "name": "ARIMA_MODEL_KWARGS",
+      "type": "MAP",
+      "label": "↳  additional parameters",
+      "description": "Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
+      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
+      "mandatory": false
+    },
+    {
+      "type": "SEPARATOR",
+      "visibilityCondition": "model.AUTOML=='expert'"
+    },
+    {
       "name": "SEASONALTREND_MODEL_ACTIVATED",
       "label": "- Seasonal Trend",
       "description": "Based on the stlf implementation in R \"forecast\" package. WARNING: may not converge for non-seasonal data.",
@@ -391,35 +420,6 @@
       "visibilityCondition": "model.AUTOML=='expert'"
     },
     {
-      "name": "ARIMA_MODEL_ACTIVATED",
-      "label": "- ARIMA",
-      "description": "Based on the auto.arima implementation in R \"forecast\" package.\nWARNING: slow for long time series (1000+ records)",
-      "type": "BOOLEAN",
-      "defaultValue": false,
-      "mandatory": true
-    },
-    {
-      "name": "ARIMA_MODEL_STEPWISE",
-      "label": "↳ stepwise",
-      "description": "Use stepwise procedure to speed up the search for model parameters",
-      "type": "BOOLEAN",
-      "defaultValue": true,
-      "mandatory": false,
-      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
-    },
-    {
-      "name": "ARIMA_MODEL_KWARGS",
-      "type": "MAP",
-      "label": "↳  additional parameters",
-      "description": "Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
-      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
-      "mandatory": false
-    },
-    {
-      "type": "SEPARATOR",
-      "visibilityCondition": "model.AUTOML=='expert'"
-    },
-    {
       "name": "STATESPACE_MODEL_ACTIVATED",
       "label": "- State Space",
       "description": "Based on the tbats implementation in R \"forecast\" package.\nWARNING: slow for long time series (1000+ records)",
@@ -449,7 +449,7 @@
       "selectChoices": [
         {
           "value": "split",
-          "label": "Train/Test split"
+          "label": "Train/Test Split"
         },
         {
           "value": "crossval",

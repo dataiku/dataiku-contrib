@@ -75,8 +75,9 @@ ProphetModelWrapper <- function(df, growth = "linear", model = NULL, xreg = NULL
   #          refit an existing model without re-estimating its parameters.
   #   y: added for compatibility with others model types but unused
   #      since prophet uses the df argument as data input.
+  #   xreg: matrix of external regressors (optional)
   #   ...: additional arguments passed to the original prophet function
-  #   TODO add xreg
+  #
   # Returns:
   #   Fitted Prophet model
 
@@ -98,18 +99,19 @@ ProphetModelWrapper <- function(df, growth = "linear", model = NULL, xreg = NULL
 
 TrainForecastingModels <- function(ts, df, xreg = NULL, modelParameterList,
   refit = FALSE, refitModelList = NULL, verbose = TRUE) {
-  # Trains or retrains multiple forecasting models on a time series according to
+  # Trains or retrains multiple forecast models on a time series according to
   # a list of model parameters and optionally previously fitted models.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
   #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelParameterList: named list of model parameters set in the plugin UI
   #   refit: boolean, if TRUE then refit existing models without re-estimating its parameters.
   #   refitModelList: Named list of fitted models (output of a previous call to this function).
   #   verbose: boolean, if TRUE then prints details about each model training.
-  #   TODO add xreg
+  #
   # Returns:
   #   Named list of fitted model
 
