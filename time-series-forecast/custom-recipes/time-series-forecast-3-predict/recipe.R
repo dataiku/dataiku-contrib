@@ -47,7 +47,7 @@ PrintPlugin(paste0("Model selection stage completed: ", SELECTED_MODEL, " select
 PrintPlugin("Forecasting stage")
 
 externalRegressorMatrix <- NULL
-if (!is.na(FUTURE_XREG_DATASET_NAME) && !is.null(FUTURE_XREG_DATASET_NAME)) {
+if (!is.na(FUTURE_XREG_DATASET_NAME)) {
   if (is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) == 0 || is.na(EXT_SERIES_COLUMNS)) {
     PrintPlugin("Future external regressors dataset provided but no external regressors \
                 were provided at training time. Please re-run the Train and Evaluate recipe \
@@ -63,7 +63,7 @@ if (!is.na(FUTURE_XREG_DATASET_NAME) && !is.null(FUTURE_XREG_DATASET_NAME)) {
   externalRegressorMatrix <- as.matrix(dfXreg[EXT_SERIES_COLUMNS])
   colnames(externalRegressorMatrix) <- EXT_SERIES_COLUMNS
 } else {
-  if(!is.null(EXT_SERIES_COLUMNS) || length(EXT_SERIES_COLUMNS) != 0 || !is.na(EXT_SERIES_COLUMNS)) {
+  if(length(EXT_SERIES_COLUMNS) != 0) {
     PrintPlugin("External regressors were used at training time but \
                 no dataset for future values of regressors has been provided. \
                 Please add the dataset for future values in the Input / Output tab of the recipe. \
