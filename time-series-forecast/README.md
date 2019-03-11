@@ -2,13 +2,8 @@
 
 The Forecast plugin provides visual recipes in Dataiku DSS to work on time series data to solve forecasting problems.
 
-**New in v0.2.0: Multivariate Forecasting!** Added support of external regressors for Neural Network, Prophet and ARIMA models (requires availability of future values of regressors when forecasting).
-
 >Forecasting is required in many situations: deciding whether to build another power generation plant in the next five years requires forecasts of future demand; scheduling staff in a call centre next week requires forecasts of call volumes; stocking an inventory requires forecasts of stock requirements. Forecasts can be required several years in advance (for the case of capital investments), or only a few minutes beforehand (for telecommunication routing). Whatever the circumstances or time horizons involved, forecasting is an important aid to effective and efficient planning.
 <p style="text-align: right"> - Hyndman, Rob J. and George Athanasopoulos</p>
-
-![Example of time series forecasting](https://www.dataiku.com/static/img/product/plugins/forecast/example1.png)
-Example of time series forecasting at the week level in Dataiku DSS.
 
 
 ## The Problem
@@ -52,12 +47,31 @@ This plugin works well when:
 - The object to predict is the future of one of these time series.
 
 ## Installation Notes
+
 The plugin can be installed from the Plugin Store in DSS "Administration > Plugins > Store". You can also check its development branch ["time-series-forecast"](https://github.com/dataiku/dataiku-contrib/tree/time-series-forecast/time-series-forecast) on the [dataiku-contrib](https://github.com/dataiku/dataiku-contrib) git repo.
 
 Note that the plugin uses an R code environment so R must be installed and integrated with Dataiku on your machine (version 3.5.0 or above).
 
-You may encounter issues with the installation of the RStan package in the code environment on some operating systems . RStan has some system-level dependencies (C++) that may require additional setup. In this case, please see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) wiki.
+You may encounter issues with the installation of the RStan package in the code environment on some operating systems. RStan has some system-level dependencies (C++) that may require additional setup. In this case, please see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) wiki.
 
+## Changelog
+
+**Version 0.0.2 "alpha 2" (2019-03)**
+
+* Multivariate Forecasting: Added support of external regressors for Neural Network, Prophet and ARIMA models (requires availability of future values of regressors when forecasting).
+
+**Version 0.0.1 "alpha 1" (2019-01)**
+
+* Initial release
+* First pipeline for univariate forecasting of hourly to yearly time series
+
+## Roadmap
+
+- Evaluation recipe:
+     * For cross-validation strategy: error metrics at each step within the horizon
+- Prediction recipe:
+     * Add ability to get multiple model forecasts at the same time for ensembling
+     * Fan plot of confidence intervals within the horizon
 
 ## How To Use
 
