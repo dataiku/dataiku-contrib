@@ -44,7 +44,6 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
           if (includeHistory) {
             future[,c] <- c(df[,c], xreg[,c])
           } else {
-            print(xreg[,c])
             future[,c] <- xreg[,c]
           }
         }
