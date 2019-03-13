@@ -18,7 +18,7 @@ echo $TMPDIR
 echo "Downloading"
 case "$distrib" in
 	osx)
-		curl "https://downloads.tableau.com/tssoftware/Tableau-SDK-Python-Linux-64Bit-10-3-18.tar.gz" |tar --strip-components 1 -x -z -f -
+		curl "https://downloads.tableau.com/tssoftware/Tableau-SDK-Python-OSX-64Bit-10-3-18.tar.gz" |tar --strip-components 1 -x -z -f -
 		;;
 	*)
 		curl "https://downloads.tableau.com/tssoftware/Tableau-SDK-Python-Linux-64Bit-10-3-18.tar.gz" |tar --strip-components 1 -x -z -f -
