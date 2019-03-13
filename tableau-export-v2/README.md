@@ -26,7 +26,7 @@ You can also use the "Export" recipe to automatically recreate TDE files.
 
 ## Changelog
 
-* 0.0.3 - March 26th, 2016
+* 0.0.3 - March 26th, 2017
   
    - Fix export of dates with non-zero fractional part
 
