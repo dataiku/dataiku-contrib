@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
-        			format='deeplearning-image-cpu macro %(levelname)s - %(message)s')
+        			format='deeplearning-image-gpu macro %(levelname)s - %(message)s')
 
 
 def get_params(config, client, project):
@@ -79,7 +79,7 @@ def get_params(config, client, project):
     assert (min_threshold >= 0) and (min_threshold <= 1)  , "Min threshold must be between 0 and 1"
     params["min_threshold"] = min_threshold
         
-    env_name = 'plugin_deeplearning-image-cpu_api_node'
+    env_name = 'plugin_deeplearning-image-gpu_api_node'
     params['code_env_name'] = env_name
 
     return params
@@ -182,7 +182,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
-                    format="deeplearning-image-cpu-api-node \%(levelname)s - \%(message)s") 
+                    format="deeplearning-image-gpu-api-node \%(levelname)s - \%(message)s") 
 
 model_folder_path = folders[0]
 
