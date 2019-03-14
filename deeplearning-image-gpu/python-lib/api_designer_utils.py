@@ -17,47 +17,53 @@ def get_params(config, client, project):
     Depending on the option, we set service_id as service_id_existing or service_id_new, that's why this function is a get_params, not just check_params.
     Some checks are done to make sure the input is in the dedicated DSS object list : code-env, managed_folder, api service, endpoint.
     """
-    
+
     params = {}
-    
+
     model_folder_id = config.get("model_folder_id")
-    list_folders = [folder.get("id") for folder in project.list_managed_folders()]
+    list_folders = [folder.get("id")
+                    for folder in project.list_managed_folders()]
     assert model_folder_id, "Folder ID is empty"
     assert model_folder_id in list_folders, "Folder ID %s must be the id of a managed folder containing a model trained with the deeplearning-image plugin. The folder must belong to the project in which is executed the macro" % model_folder_id
     params["model_folder_id"] = model_folder_id
-    
+
     create_new_service = config.get("create_new_service")
-    assert type(create_new_service) is bool, "create_new_service is not bool: %r" % create_new_service
+    assert type(
+        create_new_service) is bool, "create_new_service is not bool: %r" % create_new_service
     params["create_new_service"] = create_new_service
-    
-    list_service = [service.get("id") for service in project.list_api_services()]
+
+    list_service = [service.get("id")
+                    for service in project.list_api_services()]
+
     if create_new_service:
         service_id = config.get("service_id_new")
         assert service_id, "Service ID is empty"
         assert service_id not in list_service, "Service ID %s already in use, find a new id or uncheck the create new service option to use an existing service" % service_id
-        project.create_api_service(service_id)
-    else :
+
+    else:
         service_id = config.get("service_id_existing")
         assert service_id, "Service ID is empty"
         assert service_id in list_service, "Service ID : %s not found" % service_id
-    
-    params["service_id"] = service_id 
-    list_endpoints = [endpoint.get("id") for endpoint in project.get_api_service(service_id).get_settings().get_raw()["endpoints"]]
-    endpoint_id = config.get("endpoint_id")
-    assert endpoint_id, "Endpoint ID is empty"
-    if endpoint_id in list_endpoints:
-        logger.info("Will override endpoint %s" % endpoint_id)
-    else :
-        logger.info("Create new endpoint %s in service %s" % (endpoint_id, service_id))
+
+        list_endpoints = [endpoint.get("id") for endpoint in project.get_api_service(
+            service_id).get_settings().get_raw()["endpoints"]]
+        if endpoint_id in list_endpoints:
+            print("Will override endpoint %s" % endpoint_id)
+        else:
+            print("Create new endpoint %s in service %s" %
+                  (endpoint_id, service_id))
+    params["service_id"] = service_id
     params["endpoint_id"] = config.get("endpoint_id")
-    #TO-DO custom html select to get the list of endpoints
-    
+
+    use_gpu = True
+    assert type(use_gpu) is bool, "use_gpu is not bool: %r" % create_new_service
+    params["use_gpu"] = use_gpu
+    # TO-DO custom html select to get the list of endpoints
 
     """
     create_package = config.get("create_package")
     assert type(create_new_service) is bool, "create_package is not bool: %r" % create_package
     params["create_package"] = create_package
-
     if create_package :
         list_packages = [package.get("id") for package in project.get_api_service(service_id).list_packages()]
         package_id = config.get("package_id")
@@ -69,17 +75,24 @@ def get_params(config, client, project):
 
     max_nb_labels = config.get("max_nb_labels")
     assert max_nb_labels, "Max number of labels is empty"
-    assert type(max_nb_labels) is int, "Max number of labels is not an int : %s "%type(max_nb_labels)
-    assert max_nb_labels > 0 , "Max number of labels must be strictly greater than 0"
+    assert type(max_nb_labels) is int, "Max number of labels is not an int : %s " % type(
+        max_nb_labels)
+    assert max_nb_labels > 0, "Max number of labels must be strictly greater than 0"
     params["max_nb_labels"] = max_nb_labels
-    
+
     min_threshold = config.get("min_threshold")
     assert min_threshold, "Min threshold is empty"
-    assert type(min_threshold) is float, "Min threshold is not a float : %s "%type(min_threshold)
-    assert (min_threshold >= 0) and (min_threshold <= 1)  , "Min threshold must be between 0 and 1"
+    assert type(min_threshold) is float, "Min threshold is not a float : %s " % type(
+        min_threshold)
+    assert (min_threshold >= 0) and (min_threshold <=
+                                     1), "Min threshold must be between 0 and 1"
     params["min_threshold"] = min_threshold
-        
-    env_name = 'plugin_deeplearning-image-gpu_api_node'
+
+    if use_gpu:
+        env_name = 'plugin_deeplearning-image-gpu-api_node'
+    else:
+        env_name = 'plugin_deeplearning-image-cpu-api_node'
+
     params['code_env_name'] = env_name
 
     return params
@@ -211,9 +224,10 @@ else:
     logger.info("No csv file in the model folder, will not use class names.")
 
 
-def api_py_function(img_b64):
+def api_py_function(features):
     #takes in input the image encoded as base64 base64.b64encode(open(img_path, "rb").read())
     #preprocess the image and score it
+    img_b64 = features.get('img_b64')
 
     logger.info("Start loading image")
     img_b64_decode = base64.b64decode(img_b64)
