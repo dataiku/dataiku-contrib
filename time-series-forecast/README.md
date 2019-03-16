@@ -53,17 +53,17 @@ These two ways of building a forecasting pipeline require good knowledge of mach
 
 Please see [plugin page](https://www.dataiku.com/dss/plugins/info/forecast.html) on Dataiku's website.
 
-Note that the plugin uses an R code environment so R must be installed and integrated with Dataiku on your machine (version 3.5.0 or above).
+Note that the plugin uses an R code environment so R must be installed and integrated with Dataiku on your machine (version 3.5.0 or above). Anaconda R is not supported.
 
 You may encounter issues with the installation of the RStan package in the code environment on some operating systems. RStan has some system-level dependencies (C++) that may require additional setup. In this case, please see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) wiki.
 
 ## Changelog
 
-**Version 0.0.2 "alpha 2" (2019-03)**
+**Version 0.2.0 "beta 2" (2019-03)**
 
 * Multivariate Forecasting: Added support of external regressors for Neural Network, Prophet and ARIMA models (requires availability of future values of regressors when forecasting).
 
-**Version 0.0.1 "alpha 1" (2019-01)**
+**Version 0.1.0 "beta 1" (2019-01)**
 
 * Initial release
 * First pipeline for univariate forecasting of hourly to yearly time series
