@@ -1,0 +1,203 @@
+{
+    "meta" : {
+        "label" : "Dataproc cluster (create cluster)",
+        "description" : "Creates and manages Dataproc clusters",
+        "icon" : "icon-puzzle-piece"
+    },
+
+    "params": [
+        {
+            "name" : "gcloudProjectId",
+            "label" : "GCS Project ID",
+            "type": "STRING", 
+            "mandatory" : true
+        },
+        {
+            "name": "gcloudClusterId",
+            "label" : "GCloud cluster name", 
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name" : "gcloudRegionId",
+            "label" : "Google cloud Region",
+            "type": "STRING", 
+            "mandatory" : true,
+            "defaultValue": "global"
+        },
+        {
+            "name" : "masterInstanceType",
+            "label" : "Instance type (master)",
+            "type" : "STRING",
+            "defaultValue" : "n1-highmem-4",
+            "mandatory" : true
+        },
+        {
+            "name" : "slaveInstanceType",
+            "label" : "Instance type (slaves)",
+            "type" : "STRING",
+            "defaultValue" : "n1-highmem-8",
+            "mandatory" : true
+        },
+        {
+            "name": "instancesCount",
+            "type": "INT",
+            "label" : "Instances worker count",
+            "defaultValue" : 3
+        },
+        {
+            "name": "dataprocVersion",
+            "label" : "Dataproc Version",
+            "type": "STRING",
+            "defaultValue" : "LATEST",
+            "description" : "Dataproc RELEASE",
+            "mandatory" : false
+        },
+
+
+        {
+            "type" : "SEPARATOR",
+            "label":  "Networking"
+        },
+        {
+            "name" : "gcloudZoneId",
+            "label" : "Google cloud Zone",
+            "type": "STRING", 
+            "mandatory" : true,
+            "defaultValue": "us-east1-b"
+        },
+        {
+            "name" : "tags",
+            "label" : "Tags to add",
+            "type" : "STRING",
+            "mandatory": false,
+            "description" : "Optional. Comma-separated list of security groups tags"
+        },
+
+
+        {
+            "type" : "SEPARATOR",
+            "label":  "Hive Metastore"
+        },
+        {
+            "name": "metastoreDBMode",
+            "label" : "Metastore database",
+            "type": "SELECT",
+            "defaultValue" : "TRANSIENT",
+            "selectChoices" : [
+                {"value" : "TRANSIENT", "label" : "Transient (cluster-specific)"},
+                {"value" : "MYSQL", "label" : "External MySQL"},
+                {"value" : "CUSTOM_JDBC", "label" : "Custom settings (JDBC)"}
+            ],
+            "mandatory" : true
+        },
+
+        {
+            "name": "metastoreMySQLHost",
+            "label" : "DB host",
+            "visibilityCondition": "model.metastoreDBMode == 'MYSQL'",
+            "type": "STRING",
+            "description" : "Hostname of the MySQL or Aurora host",
+            "mandatory" : false
+        },
+        {
+            "name": "metastoreMySQLUser",
+            "label" : "DB user",
+            "visibilityCondition": "model.metastoreDBMode == 'MYSQL'",
+            "type": "STRING",
+            "description" : "Username of the MySQL or Aurora DB",
+            "mandatory" : false
+        },
+        {
+            "name": "metastoreMySQLPassword",
+            "label" : "DB password",
+            "visibilityCondition": "model.metastoreDBMode == 'MYSQL'",
+            "type": "PASSWORD",
+            "description" : "Password of the MySQL or Aurora DB",
+            "mandatory" : false
+        },
+
+        {
+            "name": "metastoreJDBCURL",
+            "label" : "Metastore JDBC URL",
+            "visibilityCondition": "model.metastoreDBMode == 'CUSTOM_JDBC'",
+            "type": "STRING",
+            "description" : "JDBC URL of the metastore database",
+            "mandatory" : false
+        },
+        {
+            "name": "metastoreJDBCDriver",
+            "label" : "Metastore JDBC Driver",
+            "visibilityCondition": "model.metastoreDBMode == 'CUSTOM_JDBC'",
+            "type": "STRING",
+            "description" : "Optional. JDBC Driver of the metastore database",
+            "defaultValue" : "org.mariadb.jdbc.Driver",
+            "mandatory" : false
+        },
+        {
+            "name": "metastoreJDBCUser",
+            "label" : "Metastore JDBC User",
+            "visibilityCondition": "model.metastoreDBMode == 'CUSTOM_JDBC'",
+            "type": "STRING",
+            "description" : "Optional. JDBC user of the metastore database",
+            "mandatory" : false
+        },
+        {
+            "name": "metastoreJDBCPassword",
+            "label" : "Metastore JDBC password",
+            "visibilityCondition": "model.metastoreDBMode == 'CUSTOM_JDBC'",
+            "type": "PASSWORD",
+            "description" : "Optional. JDBC password of the metastore database",
+            "mandatory" : false
+        },
+
+        {
+            "name": "metastoreGcloudInstance",
+            "label" : "Gcloud SQL instance name",
+            "visibilityCondition": "model.metastoreDBMode == 'GCLOUD_SQL'",
+            "type": "STRING",
+            "description" : "Gcloud SQL instance name for metastore database",
+            "mandatory" : false
+        },
+        {
+            "name": "metastoreGcloudRegion",
+            "label" : "Gcloud SQL region",
+            "visibilityCondition": "model.metastoreDBMode == 'GCLOUD_SQL'",
+            "type": "STRING",
+            "defaultValue" : "",
+            "description" : "Optional. Gcloud SQL instance region (by default same as cluster)",
+            "mandatory" : false
+        },
+
+        {
+            "name": "databasesToCreate",
+            "label" : "Databases to create",
+            "type": "STRING",
+            "defaultValue" : "dataiku",
+            "description" : "Comma-separated list of databases to create upon startup",
+            "mandatory" : false
+        },
+        
+        {
+            "type" : "SEPARATOR",
+            "label":  "Misc"
+        },
+        {
+            "name": "labels",
+            "label": "labels ",
+            "type" : "KEY_VALUE_LIST",
+            "description" : "GCP labels to add on the cluster"
+        }
+    ],
+    
+    "actions" : [
+        {
+            "id" : "fetch-nodes-keys",
+            "meta" : {
+                "label" : "Fetch node description keys",
+                "description" : "Fetches node description keys",
+                "icon" : "icon-search"
+            }
+        }
+    ]
+}

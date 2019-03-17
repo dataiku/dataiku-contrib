@@ -1,0 +1,45 @@
+{
+    "meta" : {
+        "label" : "Dataproc cluster (attach to existing cluster)",
+        "description" : "Creates a DSS cluster to attach to an existing DATAPROC cluster",
+        "icon" : "icon-puzzle-piece"
+    },
+
+    "params": [
+        {
+            "name" : "gcloudProjectId",
+            "label" : "GCP Project ID",
+            "type" : "STRING", 
+            "mandatory" : true
+        },
+        {
+            "name" : "gcloudClusterId",
+            "label" : "GCloud cluster Id", 
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name" : "gcloudRegionId",
+            "label" : "GCloud region",
+            "type" : "STRING",
+            "mandatory" : true
+        },
+        {
+            "name" : "gcloudZoneId",
+            "label" : "GCloud network Zone",
+            "type" : "STRING",
+            "mandatory" : true
+        }
+    ],
+    
+    "actions" : [
+        {
+            "id" : "fetch-nodes-keys",
+            "meta" : {
+                "label" : "Fetch node description keys",
+                "description" : "Fetches node description keys",
+                "icon" : "icon-search"
+            }
+        }
+    ]
+}

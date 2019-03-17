@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "label": "Get Dataproc cluster info",
+        "description": "Gets sizing information about the Dataproc cluster",
+        "icon": "icon-cloud"
+    },
+
+    "impersonate": false,
+
+    "permissions": [],
+
+    "resultType": "HTML",
+
+    "macroRoles": [
+        {"type":"CLUSTER", "targetParamsKey": "dss_cluster_id", "limitToSamePlugin": true }
+    ],
+
+    "params": [
+        {
+            "name": "dss_cluster_id",
+            "label": "DSS Cluster id (do not change)",
+            "type": "CLUSTER",
+            "description": "Identifier of the current DSS cluster",
+            "mandatory": true
+        }
+    ]
+}
