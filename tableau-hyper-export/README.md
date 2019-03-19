@@ -1,4 +1,4 @@
-Current Version: 0.0.1
+Current Version: 0.0.2
 Compatible with DSS version: 5.0.2
 
 **For earlier versions of DSS please refer to the manual installation procedure below**

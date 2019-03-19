@@ -35,6 +35,13 @@
             "mandatory": true
         },
         {
+            "name": "ssl_cert_path",
+            "label": "SSL certificate",
+            "type": "STRING",
+            "description": "(optional) Full path to your tableau SSL certificate",
+            "mandatory": false
+        },
+        {
             "label":"Destination",
             "type": "SEPARATOR"
         },
