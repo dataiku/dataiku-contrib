@@ -13,7 +13,7 @@ class MyCluster(Cluster):
         self.config = config
         self.plugin_config = plugin_config
         self.client = None
-        self.cluster_id = cluster_id.replace("_","-")
+        self.cluster_id = config.get("gcloudClusterId") or cluster_id
         return
 
     def __init_client__(self):
@@ -22,6 +22,7 @@ class MyCluster(Cluster):
             self.client = DataProcClient(self.config["gcloudProjectId"],asumeDefaultCredentials=True)
             self.client.region = self.config.get("gcloudRegionId")
             self.client.zone = self.config.get("gcloudZoneId")
+
         return
         
     def start(self):
