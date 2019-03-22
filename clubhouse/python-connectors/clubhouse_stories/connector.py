@@ -28,7 +28,7 @@ class StoriesConnector(Connector):
     def __init__(self, config, plugin_config):
         Connector.__init__(self, config, plugin_config)  # pass the parameters to the base class
         self.endpoint = "https://api.clubhouse.io/api/beta/"
-        self.key = "5bde183c-63d3-43e8-8be0-772ee2dc6cf3" #plugin_config["api_token"]
+        self.key = plugin_config["api_token"]
 
     def list_projects(self):
         logging.info("Clubhouse: fetching projects")
