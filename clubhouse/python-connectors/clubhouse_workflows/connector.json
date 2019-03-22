@@ -2,7 +2,7 @@
     "meta" : {
         "label" : "Clubhouse Workflows",
         "description" : "A simple non-partioned connector for clubhouse.io workflows",
-        "icon" : "icon-road"
+        "icon" : "icon-flag-alt"
     },
     "readable" : true,
     "writable" : false,

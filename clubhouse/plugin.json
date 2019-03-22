@@ -1,6 +1,6 @@
 {
     "id" : "clubhouse",
-    "version" : "0.0.1",
+    "version" : "1.0.0",
     "meta" : {
         "label" : "Clubhouse",
         "description" : "Connector to read data from Clubhouse.io",

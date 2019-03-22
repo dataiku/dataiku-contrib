@@ -2,7 +2,7 @@
     "meta" : {
         "label" : "Clubhouse Epics",
         "description" : "A simple non-partioned connector for clubhouse.io epics",
-        "icon" : "icon-paperclip"
+        "icon" : "icon-flag-alt"
     },
     "readable" : true,
     "writable" : false,

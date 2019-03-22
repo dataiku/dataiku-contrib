@@ -5,21 +5,18 @@ import logging
 
 import requests
 
-class WorkflowsConnector(Connector):
+class MilestonesConnector(Connector):
 
     def __init__(self, config, plugin_config):
         Connector.__init__(self, config, plugin_config)  # pass the parameters to the base class
-        self.endpoint = "https://api.clubhouse.io/api/beta/"
+        self.endpoint = "https://api.clubhouse.io/api/beta"
         self.key = "5bde183c-63d3-43e8-8be0-772ee2dc6cf3" #plugin_config["api_token"]
 
-    def list_workflows(self):
-        logging.info("Clubhouse: fetching workflows")
-        return self.execute_query("workflows")
-
-    def execute_query(self, query):
+    def list_milestones(self):
+        logging.info("Clubhouse: fetching epics")
         headers = {"Content-Type": "application/json"}
 
-        r = requests.get(self.endpoint + query + "?token=" + self.key, headers=headers)
+        r = requests.get(self.endpoint + "/milestones?token=" + self.key, headers=headers)
         r.raise_for_status()
         try:
             return json.loads(r.content)
@@ -35,18 +32,13 @@ class WorkflowsConnector(Connector):
                             partition_id=None, records_limit = -1):
         query_date = datetime.datetime.now()
 
+        rows = self.list_milestones()
         nb = 0
-        workflows = self.list_workflows()
-        for workflow in workflows:
-            for state in workflow[u"states"]:
-                if 0 <= records_limit <= nb:
-                    logging.info("Reached records_limit (%i), stopping." % records_limit)
-                    return
+        for row in rows:
+            if 0 <= records_limit <= nb:
+                logging.info("Reached records_limit (%i), stopping." % records_limit)
+                return
 
-                row = workflow.copy()
-                row.update(state)
-                row[u"query_date"] = query_date
-                row[u"workflow_id"] = workflow["id"]
-                del row[u"states"]
-                yield row
-                nb += 1
+            row[u"query_date"] = query_date
+            yield row
+            nb += 1
