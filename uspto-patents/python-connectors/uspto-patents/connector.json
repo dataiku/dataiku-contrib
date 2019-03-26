@@ -1,37 +1,37 @@
 {
-	"meta" : {
-		"label" : "USPTO Patents"
-	},
+    "meta" : {
+        "label" : "USPTO Patents"
+    },
 
-	// Can this connector read data ?
-	"readable" : true,
-	// Can this connector write data ?
-	"writable" : false,
+    // Can this connector read data ?
+    "readable" : true,
+    // Can this connector write data ?
+    "writable" : false,
 
 
 
-  	"params": [
-    	{
-    		"name": "test_mode",
+    "params": [
+        {
+            "name": "test_mode",
             "label" :"Test mode, forces strict limit to 1000 rows",
-    		"type": "BOOLEAN"
-    	},
-    	{
-    		"name": "all_years",
+            "type": "BOOLEAN"
+        },
+        {
+            "name": "all_years",
             "label" : "Fetch all years at once",
             "type" : "BOOLEAN",
             "defaultValue" : true,
             "description": "If false, dataset is partitioned by year"
-    	},
+        },
         {
             "name": "cache_folder",
             "label" : "Cache folder to store files between runs",
             "defaultValue" : "${dip.home}/tmp/uspto-connector",
             "type": "STRING"
         }
-	],
+    ],
 
-	"strictSchema" : true,
+    "strictSchema" : true,
 
-	"partitioningMode" : "CODE_DEFINED_LISTABLE"
+    "partitioningMode" : "CODE_DEFINED_LISTABLE"
 }
