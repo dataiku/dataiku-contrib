@@ -1,19 +1,13 @@
 {
-    "id" : "dataproc-clusters",
-    "version" : "1.0.0",
-
-
-    "meta" : {
+    "id": "dataproc-clusters",
+    "version": "1.0.0",
+    "meta": {
         "label" : "Dataproc clusters",
-
-        "description" : "Dynamically create Dataproc clusters or attach to existing ones.",
-        "author" : "Dataiku (Joel Belafa)",
-
-        "icon" : "icon-puzzle-piece",
-
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
-
-        "tags" : ["clusters", "cloud", "GCP","Google","Dataproc"]
+        "description": "Dynamically create Dataproc clusters or attach to existing ones",
+        "author": "Dataiku (Joel Belafa)",
+        "icon": "icon-cloud",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/dataproc-clusters.html",
+        "tags": ["Clusters", "cloud", "Google"]
     }
 }
