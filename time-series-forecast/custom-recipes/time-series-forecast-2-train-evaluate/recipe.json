@@ -1,7 +1,7 @@
 {
   "meta": {
     "label": "2. Train models and evaluate errors on historical data",
-    "description": "Train forecasting models and evaluate them on historical data using temporal split or cross-validation",
+    "description": "Train forecast models and evaluate them on historical data using temporal split or cross-validation",
     "icon": "icon-calendar"
   },
   "kind": "R",
@@ -53,11 +53,19 @@
     },
     {
       "name": "SERIES_COLUMN",
-      "label": "Target series column",
-      "description": "Must be of NUMERIC type",
+      "label": "Target column",
+      "description": "Series to forecast - Must be of NUMERIC type",
       "type": "COLUMN",
       "columnRole": "INPUT_DATASET_NAME",
       "mandatory": true
+    },
+    {
+      "name": "EXT_SERIES_COLUMNS",
+      "label": "Feature columns",
+      "description": "Optional external regressors - Must be of NUMERIC type",
+      "type": "COLUMNS",
+      "columnRole": "INPUT_DATASET_NAME",
+      "mandatory": false
     },
     {
       "name": "GRANULARITY",
@@ -265,6 +273,35 @@
       "visibilityCondition": "model.AUTOML=='expert'"
     },
     {
+      "name": "ARIMA_MODEL_ACTIVATED",
+      "label": "- ARIMA",
+      "description": "Based on the auto.arima implementation in R \"forecast\" package.\nWARNING: slow for long time series (1000+ records)",
+      "type": "BOOLEAN",
+      "defaultValue": false,
+      "mandatory": true
+    },
+    {
+      "name": "ARIMA_MODEL_STEPWISE",
+      "label": "↳ stepwise",
+      "description": "Use stepwise procedure to speed up the search for model parameters",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "mandatory": false,
+      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
+    },
+    {
+      "name": "ARIMA_MODEL_KWARGS",
+      "type": "MAP",
+      "label": "↳  additional parameters",
+      "description": "Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
+      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
+      "mandatory": false
+    },
+    {
+      "type": "SEPARATOR",
+      "visibilityCondition": "model.AUTOML=='expert'"
+    },
+    {
       "name": "SEASONALTREND_MODEL_ACTIVATED",
       "label": "- Seasonal Trend",
       "description": "Based on the stlf implementation in R \"forecast\" package. WARNING: may not converge for non-seasonal data.",
@@ -383,35 +420,6 @@
       "visibilityCondition": "model.AUTOML=='expert'"
     },
     {
-      "name": "ARIMA_MODEL_ACTIVATED",
-      "label": "- ARIMA",
-      "description": "Based on the auto.arima implementation in R \"forecast\" package.\nWARNING: slow for long time series (1000+ records)",
-      "type": "BOOLEAN",
-      "defaultValue": false,
-      "mandatory": true
-    },
-    {
-      "name": "ARIMA_MODEL_STEPWISE",
-      "label": "↳ stepwise",
-      "description": "Use stepwise procedure to speed up the search for model parameters",
-      "type": "BOOLEAN",
-      "defaultValue": true,
-      "mandatory": false,
-      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED"
-    },
-    {
-      "name": "ARIMA_MODEL_KWARGS",
-      "type": "MAP",
-      "label": "↳  additional parameters",
-      "description": "Optional additional parameters cf. www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima",
-      "visibilityCondition": "model.AUTOML=='expert' && model.ARIMA_MODEL_ACTIVATED",
-      "mandatory": false
-    },
-    {
-      "type": "SEPARATOR",
-      "visibilityCondition": "model.AUTOML=='expert'"
-    },
-    {
       "name": "STATESPACE_MODEL_ACTIVATED",
       "label": "- State Space",
       "description": "Based on the tbats implementation in R \"forecast\" package.\nWARNING: slow for long time series (1000+ records)",
@@ -437,31 +445,31 @@
       "label": "Strategy",
       "type": "SELECT",
       "mandatory": true,
-      "description": "Cross-validation is based on R \"Prophet\" implementation. Robust but slower.",
+      "description": "Time-based split or cross-validation based on R \"Prophet\" method (slower)",
       "selectChoices": [
         {
           "value": "split",
-          "label": "Train/Test split"
+          "label": "Train/Test Split"
         },
         {
           "value": "crossval",
-          "label": "Time series cross-validation"
+          "label": "Time Series Cross-Validation"
         }
       ],
       "defaultValue": "split"
     },
     {
       "name": "EVAL_HORIZON",
-      "label": "- Horizon",
-      "description": "Number of observations in the test split(s)",
+      "label": "Horizon",
+      "description": "Number of time steps to evaluate the forecast error",
       "type": "INT",
       "defaultValue": 10,
       "mandatory": true
     },
     {
       "name": "CROSSVAL_INITIAL",
-      "label": "- Initial training",
-      "description": "Number of observations in the initial train set. If -1, 10 * Horizon is used.",
+      "label": "Initial training",
+      "description": "Number of time steps in the initial train set. If -1, 10 * Horizon is used.",
       "type": "INT",
       "mandatory": false,
       "defaultValue": -1,
@@ -469,8 +477,8 @@
     },
     {
       "name": "CROSSVAL_PERIOD",
-      "label": "- Cutoff period",
-      "description": "How often to create cross-validation splits. If -1, 0.5 * Horizon is used.",
+      "label": "Cutoff period",
+      "description": "Number of time steps between each split. If -1, 0.5 * Horizon is used.",
       "type": "INT",
       "mandatory": false,
       "defaultValue": -1,

@@ -6,12 +6,12 @@ ComputeErrorMetricsSplit <- function(forecastDfList, historyDf) {
   # Utility function used inside the EvaluateModelsSplit function.
   #
   # Args:
-  #   forecastDfList: named list of forecasts dataframes 
+  #   forecastDfList: named list of forecasts dataframes
   #                   (result of a call to the GetForecasts function).
   #   historyDf: data.frame of historical values.
   #
   # Returns:
-  #   Data.frame with the evaluation of all models' split errors 
+  #   Data.frame with the evaluation of all models' split errors
 
   errorDfList <- list()
   for(modelName in names(forecastDfList)) {
@@ -25,31 +25,35 @@ ComputeErrorMetricsSplit <- function(forecastDfList, historyDf) {
   return(errorDf)
 }
 
-EvaluateModelsSplit <- function(ts, df, modelList, modelParameterList, horizon, granularity) {
-  # Evaluates forecasting models on a time series according to the split strategy.
+EvaluateModelsSplit <- function(ts, df, xreg = NULL, modelList, modelParameterList, horizon, granularity) {
+  # Evaluates forecast models on a time series according to the split strategy.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
-  #   df: input data frame following the Prophet format 
+  #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   horizon: number of periods to evaluate the models.
   #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
   #
   # Returns:
-  #   Data.frame with the evaluation of all models' split errors 
+  #   Data.frame with the evaluation of all models' split errors
 
-  trainTs <- head(ts, length(ts) - horizon)
+  trainRows <- length(ts) - horizon
+  trainTs <- head(ts, trainRows)
   evalTs <- tail(ts, horizon)
-  trainDf <- head(df, nrow(df) - horizon)
+  trainDf <- head(df, trainRows)
   evalDf <- tail(df, horizon)
+  trainXreg <- head(xreg, trainRows) # NULL if xreg is NULL
+  evalXreg <- tail(xreg, horizon) # NULL if xreg is NULL
   evalModelList <- TrainForecastingModels(
-    trainTs, trainDf, modelParameterList,
+    trainTs, trainDf, trainXreg, modelParameterList,
     refit = TRUE, refitModelList = modelList,
     verbose = FALSE
   )
-  evalForecastDfList <- GetForecasts(trainTs, trainDf, 
+  evalForecastDfList <- GetForecasts(trainTs, trainDf, evalXreg,
     evalModelList, modelParameterList, horizon, granularity)
   errorDf <- ComputeErrorMetricsSplit(evalForecastDfList, evalDf)
   return(errorDf)
@@ -64,7 +68,7 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
   # until it reaches the initial training set size.
   #
   # Args:
-  #   df: input data frame following the Prophet format 
+  #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
   #   horizon: number of periods to evaluate the models.
   #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
@@ -98,8 +102,8 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
     cutoffIndex <- length(dates) - horizon
     cutoff <- dates[cutoffIndex]
     result <- c(cutoff)
-    while(result[length(result)] >= dates[initial+1]) { 
-      cutoffIndex <- cutoffIndex - period 
+    while(result[length(result)] >= dates[initial+1]) {
+      cutoffIndex <- cutoffIndex - period
       cutoff <- dates[cutoffIndex] # last cutoff point
       if (cutoffIndex <= 1) {
         result <- c(result, NA)
@@ -112,7 +116,7 @@ GenerateCutoffDatesCrossval <- function(df, horizon, granularity, initial, perio
     }
   }
   result <- utils::head(result, -1) # the last element of the while loop needs to be removed
-  PrintPlugin(paste("Making", length(result), "forecasts with cutoffs between", 
+  PrintPlugin(paste("Making", length(result), "forecasts with cutoffs between",
     result[length(result)], "and", result[1]))
   cutoffs <- rev(result) # restores the natural order of time since the while loop is backwards
   return(cutoffs)
@@ -127,10 +131,10 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
   #                   the prophet::cross_validation output format.
   #   rollingWindow: proportion of data to use in each rolling window for
   #                  computing the metrics. Should be in [0, 1].
-  #                  1.0 (default) will output a single value for the entire horizon. 
+  #                  1.0 (default) will output a single value for the entire horizon.
   #
   # Returns:
-  #   Data.frame with the evaluation of all models' cross-validation errors 
+  #   Data.frame with the evaluation of all models' cross-validation errors
 
   errorDfList <- list()
   for(modelName in names(crossvalDfList)) {
@@ -159,14 +163,15 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
   return(errorDf)
 }
 
-EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
+EvaluateModelsCrossval <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   horizon, granularity, initial, period) {
-  # Evaluates forecasting models on a time series according to the cross-validation strategy.
+  # Evaluates forecast models on a time series according to the cross-validation strategy.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
-  #   df: input data frame following the Prophet format 
+  #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   horizon: number of periods to evaluate the models.
@@ -175,7 +180,7 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
   #   period: number of periods between cutoff dates.
   #
   # Returns:
-  #   Data.frame with the evaluation of all models' cross-validation errors 
+  #   Data.frame with the evaluation of all models' cross-validation errors
 
   cutoffs <- GenerateCutoffDatesCrossval(df, horizon, granularity, initial, period)
   crossvalDfList <- list()
@@ -185,23 +190,30 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
   # compute forecasts for all cutoffs
   for(i in 1:length(cutoffs)) {
     cutoff <- cutoffs[i]
-    history.df <- dplyr::filter(df, ds <= cutoff)
-    if (nrow(history.df) < 2) {
+    trainDf <- dplyr::filter(df, ds <= cutoff)
+    trainRows <- nrow(trainDf)
+    if (trainRows < 2) {
       PrintPlugin("Less than two datapoints before cutoff. Please increase initial training.", stop = TRUE)
     }
-    history.ts <- head(ts, nrow(history.df))
-    PrintPlugin(paste0("Crossval split ", i ,"/", length(cutoffs), " at cutoff ", cutoffs[i], 
-              " with ", length(history.ts), " training rows"))
-    df.predict <- head(dplyr::filter(df, ds > cutoff), horizon)
+    trainTs <- head(ts, trainRows)
+    trainXreg <- head(xreg, trainRows) # NULL if xreg is NULL
+    evalDf <- head(dplyr::filter(df, ds > cutoff), horizon)
+    evalXreg <- NULL
+    if (!is.null(xreg)) {
+      evalXreg <- as.matrix(xreg[(trainRows + 1):(trainRows + horizon),])
+      colnames(evalXreg) <- colnames(xreg)
+    }
+    PrintPlugin(paste0("Crossval split ", i ,"/", length(cutoffs), " at cutoff ", cutoffs[i],
+      " with ", length(trainTs), " training rows"))
     evalModelList <- TrainForecastingModels(
-      history.ts, history.df, modelParameterList,
+      trainTs, trainDf, trainXreg, modelParameterList,
       refit = TRUE, refitModelList = modelList,
       verbose = FALSE
     )
-    forecastDfList <- GetForecasts(history.ts, history.df,
+    forecastDfList <- GetForecasts(trainTs, trainDf, evalXreg,
       evalModelList, modelParameterList, horizon, granularity)
     for(modelName in names(forecastDfList)) {
-      tmpDf <- dplyr::inner_join(df.predict, forecastDfList[[modelName]], by = "ds") %>%
+      tmpDf <- dplyr::inner_join(evalDf, forecastDfList[[modelName]], by = "ds") %>%
         select(ds, y, yhat, yhat_lower, yhat_upper)
       tmpDf$cutoff <- cutoff
       crossvalDfList[[modelName]] <- rbind(crossvalDfList[[modelName]] , tmpDf)
@@ -211,15 +223,16 @@ EvaluateModelsCrossval <- function(ts, df, modelList, modelParameterList,
   return(errorDf)
 }
 
-EvaluateModels <- function(ts, df, modelList, modelParameterList, evalStrategy, 
+EvaluateModels <- function(ts, df, xreg = NULL, modelList, modelParameterList, evalStrategy,
   horizon, granularity, initial = NULL, period = NULL) {
-  # Evaluates multiple forecasting models on a time series according to
+  # Evaluates multiple forecast models on a time series according to
   # the specified evaluation strategy.
   #
   # Args:
   #   ts: input time series of R ts or msts class.
-  #   df: input data frame following the Prophet format 
+  #   df: input data frame following the Prophet format
   #       ("ds" column for time, "y" for series).
+  #   xreg: matrix of external regressors (optional)
   #   modelList: named list of models (output of a call to the TrainForecastingModels function).
   #   modelParameterList: named list of model parameters set in the "Train and Evaluate" recipe UI.
   #   evalStrategy: character string describing which evaluation strategy to use
@@ -233,13 +246,13 @@ EvaluateModels <- function(ts, df, modelList, modelParameterList, evalStrategy,
   #   Data.frame with the evaluation of all models' errors
 
   if (evalStrategy == 'split') {
-    errorDf <- EvaluateModelsSplit(ts, df, modelList, modelParameterList, 
+    errorDf <- EvaluateModelsSplit(ts, df, xreg, modelList, modelParameterList,
       horizon, granularity)
   } else if (evalStrategy == 'crossval') {
-    errorDf <- EvaluateModelsCrossval(ts, df, modelList, modelParameterList,
-      horizon, granularity, initial, period) 
+    errorDf <- EvaluateModelsCrossval(ts, df, xreg, modelList, modelParameterList,
+      horizon, granularity, initial, period)
   }
-  errorDf <- errorDf %>% 
+  errorDf <- errorDf %>%
     select_(.dots = c("model", "ME", "RMSE", "MAE", "MPE", "MAPE")) %>%
     rename(mean_error = ME, root_mean_square_error = RMSE, mean_absolute_error = MAE,
       mean_percentage_error = MPE, mean_absolute_percentage_error = MAPE) %>%
