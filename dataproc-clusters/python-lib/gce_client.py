@@ -86,7 +86,7 @@ class DataProcClient(AbstractGCloudClient):
             self.__lookup__(name)
             return True
         except Exception as e:
-            logger.debug(e.message)
+            logger.debug(str(e))
             pass
         return False
 
@@ -195,7 +195,7 @@ class DataProcClient(AbstractGCloudClient):
         while timeout > 0:
             clusterDict = self.__lookup__(clusterName)
             if status == str(clusterDict.get("status").get("state")):
-                print " cluster {}  is {} ".format(clusterName , status)
+                print("Cluster {}  is {} ".format(clusterName , status))
                 return
             time.sleep(60)
             timeout -=1
@@ -241,8 +241,8 @@ class DataProcClient(AbstractGCloudClient):
             }
           }
         }
-
-        if numberOfSecondaryInstance > 0 : 
+        # '>= 0' allows to scale down preemptible workers
+        if numberOfSecondaryInstance >= 0 : 
             # implement update for spot instances 
             # update mask  config.secondary_worker_config.num_instances
             # update request body
@@ -350,6 +350,19 @@ class GcloudComputeClient(AbstractGCloudClient):
         for iface in instance.get("networkInterfaces"):
             return str(iface.get("networkIP"))
         return None
+
+    def getInstanceType(self, name, instance=None, zone=None, region=None):
+        # For using info directly from "native" GCP client to fetch machine type for macros
+        instance = instance or self.get_instance(name, zone=zone, region=region)
+        instance_type = instance.get("machineType").split("/")[-1]
+        return str(instance_type)
+
+    def getInstancePreemptibility(self, name, instance=None, zone=None, region=None):
+        # For using info directly from "native" GCP client to fetch machine type for macros
+        instance = instance or self.get_instance(name, zone=zone, region=region)
+        is_preemptible_instance = ("YES" if instance["scheduling"]["preemptible"] else "NO")
+        return is_preemptible_instance
+        
 
     def isIntanceMatchesLabels(self,instance,labels):
         return self.isTaggableMatchesLabels(instance,labels)

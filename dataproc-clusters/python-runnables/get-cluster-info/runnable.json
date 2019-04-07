@@ -9,7 +9,7 @@
 
     "permissions": [],
 
-    "resultType": "HTML",
+    "resultType": "RESULT_TABLE",
 
     "macroRoles": [
         {"type":"CLUSTER", "targetParamsKey": "dss_cluster_id", "limitToSamePlugin": true }
