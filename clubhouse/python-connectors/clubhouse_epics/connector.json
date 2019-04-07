@@ -1,11 +1,11 @@
 {
-    "meta" : {
-        "label" : "Clubhouse Epics",
-        "description" : "A simple non-partioned connector for clubhouse.io epics",
-        "icon" : "icon-flag-alt"
+    "meta": {
+        "label": "Clubhouse Epics",
+        "description": "List epics from Clubhouse.io",
+        "icon": "icon-flag-alt"
     },
-    "readable" : true,
-    "writable" : false,
+    "readable": true,
+    "writable": false,
     "params": [],
     "partitioningMode" : "NOT_PARTITIONABLE"
 }
