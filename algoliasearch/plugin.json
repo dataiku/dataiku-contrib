@@ -1,13 +1,13 @@
 {
-    "id" : "algoliasearch",
-    "version" : "0.0.5",
-    "meta" : {
+    "id": "algoliasearch",
+    "version": "0.0.6",
+    "meta": {
         "label": "Algolia Search Connector",
-        "description" : "A read-and-write connector for the Algolia search API",
-        "author" : "Dataiku (Clément Stenac)",
-        "icon" : "icon-search",
-        "tags" : ["SaaS", "API", "Connector"],
-        "licenseInfo" : "Apache Software License version 2",
-        "url" : "https://www.dataiku.com/community/plugins/info/algoliasearch.html"
+        "description": "A read-and-write connector for the Algolia search API",
+        "author": "Dataiku (Clément Stenac)",
+        "icon": "icon-search",
+        "tags": ["SaaS", "Connector"],
+        "licenseInfo": "Apache Software License version 2",
+        "url": "https://www.dataiku.com/dss/plugins/info/algoliasearch.html"
     }
 }

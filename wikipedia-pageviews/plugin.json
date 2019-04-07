@@ -1,20 +1,13 @@
 {
-	"id" : "wikipedia-pageviews",
-
-	"version" : "0.0.2",
-
-	"meta" : {
-		"label" : "Wikipedia Page Views",
-
-		"description" : "This plugin provides datasets and recipes to interact with the Wikipedia Page Views API. You can retrieve the number of page views per day for the top 1000 articles of each Wikipedia, or follow the view count of multiple Wikipedia pages over time",
-		"author" : "Dataiku (Clément Stenac)",
-
-		"icon" : "icon-puzzle-piece",
-
-		"licenseInfo" : "Apache Software License",
-
-		"url" : "https://www.dataiku.com/community/plugins/info/wikipedia-pageviews.html",
-
-		"tags" : ["Open Data", "Analytics"]
+	"id": "wikipedia-pageviews",
+	"version": "0.0.2",
+	"meta": {
+		"label": "Wikipedia page views",
+		"description": "Retrieve the number of page views per day for the top 1000 articles of each Wikipedia, follow the view count of multiple Wikipedia pages over time, etc",
+		"author": "Dataiku (Clément Stenac)",
+		"icon": "icon-puzzle-piece",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/wikipedia-pageviews.html",
+		"tags": ["Open Data", "Connector"]
 	}
 }

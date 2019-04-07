@@ -1,13 +1,13 @@
 {
-	"id" : "googlesheets",
-	"version" : "1.0.0",
-	"meta" : {
-		"label" : "Google Sheets connector",
-		"description" : "Connector to spreadsheets hosted by Google Sheets",
-		"author" : "Dataiku (Jérémy Grèze)",
-		"icon" : "icon-file-text",
-		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/info/googlesheets.html",
-		"tags" : ["API", "Productivity"]
+	"id": "googlesheets",
+	"version": "1.0.1",
+	"meta": {
+		"label": "Google Sheets",
+		"description": "Fetch data from Google Sheets",
+		"author": "Dataiku (Jérémy Grèze)",
+		"icon": "icon-file-text",
+		"licenseInfo": "Apache Software License version 2",
+		"url": "https://www.dataiku.com/dss/plugins/info/googlesheets.html",
+		"tags": ["Google", "Productivity", "SaaS", "Connector"]
 	}
 }

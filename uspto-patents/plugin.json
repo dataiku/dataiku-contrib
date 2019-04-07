@@ -1,30 +1,13 @@
-// This file is the descriptor for the DSS Plugin USPTOPatents
 {
-	// The identifier of the plugin.
-	// This must be globally unique, and only contain A-Za-z0-9_-
-	"id" : "uspto-patents",
-
-	// Version. It is highly recommended to use Semantic Versioning
-	"version" : "0.0.1",
-
-	// Meta data for display purposes
-	"meta" : {
-		// Name of this plugin that will appear in the interface.
-		"label" : "USPTO (patents) Data connector",
-
-		"description" : "Provides a connector for USPTO patents XML Bulk files",
-
-		"author" : "Dataiku (Florian Douetteau)",
-
-		// The icon of a plugin must be one of the FontAwesome 3.1 icons
-		"icon" : "icon-legal",
-
-		"licenseInfo" : "Apache Software License",
-
-		// URL where the user can learn more about the plugin
-		"url" : "https://www.dataiku.com/community/plugins/info/uspto-patents.html",
-
-		// List of tags for filtering the list of plugins
-		"tags" : ["Public Data"]
+	"id": "uspto-patents",
+	"version": "0.0.2",
+	"meta": {
+		"label": "USPTO (patents)",
+		"description": "Connect to USPTO patents XML bulk files",
+		"author": "Dataiku (Florian Douetteau)",
+		"icon": "icon-legal",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/uspto-patents.html",
+		"tags": ["Open Data", "Enrichment", "Connector"]
 	}
 }

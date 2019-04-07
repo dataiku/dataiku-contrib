@@ -1,17 +1,13 @@
 {
-    "id" : "named-entity-recognition",
-    "version" : "1.0.6",
-    "meta" : {
-        "label" : "Named Entity Recognition",
-
-        "description" : "This plugin provides a tool to perform Named Entity Recognition on english texts.",
-        "author" : "Dataiku (Hicham EL BOUKKOURI)",
-
-        "icon" : "icon-search",
-        "licenseInfo" : "Apache Software License",
-
-        "url" : "https://dataiku.com/community/plugins/info/named-entity-recognition.html",
-
-        "tags" : ["NLP", "Named Entity Recognition"]
+    "id": "named-entity-recognition",
+    "version": "1.0.6",
+    "meta": {
+        "label": "Named Entity Recognition",
+        "description": "Perform named entity recognition on English texts (i.e. identify people names, dates, places, etc)",
+        "author": "Dataiku (Hicham El Boukkouri)",
+        "icon": "icon-tag",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/named-entity-recognition.html",
+        "tags": ["NLP"]
     }
 }

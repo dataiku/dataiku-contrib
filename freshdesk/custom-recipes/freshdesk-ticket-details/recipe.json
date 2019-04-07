@@ -3,7 +3,7 @@
         "label" : "Freshdesk tickets details",
         "description" : "Fetches details for each ticket. Input dataset must contain a column display_id.",
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
-        "tags" : ["API", "Productivity", "SaaS"]
+        "tags" : []
     },
     "kind" : "PYTHON",
     "inputRoles" : [

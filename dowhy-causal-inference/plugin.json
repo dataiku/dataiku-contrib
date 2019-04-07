@@ -1,0 +1,13 @@
+{
+    "id": "dowhy-causal-inference",
+    "version": "0.0.2",
+    "meta": {
+        "label": "Causal Inference (dowhy)",
+        "description": "Design causal models and estimate causal effects",
+        "author": "Dataiku (Jean-Yves Gerardy)",
+        "icon": "icon-exchange",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/dowhy-causal-inference.html",
+        "tags": ["Causality", "Machine Learning"]
+    }
+}

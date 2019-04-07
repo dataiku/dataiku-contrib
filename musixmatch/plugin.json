@@ -1,20 +1,13 @@
 {
-    "id" : "musixmatch",
-
-    "version" : "0.0.1",
-
-    "meta" : {
-        "label" : "Musixmatch",
-
-        "description" : "Given a list of Musixmatch Artists IDs, retrieves every single track for each artist, with additional details for every track",
-        "author" : "Luca Grazioli (ICTeam)",
-
-        "icon" : "icon-music",
-
-        "licenseInfo" : "Apache Software License",
-
-        "url" : "http://www.icteam.it",
-
-        "tags" : ["Enrichment", "Music"]
+    "id": "musixmatch",
+    "version": "0.0.2",
+    "meta": {
+        "label": "Musixmatch",
+        "description": "Given a list of Musixmatch Artists IDs, retrieves every single track for each artist, with additional details for every track",
+        "author": "Luca Grazioli (ICTeam)",
+        "icon": "icon-music",
+        "licenseInfo": "Apache Software License",
+        "url": "http://www.icteam.it",
+        "tags": ["Enrichment", "Music", "Connector"]
     }
 }

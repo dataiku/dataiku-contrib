@@ -1,13 +1,13 @@
 {
-	"id" : "salesforce",
-	"version" : "1.1.0",
-	"meta" : {
-		"label" : "Salesforce",
-		"description" : "Connectors to read data from Salesforce, a SaaS CRM.",
-		"author" : "Dataiku (Jérémy Grèze)",
-		"icon" : "icon-cloud",
-		"licenseInfo" : "Apache Software License version 2",
-		"url" : "https://www.dataiku.com/community/plugins/info/salesforce.html",
-		"tags" : ["CRM", "SaaS"]
+	"id": "salesforce",
+	"version": "1.1.1",
+	"meta": {
+		"label": "Salesforce",
+		"description": "Fetch data from Salesforce",
+		"author": "Dataiku (Jérémy Grèze)",
+		"icon": "icon-cloud",
+		"licenseInfo": "Apache Software License version 2",
+		"url": "https://www.dataiku.com/dss/plugins/info/salesforce.html",
+		"tags": ["CRM", "SaaS", "Connector"]
 	}
 }

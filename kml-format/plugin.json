@@ -1,15 +1,13 @@
 {
-	"id" : "kml-format",
-
-	"version" : "0.0.1",
-
-	"meta" : {
-		"label" : "KML Format extractor",
-		"description" : "Reads Google Earth KML files",
-		"author" : "Dataiku (Clément Stenac)",
-		"icon" : "icon-globe",
-		"licenseInfo" : "Apache Software License",
-		"url" : "https://www.dataiku.com",
-		"tags" : ["Geospatial"]
+	"id": "kml-format",
+	"version": "0.0.2",
+	"meta": {
+		"label": "KML Format extractor",
+		"description": "Read Google Earth KML files",
+		"author": "Dataiku (Clément Stenac)",
+		"icon": "icon-globe",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/kml-format.html",
+		"tags": ["Geospatial", "Format"]
 	}
 }

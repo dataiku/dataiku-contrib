@@ -172,6 +172,6 @@ Make sure that:
 ## Resources
 
 * [Force.com REST API documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm)
-* [Plugin page](https://www.dataiku.com/community/plugins/info/salesforce.html) on Dataiku's website
+* [Plugin page](https://www.dataiku.com/dss/plugins/info/salesforce.html) on Dataiku's website
 * Our Q&A: [answers.dataiku.com](https://answers.dataiku.com)
 * [Github issues](https://github.com/dataiku/dataiku-contrib/issues) of the repo

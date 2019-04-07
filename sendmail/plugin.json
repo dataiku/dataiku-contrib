@@ -1,15 +1,13 @@
 {
-	"id" : "sendmail",
-
-	"version" : "0.1.4",
-
-	"meta" : {
-		"label" : "Send emails",
-		"description" : "Sends emails based on a dataset containing a list of contacts, with optional attachments (other datasets)",
-		"author" : "Dataiku",
-		"icon" : "icon-envelope-alt",
-		"licenseInfo" : "Apache Software License",
-		"url" : "https://www.dataiku.com/community/plugins/info/sendmail.html",
-		"tags" : ["Mail"]
+	"id": "sendmail",
+	"version": "0.1.5",
+	"meta": {
+		"label": "Send emails",
+		"description": "Send emails based on a dataset containing a list of contacts, with optional attachments (other datasets)",
+		"author": "Dataiku",
+		"icon": "icon-envelope-alt",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/sendmail.html",
+		"tags": ["Productivity", "Marketing"]
 	}
 }
