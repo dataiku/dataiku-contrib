@@ -1,11 +1,11 @@
 {
-    "meta" : {
-        "label" : "Clubhouse Workflows",
-        "description" : "A simple non-partioned connector for clubhouse.io workflows",
-        "icon" : "icon-flag-alt"
+    "meta": {
+        "label": "Clubhouse Workflows",
+        "description": "List workflows from Clubhouse.io",
+        "icon": "icon-flag-alt"
     },
-    "readable" : true,
-    "writable" : false,
+    "readable": true,
+    "writable": false,
     "params": [],
-    "partitioningMode" : "NOT_PARTITIONABLE"
+    "partitioningMode": "NOT_PARTITIONABLE"
 }
