@@ -1,7 +1,7 @@
 {
     "meta" : {
         "label": "Clubhouse Stories",
-        "description": "A simple non-partioned connector for clubhouse.io stories",
+        "description": "List stories from Clubhouse.io",
         "icon": "icon-flag-alt"
     },
     "readable": true,
