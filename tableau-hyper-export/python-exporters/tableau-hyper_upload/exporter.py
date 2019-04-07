@@ -18,6 +18,15 @@ class CustomExporter(Exporter):
         self.project_name = config.get('project', 'Default')
         self.output_table = config.get('output_table', 'DSS_extract')
         self.site_id = config.get('site_id', '')
+        self.ssl_cert_path = config.get('ssl_cert_path', None)
+        
+        if self.ssl_cert_path:
+            if not os.path.isfile(self.ssl_cert_path):
+                raise ValueError('SSL certificate file %s does not exist' % self.ssl_cert_path)
+            else:
+                #default variables handled by python requests to validate cert (used by underlying tableauserverclient)
+                os.environ['REQUESTS_CA_BUNDLE'] = self.ssl_cert_path
+                os.environ['CURL_CA_BUNDLE'] = self.ssl_cert_path
         
         self.project = None
         self.datasource = None

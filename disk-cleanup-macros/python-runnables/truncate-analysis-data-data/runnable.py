@@ -134,7 +134,7 @@ class MyRunnable(Runnable):
                                     if split_data_filename is None:
                                         continue
                                     split_data_file = osp.join(splits_folder,split_data_filename)
-                                    _, split_data_extension = osp.splitext(split)
+                                    _, split_data_extension = osp.splitext(split_data_filename)
                                     if osp.isfile(split_data_file):
                                         if do_it:
                                             if split_date is None:
@@ -144,7 +144,7 @@ class MyRunnable(Runnable):
                                                 size_before = os.stat(split_data_file).st_size 
                                                 try:
                                                     data_file = pd.read_csv(split_data_file, nrows = lines)
-                                                    data_file.to_csv(split_data_file, index = False, compression="gzip" if split_data_extension == "gz" else None)
+                                                    data_file.to_csv(split_data_file, index = False, compression="gzip" if split_data_extension == ".gz" else None)
                                                 except Exception as e:
                                                     logging.getLogger().error("{}: {}".format(split_data_file,str(e)))
                                                 reclaimed = size_before - os.stat(split_data_file).st_size 

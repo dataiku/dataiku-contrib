@@ -1,6 +1,6 @@
 {
     "id": "time-series-forecast",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "meta": {
         "label": "Forecast",
         "description": "Forecast univariate time series. This plugin covers the full cycle of data cleaning, model training, evaluation and prediction.",

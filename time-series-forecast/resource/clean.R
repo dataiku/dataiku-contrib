@@ -11,15 +11,12 @@ source(file.path(dkuCustomRecipeResource(), "io.R"))
 # This is the character date format used by Dataiku DSS for dates as per the ISO8601 standard.
 # It is needed to parse dates from Dataiku datasets.
 dkuDateFormat = "%Y-%m-%dT%T.000Z"
-
-# Set number of digits to use when printing Sys.time.
-# It is needed to store version name in the model folder at millisecond granularity.
-op <- options(digits.secs = 3)
+alternativeDateFormats = c(dkuDateFormat, "%Y-%m-%dT%T.000000Z", "%Y-%m-%dT%T")
 
 # This fixed mapping is used to convert time series from R data.frame to forecast::msts format.
 # It is needed as forecast::msts format requires seasonality arguments.
 mapGranularitySeasonality <- list(
-  year = c(1),  
+  year = c(1),
   quarter = c(4),
   month = c(12),
   week = c(365.25/7),
@@ -37,16 +34,16 @@ AggregateNa <- function(x, strategy) {
   #
   # Returns:
   #   Sum or average of non-missing values of x (or NA if x has no values).
-  
+
   agg <- case_when(
       strategy == 'mean' ~ ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)),
       strategy == 'sum' ~  ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE))
-  )   
+  )
   return(agg)
 }
 
 TruncateDate <- function(date, granularity) {
-  # Truncates a date to the start of the chosen granularity. 
+  # Truncates a date to the start of the chosen granularity.
   # It guarantees that ResampleDataframeWithTimeSeries function works at yearly/quarterly/monthly granularity.
   # Indeed they have varying lengths contrary to week/day/hour granularity.
   #
@@ -56,7 +53,7 @@ TruncateDate <- function(date, granularity) {
   #
   # Returns:
   #   Truncated date object. For weekly granularity, we consider that weeks start on Monday.
-  
+
   tmpDate <- as.POSIXlt(date)
   outputDate <-  switch(granularity,
     year = as.Date(tmpDate) - tmpDate$yday,
@@ -86,10 +83,10 @@ ConvertDataFrameToTimeSeries <- function(df, timeColumn, seriesColumn, granulari
 
   # Vector of two elements according to the ts object documentation:
   # 1. The year in yyyy format,
-  # 2. The numeric fraction of the period inside the year 
+  # 2. The numeric fraction of the period inside the year
   # e.g. 10/365.25 for the 10th day of the year.
-  startDate <- c() 
-  startDate[1] <- lubridate::year(minDate) 
+  startDate <- c()
+  startDate[1] <- lubridate::year(minDate)
   startDate[2] <- switch(granularity, # ts expects a decimal within the year
     year = 1,
     quarter = lubridate::quarter(minDate),
@@ -111,7 +108,7 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
   # Parses and optionally resamples time series in the data.frame at chosen granularity.
   #
   # Args:
-  #   df: data.frame with one time column in Dataiku parsed date format 
+  #   df: data.frame with one time column in Dataiku parsed date format
   #       and any number of numeric series columns.
   #   timeColumn: name of the time columnn. Must be of dataiku parsed Date format
   #   seriesColumns: name of the numeric columns for the time series values.
@@ -123,9 +120,9 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
   #   data frame with the prepared time series
 
   if (granularity == "hour") {
-    df[[timeColumn]] <- as.POSIXct(df[[timeColumn]], format = dkuDateFormat) 
+    df[[timeColumn]] <- as.POSIXct(df[[timeColumn]], tryFormats = alternativeDateFormats)
   } else {
-    df[[timeColumn]] <- as.Date(df[[timeColumn]], format = dkuDateFormat)
+    df[[timeColumn]] <- as.Date(df[[timeColumn]], tryFormats = alternativeDateFormats)
   }
   # Get continuous range of dates
   minDate <- TruncateDate(min(df[[timeColumn]]), granularity)
@@ -144,14 +141,14 @@ PrepareDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns,
     # that dataframe is not irregularly sampled which would cause models to fail
     if (nrow(dateRange) != nrow(df)) {
       PrintPlugin(paste0("Data is not sampled at ", GRANULARITY, " granularity"), stop = TRUE)
-    } 
+    }
     dfOutput <- df
   }
   return(dfOutput)
 }
 
-CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granularity, 
-  missingValues, missingImputeWith, missingImputeConstant, 
+CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granularity,
+  missingValues, missingImputeWith, missingImputeConstant,
   outliers, outliersImputeWith, outliersImputeConstant) {
   # Cleans multiple time series in a data.frame from missing values and outliers.
   # It can use interpolation techniques from the forecast package,
@@ -164,13 +161,13 @@ CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granular
   #   granularity: character string (one of "year", "quarter", "month", "week", "day", "hour").
   #   missingValues: character string describing how to replace missing values
   #                  (one of "impute", "interpolate" or else no processing is applied).
-  #   missingImputeWith: If missingValues is "impute", character string 
+  #   missingImputeWith: If missingValues is "impute", character string
   #                      describing how to replace missing values
   #                      (one of "median", "average", "constant").
   #   missingImputeConstant: Constant to impute missing values.
   #   outliers: character string describing how to replace detected outliers
   #             (one of "impute", "interpolate" or else no processing is applied).
-  #   outliersImputeWith: If outliers is "impute", character string 
+  #   outliersImputeWith: If outliers is "impute", character string
   #                      describing how to replace outliers
   #                      (one of "median", "average", "constant").
   #   outliersImputeConstant: Constant to impute outliers.
@@ -183,13 +180,13 @@ CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granular
   for(seriesColumn in seriesColumns) {
     ts <- ConvertDataFrameToTimeSeries(df, timeColumn, seriesColumn, granularity)
     if (missingValues == 'interpolate') {
-      ts <- forecast::na.interp(ts) 
+      ts <- forecast::na.interp(ts)
     } else if (missingValues == 'impute') {
       missingImputation <- case_when(
         missingImputeWith == 'median' ~ median(ts, na.rm = TRUE),
         missingImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
         missingImputeWith == 'constant' ~ missingImputeConstant
-      )   
+      )
       ts[which(is.na(ts))] <- missingImputation
     }
     if (outliers == 'interpolate') {
@@ -200,7 +197,7 @@ CleanDataframeWithTimeSeries <- function(df, timeColumn, seriesColumns, granular
         outliersImputeWith == 'median' ~ median(ts, na.rm = TRUE),
         outliersImputeWith == 'average' ~ mean(ts, na.rm = TRUE),
         outliersImputeWith == 'constant' ~ outliersImputeConstant
-      )   
+      )
       ts[outliersDetected$index] <- outliersImputation
     }
     dfOutput[[seriesColumn]] <- as.numeric(ts)

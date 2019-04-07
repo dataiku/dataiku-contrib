@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
 from tableausdk import *
+from tableausdk.HyperExtract import *
+import tableauserverclient as TSC
 
-TABLEAU_FORMAT = ''
+TABLEAU_FORMAT = 'hyper'
 
-try:
-    import tableausdk.Extract
-    TABLEAU_FORMAT = 'tde'
-except ImportError:
-    from tableausdk.HyperExtract import *
-    TABLEAU_FORMAT = 'hyper'
-
-if TABLEAU_FORMAT == 'tde':
-    from tableausdk.Server import *
-else:
-    import tableauserverclient as TSC
 
 # Because of a bug in Tableau, we need to load Tableau before pandas.
 # See http://community.tableau.com/thread/156790 for more info

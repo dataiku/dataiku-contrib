@@ -2,6 +2,10 @@ library(dataiku)
 library(jsonlite)
 library(R.utils)
 
+# Set number of digits to use when printing Sys.time.
+# It is needed to store version name in the model folder at millisecond granularity.
+op <- options(digits.secs = 3)
+
 PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
   # Makes it easier to identify custom logging messages from the plugin.
   if (verbose) {
@@ -12,7 +16,7 @@ PrintPlugin <- function(message, verbose = TRUE, stop = FALSE) {
         "###########################################################"
       )
       cat(msg)
-      stop()
+      stop(message)
     } else {
       msg <- paste0("[PLUGIN LOG] ", message)
       message(msg)
@@ -27,7 +31,7 @@ InferType <- function(x) {
   #   x: atomic character element.
   #
   # Returns:
-  #   Object of inferred type with the same name as the input 
+  #   Object of inferred type with the same name as the input
 
   if (!is.na(suppressWarnings(as.numeric(x)))) {
     xInferred <- as.numeric(x)
@@ -62,7 +66,7 @@ CleanPluginParam <- function(param) {
     }
   } else if (length(param) == 0) { # if MAP parameter is empty
     output <- list()
-  } else { 
+  } else {
     output <- InferType(param)
   }
   return(output)
@@ -84,7 +88,7 @@ GetPartitioningDimension <- function() {
       if (substr(v, 1, 8) == "DKU_DST_"){
           partitionDimensionName <- c(partitionDimensionName, substr(v, 9, nchar(v)))
       }
-  } 
+  }
   if (length(partitionDimensionName) > 1) {
     PrintPlugin("Output must be partitioned by only one discrete dimension", stop = TRUE)
   } else if ("date" %in% partitionDimensionName) {
@@ -125,8 +129,8 @@ CheckPartitioningSettings <- function(inputDatasetName) {
 WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName) {
   # Writes a data.frame to a Dataiku dataset with a column to store the partition identifier
   # in case partitioning is activated, else writes the dataset without changes.
-  # Needed for filesystem partioning when the partition identifier is not in the data itself. 
-  # It is very useful to have the partition written in the data in order to 
+  # Needed for filesystem partioning when the partition identifier is not in the data itself.
+  # It is very useful to have the partition written in the data in order to
   # build charts on the whole dataset. Could be an option in the native dataiku API?
   #
   # Args:
@@ -145,14 +149,14 @@ WriteDatasetWithPartitioningColumn <- function(df, outputDatasetName) {
     partitioningColumnName <- paste0("_dku_partition_", partitionDimensionName)
     # writes partition identifier to the dataframe as a new column
     df[[partitioningColumnName]] <- dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName))
-    df <- df %>% 
+    df <- df %>%
       select(partitioningColumnName, everything())
   }
   dkuWriteDataset(df, outputDatasetName)
 }
 
 GetFolderPathWithPartitioning <- function(folderName) {
-  # Gets path to the folder partition if partitioning is activated, else path to the whole folder. 
+  # Gets path to the folder partition if partitioning is activated, else path to the whole folder.
   # This is needed to write to a specific folder partition, as there are no dataiku R method
   # to get the *current* folder partition path with respect to a Build job.
   # Ideally this could be handled natively in our R API similarly to dkuWriteDataset
@@ -170,7 +174,7 @@ GetFolderPathWithPartitioning <- function(folderName) {
   if (partitioningIsActivated && outputFolderIsPartitioned) {
     filePath <- file.path(
       dkuManagedFolderPath(folderName),
-      dkuManagedFolderPartitionFolder(folderName, 
+      dkuManagedFolderPartitionFolder(folderName,
         partition = dkuFlowVariable(paste0("DKU_DST_", partitionDimensionName)))
     )
     filePath <- normalizePath(gsub("//","/",filePath))

@@ -1,0 +1,11 @@
+{
+    "meta": {
+        "label": "Clubhouse Workflows",
+        "description": "List workflows from Clubhouse.io",
+        "icon": "icon-flag-alt"
+    },
+    "readable": true,
+    "writable": false,
+    "params": [],
+    "partitioningMode": "NOT_PARTITIONABLE"
+}

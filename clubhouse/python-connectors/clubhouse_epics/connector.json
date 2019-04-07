@@ -1,0 +1,11 @@
+{
+    "meta": {
+        "label": "Clubhouse Epics",
+        "description": "List epics from Clubhouse.io",
+        "icon": "icon-flag-alt"
+    },
+    "readable": true,
+    "writable": false,
+    "params": [],
+    "partitioningMode" : "NOT_PARTITIONABLE"
+}

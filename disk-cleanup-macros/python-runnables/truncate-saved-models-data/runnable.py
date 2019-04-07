@@ -26,9 +26,9 @@ class MyRunnable(Runnable):
         dip_home = os.environ['DIP_HOME']
         saved_models = osp.join(dip_home, 'saved_models')
 
-        def truncate_file(path, rows):
+        def truncate_file(path, rows, compression=None):
             yourfile = pd.read_csv(path, nrows = rows)
-            yourfile.to_csv(path, index = False)
+            yourfile.to_csv(path, index = False, compression=compression)
 
         rt = ResultTable()
         rt.set_name("Saved models cleanup")
@@ -71,15 +71,16 @@ class MyRunnable(Runnable):
                         # Need to clean this version
                         deleted_versions += 1
                         split_dir = osp.join(version_dir, "split")
+                        allowed_extensions = [".csv", ".gz"]
                         if osp.isdir(split_dir):
                             for name in os.listdir(split_dir):
                                 path = osp.join(split_dir, name)
                                 ext = osp.splitext(path)[-1].lower()
-                                if ext == ".csv":
+                                if ext in allowed_extensions:
                                     if do_it:
                                         try:
                                             initial = os.stat(path).st_size 
-                                            truncate_file(path, lines)
+                                            truncate_file(path, lines, compression=("gzip" if ext == ".gz" else None))
                                             size_reclaimed += initial - os.stat(path).st_size
                                         except Exception as e:
                                             logging.getLogger().error("{}: {}".format(path,str(e)))
