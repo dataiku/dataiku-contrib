@@ -1,13 +1,13 @@
 {
-    "id" : "github-import-wiki",
-    "version" : "1.0.0",
-    "meta" : {
-        "label" : "Github Wiki importer",
-        "description" : "Import a GitHub wiki into DSS",
-        "author" : "Dataiku",
-        "icon" : "icon-github",
+    "id": "github-import-wiki",
+    "version": "1.0.0",
+    "meta": {
+        "label": "Github Wiki importer",
+        "description": "Import a GitHub wiki into DSS",
+        "author": "Dataiku (Arnaud Pichery)",
+        "icon": "icon-github",
         "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
-        "tags" : ["wiki"]
+        "url": "https://www.dataiku.com/dss/plugins/info/github-import-wiki.html",
+        "tags": ["Admin"]
     }
 }
