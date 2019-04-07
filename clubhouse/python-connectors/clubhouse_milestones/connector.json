@@ -1,11 +1,11 @@
 {
-    "meta" : {
-        "label" : "Clubhouse Milestones",
-        "description" : "A simple non-partioned connector for clubhouse.io milestones",
-        "icon" : "icon-flag-alt"
+    "meta": {
+        "label": "Clubhouse Milestones",
+        "description": "List milestones from Clubhouse.io",
+        "icon": "icon-flag-alt"
     },
-    "readable" : true,
-    "writable" : false,
+    "readable": true,
+    "writable": false,
     "params": [],
-    "partitioningMode" : "NOT_PARTITIONABLE"
+    "partitioningMode": "NOT_PARTITIONABLE"
 }
