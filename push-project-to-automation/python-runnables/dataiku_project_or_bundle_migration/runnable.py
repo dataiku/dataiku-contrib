@@ -46,9 +46,8 @@ class MyRunnable(Runnable):
         # use public python api to get access to remote host
         remote_client = dataikuapi.DSSClient(remote_host, api_key)
 
-        # ignore SSL Certifications if selected
-        ignore_ssl_certs = self.config.get("ignore_ssl_certs")
-        if ignore_ssl_certs:
+        # ignore SSL Certificates if selected
+        if self.config.get("ignore_ssl_certs"):
             remote_client._session.verify = False
 
         html = '<div> Successfully connected to remote host: %s</div>' %(remote_client.host)
