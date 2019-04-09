@@ -1,19 +1,13 @@
 {
-	"id" : "twitter-tools",
-	"version" : "0.0.4",
-
-	"meta" : {
-		"label" : "Twitter tools",
-
-		"description" : "This plugin contains several tools that will turn DSS into an efficient machine to manage your Twitter account. It contains recipes to:\n\n * Get information about your followers\n * Get information about who you are following\n * Search for users by multiple keywords\n * Follow and unfollow users from a dataset\n\nFor this plugin, you will need to create a Dataiku API key with admin rights",
-		"author" : "Sonra (Vadim Mytarev)",
-
-		"icon" : "icon-twitter",
-
-		"licenseInfo" : "Apache Software License",
-
-		"url" : "https://www.dataiku.com/dss/plugins/info/twitter-tools.html",
-
-		"tags" : ["Social network"]
+	"id": "twitter-tools",
+	"version": "0.0.5",
+	"meta": {
+		"label": "Twitter tools",
+		"description": "Turn DSS into an efficient machine to manage your Twitter account. This plugin contains recipes to:\n\n * Get information about your followers\n * Get information about who you are following\n * Search for users by multiple keywords\n * Follow and unfollow users from a dataset\n\nFor this plugin, you will need to create a Dataiku API key with admin rights",
+		"author": "Sonra (Vadim Mytarev)",
+		"icon": "icon-twitter",
+		"licenseInfo": "Apache Software License",
+		"url": "https://www.dataiku.com/dss/plugins/info/twitter-tools.html",
+		"tags": ["Social Media", "Productivity", "Marketing"]
 	}
 }

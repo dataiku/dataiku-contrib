@@ -1,13 +1,13 @@
 {
-    "id" : "instagram",
-    "version" : "0.9.1",
-    "meta" : {
-        "label" : "Instagram",
-        "description" : "A set of DSS functions allowing to interact with the Instagram public API",
-        "author" : "Dataiku",
-        "icon" : "icon-instagram",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
-        "tags" : ["Social network", "Analytics"]
+    "id": "instagram",
+    "version": "0.9.2",
+    "meta": {
+        "label": "Instagram",
+        "description": "Fetch data from Instagram public API",
+        "author": "Dataiku",
+        "icon": "icon-instagram",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/instagram.html",
+        "tags": ["Social Media", "Marketing", "Connector"]
     }
 }

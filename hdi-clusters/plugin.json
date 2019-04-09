@@ -1,13 +1,13 @@
 {
-    "id" : "hdi-clusters",
-    "version" : "0.0.1",
-    "meta" : {
-        "label" : "HDI clusters",
-        "description" : "Dynamically create HDI clusters or attach to existing ones",
-        "author" : "Dataiku",
-        "icon" : "icon-puzzle-piece",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
-        "tags" : ["clusters", "cloud", "Azure", "experimental"]
+    "id": "hdi-clusters",
+    "version": "0.0.2",
+    "meta": {
+        "label": "HDI clusters",
+        "description": "Dynamically create HDI clusters or attach to existing ones",
+        "author": "Dataiku (Thomas Cabrol)",
+        "icon": "icon-cloud",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/hdi-clusters.html",
+        "tags": ["Microsoft Azure", "Cloud", "Clusters"]
     }
 }

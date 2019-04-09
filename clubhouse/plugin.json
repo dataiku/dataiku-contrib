@@ -1,0 +1,22 @@
+{
+    "id": "clubhouse",
+    "version": "1.0.0",
+    "meta": {
+        "label": "Clubhouse",
+        "description": "Retrieve data from Clubhouse.io, a project management tool for software development",
+        "author": "Dataiku (Arnaud PICHERY)",
+        "icon": "icon-flag-alt",
+        "licenseInfo" : "Apache Software License version 2",
+        "url": "https://www.dataiku.com/community/plugins/info/clubhouse.html",
+        "tags": ["Productivity", "Productivity", "SaaS"]
+    },
+    "params": [
+        {
+            "name": "api_token",
+            "label": "clubhouse.io API Token",
+            "description": "Create one from your profile settings in clubhouse.io",
+            "type": "STRING",
+            "mandatory": true
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.2.7
+PLUGIN_VERSION=0.3.0
 PLUGIN_ID=census-us
 
 plugin:
@@ -6,5 +6,5 @@ plugin:
 	rm -rf dist
 	mkdir dist
 	zip --exclude "*.pyc" -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json custom-recipes python-connectors python-lib requirements.json
-    
+
 include ../Makefile.inc

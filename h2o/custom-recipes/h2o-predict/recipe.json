@@ -3,7 +3,7 @@
         "label" : "Predict",
         "description": "Apply a prediction model to a dataset and return the scores",
         "author" : "Dataiku (Jean-Baptiste Rouquier)",
-        "tags" : ["API", "ML"]
+        "tags" : ["Machine Learning"]
     },
     "kind" : "PYTHON",
     "inputRoles" : [

@@ -13,7 +13,7 @@ This plugin provides a read and write connector to interact with [Google Sheets]
 
 The plugin uses the protocol [OAuth 2.0 for Server to Server Applications](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) to connect to the Google Sheets API.
 
-In order to use the plugin, you will need service account's credentials exported in a JSON file with the Sheets API enabled. To generate this JSON, you can follow [the instructions on the plugin page](https://www.dataiku.com/community/plugins/info/googlesheets.html).
+In order to use the plugin, you will need service account's credentials exported in a JSON file with the Sheets API enabled. To generate this JSON, you can follow [the instructions on the plugin page](https://www.dataiku.com/dss/plugins/info/googlesheets.html).
 
 ## Changelog
 
@@ -41,6 +41,6 @@ In order to use the plugin, you will need service account's credentials exported
 
 ## Need help?
 
-Find out more on the [plugin page](https://www.dataiku.com/community/plugins/info/googlesheets.html) on Dataiku's website.
+Find out more on the [plugin page](https://www.dataiku.com/dss/plugins/info/googlesheets.html) on Dataiku's website.
 
 Ask your question on [answers.dataiku.com](https://answers.dataiku.com). Or, [open an issue](https://github.com/dataiku/dataiku-contrib/issues).

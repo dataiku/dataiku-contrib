@@ -1,30 +1,30 @@
 {
-    "id" : "geocoder",
-    "version" : "1.0.9",
+    "id": "geocoder",
+    "version": "1.1.0",
 
-    "meta" : {
-        "label" : "Geocoder",
-        "description" : "Provides recipes to perform geocoding and reverse geocoding on columns of your datasets. Supports over 25 geocoding service providers, along with caching and batch options.",
-        "author" : "Dataiku (Thomas Labadie)",
-        "icon" : "icon-globe",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins/info/geocoder.html",
-        "tags" : ["Geospatial", "Enrichment"]
+    "meta": {
+        "label": "Geocoder",
+        "description": "Perform geocoding and reverse geocoding. Supports over 25 geocoding service providers, along with caching and batch options.",
+        "author": "Dataiku (Thomas Labadie)",
+        "icon": "icon-globe",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/geocoder.html",
+        "tags": ["Geospatial", "Enrichment"]
     },
-    
-    "params" : [
+
+    "params": [
         {
             "name": "cache_location",
             "type": "SELECT",
-            "label" : "Cache location",
+            "label": "Cache location",
             "selectChoices": [
             {
-                "value":"original",
-                "label":"Dataiku Data Directory"
+                "value": "original",
+                "label": "Dataiku Data Directory"
             },
             {
-                "value":"custom",
-                "label":"Custom"
+                "value": "custom",
+                "label": "Custom"
             }
             ],
             "defaultValue": "original"
@@ -32,77 +32,77 @@
         {
             "name": "cache_location_custom",
             "type": "STRING",
-            "label" : "Custom cache location",
+            "label": "Custom cache location",
             "description": "Absolute path",
-            "visibilityCondition" : "model.cache_location == 'custom'"
+            "visibilityCondition": "model.cache_location == 'custom'"
         },
         {
             "name": "sep_fw",
             "type": "SEPARATOR",
-            "label" : "Forward Geocoding Cache"
+            "label": "Forward Geocoding Cache"
         },
         {
             "name": "forward_cache_size",
             "type": "INT",
-            "label" : "Cache size",
+            "label": "Cache size",
             "description": "in megabytes",
-            "defaultValue" : 1000
+            "defaultValue": 1000
         },
         {
             "name": "forward_cache_policy",
-            "label" : "Eviction policy",
+            "label": "Eviction policy",
             "type": "SELECT",
             "selectChoices": [
             {
-                "value":"least-recently-stored",
-                "label":"Least Recently Stored"
+                "value": "least-recently-stored",
+                "label": "Least Recently Stored"
             },
             {
-                "value":"least-recently-used",
-                "label":"Least Recently Used"
+                "value": "least-recently-used",
+                "label": "Least Recently Used"
             },
             {
-                "value":"least-frequently-used",
-                "label":"Least Frequently Used"
+                "value": "least-frequently-used",
+                "label": "Least Frequently Used"
             },
             {
-                "value":"none",
-                "label":"None"
+                "value": "none",
+                "label": "None"
             }],
             "defaultValue": "least-recently-stored"
         },
         {
             "name": "sep_rv",
             "type": "SEPARATOR",
-            "label" : "Reverse Geocoding Cache"
+            "label": "Reverse Geocoding Cache"
         },
         {
             "name": "reverse_cache_size",
             "type": "INT",
-            "label" : "Cache size",
+            "label": "Cache size",
             "description": "in megabytes",
-            "defaultValue" : 1000
+            "defaultValue": 1000
         },
         {
             "name": "reverse_cache_policy",
-            "label" : "Eviction policy",
+            "label": "Eviction policy",
             "type": "SELECT",
             "selectChoices": [
             {
-                "value":"least-recently-stored",
-                "label":"Least Recently Stored"
+                "value": "least-recently-stored",
+                "label": "Least Recently Stored"
             },
             {
-                "value":"least-recently-used",
-                "label":"Least Recently Used"
+                "value": "least-recently-used",
+                "label": "Least Recently Used"
             },
             {
-                "value":"least-frequently-used",
-                "label":"Least Frequently Used"
+                "value": "least-frequently-used",
+                "label": "Least Frequently Used"
             },
             {
-                "value":"none",
-                "label":"None"
+                "value": "none",
+                "label": "None"
             }],
             "defaultValue": "least-recently-stored"
         }

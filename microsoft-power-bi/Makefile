@@ -1,4 +1,4 @@
-PLUGIN_VERSION=1.1.0
+PLUGIN_VERSION=1.1.1
 PLUGIN_ID=microsoft-power-bi
 
 plugin:

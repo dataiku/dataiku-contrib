@@ -1,13 +1,13 @@
 {
-	"id" : "graph-analytics",
-  "version" : "0.0.2",
-  "meta" : {
-    "label" : "Graph analytics",
-    "description" : "This plugin offers two recipes to handle two kinds of graphs:\n\n * Edges list (graph specified as a list of source_node / target_node couples)\n * Bipartite graph (two kinds of items like product and transaction, transactions linking products together)\n\nIt can transform bipartite graphs into edge lists and extract node statistics from edge lists\n\nWARNING!\n You have to create a [Python code env](https://doc.dataiku.com/dss/latest/code-envs/operations-python.html) with the following packages if you want to use the webapp template of this plugin:\n * networkx\n * python-louvain\n * flask\n * matplotlib\n * scipy",
-    "author" : "Dataiku (Thomas Cabrol)",
-    "icon" : "icon-link",
-		"licenseInfo" : "Apache Software License",
-		"url" : "https://www.dataiku.com/dss/plugins/info/graph-analytics.html",
-		"tags" : ["Graph"]
-	}
+    "id": "graph-analytics",
+    "version": "0.0.2",
+    "meta": {
+        "label": "Graph analytics",
+        "description": "Work with two kinds of graphs:\n\n * Edges list (graph specified as a list of source_node / target_node couples)\n * Bipartite graph (two kinds of items like product and transaction, transactions linking products together)\n\nIt can transform bipartite graphs into edge lists and extract node statistics from edge lists\n\nWARNING!\n You have to create a [Python code env](https://doc.dataiku.com/dss/latest/code-envs/operations-python.html) with the following packages if you want to use the webapp template of this plugin:\n * networkx\n * python-louvain\n * flask\n * matplotlib\n * scipy",
+        "author": "Dataiku (Thomas Cabrol)",
+        "icon": "icon-link",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/graph-analytics.html",
+        "tags": ["Graph"]
+    }
 }

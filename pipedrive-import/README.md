@@ -44,6 +44,6 @@ You can install this package if required with the [pip of the DSS virtualenv](ht
 
 ## Need help?
 
-Find out more on the [plugin page](https://www.dataiku.com/community/plugins/info/pipedrive.html) on Dataiku's website.
+Find out more on the [plugin page](https://www.dataiku.com/dss/plugins/info/pipedrive.html) on Dataiku's website.
 
 Ask your question on [answers.dataiku.com](https://answers.dataiku.com). Or, [open an issue](https://github.com/dataiku/dataiku-contrib/issues).

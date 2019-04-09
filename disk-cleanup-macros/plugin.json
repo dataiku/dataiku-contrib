@@ -1,15 +1,13 @@
 {
-    "id" : "disk-cleanup-macros",
-
-    "version" : "0.0.1",
-
-    "meta" : {
-        "label" : "Manage DSS disk usage",
-        "description" : "This plugins contains several macros that help monitor and manage disk space used by DSS",
-        "author" : "Dataiku",
-        "icon" : "icon-wrench",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com",
-        "tags" : ["administration"]
+    "id": "disk-cleanup-macros",
+    "version": "0.0.2",
+    "meta": {
+        "label": "Manage DSS disk usage",
+        "description": "Tools to monitor and manage disk space used by DSS",
+        "author": "Dataiku (Clément Stenac)",
+        "icon": "icon-wrench",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/disk-cleanup-macros.html",
+        "tags": ["Admin"]
     }
 }

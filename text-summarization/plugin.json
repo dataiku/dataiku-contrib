@@ -1,20 +1,13 @@
 {
-    "id" : "text-summarization",
-
-    "version" : "1.0.0",
-
-    "meta" : {
-        "label" : "Text Summarization",
-
-        "description" : "This plugin provides simple methods for summarizing texts. These methods are extractive summarization methods, which means that the summary will be a number of extracted sentences from the original text.",
-        "author" : "Dataiku (Hicham EL BOUKKOURI)",
-
-        "icon" : "icon-file-text",
-
-        "licenseInfo" : "Apache Software License",
-
-        "url" : "https://www.dataiku.com",
-
-        "tags" : ["NLP", "Summarization"]
+    "id": "text-summarization",
+    "version": "1.0.1",
+    "meta": {
+        "label": "Text Summarization",
+        "description": "Summarize texts using extractive summarization methods (which means that the summary will be a number of extracted sentences from the original text).",
+        "author": "Dataiku (Hicham El Boukkouri)",
+        "icon": "icon-file-text",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/text-summarization.html",
+        "tags": ["NLP"]
     }
 }
