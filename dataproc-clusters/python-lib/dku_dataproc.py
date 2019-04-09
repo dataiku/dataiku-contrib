@@ -53,6 +53,7 @@ def make_cluster_keys_and_data(client, cluster_id,clusterBody=None, create_user_
     hadoop_keys = {
         "extraConf" : [
            {"key": "fs.defaultFS", "value" : "hdfs://%s/" % master_ip},
+           {"key": "fs.default.name", "value" : "hdfs://%s/" % master_ip},
            {"key": "yarn.resourcemanager.address" , "value" :  "%s:8032" % master_ip},
            {"key": "yarn.resourcemanager.hostname" , "value" :  master_ip },
            {"key": "yarn.resourcemanager.scheduler.address" , "value" :  "%s:8030" % master_ip},
