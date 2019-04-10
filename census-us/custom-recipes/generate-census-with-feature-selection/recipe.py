@@ -635,7 +635,7 @@ if s_found >0:
     
 else:
     print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    print 'US Census CANNOT be built, no states available in your dataset...'
+    print 'US Census CANNOT be built, no States available in your dataset...'
     print 'Check the following settings :'
     print '-> are the states in the right format regarding the plugin set by the user ?'
     print '-> is the column really containing states ?'

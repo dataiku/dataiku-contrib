@@ -38,6 +38,8 @@ Imputation:
 - since the US Census is built per state, all imputation is related to the state processed. 
 - imputation is only done for feature selection, all the output data are row data.
 
+No result:
+- it is possible that the feature selection returns 0 selected features: it'll be written in the job logs.
 
 ## 3/ US CENSUS CUSTOM DATASETS 
 
@@ -70,7 +72,7 @@ https://censusreporter.org/data/table/?table=B00001&geo_ids=05000US10001,150|050
 => ! Try it on a neutral environment [dev, sandbox] before any deployment in production !
 => This plugin might not work in Multi User Security environment since it requires the Plugin to access the data_dir and uses Python system libraries.
 
-It's highly recommended to enable the code-env provided with the plugin
+Please create the code-env according to the definition provided with the plugin
 
 Otherwise, without code-envs:
 This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
