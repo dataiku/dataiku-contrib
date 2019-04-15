@@ -126,11 +126,11 @@ class MyRunnable(Runnable):
             ############
 
             if text_language == 'english':
-                url = 'https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.vec'
+                url = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.en.vec'
             elif text_language == 'french':
-                url = 'https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.fr.vec'
+                url = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.fr.vec'
             elif text_language == 'german':
-                url = 'https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.de.vec'
+                url = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.de.vec'
             else:
                 raise NotImplementedError(
                     "Only English, French and German languages are supported.")
