@@ -1,12 +1,12 @@
 library(forecast)
-library(prophet)
+#library(prophet)
 
 source(file.path(dkuCustomRecipeResource(), "io.R"))
 
 # Identifiers for models. Used as a naming convention for all lists storing forecasting objects.
 AVAILABLE_MODEL_NAME_LIST <- c(
   "NAIVE_MODEL",
-  "PROPHET_MODEL",
+  # "PROPHET_MODEL",
   "SEASONALTREND_MODEL",
   "EXPONENTIALSMOOTHING_MODEL",
   "ARIMA_MODEL",
@@ -17,7 +17,7 @@ AVAILABLE_MODEL_NAME_LIST <- c(
 # Maps each model name to the actual function used for model training.
 MODEL_FUNCTION_NAME_LIST <- list(
   "NAIVE_MODEL" = list(modelFunction = "NaiveModelWrapper"), # wrapper around forecast package
-  "PROPHET_MODEL" = list(modelFunction = "ProphetModelWrapper"), # wrapper around prophet package
+  # "PROPHET_MODEL" = list(modelFunction = "ProphetModelWrapper"), # wrapper around prophet package
   "SEASONALTREND_MODEL" = list(modelFunction = "stlf"), # forecast package
   "EXPONENTIALSMOOTHING_MODEL" = list(modelFunction = "ets"), # forecast package
   "ARIMA_MODEL" = list(modelFunction = "auto.arima"), # forecast package
@@ -28,7 +28,7 @@ MODEL_FUNCTION_NAME_LIST <- list(
 # Maps each model name to the name used in the UI
 MODEL_UI_NAME_LIST <- list(
   "NAIVE_MODEL" = "Baseline",
-  "PROPHET_MODEL" = "Prophet",
+  # "PROPHET_MODEL" = "Prophet",
   "SEASONALTREND_MODEL" = "Seasonal Trend",
   "EXPONENTIALSMOOTHING_MODEL" = "Exponential Smoothing",
   "ARIMA_MODEL" = "ARIMA",
@@ -63,39 +63,39 @@ NaiveModelWrapper <- function(y, method = "simple", h = 10, level = c(80,95), mo
   return(model)
 }
 
-ProphetModelWrapper <- function(df, growth = "linear", model = NULL, xreg = NULL, y = NULL, ...) {
-  # Wraps Facebook Prophet model in a single standard function.
-  #
-  # Args:
-  #   df: input data frame following the Prophet format
-  #       ("ds" column for time, "y" for series).
-  #   growth: character string describing which growth model to use
-  #           (one of "linear", "logistic").
-  #   model: added for compatibility with others model types in order to
-  #          refit an existing model without re-estimating its parameters.
-  #   y: added for compatibility with others model types but unused
-  #      since prophet uses the df argument as data input.
-  #   xreg: matrix of external regressors (optional)
-  #   ...: additional arguments passed to the original prophet function
-  #
-  # Returns:
-  #   Fitted Prophet model
+# ProphetModelWrapper <- function(df, growth = "linear", model = NULL, xreg = NULL, y = NULL, ...) {
+#   # Wraps Facebook Prophet model in a single standard function.
+#   #
+#   # Args:
+#   #   df: input data frame following the Prophet format
+#   #       ("ds" column for time, "y" for series).
+#   #   growth: character string describing which growth model to use
+#   #           (one of "linear", "logistic").
+#   #   model: added for compatibility with others model types in order to
+#   #          refit an existing model without re-estimating its parameters.
+#   #   y: added for compatibility with others model types but unused
+#   #      since prophet uses the df argument as data input.
+#   #   xreg: matrix of external regressors (optional)
+#   #   ...: additional arguments passed to the original prophet function
+#   #
+#   # Returns:
+#   #   Fitted Prophet model
 
-  if (is.null(model)) {
-    m <- prophet(growth = growth, ...)
-    if(!is.null(xreg)) {
-      for(columnName in colnames(xreg)) {
-        m <- add_regressor(m, columnName)
-      }
-    }
-    m <- fit.prophet(m, df)
-  } else {
-    cutoff <- max(df$ds)
-    m2 <- prophet:::prophet_copy(model, cutoff)
-    m <- fit.prophet(m2, df)
-  }
-   return(m)
-}
+#   if (is.null(model)) {
+#     m <- prophet(growth = growth, ...)
+#     if(!is.null(xreg)) {
+#       for(columnName in colnames(xreg)) {
+#         m <- add_regressor(m, columnName)
+#       }
+#     }
+#     m <- fit.prophet(m, df)
+#   } else {
+#     cutoff <- max(df$ds)
+#     m2 <- prophet:::prophet_copy(model, cutoff)
+#     m <- fit.prophet(m2, df)
+#   }
+#    return(m)
+# }
 
 TrainForecastingModels <- function(ts, df, xreg = NULL, modelParameterList,
   refit = FALSE, refitModelList = NULL, verbose = TRUE) {
@@ -121,9 +121,9 @@ TrainForecastingModels <- function(ts, df, xreg = NULL, modelParameterList,
     if (refit && !is.null(refitModelList)) {
       modelParameters[["kwargs"]][["model"]] <- refitModelList[[modelName]]
     }
-    if (modelName == "PROPHET_MODEL") {
-      modelParameters[["kwargs"]][["df"]] <- df
-    }
+    # if (modelName == "PROPHET_MODEL") {
+    #   modelParameters[["kwargs"]][["df"]] <- df
+    # }
     if(modelName %in% MODELS_WITH_XREG_SUPPORT) {
       modelParameters[["kwargs"]][["xreg"]] <- xreg
     }

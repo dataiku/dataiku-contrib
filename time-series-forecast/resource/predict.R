@@ -1,5 +1,5 @@
 library(forecast)
-library(prophet)
+#library(prophet)
 
 source(file.path(dkuCustomRecipeResource(), "clean.R"))
 source(file.path(dkuCustomRecipeResource(), "train.R"))
@@ -36,18 +36,18 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   forecastDfList <- list()
   for(modelName in names(modelList)) {
     model <- modelList[[modelName]]
-    if (modelName == "PROPHET_MODEL") {
-      freq <- ifelse(granularity == "hour", 3600, granularity)
-      future <- make_future_dataframe(model, horizon, freq, include_history = includeHistory)
-      if (!is.null(xreg)) {
-        for (c in colnames(xreg)) {
-          if (includeHistory) {
-            future[,c] <- c(df[,c], xreg[,c])
-          } else {
-            future[,c] <- xreg[,c]
-          }
-        }
-      }
+    # if (modelName == "PROPHET_MODEL") {
+    #   freq <- ifelse(granularity == "hour", 3600, granularity)
+    #   future <- make_future_dataframe(model, horizon, freq, include_history = includeHistory)
+    #   if (!is.null(xreg)) {
+    #     for (c in colnames(xreg)) {
+    #       if (includeHistory) {
+    #         future[,c] <- c(df[,c], xreg[,c])
+    #       } else {
+    #         future[,c] <- xreg[,c]
+    #       }
+    #     }
+    #   }
       model$interval.width <- confidenceInterval / 100.0
       forecastDf <- stats::predict(model, future) %>%
         select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))

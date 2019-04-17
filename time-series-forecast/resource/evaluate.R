@@ -145,13 +145,13 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
     w <- as.integer(rollingWindow * nrow(tmpDf))
     w <- max(w, 1)
     w <- min(w, nrow(tmpDf))
-    # ME and MPE are not implemented in Prophet
-    tmpDf[["ME"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
-    tmpDf[["MPE"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
-    # Other error metrics have built-in prophet implementations
-    tmpDf[["MAE"]] <- prophet:::mae(tmpDf, w)
-    tmpDf[["MAPE"]] <- prophet:::mape(tmpDf, w)
-    tmpDf[["RMSE"]] <- prophet:::rmse(tmpDf, w)
+    # # ME and MPE are not implemented in Prophet
+    # tmpDf[["ME"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
+    # tmpDf[["MPE"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
+    # # Other error metrics have built-in prophet implementations
+    # tmpDf[["MAE"]] <- prophet:::mae(tmpDf, w)
+    # tmpDf[["MAPE"]] <- prophet:::mape(tmpDf, w)
+    # tmpDf[["RMSE"]] <- prophet:::rmse(tmpDf, w)
     tmpDf <- stats::na.omit(tmpDf)
     if (nrow(tmpDf) > 0) {
       errorDfList[[modelName]] <- tmpDf
