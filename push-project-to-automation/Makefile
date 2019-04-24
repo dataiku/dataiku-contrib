@@ -1,5 +1,5 @@
-PLUGIN_VERSION=0.0.3
-PLUGIN_ID=push-project-to-automation
+PLUGIN_VERSION=0.0.4
+PLUGIN_ID=dataiku-project-bundle-migration
 
 plugin:
 	cat plugin.json|json_pp > /dev/null
