@@ -48,11 +48,11 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
     #       }
     #     }
     #   }
-      model$interval.width <- confidenceInterval / 100.0
-      forecastDf <- stats::predict(model, future) %>%
-        select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))
-      forecastDf$ds <- dateRange # harmonizes dates with other model types
-    } else {
+    #   model$interval.width <- confidenceInterval / 100.0
+    #   forecastDf <- stats::predict(model, future) %>%
+    #     select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))
+    #   forecastDf$ds <- dateRange # harmonizes dates with other model types
+    # } else {
       # special cases for naive and seasonal trend model which cannot use forecast(model, h)
       # they can only be called directly with a horizon argument
       if (modelName %in% c("NAIVE_MODEL","SEASONALTREND_MODEL")) {
@@ -97,7 +97,7 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
           yhat_upper = as.numeric(f$upper)[1:horizon],
         )
       }
-     }
+     # }
     forecastDfList[[modelName]] <- forecastDf
   }
   return(forecastDfList)

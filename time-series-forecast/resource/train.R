@@ -38,7 +38,7 @@ MODEL_UI_NAME_LIST <- list(
 MODEL_UI_NAME_LIST_REV <- split(names(MODEL_UI_NAME_LIST), unlist(MODEL_UI_NAME_LIST))
 
 # List of forecast amodels which support external regressors
-MODELS_WITH_XREG_SUPPORT = c("PROPHET_MODEL", "ARIMA_MODEL","NEURALNETWORK_MODEL")
+MODELS_WITH_XREG_SUPPORT = c("ARIMA_MODEL","NEURALNETWORK_MODEL")
 
 NaiveModelWrapper <- function(y, method = "simple", h = 10, level = c(80,95), model = NULL) {
   # Wraps naive models implementations in the forecast package in a single standard function.

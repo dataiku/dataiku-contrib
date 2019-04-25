@@ -445,17 +445,17 @@
       "label": "Strategy",
       "type": "SELECT",
       "mandatory": true,
-      "description": "Time-based split",
+      "description": "Time-based split or cross-validation based on R \"Prophet\" method (slower)",
       "selectChoices": [
         {
           "value": "split",
           "label": "Train/Test Split"
         }
-        // },
-        // {
-        //   "value": "crossval",
-        //   "label": "Time Series Cross-Validation"
-        // }
+        },
+        {
+          "value": "crossval",
+          "label": "Time Series Cross-Validation"
+        }
       ],
       "defaultValue": "split"
     },

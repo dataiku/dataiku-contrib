@@ -25,6 +25,29 @@ ComputeErrorMetricsSplit <- function(forecastDfList, historyDf) {
   return(errorDf)
 }
 
+## Functions copied from the prophet package
+globalVariables(c("ds", "y", "cap", "yhat", "yhat_lower", "yhat_upper"))
+
+rolling_mean <- function(x, w) {
+  s <- cumsum(c(0, x))
+  prefix <- rep(NA, w - 1)
+  return(c(prefix, (s[(w + 1):length(s)] - s[1:(length(s) - w)]) / w))
+}
+
+rmse <- function(df, w) {
+  return(sqrt(mse(df, w)))
+}
+
+mae <- function(df, w) {
+  ae <- abs(df$y - df$yhat)
+  return(rolling_mean(ae, w))
+}
+
+mape <- function(df, w) {
+  ape <- abs((df$y - df$yhat) / df$y)
+  return(rolling_mean(ape, w))
+}
+
 EvaluateModelsSplit <- function(ts, df, xreg = NULL, modelList, modelParameterList, horizon, granularity) {
   # Evaluates forecast models on a time series according to the split strategy.
   #
@@ -146,12 +169,12 @@ ComputeErrorMetricsCrossval <- function(crossvalDfList, rollingWindow = 1.0) {
     w <- max(w, 1)
     w <- min(w, nrow(tmpDf))
     # # ME and MPE are not implemented in Prophet
-    # tmpDf[["ME"]] <- prophet:::rolling_mean(tmpDf$y - tmpDf$yhat, w)
-    # tmpDf[["MPE"]] <- prophet:::rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
+    tmpDf[["ME"]] <- rolling_mean(tmpDf$y - tmpDf$yhat, w)
+    tmpDf[["MPE"]] <- rolling_mean((tmpDf$y - tmpDf$yhat)/tmpDf$y, w)
     # # Other error metrics have built-in prophet implementations
-    # tmpDf[["MAE"]] <- prophet:::mae(tmpDf, w)
-    # tmpDf[["MAPE"]] <- prophet:::mape(tmpDf, w)
-    # tmpDf[["RMSE"]] <- prophet:::rmse(tmpDf, w)
+    tmpDf[["MAE"]] <- mae(tmpDf, w)
+    tmpDf[["MAPE"]] <- mape(tmpDf, w)
+   tmpDf[["RMSE"]] <- rmse(tmpDf, w)
     tmpDf <- stats::na.omit(tmpDf)
     if (nrow(tmpDf) > 0) {
       errorDfList[[modelName]] <- tmpDf
