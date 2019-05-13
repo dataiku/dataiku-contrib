@@ -1,5 +1,5 @@
 {
-    "id": "forecast-testing",
+    "id": "time-series-forecast",
     "version": "0.2.0",
     "meta": {
         "label": "Forecast",
