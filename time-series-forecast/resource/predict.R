@@ -1,5 +1,5 @@
 library(forecast)
-library(prophet)
+#library(prophet)
 
 source(file.path(dkuCustomRecipeResource(), "clean.R"))
 source(file.path(dkuCustomRecipeResource(), "train.R"))
@@ -36,23 +36,23 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
   forecastDfList <- list()
   for(modelName in names(modelList)) {
     model <- modelList[[modelName]]
-    if (modelName == "PROPHET_MODEL") {
-      freq <- ifelse(granularity == "hour", 3600, granularity)
-      future <- make_future_dataframe(model, horizon, freq, include_history = includeHistory)
-      if (!is.null(xreg)) {
-        for (c in colnames(xreg)) {
-          if (includeHistory) {
-            future[,c] <- c(df[,c], xreg[,c])
-          } else {
-            future[,c] <- xreg[,c]
-          }
-        }
-      }
-      model$interval.width <- confidenceInterval / 100.0
-      forecastDf <- stats::predict(model, future) %>%
-        select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))
-      forecastDf$ds <- dateRange # harmonizes dates with other model types
-    } else {
+    # if (modelName == "PROPHET_MODEL") {
+    #   freq <- ifelse(granularity == "hour", 3600, granularity)
+    #   future <- make_future_dataframe(model, horizon, freq, include_history = includeHistory)
+    #   if (!is.null(xreg)) {
+    #     for (c in colnames(xreg)) {
+    #       if (includeHistory) {
+    #         future[,c] <- c(df[,c], xreg[,c])
+    #       } else {
+    #         future[,c] <- xreg[,c]
+    #       }
+    #     }
+    #   }
+    #   model$interval.width <- confidenceInterval / 100.0
+    #   forecastDf <- stats::predict(model, future) %>%
+    #     select_(.dots = c("ds", "yhat", "yhat_lower", "yhat_upper"))
+    #   forecastDf$ds <- dateRange # harmonizes dates with other model types
+    # } else {
       # special cases for naive and seasonal trend model which cannot use forecast(model, h)
       # they can only be called directly with a horizon argument
       if (modelName %in% c("NAIVE_MODEL","SEASONALTREND_MODEL")) {
@@ -97,7 +97,7 @@ GetForecasts <- function(ts, df, xreg = NULL, modelList, modelParameterList,
           yhat_upper = as.numeric(f$upper)[1:horizon],
         )
       }
-     }
+     # }
     forecastDfList[[modelName]] <- forecastDf
   }
   return(forecastDfList)

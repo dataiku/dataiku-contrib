@@ -168,59 +168,59 @@
       "type": "SEPARATOR",
       "visibilityCondition": "model.AUTOML=='expert'"
     },
-    {
-      "name": "PROPHET_MODEL_ACTIVATED",
-      "label": "- Prophet",
-      "description": "Based on the Prophet implementation in R \"prophet\" package.",
-      "type": "BOOLEAN",
-      "defaultValue": true,
-      "mandatory": true
-    },
-    {
-      "name": "PROPHET_MODEL_GROWTH",
-      "label": "↳ Growth",
-      "description": "Use a linear or logistic trend",
-      "type": "SELECT",
-      "defaultValue": "linear",
-      "mandatory": true,
-      "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
-      "selectChoices": [
-        {
-          "value": "linear",
-          "label": "Linear"
-        },
-        {
-          "value": "logistic",
-          "label": "Logistic"
-        }
-      ]
-    },
-    {
-      "name": "PROPHET_MODEL_MINIMUM",
-      "label": "↳ Minimum",
-      "description": "Saturating minimum for logistic growth",
-      "type": "DOUBLE",
-      "defaultValue": 0.0,
-      "mandatory": false,
-      "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED && model.PROPHET_MODEL_GROWTH=='logistic'"
-    },
-    {
-      "name": "PROPHET_MODEL_MAXIMUM",
-      "label": "↳ Maximum",
-      "description": "Saturating maximum for logistic growth",
-      "type": "DOUBLE",
-      "defaultValue": 1.0,
-      "mandatory": false,
-      "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED && model.PROPHET_MODEL_GROWTH=='logistic'"
-    },
-    {
-      "name": "PROPHET_MODEL_KWARGS",
-      "type": "MAP",
-      "label": "↳  additional parameters",
-      "description": "Optional additional parameters cf. cran.r-project.org/web/packages/prophet/prophet.pdf",
-      "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
-      "mandatory": false
-    },
+    // {
+    //   "name": "PROPHET_MODEL_ACTIVATED",
+    //   "label": "- Prophet",
+    //   "description": "Based on the Prophet implementation in R \"prophet\" package.",
+    //   "type": "BOOLEAN",
+    //   "defaultValue": true,
+    //   "mandatory": true
+    // },
+    // {
+    //   "name": "PROPHET_MODEL_GROWTH",
+    //   "label": "↳ Growth",
+    //   "description": "Use a linear or logistic trend",
+    //   "type": "SELECT",
+    //   "defaultValue": "linear",
+    //   "mandatory": true,
+    //   "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
+    //   "selectChoices": [
+    //     {
+    //       "value": "linear",
+    //       "label": "Linear"
+    //     },
+    //     {
+    //       "value": "logistic",
+    //       "label": "Logistic"
+    //     }
+    //   ]
+    // },
+    // {
+    //   "name": "PROPHET_MODEL_MINIMUM",
+    //   "label": "↳ Minimum",
+    //   "description": "Saturating minimum for logistic growth",
+    //   "type": "DOUBLE",
+    //   "defaultValue": 0.0,
+    //   "mandatory": false,
+    //   "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED && model.PROPHET_MODEL_GROWTH=='logistic'"
+    // },
+    // {
+    //   "name": "PROPHET_MODEL_MAXIMUM",
+    //   "label": "↳ Maximum",
+    //   "description": "Saturating maximum for logistic growth",
+    //   "type": "DOUBLE",
+    //   "defaultValue": 1.0,
+    //   "mandatory": false,
+    //   "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED && model.PROPHET_MODEL_GROWTH=='logistic'"
+    // },
+    // {
+    //   "name": "PROPHET_MODEL_KWARGS",
+    //   "type": "MAP",
+    //   "label": "↳  additional parameters",
+    //   "description": "Optional additional parameters cf. cran.r-project.org/web/packages/prophet/prophet.pdf",
+    //   "visibilityCondition": "model.AUTOML=='expert' && model.PROPHET_MODEL_ACTIVATED",
+    //   "mandatory": false
+    // },
     {
       "type": "SEPARATOR",
       "visibilityCondition": "model.AUTOML=='expert'"
