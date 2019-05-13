@@ -7,10 +7,13 @@ With this plugin, you can:
 * Import a complete Algolia index as a [DSS](https://www.dataiku.com/dss) dataset
 * Copy a DSS dataset to an Algolia index
 
-You could thus use a DSS [Flow](http://doc.dataiku.com/dss/latest/flow/index.html) to prepare your 
+You could thus use a DSS [Flow](http://doc.dataiku.com/dss/latest/flow/index.html) to prepare your
 Algolia search index.
 
 # Changelog
+
+## Version 0.0.6 (2019/04/30)
+* Add a code environment
 
 ## Version 0.0.5 (2018/06/05)
 

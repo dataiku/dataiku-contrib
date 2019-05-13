@@ -44,9 +44,15 @@
             "name": "activate_scenarios",
             "label" : "Activate Scenarios",
             "type": "BOOLEAN",
-            "mandatory" : false,
             "default": true,
             "description": "If selected, all active scenarios on the initial project will be activated in the remote project."
+        },
+        {
+            "name": "ignore_ssl_certs",
+            "label" : "Ignore SSL Certificates",
+            "type": "BOOLEAN",
+            "default": false,
+            "description": "If selected, ignores SSL certificates on remote instance."
         }
     ]
 }
