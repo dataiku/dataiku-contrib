@@ -14,7 +14,6 @@ This plugin offers a set of 3 visual recipes to forecast yearly to hourly time s
 - Predicting future values and get historical residuals based on trained models
 
 The following models are available in the recipe:
-- Prophet
 - Neural Network
 - Seasonal Trend
 - Exponential Smoothing
@@ -55,9 +54,11 @@ Please see [plugin page](https://www.dataiku.com/dss/plugins/info/forecast.html)
 
 Note that the plugin uses an R code environment so R must be installed and integrated with Dataiku on your machine (version 3.5.0 or above). Anaconda R is not supported.
 
-You may encounter issues with the installation of the RStan package in the code environment on some operating systems. RStan has some system-level dependencies (C++) that may require additional setup. In this case, please see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) wiki.
-
 ## Changelog
+
+**Version 0.3.0 "beta 3" (2019-05)**
+
+* Remove dependency on rstan and prophet packages. 
 
 **Version 0.2.0 "beta 2" (2019-03)**
 
