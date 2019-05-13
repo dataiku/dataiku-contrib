@@ -8,8 +8,6 @@
 	// Can this connector write data ?
 	"writable" : false,
 
-
-
   	"params": [
     	{
     		"name": "test_mode",
