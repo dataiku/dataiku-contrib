@@ -181,5 +181,12 @@ def generate_access_token(username=None, password=None, client_id=None, client_s
         "scope"        : "openid"
     }
     response = requests.post('https://login.microsoftonline.com/common/oauth2/token', data=data)
+
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print('HTTPError: ' + str(e) + ' response content:' + response.content)
+        sys.exit("Error getting token")
+        
     return response.json()
     
