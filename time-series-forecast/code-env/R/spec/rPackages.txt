@@ -1,5 +1,4 @@
 "forecast","8.5"
-"zoo","1.8-5"
 "xts","0.11-2"
 "lubridate","1.7.4"
 "R.utils","2.8.0"
