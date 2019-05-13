@@ -34,6 +34,11 @@ rolling_mean <- function(x, w) {
   return(c(prefix, (s[(w + 1):length(s)] - s[1:(length(s) - w)]) / w))
 }
 
+mse <- function(df, w) {
+  se <- (df$y - df$yhat) ** 2
+  return(rolling_mean(se, w))
+}
+
 rmse <- function(df, w) {
   return(sqrt(mse(df, w)))
 }
