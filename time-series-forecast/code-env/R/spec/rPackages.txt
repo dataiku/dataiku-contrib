@@ -2,6 +2,4 @@
 "xts","0.11-2"
 "lubridate","1.7.4"
 "R.utils","2.8.0"
-#"rstan","2.18.2"
-#"prophet","0.4"
 "dplyr","0.8.0.1"
