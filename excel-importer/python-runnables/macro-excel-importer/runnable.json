@@ -1,9 +1,8 @@
 /* This file is the descriptor for the python runnable macro-excel-importer */
 {
-    /* Meta data for display purposes */
     "meta": {
-        "label": "Xslx sheets importer macro",
-        "description": "Creates one dataset per sheet. Sheets must have distinct names",
+        "label": "Import xlsx sheets",
+        "description": "Creates one dataset per excel sheet",
         "icon": "icon-puzzle-piece"
     }, 
     
@@ -20,6 +19,6 @@
            "name": "model_folder_id",
            "type": "FOLDER",
            "label": "Folder name",
-           "description": "Name of the image classification model folder"
+           "description": "Name of the folder that contains the xlsx file(s)"
        }]
 }

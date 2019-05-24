@@ -2,8 +2,8 @@
 import dataiku
 import pandas as pd
 import os
+import openpyxl
 from dataiku.runnables import Runnable
-
 
 
 class MyRunnable(Runnable):
@@ -28,35 +28,36 @@ class MyRunnable(Runnable):
 
     def run(self, progress_callback):
 
-
-        # Create dataset using the API
+        # Get project and folder containing the Excel files
         client = dataiku.api_client()
-        model_folder_id = self.config.get("model_folder_id")
-        print(model_folder_id)
+        project = client.get_project(self.project_key)
 
-        # Get folder and path
-        folder_id = model_folder_id
+        folder_id = self.config.get("model_folder_id")
         folder = dataiku.Folder(folder_id, project_key=self.project_key)
         folder_path = folder.get_path()
 
         # List files in folder and get path
         files_list = os.listdir(folder_path)
 
-        # Create dataset using the API
-        client = dataiku.api_client()
-        project = client.get_project(self.project_key)
-
         for my_file in files_list:
+            ## Get file path
             file_path = os.path.join(folder_path, my_file)
-            # Get Excel file and load in a pandas dataframe
+            
+            ## Get Excel file and load in a pandas dataframe
             sheets_names = pd.ExcelFile(file_path).sheet_names
             for sheet in sheets_names:
-                #sheet = str(sheet.replace(" ", "_"))
-                dataset_name = str(my_file).replace(" ", "_").split(".")[0] + "_" + sheet
-                project.create_dataset(dataset_name
+                
+                ### Rename sheets by "file_sheet"
+                ss=openpyxl.load_workbook(file_path)
+                ss_sheet = ss.get_sheet_by_name(sheet)
+                if not my_file.split(".")[0] in ss_sheet.title:
+                    ss_sheet.title = my_file.split(".")[0] + "_" + sheet
+                    ss.save(file_path)
+
+                ### Create dataset from Excel sheet
+                project.create_dataset(ss_sheet.title
                         ,'FilesInFolder'
                         , params={'folderSmartId': folder_id,'path': my_file}
                         , formatType='excel'
-                        #, readWriteOptions={'forceSingleOutputFile': False}
-                        , formatParams={"xlsx":True, "sheets":"*"+sheet,'parseHeaderRow': True})
+                        , formatParams={"xlsx":True, "sheets":"*"+ss_sheet.title,'parseHeaderRow': True})
 
