@@ -1,18 +1,18 @@
-// This file is the descriptor for the Custom code recipe compute_weather_histo_dataset
+
 {
-    // Meta data for display purposes
-    "meta": {
-        "label": "From Dataset - get US census block_id from lat lon",
-        "author": "Dataiku (Nicolas Gakrelidz)",
-        "description": "From Latitude, Longitude the API returns the block_id and derivated fields. At each batch, the plugin can perform a groupby for removing duplicated Lat/Lon or use your raw records. The input coordinates must be clean.",
-        "tags": []
+
+    "meta" : {
+        "label" : "From Dataset - get US census block group from lat lon",
+        "author" : "Dataiku (Nicolas GAKRELIDZ)",
+        "description":'From Latitude, Longitude the API returns the block group and derivated fields. At each batch, the plugin can perform a groupby for removing duplicated Lat/Lon or use your raw records. The input coordinates must be clean.',
+        "tags" : ["us census", "block", "API"]
     },
 
-    "kind": "PYTHON",
-    "selectableFromDataset": "input",
+    "kind" : "PYTHON",
+    "selectableFromDataset" : "input",
 
-
-    "inputRoles": [
+     
+    "inputRoles" : [
         {
             "label": "lat lon Dataset",
             "name": "input",
@@ -21,9 +21,9 @@
             "acceptsDataset": true
         }
     ],
-
-
-    "outputRoles": [
+ 
+    
+    "outputRoles" : [
         {
             "label": "output block dataset",
             "name": "output",
@@ -33,62 +33,92 @@
         }
     ],
 
-
+    
 
     "params": [
 
         {
            "name": "p_col_lat",
-           "label": "Column LATITUDE:",
+           "label" : "Column LATITUDE:",
            "type": "COLUMN",
            "columnRole": "input",
            "description":"Column corresponding to LATITUDE in your input dataset",
-           "mandatory": false
+           "mandatory" : false
         }
-
+     
       ,
         {
            "name": "p_col_lon",
-           "label": "Column LONGITUDE:",
+           "label" : "Column LONGITUDE:",
            "type": "COLUMN",
            "columnRole": "input",
            "description":"Column corresponding to LONGITUDE in your input dataset",
-           "mandatory": false
+           "mandatory" : false
         },
         {
-            "name": "_options",
-            "label": "Options",
-            "type": "SEPARATOR"
+            "name": "p_benchmark",
+            "label" : "Benchmark:",
+            "type": "SELECT",
+            "defaultValue": "4",
+            "description":"",
+            "selectChoices": [
+                {
+                    "value": "9",
+                    "label": "Public_AR_Census2010"
+                },
+                {
+                    "value": "4",
+                    "label": "Public_AR_Current"
+                }
+            ]
+        },
+        {
+            "name": "p_vintage",
+            "label" : "Vintage:",
+            "type": "SELECT",
+            "defaultValue": "4",
+            "description":"",
+            "selectChoices": [
+                {
+                    "value": "910",
+                    "label": "Census2010_Census2010"
+                },
+                {
+                    "value": "416",
+                    "label": "ACS2016_Current"
+                },
+                {
+                    "value": "4",
+                    "label": "Current_Current"
+                }
+            ]
+        },
+        {
+            "name" : "_options",
+            "label" : "Options",
+            "type" : "SEPARATOR"
         },
         {
            "name": "param_api_throttle",
-           "label": "API call throttle:",
+           "label" : "API call throttle:",
            "type": "INT",
            "defaultValue": 1,
            "description":"Define the pause in seconds between each API call",
-           "mandatory": true
+           "mandatory" : true
         },
         {
            "name": "param_batch_size",
-           "label": "Input Dataset split:",
+           "label" : "Input Dataset split:",
            "type": "INT",
            "defaultValue": 50000,
            "description":"For handling large datasets",
-           "mandatory": true
-        },
-        {
-           "name": "param_output_bbox",
-           "label": "Output BBOX:",
-           "type": "BOOLEAN",
-           "defaultValue": false,
-           "description":"Output the squared bounding box of the area",
-           "mandatory": true
+           "mandatory" : true
         },
         {
             "name": "param_strategy",
             "type": "SELECT",
             "defaultValue": "unique",
-            "description":"does the plugin needs to make your Lat/Lon uniques",
+            "description":"does the plugin need to make yours Lat/Lon uniques (use according to Input Dataset split) otherwise use a unique row id",
             "selectChoices": [
                 {
                     "value": "make_unique",
@@ -102,47 +132,24 @@
         },
         {
            "name": "p_id_column",
-           "label": "Input Column ID:",
+           "label" : "Input Column ID:",
            "type": "COLUMN",
            "columnRole": "input",
            "description":"Column corresponding to unique ID in your input dataset",
-           "mandatory": false,
+           "mandatory" : false,
            "visibilityCondition": "model.param_strategy == 'use_my_id'"
         },
         {
            "name": "param_id_as_int",
-           "label": "ID as INT:",
+           "label" : "ID as INT:",
            "type": "BOOLEAN",
            "defaultValue": false,
            "description":"Consider the ID values as integer",
-           "mandatory": false,
+           "mandatory" : false,
             "visibilityCondition": "model.param_strategy == 'use_my_id'"
         }
-        //,
-        //{
-           //"name": "param_id",
-           //"label": "Column ID:",
-           //"type": "COLUMN",
-           //"description":"For only submitting some of the inputs ids, INTEGER. (will be processed on the entire input dataset)",
-           //"mandatory": true
-        //},
-        //{
-           //"name": "param_id_min",
-           //"label": "ID From:",
-           //"type": "INT",
-           //"defaultValue": 0,
-           //"description":"ID Min",
-           //"mandatory": true
-        //},
-        //{
-           //"name": "param_id_max",
-           //"label": "ID To:",
-           //"type": "INT",
-           //"defaultValue": 100,
-           //"description":"ID Max",
-           //"mandatory": true
-        //}
-
+        
+              
     ]
 
 }

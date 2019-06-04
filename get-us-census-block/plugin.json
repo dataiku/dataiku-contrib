@@ -1,12 +1,13 @@
+
 {
-	"id": "get-us-census-block",
-	"version": "0.3.0",
-	"meta": {
-		"label": "Get US census block",
-		"description": "Get an US Census block_id from the fcc.gov API",
-		"author": "Dataiku (Nicolas Gakrelidz)",
-		"icon": "icon-location-arrow",
-		"licenseInfo": "Apache Software License",
+	"id" : "get-us-census-block",
+	"version" : "0.4.0",
+	"meta" : {
+		"label" : "Get US census block",
+		"description" : "Get an US Census block group from the US Census API",
+		"author" : "Dataiku (Nicolas GAKRELIDZ)",
+		"icon" : "icon-location-arrow",
+		"licenseInfo" : "Apache Software License",
 		"url": "https://www.dataiku.com/dss/plugins/info/get-us-census-block.html",
 		"tags": ["Enrichment", "Open Data", "Connector"]
 	}
