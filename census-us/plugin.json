@@ -3,7 +3,7 @@
 
     "id" : "census-us",
 
-    "version" : "0.2.8",
+    "version" : "0.3.0",
 
     "meta" : {
 
@@ -13,6 +13,6 @@
         "icon" : "icon-book",
         "licenseInfo" : "Apache Software License",
         "url" : "https://www.dataiku.com/dss/plugins/info/us-census.html",
-        "tags" : ["census","usa","enrichment"]
+        "tags" : ["census","usa","enrichment","geocoding","feature selection"]
     }
 }

@@ -66,6 +66,18 @@ https://censusreporter.org/data/table/?table=B00001&geo_ids=05000US10001,150|050
 
 > Dimensions must be Exactly the same, any doubt download the data from census reporter and check in excel (better...)
 
+## 4/ US CENSUS GEOCODER and REVERSE GEOGRAPHY CODER
+
+US CENSUS BATCH GEOCODER:
+- A description of the service used : https://www.census.gov/data/developers/data-sets/Geocoding-services.html
+Note, this is a free API as of this plugin written. 
+
+Data returned:
+- For all records that the plugin is not able to parse, then the column "Match" will have this value: 'Custom parsing required'. You can then filter these values and parse the row in a custom way.
+
+REVERSE GEOGRAPHY CODER:
+- From LAT/LON to US CENSUS Geography level.
+
 
 ## Requirements/recommendations/important note:
 

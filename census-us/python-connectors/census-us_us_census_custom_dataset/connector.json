@@ -1,25 +1,29 @@
+/* This file is the descriptor for the Custom python dataset census-us_us_census_custom_dataset */
 {
-    // This file is the descriptor for the Custom python dataset census-us_us_census_custom_dataset
-    // Meta data for display purposes
+    /* Meta data for display purposes */
     "meta" : {
         "label" : "US Census dataset",
         "description": "Build a US Census level from a list of states and fields.",
         "author" : "Dataiku (Nicolas GAKRELIDZ)",
-        "tags" : ["census","usa", "dataset"]
+        "tags" : ["census","usa", "dataset","enrichment"]
     },
 
-    // Can this connector read data ?
+    /* Can this connector read data ? */
     "readable" : true,
-    // Can this connector write data ?
+    /* Can this connector write data ? */
     "writable" : false,
 
 
-    // The field params holds a list of all the params for which the user will be prompted for values
-    // The available parameter types are STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
+    /* The field "params" holds a list of all the params
+       for wich the user will be prompted for values:
+
+       The available parameter types are:
+       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
+    */
 
     "params": [
-
-
+        
+        
         {
            "name": "param_state_list",
            "label" : "State(s):",
@@ -99,7 +103,7 @@
                 }
             ]
         },
-
+        
         {
            "name": "param_fields",
            "label" : "Census fields:",
@@ -128,7 +132,9 @@
            "description":"Delete the US Census sources collected after the process (Not deleting sources may require a large space disk)",
            "mandatory" : true
         }
-    ],
+              
+    ], "partitioningMode" : "NOT_PARTITIONABLE"
 
-    "partitioningMode" : "NOT_PARTITIONABLE"
+    
+    
 }

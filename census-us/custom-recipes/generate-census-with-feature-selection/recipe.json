@@ -4,8 +4,9 @@
         "label" : "Build US Census with feature selection",
         "author" : "Dataiku (Nicolas GAKRELIDZ)",
         "description":"Generate US Census regarding an input target. This recipe will perform an univariate feature selection and the most significative fields among +20000 US census estimations fields. Flat files are exported into a managed folder. A report is provided regarding the features selected.",
-        "tags" : ["census", "usa", "feature selection"]
+        "tags" : ["census", "usa", "feature selection","enrichment"]
     },
+
     "kind" : "PYTHON",
     "selectableFromDataset" : "input",
 
@@ -42,13 +43,15 @@
             "required": false,
             "acceptsDataset": true
         }
+       
+        
+    ] 
+    ,
 
-
-    ],
-
+    
 
     "params": [
-
+        
         {
            "name": "param_column_id",
            "label" : "Column ID:",
@@ -56,8 +59,9 @@
            "description":"unique identifier of your input dataset record",
            "columnRole": "input",
            "mandatory" : true
-        },
-
+        }
+     
+        ,
         {
            "name": "param_column_state",
            "label" : "Column state:",
@@ -66,7 +70,6 @@
            "columnRole": "input",
            "mandatory" : true
         },
-
         {
            "name": "param_state_format",
            "label" : "State format:",
@@ -89,7 +92,6 @@
                 }
             ]
         },
-
         {
            "name": "param_census_level_column",
            "label" : "Column Census Level:",
@@ -98,13 +100,11 @@
            "description":"",
            "mandatory" : true
         },
-
         {
             "name" : "_us_census_content",
             "label" : "US Census content",
             "type" : "SEPARATOR"
         },
-
         {
            "name": "param_census_content",
            "label" : "Census content:",
@@ -129,7 +129,6 @@
                 }
             ]
         },
-
         {
            "name": "param_census_level",
            "label" : "Census Level:",
@@ -151,13 +150,12 @@
                 }
             ]
         },
-
         {
             "name" : "_feature_selection",
             "label" : "Feature selection settings",
             "type" : "SEPARATOR"
         },
-
+        
         {
            "name": "param_column_target",
            "label" : "Column Target:",
@@ -166,7 +164,6 @@
            "description":"Feature selection target",
            "mandatory" : true
         },
-
         {
            "name": "param_feature_selection_superv_type",
            "label" : "Algorithm:",
@@ -188,7 +185,7 @@
                 }
             ]
         },
-
+        
         {
            "name": "param_sig_threshold",
            "label" : "Sig. threshold:",
@@ -197,7 +194,6 @@
            "description":"%",
            "mandatory" : true
         },
-
         {
            "name": "param_nb_fields_max",
            "label" : "Nb max fields:",
@@ -206,7 +202,6 @@
            "description":"Keep only the X top significative fields (-1 = No limit)",
            "mandatory" : true
         },
-
         {
            "name": "param_rescale",
            "label" : "Standard rescaling:",
@@ -215,13 +210,11 @@
            "description":"Only for feature selection, raw data won't be modified",
            "mandatory" : true
         },
-
         {
             "name" : "_imputation_strategy",
             "label" : "Imputation strategy",
             "type" : "SEPARATOR"
         },
-
         {
            "name": "param_impute_strategy",
            "label" : "Replace missing value with:",
@@ -273,7 +266,7 @@
            "description":"Generate X files of Y nb fields max",
            "mandatory" : true
         },
-
+        
         {
            "name": "param_output_one_file_all_states",
            "label" : "All States in one output:",
@@ -282,7 +275,7 @@
            "description":"Stack the states in 1 output file (not recommended for process containing large states e.g TX,NY,CA,...)",
            "mandatory" : true
         },
-
+        
         {
            "name": "param_output_only_matching_census_level",
            "label" : "Only keep census level matching input:",
@@ -312,8 +305,7 @@
            "description":"Delete the US Census sources collected after the process (Not deleting sources may require a large space disk)",
            "mandatory" : true
         }
-
+              
     ]
-
 
 }
