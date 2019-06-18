@@ -2307,4 +2307,4 @@ class USPTOConnector(Connector):
         if self.all_years:
             return []
         else:
-            return [str(x) for x in xrange(2005, 2016)]
+            return [str(x) for x in xrange(1976, 2016)]
