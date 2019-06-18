@@ -7,12 +7,10 @@
     "readable" : true,
     // Can this connector write data ?
     "writable" : false,
-
-
-
-    "params": [
-        {
-            "name": "test_mode",
+  
+  	"params": [
+    	{
+    		"name": "test_mode",
             "label" :"Test mode, forces strict limit to 1000 rows",
             "type": "BOOLEAN"
         },
@@ -32,6 +30,5 @@
     ],
 
     "strictSchema" : true,
-
     "partitioningMode" : "CODE_DEFINED_LISTABLE"
 }

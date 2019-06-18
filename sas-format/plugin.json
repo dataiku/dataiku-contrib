@@ -4,7 +4,7 @@
 
     "meta" : {
         "label" : "SAS format provided by Pandas",
-        "description" : "Format supporting IBM SAS files (.sas7bdat and .xport). This implementation is provided by Pandas and may be slower than the light one provided with DSS, but supports more options.",
+        "description" : "Format supporting SAS files (.sas7bdat and .xport). This implementation is provided by Pandas and may be slower than the light one provided with DSS, but supports more options.",
         "author" : "Dataiku (Thomas Labadie)",
         "icon" : "icon-gears",
         "licenseInfo" : "Apache Software License",

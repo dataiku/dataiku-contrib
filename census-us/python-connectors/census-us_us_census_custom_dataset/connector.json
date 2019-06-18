@@ -1,29 +1,43 @@
+/* This file is the descriptor for the Custom python dataset census-us_us_census_custom_dataset */
 {
-    "meta": {
-        "label": "US Census dataset",
+    /* Meta data for display purposes */
+    "meta" : {
+        "label" : "US Census dataset",
         "description": "Build a US Census level from a list of states and fields.",
-        "author": "Dataiku (Nicolas Gakrelidz)",
-        "tags": []
+        "author" : "Dataiku (Nicolas GAKRELIDZ)",
+        "tags" : ["census","usa", "dataset","enrichment"]
     },
 
-    "readable": true,
-    "writable": false,
+    /* Can this connector read data ? */
+    "readable" : true,
+    /* Can this connector write data ? */
+    "writable" : false,
+
+
+    /* The field "params" holds a list of all the params
+       for wich the user will be prompted for values:
+
+       The available parameter types are:
+       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
+    */
 
     "params": [
+        
+        
         {
            "name": "param_state_list",
-           "label": "State(s):",
+           "label" : "State(s):",
            "type": "STRING",
             "description":"states separated by a comma no spaces. Like: mt,tx,mi or 01,02 or Alaska,Texas",
-           "mandatory": true
+           "mandatory" : true
         },
         {
            "name": "param_state_format",
-           "label": "State format:",
+           "label" : "State format:",
            "type": "SELECT",
            "description":"2letters: ca, 2Digits: 06, Fullname:California",
            "defaultValue": "state_2letters",
-           "mandatory": true,
+           "mandatory" : true,
            "selectChoices": [
                 {
                     "value": "state_2letters",
@@ -40,15 +54,15 @@
             ]
         },
         {
-            "name": "_us_census_content",
-            "label": "US Census content",
-            "type": "SEPARATOR"
+            "name" : "_us_census_content",
+            "label" : "US Census content",
+            "type" : "SEPARATOR"
         },
         {
            "name": "param_census_content",
-           "label": "Census content:",
+           "label" : "Census content:",
            "type": "SELECT",
-           "mandatory": true,
+           "mandatory" : true,
            "selectChoices": [
                 {
                     "value": "ACS5Y2016",
@@ -70,10 +84,10 @@
         },
         {
            "name": "param_census_level",
-           "label": "Census Level:",
+           "label" : "Census Level:",
            "type": "SELECT",
            "defaultValue": "TRACT",
-           "mandatory": true,
+           "mandatory" : true,
            "selectChoices": [
                 {
                     "value": "COUNTY",
@@ -89,37 +103,38 @@
                 }
             ]
         },
-
+        
         {
            "name": "param_fields",
-           "label": "Census fields:",
+           "label" : "Census fields:",
            "type": "TEXTAREA",
            "description":"US Census Fields. Ex: B00001_001E,B08534_001E",
-           "mandatory": true
+           "mandatory" : true
         },
         {
-            "name": "_us_census_sources",
-            "label": "US Census sources",
-            "type": "SEPARATOR"
+            "name" : "_us_census_sources",
+            "label" : "US Census sources",
+            "type" : "SEPARATOR"
         },
         {
            "name": "param_re_use_collected_census_sources",
-           "label": "Use previous sources:",
+           "label" : "Use previous sources:",
            "type": "BOOLEAN",
            "defaultValue": false,
            "description":"Use sources previously collected if exists (avoid to download multiple times the sources)",
-           "mandatory": true
+           "mandatory" : true
         },
         {
            "name": "param_delete_census_sources",
-           "label": "Delete sources:",
+           "label" : "Delete sources:",
            "type": "BOOLEAN",
            "defaultValue": true,
            "description":"Delete the US Census sources collected after the process (Not deleting sources may require a large space disk)",
-           "mandatory": true
+           "mandatory" : true
         }
+              
+    ], "partitioningMode" : "NOT_PARTITIONABLE"
 
-    ],
-    "partitioningMode": "NOT_PARTITIONABLE"
-
+    
+    
 }

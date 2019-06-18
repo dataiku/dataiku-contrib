@@ -144,7 +144,7 @@ class TableauExport(object):
         self.table.insert(output_row)
         self.nrows += 1
         if self.nrows % 5000 == 0:
-            print("%s: Exported %d rows".format(self.format_type, self.nrows))
+            print("{}: Exported {} rows".format(self.format_type, self.nrows))
 
 
 def upload_tde_file(tde_file, config):

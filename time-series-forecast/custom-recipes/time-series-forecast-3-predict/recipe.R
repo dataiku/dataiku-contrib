@@ -101,9 +101,9 @@ names(dfOutput) <- dplyr::recode(
 # converts the date from POSIX to a character following dataiku date format in ISO 8601 standard
 dfOutput[[TIME_COLUMN]] <- strftime(dfOutput[[TIME_COLUMN]] , dkuDateFormat)
 
-# removes the unnecessary floor and cap columns from prophet model if they exist
-dfOutput <- dfOutput %>%
-  select(-one_of(c("floor", "cap")))
+# # removes the unnecessary floor and cap columns from prophet model if they exist
+# dfOutput <- dfOutput %>%
+#   select(-one_of(c("floor", "cap")))
 
 PrintPlugin("Forecasting stage completed, saving forecasts to output dataset.")
 

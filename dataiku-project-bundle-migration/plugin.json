@@ -1,6 +1,6 @@
 {
-    "id": "push-project-to-automation",
-    "version": "0.0.3",
+    "id": "dataiku-project-bundle-migration",
+    "version": "0.0.4",
     "meta": {
         "label": "Push projects to automation",
         "description": "Bundle projects and push them to an automation node (or another Design node).",

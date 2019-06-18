@@ -78,10 +78,10 @@ df <- dkuReadDataset(INPUT_DATASET_NAME, columns = selectedColumns, colClasses =
   PrepareDataframeWithTimeSeries(TIME_COLUMN, c(SERIES_COLUMN, EXT_SERIES_COLUMNS),
                                  GRANULARITY, resample = FALSE)
 names(df) <- c('ds','y', EXT_SERIES_COLUMNS) # Converts df to generic prophet-compatible format
-if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
-  df[['floor']] <- PROPHET_MODEL_MINIMUM
-  df[['cap']] <- PROPHET_MODEL_MAXIMUM
-}
+# if (PROPHET_MODEL_ACTIVATED && PROPHET_MODEL_GROWTH == 'logistic') {
+#   df[['floor']] <- PROPHET_MODEL_MINIMUM
+#   df[['cap']] <- PROPHET_MODEL_MAXIMUM
+# }
 
 # Additional check on the number of rows of the input for the cross-validation evaluation strategy
 if (EVAL_STRATEGY == "crossval" && (EVAL_HORIZON + CROSSVAL_INITIAL > nrow(df))) {

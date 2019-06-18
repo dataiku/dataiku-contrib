@@ -10,7 +10,7 @@ import requests
 import zipfile
 import os
 import shutil
-
+import sys
 
 
 
@@ -101,7 +101,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
     if P_USE_PREVIOUS_SOURCES is False or os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) is False:
     
-        response = requests.get(fields_definition_url_file)
+        response = requests.get(fields_definition_url_file, stream=True)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) , 'wb') as f:
 
             f.write(response.content)
@@ -130,7 +130,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
         lim_t = fields_definition_url_file_template[::-1].find('/')
         
-        response = requests.get(fields_definition_url_file_template)
+        response = requests.get(fields_definition_url_file_template, stream=True)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file_template[-lim_t:]) , 'wb') as f:
             f.write(response.content)
         print '[+] downloaded: %s' % fields_definition_url_file_template
@@ -175,7 +175,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         lim = crosswalk_zcta_url_file[::-1].find('/')
         
         if not os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:] ):
-            response = requests.get(crosswalk_zcta_url_file)
+            response = requests.get(crosswalk_zcta_url_file, stream=True)
             with open(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:], 'wb') as fc:
 
                 fc.write(response.content)
@@ -381,6 +381,16 @@ def create_output_batch(outcolz_list,P_FEATURE_SELECTION_NB_FIELD_PER_OUTPUT,out
         d['col'].append(col)
 
     d_df = pd.DataFrame(d)
+    
+    try:
+        Nd_df = d_df.shape[0]
+    except:
+        Nd_df=0
+        print '########### No Feature fitting with this target ! ###############'
+        sys.exit(1)
+    
+    if Nd_df==0:
+        print '########### No Feature fitting with this target ! ###############'
 
     d_out = dict()
     for ei in np.unique(d['i']):
@@ -390,3 +400,8 @@ def create_output_batch(outcolz_list,P_FEATURE_SELECTION_NB_FIELD_PER_OUTPUT,out
     dlast = ei
     
     return d_out,dlast
+
+
+
+
+

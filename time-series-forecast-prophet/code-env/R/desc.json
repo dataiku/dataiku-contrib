@@ -1,0 +1,10 @@
+{
+  "installCorePackages": true,
+  "installJupyterSupport": true,
+  "conda": false,
+  "forceConda": false,
+  "deploymentMode": "DESIGN_MANAGED",
+  "envSettings": {
+  "inheritGlobalSettings": true
+  }
+}

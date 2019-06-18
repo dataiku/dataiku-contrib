@@ -4,3 +4,4 @@
 state.json
 *.Rhistory
 *.RData
+.Rproj.user/

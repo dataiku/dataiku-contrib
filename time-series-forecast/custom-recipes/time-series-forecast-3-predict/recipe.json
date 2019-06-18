@@ -98,17 +98,17 @@
       "label": "Model to use",
       "type": "SELECT",
       "mandatory": false,
-      "defaultValue": "PROPHET_MODEL",
+      "defaultValue": "NAIVE_MODEL",
       "visibilityCondition": "model.MODEL_SELECTION=='manual'",
       "selectChoices": [
         {
           "value": "NAIVE_MODEL",
           "label": "Baseline"
         },
-        {
-          "value": "PROPHET_MODEL",
-          "label": "Prophet"
-        },
+        // {
+        //   "value": "PROPHET_MODEL",
+        //   "label": "Prophet"
+        // },
         {
           "value": "NEURALNETWORK_MODEL",
           "label": "Neural Network"
