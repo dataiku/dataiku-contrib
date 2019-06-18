@@ -1,6 +1,6 @@
 {
 	"id": "uspto-patents",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"meta": {
 		"label": "USPTO (patents)",
 		"description": "Connect to USPTO patents XML bulk files",
