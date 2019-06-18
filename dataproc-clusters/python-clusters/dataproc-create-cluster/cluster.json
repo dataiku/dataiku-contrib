@@ -2,39 +2,70 @@
     "meta" : {
         "label" : "Dataproc cluster (create cluster)",
         "description" : "Creates and manages Dataproc clusters",
-        "icon" : "icon-puzzle-piece"
+        "icon" : "icon-gears"
     },
 
     "params": [
         {
             "name" : "gcloudProjectId",
-            "label" : "GCS Project ID",
+            "label" : "GCP project ID",
             "type": "STRING", 
             "mandatory" : true
         },
         {
             "name": "gcloudClusterId",
-            "label" : "GCloud cluster name", 
+            "label" : "DataProc cluster name",
+            "description": "Identifier of the cluster in GCP project", 
             "type": "STRING",
             "mandatory" : true
         },
         {
+            "name": "dataprocVersion",
+            "label" : "Dataproc version",
+            "type": "STRING",
+            "defaultValue" : "LATEST",
+            "mandatory" : false
+        },
+        {
+          "type": "SEPARATOR",
+          "label": "Network"
+        },
+
+        {
             "name" : "gcloudRegionId",
-            "label" : "Google cloud Region",
+            "label" : "Region",
             "type": "STRING", 
             "mandatory" : true,
             "defaultValue": "global"
         },
         {
+            "name" : "gcloudZoneId",
+            "label" : "Zone",
+            "type": "STRING", 
+            "mandatory" : true,
+            "defaultValue": "us-east1-b"
+        },
+        {
+            "name" : "tags",
+            "label" : "Additional tags",
+            "type" : "STRING",
+            "mandatory": false,
+            "description" : "Optional. Comma-separated list of security groups tags"
+        },
+        {
+          "type": "SEPARATOR",
+          "label": "Cluster nodes"
+        },
+        {
             "name" : "masterInstanceType",
-            "label" : "Instance type (master)",
+            "label" : "Instance type (MASTER node)",
             "type" : "STRING",
             "defaultValue" : "n1-highmem-4",
             "mandatory" : true
         },
         {
             "name" : "slaveInstanceType",
-            "label" : "Instance type (slaves)",
+            "label" : "Instance type (WORKER nodes)",
             "type" : "STRING",
             "defaultValue" : "n1-highmem-8",
             "mandatory" : true
@@ -42,39 +73,10 @@
         {
             "name": "instancesCount",
             "type": "INT",
-            "label" : "Instances worker count",
+            "label" : "Nb. of WORKER nodes",
+            "description": "(minimum 2)",
             "defaultValue" : 3
         },
-        {
-            "name": "dataprocVersion",
-            "label" : "Dataproc Version",
-            "type": "STRING",
-            "defaultValue" : "LATEST",
-            "description" : "Dataproc RELEASE",
-            "mandatory" : false
-        },
-
-
-        {
-            "type" : "SEPARATOR",
-            "label":  "Networking"
-        },
-        {
-            "name" : "gcloudZoneId",
-            "label" : "Google cloud Zone",
-            "type": "STRING", 
-            "mandatory" : true,
-            "defaultValue": "us-east1-b"
-        },
-        {
-            "name" : "tags",
-            "label" : "Tags to add",
-            "type" : "STRING",
-            "mandatory": false,
-            "description" : "Optional. Comma-separated list of security groups tags"
-        },
-
-
         {
             "type" : "SEPARATOR",
             "label":  "Hive Metastore"
@@ -97,7 +99,6 @@
             "label" : "DB host",
             "visibilityCondition": "model.metastoreDBMode == 'MYSQL'",
             "type": "STRING",
-            "description" : "Hostname of the MySQL or Aurora host",
             "mandatory" : false
         },
         {
@@ -105,7 +106,6 @@
             "label" : "DB user",
             "visibilityCondition": "model.metastoreDBMode == 'MYSQL'",
             "type": "STRING",
-            "description" : "Username of the MySQL or Aurora DB",
             "mandatory" : false
         },
         {
@@ -113,7 +113,6 @@
             "label" : "DB password",
             "visibilityCondition": "model.metastoreDBMode == 'MYSQL'",
             "type": "PASSWORD",
-            "description" : "Password of the MySQL or Aurora DB",
             "mandatory" : false
         },
 
@@ -153,7 +152,7 @@
 
         {
             "name": "metastoreGcloudInstance",
-            "label" : "Gcloud SQL instance name",
+            "label" : "Google Cloud SQL instance name",
             "visibilityCondition": "model.metastoreDBMode == 'GCLOUD_SQL'",
             "type": "STRING",
             "description" : "Gcloud SQL instance name for metastore database",
@@ -161,7 +160,7 @@
         },
         {
             "name": "metastoreGcloudRegion",
-            "label" : "Gcloud SQL region",
+            "label" : "Region",
             "visibilityCondition": "model.metastoreDBMode == 'GCLOUD_SQL'",
             "type": "STRING",
             "defaultValue" : "",
