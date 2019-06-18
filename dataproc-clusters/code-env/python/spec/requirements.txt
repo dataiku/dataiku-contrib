@@ -1,5 +1,0 @@
-google-auth-httplib2 
-google-auth 
-google-cloud
-google-api-python-client
-googleapis-common-protos
