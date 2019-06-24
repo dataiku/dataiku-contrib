@@ -1,9 +1,9 @@
 {
-    "id": "google-charts",
+    "id": "waterfall-chart",
     "version": "0.1.0",
     "meta": {
-        "label": "Google charts",
-        "description": "Set of visualization webapps with Google Charts",
+        "label": "Waterfall chart",
+        "description": "Use waterfall chart to visualize the evolution of a value.",
         "author": "Dataiku (Du Phan)",
         "icon": "icon-bar-chart",
         "licenseInfo": "Apache Software License",

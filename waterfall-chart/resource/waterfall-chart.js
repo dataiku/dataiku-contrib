@@ -1,7 +1,7 @@
 let dataReady;
 let chartReady;
 
-function initWaterfall(onReady) {
+function initWaterfall(cfg, onReady) {
     try {
         dataiku.checkWebAppParameters();
     } catch (e) {
@@ -9,10 +9,11 @@ function initWaterfall(onReady) {
         return;
     }
     
-    const cfg = dataiku.getWebAppConfig();
+    console.warn('CFG ', cfg)
     const dataset = cfg['dataset'];
     const unit = cfg['unit'];
     const value = cfg['value'];
+    console.warn('----VALUE: ',value)
     const sampling = {};
 
     let allRows;
@@ -53,9 +54,7 @@ function initWaterfall(onReady) {
             drawAppIfEverythingReady();
         });
         dataiku.fetch(dataset, sampling, function(dataFrame) {
-
             allRows = dataFrame.mapRecords(transform_record);
-
             var last_index = allRows.length - 1;
             var final_row = ["final", "0", "0", allRows[last_index][4], allRows[last_index][4]];
             allRows.push(final_row);
