@@ -40,3 +40,33 @@ The following steps can be followed - when using the Azure Portal:
 > If you intend to use an already existing user, you should make sure that its settings have 
 > at least *Usage location* and the *Power BI license* set.
 
+## Register an App that will interact with Power BI service API's on behalf of the user
+The following steps can be followed - when using the Azure Portal:	
+* Click on the **Azure Active Directory** menu, then click on **App Registrations**.
+* Create a new App
+	* Click **"+New registration"**
+	* Enter a name (ex: *Dataiku App to Push Data to PowerBI*)
+	* click **"Register"**
+* Set the proper authentication properties for your App
+	* Click on **Authentication**
+	* Add a new *Public client (mobile & desktop)* > ```https://dev.powerbi.com/Apps/SignInRedirect``` property
+	* Add a new *Public client (mobile & desktop)* > ```urn:ietf:wg:oauth:2.0:oob``` property
+	* Under *Implicit grant*, select **"ID tokens"**
+	* Under *Default client type*, select **Yes**
+	* Click **Save**
+* Set the proper permissions for your App
+	* Click **"+ Add a permission"**
+	* Select **Power BI Service**
+	* Click **"Delegated permissions"**
+	* Select **Dataset** > **Dataset.ReadWrite.All**
+	* Click **Add permissions**
+	* Click **Grant admin consent for ....(name of the directory)"** (*Yes*)
+* Set ownership of the App
+	* Click **"Owner"**
+	* Click **"+ Add owners** and add the user that will interact with the Power BI Service API's (ex: *PowerBI Service User for Dataiku*, as created in the previous step)
+* Go back **Overview**, and write down your **Application (client) ID**
+
+
+
+	
+	
