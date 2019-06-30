@@ -107,4 +107,4 @@ print(access_token)
 }
 ```
 > **Note**: This Project variable should be set in the Project where you intend to export data to Power BI
-* Finally, when using the Plugin, choose the "... with access token" export options. 
+* Finally, when using the Plugin, choose the "... **with access token**" export options. 
