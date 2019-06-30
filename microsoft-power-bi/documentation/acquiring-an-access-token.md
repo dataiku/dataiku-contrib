@@ -16,7 +16,7 @@ For an high-level perspective, the steps involve are the following:
 * register an Application that will interact with the Power BI service on behalf of the user above - and set the proper permissions
 * obtain an access token and make it available to the Plugin
 
-## Create a "service" user that will interact with the Power BI service
+## Create a "service" user that will interact with the Power BI service (optional)
 In this step - we are creating a generic "service" user that will be granted the proper permissions to interact with the Power BI service API's.	
 > **Note**:
 > The Dataiku Power BI Plugin users will push their data 
