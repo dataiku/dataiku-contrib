@@ -1,9 +1,10 @@
 # Acquiring an access token for the Azure Power BI Plugin
 
-**Date**: June 30th, 2019
-**Important**: this documentation is provided as-is, on a best-effort basis and is meant to provide guidance
-to end users to obtain a valid access token to interact with the Power BI service. It has not been validated
-by Microsoft. The official Microsoft documentation will always prevail on this one. 
+**Date**: June 30th, 2019	
+
+> **Important**: this documentation is provided as-is, on a best-effort basis and is meant to provide guidance
+> to end users to obtain a valid access token to interact with the Power BI service. It has not been validated
+> by Microsoft. The official Microsoft documentation will always prevail on this one. 
 
 ## Overview
 In order to use the Power BI Plugin, you will need a proper access token to interact with the service through thier REST API's. 
