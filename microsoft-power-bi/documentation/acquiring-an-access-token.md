@@ -70,7 +70,7 @@ The following steps can be followed - when using the Azure Portal:
 ## Obtaining an access token for the Plugin
 The following steps can be used to obtain a valid access token to input into the Power BI Plugin. 
 * Make sure you installed the Power BI Plugin from the Dataiku plugin store. 
-* Run the following Python code (in a Jupyter Notebook for instance)
+* Run the following Python code (in a Jupyter Notebook for instance). Note that you will need the *Adal* package, you may want to build a dedicated code env to install it.
 ```python
 import adal
 import requests
