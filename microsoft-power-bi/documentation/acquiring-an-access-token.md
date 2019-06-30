@@ -1,6 +1,7 @@
 # Acquiring an access token for the Azure Power BI Plugin
 
 **Valid as of**: June 30th, 2019	
+
 **Note**: you will need admin level privileges on your Azure subscription to complete the steps below.	
 
 > **Important**: this documentation is provided as-is, on a best-effort basis and is meant to provide guidance
