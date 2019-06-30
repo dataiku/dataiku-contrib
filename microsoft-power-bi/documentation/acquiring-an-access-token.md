@@ -67,6 +67,44 @@ The following steps can be followed - when using the Azure Portal:
 * Go back **Overview**, and write down your **Application (client) ID**
 
 
+## Obtaining an access token for the Plugin
+The following steps can be used to obtain a valid access token to input into the Power BI Plugin. 
+* Make sure you installed the Power BI Plugin from the Dataiku plugin store. 
+* Run the following Python code (in a Jupyter Notebook for instance)
+```python
+import adal
+import requests
 
-	
-	
+authority_url = 'https://login.windows.net/common'
+resource_url = 'https://analysis.windows.net/powerbi/api'
+
+client_id = "YOUR-APP-APPLICATION-ID"
+username = "YOUR-USERNAME@YOUR-TENANT"
+password = "YOUR-USERNAME-PASSWORD"
+
+context = adal.AuthenticationContext(
+    authority=authority_url,
+    validate_authority=True,
+    api_version=None
+)
+
+token = context.acquire_token_with_username_password(
+    resource=resource_url,
+    client_id=client_id,
+    username=username,
+    password=password
+)
+
+access_token = token.get('accessToken')
+print(access_token)
+```
+* Copy/paste the access token in a Project Variable (or replace current value) with the following key:
+```
+{
+  "powerbi-settings": {
+    "access_token": "YOUR-ACCESS-TOKEN"
+  }
+}
+```
+> **Note**: This Project variable should be set in the Project where you intend to export data to Power BI
+* Finally, when using the Plugin, choose the "... with access token" export options. 
