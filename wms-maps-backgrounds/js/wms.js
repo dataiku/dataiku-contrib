@@ -28,6 +28,8 @@
                 wmsList[i][1]
             );
         }
-    })
+    }).error(function(a, b, c) {
+        console.error("Failed to get WMS plugin settings", getErrorDetails(a, b, c));
+    });
 
 })();
