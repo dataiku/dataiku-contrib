@@ -14,6 +14,7 @@
         } else if (data.settings.config && data.settings.config.wmsResources && data.settings.config.wmsResources.length > 0) {
             // old style, everything in a textarea
             console.info("Registering WMS map backgrounds from parameters");
+            var wmsResources = data.settings.config.wmsResources;
             wmsList = wmsResources.split("\n").filter(x => x.length > 0).map(x => [x.split(" ")[0], x.split(" ")[1], x.split(" ")[2]]);
         } else {
             console.info("No settings for registering WMS map backgrounds");
