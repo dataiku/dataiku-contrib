@@ -48,6 +48,8 @@
             dkuMapBackgrounds.addMapbox(bg[0], bg[1], accessToken);
         });
 
+    }).error(function(a, b, c) {
+        console.error("Failed to get MapBox plugin settings", getErrorDetails(a, b, c));
     });
     
 })();
