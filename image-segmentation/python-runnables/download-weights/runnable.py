@@ -4,14 +4,15 @@ import requests
 import dataiku
 import os
 import logging
+import json
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO,  # avoid getting log from 3rd party module
                     format='image-segmentation plugin %(levelname)s - %(message)s')
-
 try :
     import pycocotools
 except :
-    with open('../../../../../../config/plugins/image-segmentation/settings.json','r') as f:
+    json_path = os.path.join(os.environ['DIP_HOME'], 'config/plugins/image-segmentation/settings.json') 
+    with open(json_path, 'r') as f:
         codenv_name = json.load(f).get('codeEnvName')
     logger.warning("##### WARNING ##### Couldn't find pycocotools in installed packages : will proceed to installing the package in plugin codenv")
     client = dataiku.api_client()
