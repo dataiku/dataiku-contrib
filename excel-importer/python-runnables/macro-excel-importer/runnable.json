@@ -20,5 +20,7 @@
            "type": "FOLDER",
            "label": "Folder name",
            "description": "Name of the folder that contains the xlsx file(s)"
-       }]
+       }],
+    "resultType" : "RESULT_TABLE"
+    
 }

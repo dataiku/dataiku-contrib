@@ -39,6 +39,14 @@ class MyRunnable(Runnable):
         # List files in folder and get path
         files_list = os.listdir(folder_path)
 
+        # List the datasets in the project
+        datasets_in_project = []
+        for i in range(len(project.list_datasets())):
+            datasets_in_project.append(project.list_datasets()[i]['name'])
+        
+        # Actions performed
+        actions_performed = dict()
+        
         for my_file in files_list:
             ## Get file path
             file_path = os.path.join(folder_path, my_file)
@@ -54,6 +62,12 @@ class MyRunnable(Runnable):
                     ss_sheet.title = my_file.split(".")[0] + "_" + sheet
                     ss.save(file_path)
 
+             ## If the dataset already exists, delete and replace it
+                actions_performed[ss_sheet.title] = "created"
+                if ss_sheet.title in datasets_in_project:
+                    project.get_dataset(ss_sheet.title).delete()
+                    actions_performed[ss_sheet.title] = "replaced"
+
                 ### Create dataset from Excel sheet
                 project.create_dataset(ss_sheet.title
                         ,'FilesInFolder'
@@ -61,3 +75,17 @@ class MyRunnable(Runnable):
                         , formatType='excel'
                         , formatParams={"xlsx":True, "sheets":"*"+ss_sheet.title,'parseHeaderRow': True})
 
+        
+        
+        # Output table
+        from dataiku.runnables import Runnable, ResultTable
+        rt = ResultTable()
+        rt.add_column("actions", "Actions", "STRING")
+
+        # Actions : "dataset" has been created or replaced
+        for i in range(len(actions_performed)):
+            record = []
+            record.append(actions_performed.keys()[i] + " has been " + actions_performed.values()[i])
+            rt.add_record(record)
+
+        return rt
