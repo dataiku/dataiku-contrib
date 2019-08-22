@@ -44,15 +44,69 @@
             "name": "activate_scenarios",
             "label" : "Activate Scenarios",
             "type": "BOOLEAN",
+            "mandatory" : false,
             "default": true,
             "description": "If selected, all active scenarios on the initial project will be activated in the remote project."
+        },
+        {
+            "name": "advanced",
+            "label" : "Advanced Options",
+            "type": "BOOLEAN",
+            "mandatory" : false,
+            "default": false,
+            "description": "View advanced options."
         },
         {
             "name": "ignore_ssl_certs",
             "label" : "Ignore SSL Certificates",
             "type": "BOOLEAN",
+            "visibilityCondition" : "model.advanced",
+            "mandatory" : false,
             "default": false,
             "description": "If selected, ignores SSL certificates on remote instance."
+        },
+        {
+            "name": "remote_design_instance",
+            "label" : "Remote Design Instance",
+            "type": "BOOLEAN",
+            "visibilityCondition" : "model.advanced",
+            "mandatory" : false,
+            "default": false,
+            "description": "Are you pushing the project to another design instance?"
+        },
+        {
+            "name": "create_bundle_on_remote_design_instance",
+            "label" : "Create Bundle on Remote Design Instance",
+            "type": "BOOLEAN",
+            "visibilityCondition" : "model.remote_design_instance",
+            "mandatory" : false,
+            "default": false,
+            "description": "If remote instance is a design instance, create a bundle on it?"
+        },
+        {
+            "name": "assign_git_remote",
+            "label" : "Git Remotes",
+            "type": "BOOLEAN",
+            "visibilityCondition" : "model.advanced",
+            "mandatory" : false,
+            "default": false,
+            "description": "Assign Git remote to target project."
+        },
+        {
+            "name": "git_remote_name",
+            "label": "Git Remote Name",
+            "type": "STRING",
+            "visibilityCondition" : "model.assign_git_remote",
+            "description": "Name of Git Remote Repository",
+            "mandatory": true
+        },
+        {
+            "name": "git_remote_url",
+            "label": "Git Remote URL",
+            "type": "STRING",
+            "visibilityCondition" : "model.assign_git_remote",
+            "description": "URL of Git Remote Repository",
+            "mandatory": true
         }
     ]
 }
