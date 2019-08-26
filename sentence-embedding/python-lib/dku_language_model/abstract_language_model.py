@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-import sys
-import os
-import pandas as pd
 import numpy as np
 import re
 import string
 import logging
 logger = logging.getLogger(__name__)
-
 
 # Twitter related tokens
 RE_HASHTAG = ur'#[a-zA-Z0-9_]+'
@@ -22,6 +18,7 @@ TOKENS_TO_IGNORE = [
     RE_URL,
     RE_EMAIL
 ]
+
 
 class AbstractLanguageModel(object):
     def __init__(self, model_path):
@@ -43,7 +40,6 @@ class AbstractLanguageModel(object):
 
         """
         if text is np.nan:
-            print('Nope nan')
             return ''
         text = str(text).lower()  # lower text
 

@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys
 import os
-import pandas as pd
-import numpy as np
-import re
-import string
-from collections import Counter, defaultdict
-from gensim.models import KeyedVectors
-from sklearn.decomposition import TruncatedSVD
 import tensorflow as tf
 import tensorflow_hub as hub
 from abstract_language_model import AbstractLanguageModel
@@ -30,14 +22,13 @@ class ElmoModel(ContextualLanguageModel):
     def load_model(self):
         # Set path for loading the pre-trained ELMo model
         os.environ["TFHUB_CACHE_DIR"] = os.path.join(self.model_path)
-        print("Initializing ELMo...")
+        logger.info("Initializing ELMo...")
         self.model = hub.Module("https://tfhub.dev/google/elmo/2", trainable=True)
         # Initialize the model
         self.sess = tf.Session()
         self.sess.run(tf.global_variables_initializer())
         self.sess.run(tf.tables_initializer())
-        
-        
+
     def get_text_batches(self, texts):
         max_sequence_length = 100
         batch_size = 32
