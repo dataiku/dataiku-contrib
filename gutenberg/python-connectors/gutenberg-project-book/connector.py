@@ -37,9 +37,14 @@ class GutenbergConnector(Connector):
         bid = str(self.book_id)
         print type(lid)
 
+        stopit = 0
         for i in range(lid-1):
-            url_book += '/'+bid[i]
-        url_book += '/'+ bid  + '/'+ bid + '.txt'
+            if (bid[i+1] != "-") and (stopit ==0):
+                url_book += '/'+bid[i]
+            else:
+                stopit=1
+                bidonly=bid[0:i]stopit = 0
+        url_book += '/'+ bidonly  + '/'+ bid + '.txt'
 
         print url_book
         response = url2.urlopen(url_book)
