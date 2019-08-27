@@ -43,7 +43,7 @@ class GutenbergConnector(Connector):
                 url_book += '/'+bid[i]
             else:
                 stopit=1
-                bidonly=bid[0:i]stopit = 0
+                bidonly=bid[0:i]
         url_book += '/'+ bidonly  + '/'+ bid + '.txt'
 
         print url_book
