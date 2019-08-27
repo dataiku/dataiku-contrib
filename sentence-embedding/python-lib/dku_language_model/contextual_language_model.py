@@ -6,6 +6,7 @@ from abstract_language_model import AbstractLanguageModel
 import logging
 logger = logging.getLogger(__name__)
 
+
 class ContextualLanguageModel(AbstractLanguageModel):
       
     def __init__(self, model_path):

@@ -73,19 +73,11 @@ class AbstractLanguageModel(object):
     def get_model_name():
         raise NotImplementedError()
         
-    @staticmethod
-    def download_model():
-        raise NotImplementedError()
-        
     def load_model(self):
-        raise NotImplementedError()
-        
-    def get_embedding(self, text):
-        raise NotImplementedError()
-        
-    def finetuning(self):
         raise NotImplementedError()
         
     def get_sentence_embedding(self, texts):
         raise NotImplementedError
-        
+
+    def get_weighted_sentence_embedding(self, texts, smoothing_parameter, npc):
+        return self.get_sentence_embedding(texts)

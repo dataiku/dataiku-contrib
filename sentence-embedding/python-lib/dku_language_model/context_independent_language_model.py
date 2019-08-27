@@ -15,7 +15,6 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
         self.word2idx = None
         self.embedding_matrix = None
 
-        
     def get_sentence_word_vectors(self, text):
         indices = [self.word2idx[w] for w in text.split() if w in self.word2idx]
         return self.embedding_matrix[indices]
@@ -30,11 +29,11 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
         res = map(self.compute_average_embedding, cleaned_texts)
         return res
         
-    def get_weighted_sentence_word_vectors(self, batch, weights):
+    def get_weighted_sentence_word_vectors(self, text, weights):
         #Check if sentence contains at least one token and return None if not
-        indices = [self.word2idx[w]for w in batch.split() if w in self.word2idx]
+        indices = [self.word2idx[w] for w in text.split() if w in self.word2idx]
         embeddings = self.embedding_matrix[indices]
-        weights = [weights[w] for w in batch.split() if w in self.word2idx]
+        weights = [weights[w] for w in text.split() if w in self.word2idx]
         return [w * e for w, e in zip(weights, embeddings)]
     
     def compute_weighted_average_embedding(self, text, weights):
@@ -79,7 +78,7 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
         logger.info("Computing weighted average embeddings...")
         res = map(lambda s: self.compute_weighted_average_embedding(s, word_weights), cleaned_texts)
 
-        #Remove empty sentences and save their indecies
+        # Remove empty sentences and save their indecies
         is_void = map(lambda x: 1 if x.shape == () else 0 , res)
         res = [x for x,y in zip(res,is_void) if y==0]
 
@@ -127,7 +126,8 @@ class FasttextModel(ContextIndependentLanguageModel):
                 embedding_matrix.append(embedding)
         self.embedding_matrix = np.array(embedding_matrix)
         self.word2idx = word2idx
-    
+
+
 class GloveModel(ContextIndependentLanguageModel):
     
     @staticmethod
@@ -150,7 +150,8 @@ class GloveModel(ContextIndependentLanguageModel):
             logger.info("Successfully loaded {} word embeddings!".format(i))
         self.embedding_matrix = np.array(embedding_matrix)
         self.word2idx = word2idx
-    
+
+
 class CustomModel(ContextIndependentLanguageModel):
     
     @staticmethod
@@ -173,4 +174,3 @@ class CustomModel(ContextIndependentLanguageModel):
             logger.info("Successfully loaded {} word embeddings!".format(i))
         self.embedding_matrix = np.array(embedding_matrix)
         self.word2idx = word2idx
-        
