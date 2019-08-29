@@ -7,20 +7,19 @@ import os
 import gzip
 import zipfile
 import requests
+import shutil
 
 
 def download_file_from_google_drive(id, destination):
     URL = "https://docs.google.com/uc?export=download"
 
     session = requests.Session()
-
     response = session.get(URL, params={'id': id}, stream=True)
     token = get_confirm_token(response)
 
     if token:
         params = {'id': id, 'confirm': token}
         response = session.get(URL, params=params, stream=True)
-
     save_response_content(response, destination)
 
 
@@ -57,7 +56,7 @@ class MyRunnable(Runnable):
 
     def get_progress_target(self):
         """
-        If the runnable will return some progress info, have this function return a tuple of 
+        If the runnable will return some progress info, have this function return a tuple of
         (target, unit) where unit is one of: SIZE, FILES, RECORDS, NONE
         """
         return (100, 'NONE')
@@ -112,9 +111,16 @@ class MyRunnable(Runnable):
             download_file_from_google_drive(file_id, archive_fname)
 
             # Decompress in managed folder and rename
+            """ 
             decompressed_file = gzip.GzipFile(archive_fname)
             with open(os.path.join(output_folder_path, "Word2vec_embeddings"), 'wb') as outfile:
+                print('))))))))))) WRITING FILE')
                 outfile.write(decompressed_file.read())
+            """
+
+            outfile_path = os.path.join(output_folder_path, "Word2vec_embeddings")
+            with open(outfile_path, 'wb') as f_out, gzip.open(archive_fname, 'rb') as f_in:
+                shutil.copyfileobj(f_in, f_out)
 
             # Remove archive
             os.remove(archive_fname)
