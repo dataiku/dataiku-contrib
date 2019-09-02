@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import logging
-import string
 from dku_language_model.context_independent_language_model import FasttextModel, Word2vecModel, GloveModel, CustomModel
 from dku_language_model.contextual_language_model import ElmoModel
-maketrans = string.maketrans
 logger = logging.getLogger(__name__)
 
 def load_pretrained_model(path, embedding_is_custom=False):
@@ -37,6 +35,5 @@ def load_pretrained_model(path, embedding_is_custom=False):
             raise ValueError("Something is wrong with the pre-trained embeddings. " +
                              "Please make sure to either use the plugin macro to download the embeddings, " +
                              "or tick the custom embedding box if you are using custom vectors.")
-
     model.load_model()
     return model

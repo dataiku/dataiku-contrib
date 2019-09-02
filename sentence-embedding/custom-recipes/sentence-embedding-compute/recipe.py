@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import dataiku
 from dataiku.customrecipe import *
-from sentence_embedding_utils import load_pretrained_model
+from commons import load_pretrained_model
 import logging
 
 FORMAT = '[SENTENCE EMBEDDING] %(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -68,7 +68,7 @@ for name in text_column_names:
         embedded_texts = model.get_weighted_sentence_embedding(texts, smoothing_parameter, npc)
 
     # Checking for existing columns with same name
-    new_column_name = "{}-{}".format(name, aggregation_method)
+    new_column_name = "{}_{}".format(name, aggregation_method)
     if new_column_name in df.columns:
         j = 1
         while new_column_name + "_{}".format(j) in df.columns:

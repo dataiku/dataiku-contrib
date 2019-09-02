@@ -3,6 +3,7 @@ import os
 import tensorflow as tf
 import tensorflow_hub as hub
 from abstract_language_model import AbstractLanguageModel
+from language_model_utils import clean_text
 import logging
 logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class ElmoModel(ContextualLanguageModel):
         return text_batches
     
     def get_sentence_embedding(self, texts):
-        cleaned_texts = map(self.clean_text, texts)
+        cleaned_texts = map(clean_text, texts)
         batches = self.get_text_batches(cleaned_texts)
         embedded_sentences = []
         for batch in batches:
