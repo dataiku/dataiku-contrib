@@ -8,7 +8,7 @@ from dataiku.customrecipe import get_recipe_resource
 from preprocessing_utils import clean_text
 
 import numpy as np
-from fastText import load_model
+from fasttext import load_model
 
 #############################
 # Logging Settings
@@ -81,10 +81,10 @@ for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZ
 
     # Post-process predicted Sentiment
     predicted_scores = np.array([int(v[0].split('__')[-1]) for v in predicted_scores])
-    
+
     if predict_polarity:
         predicted_scores += -1  # polarity model predicts 1/2 instead of 0/1
-    
+
     confidence_list = confidence_list.ravel()
 
     if chunk_idx==0:
@@ -115,7 +115,7 @@ for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZ
             else "positive" if p==4
             else "highly positive" if p==5
             else "" for p in predicted_scores]
-        
+
     if output_probabilities:
         df[new_cols[2]] = np.array(confidence_list) / float(max(confidence_list))
 
@@ -126,7 +126,7 @@ for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZ
         writer.write_dataframe(df)
     else:
         writer.write_dataframe(df)
-    
+
     n_lines += len(df)
     logger.info("Finished processing {} lines".format(n_lines))
 writer.close()
