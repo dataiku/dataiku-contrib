@@ -76,14 +76,14 @@ for chunk_idx, df in enumerate(input_dataset.iter_dataframes(chunksize=CHUNK_SIZ
         out_df.pop('sentence')
     
     # Append dataframe to output Dataset
-   if chunk_idx == 0:
+    if chunk_idx == 0:
         df_concat = out_df #worst quick fix - to use writer, would need to set the schema from spacy/flair entities first !
-        output_dataset.write_schema_from_dataframe(out_df)
-        writer = output_dataset.get_writer()
-        writer.write_dataframe(out_df)
+        #output_dataset.write_schema_from_dataframe(out_df)
+        #writer = output_dataset.get_writer()
+        #writer.write_dataframe(out_df)
     else:
         df_concat = pd.concat([df_concat, out_df], axis=0)
-        writer.write_dataframe(out_df)
+        #writer.write_dataframe(out_df)
 
     n_lines += len(df)
     logger.info("Finished processing {} lines".format(n_lines))
