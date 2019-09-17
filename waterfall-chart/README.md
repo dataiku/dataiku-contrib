@@ -1,12 +1,10 @@
-# Google charts
+# Waterfall chart
 
-This Dataiku DSS plugin helps you create, without code, different type of charts.
+This Dataiku DSS plugin adds a custom chart, the waterfall chart.
 
-It contains several webapps for 
-* waterfall/bridge chart.
+Waterfall charts are useful to visualize the cumulative effect of sequential events, introducing either positive or negative values.
 
-The charts are based on the [Google Charts library](https://developers.google.com/chart/) and requires internet access.
+This chart is based on the [Google Charts library](https://developers.google.com/chart/) and requires internet access to render on your datasets.
 
-## License 
-
+## License
 This project is licensed under the Apache Software License.
