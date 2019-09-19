@@ -28,7 +28,7 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
     def get_sentence_embedding(self, texts):
         cleaned_texts = map(clean_text, texts)
         embeddings = map(self.compute_average_embedding, cleaned_texts)
-        return embeddings
+        return embeddings.tolist()
         
     def get_weighted_sentence_word_vectors(self, text, weights):
         #Check if sentence contains at least one token and return None if not
@@ -41,7 +41,7 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
         """Weighted average embedding for computing SIF."""
         embeddings = self.get_weighted_sentence_word_vectors(text, weights)    
         avg_embedding = np.mean(embeddings, axis=0)
-        return avg_embedding
+        return avg_embedding.tolist()
     
     def remove_principal_components(self, X, npc):
         """Removes the first PC for computing SIF."""

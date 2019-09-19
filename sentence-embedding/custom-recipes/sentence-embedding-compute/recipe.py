@@ -3,6 +3,7 @@ import dataiku
 from dataiku.customrecipe import *
 from commons import load_pretrained_model
 import logging
+import json
 
 FORMAT = '[SENTENCE EMBEDDING] %(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -76,7 +77,7 @@ for name in text_column_names:
         new_column_name += "_{}".format(j)
 
     # Adding a new column with computed embeddings
-    df[new_column_name] = embedded_texts
+    df[new_column_name] = map(json.dumps, embedded_texts)
 
 logger.info("Computed sentence embeddings.")
 
