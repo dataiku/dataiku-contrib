@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import dataiku
 from dataiku.customrecipe import *
-from commons import load_pretrained_model
+from sentence_embedding_utils import load_pretrained_model
 import logging
 import json
 
