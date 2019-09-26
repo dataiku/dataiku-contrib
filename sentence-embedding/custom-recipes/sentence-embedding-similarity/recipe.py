@@ -2,7 +2,7 @@
 import dataiku
 from dataiku.customrecipe import *
 
-from sentence_embedding_utils import EmbeddingModel, clean_text, preprocess_and_compute_sentence_embedding
+from commons import EmbeddingModel, clean_text, preprocess_and_compute_sentence_embedding
 
 import os
 import json
