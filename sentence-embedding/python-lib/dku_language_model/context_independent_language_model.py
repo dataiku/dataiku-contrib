@@ -6,12 +6,11 @@ from sklearn.decomposition import TruncatedSVD
 from abstract_language_model import AbstractLanguageModel
 from language_model_utils import clean_text
 import logging
-
 logger = logging.getLogger(__name__)
 
 
 class ContextIndependentLanguageModel(AbstractLanguageModel):
-
+      
     def __init__(self, model_path):
         AbstractLanguageModel.__init__(self, model_path)
         self.word2idx = None
@@ -24,26 +23,29 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
     def compute_average_embedding(self, text):
         embeddings = self.get_sentence_word_vectors(text)
         avg_embedding = np.mean(embeddings, axis=0)
-        return avg_embedding.tolist()
-
+        if np.isnan(sum(avg_embedding)):
+            return np.nan
+        else:
+            return avg_embedding.tolist()
+        
     def get_sentence_embedding(self, texts):
         cleaned_texts = map(clean_text, texts)
         embeddings = map(self.compute_average_embedding, cleaned_texts)
         return embeddings
-
+        
     def get_weighted_sentence_word_vectors(self, text, weights):
-        # Check if sentence contains at least one token and return None if not
+        #Check if sentence contains at least one token and return None if not
         indices = [self.word2idx[w] for w in text.split() if w in self.word2idx]
         embeddings = self.embedding_matrix[indices]
         weights = [weights[w] for w in text.split() if w in self.word2idx]
         return [w * e for w, e in zip(weights, embeddings)]
-
+    
     def compute_weighted_average_embedding(self, text, weights):
         """Weighted average embedding for computing SIF."""
-        embeddings = self.get_weighted_sentence_word_vectors(text, weights)
+        embeddings = self.get_weighted_sentence_word_vectors(text, weights)    
         avg_embedding = np.mean(embeddings, axis=0)
-        return avg_embedding.tolist()
-
+        return avg_embedding #.tolist()
+    
     def remove_principal_components(self, X, npc):
         """Removes the first PC for computing SIF."""
         svd = TruncatedSVD(n_components=npc, n_iter=7, random_state=0)
@@ -57,8 +59,8 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
         j = 0
         for v in is_void:
             if v == 0:
-                final_embeddings.append(embeddings[j])
-                j += 1
+                final_embeddings.append(embeddings[j].tolist())
+                j+=1
             else:
                 final_embeddings.append(np.nan)
         return final_embeddings
@@ -78,27 +80,26 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
 
         # Compute SIF
         logger.info("Computing weighted average embeddings...")
-        raw_embeddings = np.array(
-            map(lambda s: self.compute_weighted_average_embedding(s, word_weights), cleaned_texts))
+        raw_embeddings = np.array(map(lambda s: self.compute_weighted_average_embedding(s, word_weights), cleaned_texts))
 
         # Remove empty sentences and save their indecies
         is_void = np.array(map(lambda x: x.shape == (), raw_embeddings))
-        embeddings_without_void = [x for x, y in zip(raw_embeddings, is_void) if y == 0]
+        embeddings_without_void = [x for x,y in zip(raw_embeddings,is_void) if y==0]
 
         logger.info("Removing vectors principal component...")
         embeddings_processed = self.remove_principal_components(embeddings_without_void, npc)
-        # TODO: refactor this to avoid the weird j index condition
+        #TODO: refactor this to avoid the weird j index condition 
         final_embeddings = self.contruct_final_embeddings(embeddings_processed, is_void)
-
+            
         return final_embeddings
-
-
+    
+    
 class Word2vecModel(ContextIndependentLanguageModel):
-
+    
     @staticmethod
     def get_model_name():
         return 'Word2Vec pretrained model'
-
+    
     def load_model(self):
         logger.info('Loading Word2Vec model...')
         model = KeyedVectors.load_word2vec_format(self.model_path, binary=True)
@@ -108,11 +109,11 @@ class Word2vecModel(ContextIndependentLanguageModel):
 
 
 class FasttextModel(ContextIndependentLanguageModel):
-
+    
     @staticmethod
     def get_model_name():
         return 'fastText pretrained model'
-
+        
     def load_model(self):
         logger.info('Loading fastText model...')
         word2idx = {}
@@ -135,11 +136,11 @@ class FasttextModel(ContextIndependentLanguageModel):
 
 
 class GloveModel(ContextIndependentLanguageModel):
-
+    
     @staticmethod
     def get_model_name():
         return 'GloVe pretrained model.'
-
+        
     def load_model(self):
         logger.info('Loading GloVe model...')
         word2idx = {}
@@ -159,11 +160,11 @@ class GloveModel(ContextIndependentLanguageModel):
 
 
 class CustomModel(ContextIndependentLanguageModel):
-
+    
     @staticmethod
     def get_model_name():
         return 'Custom pretrained model.'
-
+            
     def load_model(self):
         logger.info('Loading custom model...')
         word2idx = {}

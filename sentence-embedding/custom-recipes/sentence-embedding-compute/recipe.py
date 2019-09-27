@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import dataiku
 from dataiku.customrecipe import *
+import numpy as np
 from commons import load_pretrained_model
-import logging
 import json
+import logging
 
 FORMAT = '[SENTENCE EMBEDDING] %(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -69,7 +70,7 @@ for name in text_column_names:
         embedded_texts = model.get_weighted_sentence_embedding(texts, smoothing_parameter, npc)
 
     # Checking for existing columns with same name
-    new_column_name = "{}_{}".format(name, aggregation_method)
+    new_column_name = "{}-{}".format(name, aggregation_method)
     if new_column_name in df.columns:
         j = 1
         while new_column_name + "_{}".format(j) in df.columns:
@@ -78,6 +79,7 @@ for name in text_column_names:
 
     # Adding a new column with computed embeddings
     df[new_column_name] = map(json.dumps, embedded_texts)
+    df[new_column_name] = df[new_column_name].replace('NaN', np.nan) # for doctor
 
 logger.info("Computed sentence embeddings.")
 

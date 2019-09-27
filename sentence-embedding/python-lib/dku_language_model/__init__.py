@@ -1,2 +1,2 @@
-from context_independent_language_model import FasttextModel, Word2vecModel, GloveModel
-from contextual_language_model import ElmoModel
+from dku_language_model.context_independent_language_model import FasttextModel, Word2vecModel, GloveModel
+from dku_language_model.contextual_language_model import ElmoModel
