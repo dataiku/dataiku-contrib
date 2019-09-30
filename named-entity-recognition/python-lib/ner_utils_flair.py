@@ -18,6 +18,10 @@ folder_path = dataiku.Folder(model_folder).get_path()
 CACHE_ROOT = folder_path
 
 
+FLAIR_ENTITIES = ['PERSON', 'NORP', 'FAC', 'ORG', 'GPE', 'LOC', 'PRODUCT', 'EVENT', 'WORK_OF_ART', 'LAW', 'LANGUAGE', 'DATE', 
+                  'TIME', 'PERCENT', 'MONEY', 'QUANTITY', 'ORDINAL', 'CARDINAL']
+
+
 def get_from_cache(url: str, cache_dir: str = None) -> str:
     """
     Given a URL, look for the corresponding dataset in the local cache.
@@ -100,7 +104,7 @@ class CustomSequenceTagger(SequenceTagger):
             model_file = cached_path(base_path, cache_dir='models')
 
         if model_file is not None:
-            tagger: SequenceTagger = SequenceTagger.load_from_file(model_file)
+            tagger: SequenceTagger = SequenceTagger.load(model_file)
             return tagger
 
 
@@ -108,7 +112,7 @@ class CustomSequenceTagger(SequenceTagger):
 # NER function
 #############################
 
-tagger = CustomSequenceTagger.load('ner-ontonotes')
+tagger = SequenceTagger.load('ner-ontonotes')
 
 import re
 import json
@@ -119,13 +123,13 @@ from collections import defaultdict
 PATTERN = r'({}|{})'.format(
 
     # Single-word entities
-    r'(?:\s*\S+ <S-.{1,4}>)',  # (<S-TAG> format)
-
+    r'(?:\s*\S+ <S-[A-Z_]*>)',  # (<S-TAG> format)
+    
     # Match multi-word entities
     r'{}{}{}'.format(
-        r'(?:\s*\S+ <B-.{1,4}>)',  # A first tag in <B-TAG> format
-        r'(?:\s*\S+ <I-.{1,4}>)*',  # Zero or more tags in <I-TAG> format
-        r'(?:\s*\S+ <E-.{1,4}>)',  # A final tag in <E-TAG> format
+        r'(?:\s*\S+ <B-[A-Z_]*>)',  # A first tag in <B-TAG> format
+        r'(?:\s*\S+ <I-[A-Z_]*>)*',  # Zero or more tags in <I-TAG> format
+        r'(?:\s*\S+ <E-[A-Z_]*>)',  # A final tag in <E-TAG> format
     )
 )
 matcher = re.compile(PATTERN)
@@ -141,7 +145,11 @@ def extract_entities(text_column, format):
     tagger.predict(sentences)
 
     # Retrieve entities
-    entity_df = pd.DataFrame()
+    if format:
+        entity_df = pd.DataFrame()
+    else: 
+        entity_df = pd.DataFrame(columns=FLAIR_ENTITIES)
+    
     for sentence in sentences:
 
         df_row = defaultdict(list)
@@ -168,8 +176,9 @@ def extract_entities(text_column, format):
         entity_df = entity_df.append(df_row, ignore_index=True)
 
     # Put 'sentence' column first
-    cols = sorted(list(entity_df.columns))
-    cols.insert(0, cols.pop(cols.index('sentence')))
+    #cols = sorted(list(entity_df.columns))
+    #cols.insert(0, cols.pop(cols.index('sentence')))
+    cols = [col for col in entity_df.columns.tolist() if col != 'sentence']
     entity_df = entity_df[cols]
 
     return entity_df
