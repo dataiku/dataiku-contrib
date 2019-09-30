@@ -55,14 +55,15 @@ elif method == "LSA":
 
 LANGUAGE = "english"
 
-
+def isvalid(text):
+    if text is not None and text == text and text != '':
+        return True
+    else:
+        return False
 
 def summarize(text):
-
-    if text == text: #avoid nan
-        
+    if isvalid(text): 
         all_capital = False
-        
         # to avoid that all capital letter sentence gives empty output: we lower all and the upper all later on
         if text.upper() == text:
             text = text.lower()
