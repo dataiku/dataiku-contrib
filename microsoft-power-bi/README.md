@@ -1,6 +1,11 @@
 # Microsoft Power BI
 
 
+Current version: 1.1.2
+
+Compatibility: DSS 5.1 and higher
+
+
 ## Plugin information
 
 This plugin provides several tools to interact with [Microsoft Power BI](https://powerbi.microsoft.com/en-us/), in its online version hosted on Azure. 
