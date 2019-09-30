@@ -31,7 +31,7 @@
                 "mandatory": true
             }
         ],
-        "canFilter": true,
-        "canFacet": true
+        "canFilter": false,
+        "canFacet": false
     }
 }
