@@ -44,7 +44,7 @@ class ContextIndependentLanguageModel(AbstractLanguageModel):
         """Weighted average embedding for computing SIF."""
         embeddings = self.get_weighted_sentence_word_vectors(text, weights)    
         avg_embedding = np.mean(embeddings, axis=0)
-        return avg_embedding #.tolist()
+        return avg_embedding
     
     def remove_principal_components(self, X, npc):
         """Removes the first PC for computing SIF."""

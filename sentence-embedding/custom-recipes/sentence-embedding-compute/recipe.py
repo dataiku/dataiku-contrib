@@ -70,7 +70,7 @@ for name in text_column_names:
         embedded_texts = model.get_weighted_sentence_embedding(texts, smoothing_parameter, npc)
 
     # Checking for existing columns with same name
-    new_column_name = "{}-{}".format(name, aggregation_method)
+    new_column_name = "{}_{}".format(name, aggregation_method)
     if new_column_name in df.columns:
         j = 1
         while new_column_name + "_{}".format(j) in df.columns:
