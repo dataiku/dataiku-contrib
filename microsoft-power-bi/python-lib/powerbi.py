@@ -186,7 +186,7 @@ def generate_access_token(username=None, password=None, client_id=None, client_s
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         print('HTTPError: ' + str(e) + ' response content:' + response.content)
-        sys.exit("Error getting token")
+        raise e
         
     return response.json()
     
