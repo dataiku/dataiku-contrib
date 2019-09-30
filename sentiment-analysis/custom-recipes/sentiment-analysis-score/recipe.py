@@ -8,7 +8,7 @@ from dataiku.customrecipe import get_recipe_resource
 from preprocessing_utils import clean_text
 
 import numpy as np
-from fastText import load_model
+from fasttext import load_model
 
 #############################
 # Logging Settings
