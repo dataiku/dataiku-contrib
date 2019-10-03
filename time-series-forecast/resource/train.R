@@ -132,7 +132,7 @@ TrainForecastingModels <- function(ts, df, xreg = NULL, modelParameterList,
     modelList[[modelName]] <- R.utils::doCall(
       .fcn = modelParameters[["modelFunction"]],
       y = ts,
-      args = modelParameters[["kwargs"]],
+      args = modelParameters["kwargs"],
       .ignoreUnusedArgs = TRUE
     )
     endTime = Sys.time()
