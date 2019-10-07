@@ -7,7 +7,7 @@
         "author" : "Dataiku (Paul HERVET)",
         "icon" : "icon-puzzle-piece",
         "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/community/plugins/info/excel-importer.html",
+        "url" : "https://www.dataiku.com/community/plugins/info/excel-sheet-importer.html",
         "tags" : ["excel"]
     }
 }
