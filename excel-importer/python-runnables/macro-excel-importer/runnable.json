@@ -1,0 +1,26 @@
+/* This file is the descriptor for the python runnable macro-excel-importer */
+{
+    "meta": {
+        "label": "Import xlsx sheets",
+        "description": "Creates one dataset per excel sheet",
+        "icon": "icon-puzzle-piece"
+    }, 
+    
+        
+    "macroRoles": [
+       {
+           "type": "MANAGED_FOLDER",
+           "targetParamsKey": "model_folder_id"
+       }
+   ],
+
+   "params": [
+       {
+           "name": "model_folder_id",
+           "type": "FOLDER",
+           "label": "Folder name",
+           "description": "Name of the folder that contains the xlsx file(s)"
+       }],
+    "resultType" : "RESULT_TABLE"
+    
+}
