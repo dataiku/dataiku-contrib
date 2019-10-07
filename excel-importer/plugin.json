@@ -1,22 +1,13 @@
-// This file is the descriptor for the DSS Plugin excel-importer-macro
 {
-    "id" : "excel-importer-macro",
-
-    "version" : "0.0.1",
-
-
+    "id" : "excel-sheet-importer",
+    "version" : "1.0.0",
     "meta" : {
-        "label" : "Plugin excel-importer-macro",
-
+        "label" : "Excel-sheet-importer",
         "description" : "Creates one dataset per sheet contained in an Excel folder",
-        "author" : "Paul HERVET",
-
+        "author" : "Dataiku (Paul HERVET)",
         "icon" : "icon-puzzle-piece",
-
         "licenseInfo" : "Apache Software License",
-
-        "url" : "https://www.dataiku.com",
-
+        "url" : "https://www.dataiku.com/community/plugins/info/excel-importer.html",
         "tags" : ["excel"]
     }
 }
