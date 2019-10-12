@@ -1,0 +1,25 @@
+{
+    "meta" : {
+        "label": "WMS service",
+        "icon": "icon-globe"
+    },
+    "definableAtProjectLevel": true,
+    "definableInline": true,
+
+    "pluginParams": [
+    ],
+
+    "params": [
+        {
+            "name": "url",
+            "label": "Service URL",
+            "type": "STRING"
+        },
+        {
+            "name": "layerId",
+            "label": "Layer",
+            "type": "STRING",
+            "description": "Identifier of the layer in the service"
+        }
+    ]
+}
