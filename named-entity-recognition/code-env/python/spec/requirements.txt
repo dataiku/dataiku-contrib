@@ -1,3 +1,4 @@
 torch==1.2.0
 flair==0.4.3
 spacy==2.1.8
+flask>=1.0,<1.1

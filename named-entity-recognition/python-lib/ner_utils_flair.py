@@ -9,16 +9,13 @@ from dataiku.customrecipe import *
 try:
     model_folder = get_input_names_for_role('model_folder')[0]
 except IndexError:
-    raise Exception(
-        "In order to use Flair you need to download the model using a macro, " + 
-        "then add the resulting folder as an input in the recipe.")
+    raise Exception("In order to use Flair you need to download the model using a macro, then add the resulting folder as an input in the recipe.")
 
 folder_path = dataiku.Folder(model_folder).get_path()
 
 CACHE_ROOT = folder_path
 
-
-FLAIR_ENTITIES = ['PERSON', 'NORP', 'FAC', 'ORG', 'GPE', 'LOC', 'PRODUCT', 'EVENT', 'WORK_OF_ART', 'LAW', 'LANGUAGE', 'DATE', 
+FLAIR_ENTITIES = ['PERSON', 'NORP', 'FAC', 'ORG', 'GPE', 'LOC', 'PRODUCT', 'EVENT', 'WORK_OF_ART', 'LAW', 'LANGUAGE', 'DATE',
                   'TIME', 'PERCENT', 'MONEY', 'QUANTITY', 'ORDINAL', 'CARDINAL']
 
 
@@ -27,7 +24,6 @@ def get_from_cache(url: str, cache_dir: str = None) -> str:
     Given a URL, look for the corresponding dataset in the local cache.
     If it's not there, download it. Then return the path to the cached file.
     """
-
     os.makedirs(cache_dir, exist_ok=True)
 
     filename = re.sub(r'.+/', '', url)
@@ -42,8 +38,6 @@ def get_from_cache(url: str, cache_dir: str = None) -> str:
         raise IOError("HEAD request failed for url {}".format(url))
 
     if not os.path.exists(cache_path):
-
-        # GET file object
         req = requests.get(url, stream=True)
         content_length = req.headers.get('Content-Length')
         total = int(content_length) if content_length is not None else None
@@ -53,7 +47,6 @@ def get_from_cache(url: str, cache_dir: str = None) -> str:
                 if chunk:  # filter out keep-alive new chunks
                     progress.update(len(chunk))
                     temp_file.write(chunk)
-
         progress.close()
 
     return cache_path
@@ -124,7 +117,7 @@ PATTERN = r'({}|{})'.format(
 
     # Single-word entities
     r'(?:\s*\S+ <S-[A-Z_]*>)',  # (<S-TAG> format)
-    
+
     # Match multi-word entities
     r'{}{}{}'.format(
         r'(?:\s*\S+ <B-[A-Z_]*>)',  # A first tag in <B-TAG> format
@@ -136,10 +129,8 @@ matcher = re.compile(PATTERN)
 
 
 def extract_entities(text_column, format):
-
     # Create Sentences
-    sentences = [Sentence(text, use_tokenizer=True)
-                 for text in text_column.values]
+    sentences = [Sentence(text, use_tokenizer=True) for text in text_column.values]
 
     # Tag Sentences
     tagger.predict(sentences)
@@ -147,15 +138,12 @@ def extract_entities(text_column, format):
     # Retrieve entities
     if format:
         entity_df = pd.DataFrame()
-    else: 
+    else:
         entity_df = pd.DataFrame(columns=FLAIR_ENTITIES)
-    
+
     for sentence in sentences:
-
         df_row = defaultdict(list)
-
         entities = matcher.findall(sentence.to_tagged_string())
-
         # Entities are in the following format: word1 <X-TAG> word2 <X-TAG> ...
         for entity in entities:
             # Extract entity text (word1, word2, ...)
@@ -175,9 +163,6 @@ def extract_entities(text_column, format):
 
         entity_df = entity_df.append(df_row, ignore_index=True)
 
-    # Put 'sentence' column first
-    #cols = sorted(list(entity_df.columns))
-    #cols.insert(0, cols.pop(cols.index('sentence')))
     cols = [col for col in entity_df.columns.tolist() if col != 'sentence']
     entity_df = entity_df[cols]
 

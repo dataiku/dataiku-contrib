@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="/plugins/named-entity-recognition/resource/style.css" />
+<script src="/plugins/model-drift/resource/dku-helpers.js"></script>
+
+<form id="main" style="width: 800px; margin: 20px auto">
+    <h3>Named Entity Recognition with <a href="https://spacy.io/" target="_blank">SpaCy</a></h3>
+    <br>
+    <div class="white-box">
+        <h3>Input Text</h3>
+        <textarea id="input_text" class="input-text" placeholder="Enter a text for running NER">Hi Marie! I have missed you these past 4 years. You are not often in Paris, I want to see you before New Year's Eve! This afternoon,  I need to go to the City Hall but let's go have ice cream, there are good ones for €2, just 500 meters away from the Opera, next to the Conseil Constitutionnel.</textarea>
+        <input type="submit" id="run-ner" class="btn btn-primary">
+        <h3 style="margin-bottom: 10px; margin-top: 50px;">Results:</h3>
+        <div id="results"></div>
+    </div>
+</form>

@@ -1,0 +1,16 @@
+body {
+    background-color: #FAFAFA;
+}
+
+input, textarea {
+    width: 100%;
+    box-shadow: none;
+    outline: none;
+    margin: 10px 0;
+    line-height: 15px;
+    border-width: 1px;
+}
+
+input:focus {
+    border-color: #3b99fc;
+}

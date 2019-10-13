@@ -1,0 +1,32 @@
+{
+    "meta": {
+        "label": "Flair Model",
+        "description": "Downloads Flair's model for Named Entity Recognition.",
+        "icon": "icon-cloud-download"
+    },
+    "impersonate": false,
+
+    /* list of required permissions on the project to see/run the runnable */
+    "permissions": ["WRITE_CONF"],
+
+    "resultType": "HTML",
+
+    /* label to use when the runnable's result is not inlined in the UI (ex: for urls) */
+    "resultLabel": "model download output",
+
+    /* for FILE resultType, the extension to use for the temp file */
+    "extension": "txt",
+
+    /* for FILE resultType, the type of data stored in the temp file */
+    "mimeType": "text/plain",
+
+    "params": [
+        {
+            "name": "outputName",
+            "label": "Output folder name",
+            "type": "STRING",
+            "description":"The name of the folder where the model is downloaded.",
+            "mandatory": true
+        }
+    ]
+}
