@@ -1,3 +1,4 @@
-torch
-git+git://github.com/zalandoresearch/flair.git@ef55bc24fc9378ef6ad01c5d2c933e6c7742c5b8
-spacy
+torch==1.2.0
+flair==0.4.3
+spacy==2.1.8
+flask>=1.0,<1.1

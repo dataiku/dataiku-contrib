@@ -1,0 +1,176 @@
+/*
+DSS webapp base stylesheet v2.0.0
+Apache Software License
+Dataiku (Joachim Zentici)
+
+This stylesheet should allow you to simply style a webapp while keeping a good consistency with DSS
+For questions and requests, https://github.com/dataiku/dataiku-contrib/issues
+
+*/
+:root {
+    /* DSS-like colors, prefer using them for better visual integration with core product */
+    --blue-lighten-5:           #E7F3FF;
+    --blue-lighten-4:           #C4E0FE;
+    --blue-lighten-3:           #9DCCFE;
+    --blue-lighten-2:           #76B8FD;
+    --blue-lighten-1:           #58A8FC;
+    --blue:                     #3B99FC;
+    --blue-darken-1:            #3591FC;
+    --blue-darken-2:            #2D86FB;
+    --blue-darken-3:            #267CFB;
+    --blue-darken-4:            #196BFA;
+
+    --success-green:            #4caf50;
+    --warning-orange:           #F28C37;
+    --error-color:              #CE1228;
+    --error-background:         #f9e3e5;
+
+    --grey-lighten-7:           #F2F2F2;
+    --grey-lighten-6:           #DDDDDD;
+    --grey-lighten-5:           #CCCCCC;
+    --grey-lighten-4:           #BBBBBB;
+    --grey-lighten-3:           #666666;
+    --grey-lighten-2:           #444444;
+    --grey-lighten-1:           #333333;
+    --grey:                     #222222;
+
+    --grey-text:                var(--grey-lighten-1);
+    --border-color:             var(--grey-lighten-7);
+
+    /* Backgrounds */
+    --grey-background:          var(--grey-lighten-7);
+}
+
+@font-face {
+    font-family: SourceSansPro;
+    src: url(/static/dataiku/fonts/SourceSansPro-Bold.woff);
+    font-weight: 600;
+}
+@font-face {
+    font-family: SourceSansPro;
+    src: url(/static/dataiku/fonts/SourceSansPro-Semibold.woff);
+    font-weight: 500;
+}
+@font-face {
+    font-family: SourceSansPro;
+    src: url(/static/dataiku/fonts/SourceSansPro-Regular.woff);
+    font-weight: 400;
+}
+
+body {
+    font-family: 'SourceSansPro';
+    font-size: 13px;
+    color: #333333;
+}
+a {
+    color: #0088cc;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+h4 {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+/* Buttons */
+
+.btn {
+    font-family: 'SourceSansPro';
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 3px 8px;
+    margin: 0;
+    line-height: 1.4;
+    background-image: inherit;
+    box-shadow: none;
+    text-shadow: none;
+    box-sizing: border-box;
+    outline: 0;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: var(--grey-text);
+    border: 1px solid #cccccc;
+}
+.btn:hover {
+    background-color: #dddddd;
+}
+.btn:active {
+    background-color: #cccccc;
+}
+
+.btn-primary {
+    background: #28a9dd;
+    color: #ffffff;
+    border: 1px solid transparent;
+}
+.btn-primary:hover {
+    background: #31adde;
+}
+.btn-primary:active {
+    background: #22a4d9;
+}
+
+/* Layout */
+
+.white-box {
+    background: #ffffff;
+    box-shadow: 0px 0px 2px 1px rgba(34, 34, 34, 0.15);
+    box-sizing: border-box;
+    padding: 24px;
+    margin-bottom: 24px;
+    width: 1000px;
+}
+
+/* tables */
+
+table.ml-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+table.ml-table th {
+    font-family: 'SourceSansPro';
+    font-weight: 400;
+    font-size: 16px;
+}
+table.ml-table th, table.ml-table td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+}
+
+
+/* Standard components */
+
+.explanation { /* try to keep in sync with DSS .doctor-explanation */
+    font-size: 1em;
+    background: #e6eef2;
+    padding: 20px;
+    border-radius: 5px;
+    color: #31708f;
+}
+.error-message, #error_message { /*remove id*/
+    color: var(--error-color);
+    background-color: var(--error-background);
+    padding: 8px 16px 8px 16px;
+    font-size: 15px;
+}
