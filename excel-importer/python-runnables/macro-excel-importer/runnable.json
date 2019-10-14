@@ -1,7 +1,7 @@
 {
     "meta": {
         "label": "Excel xlsx sheets importer",
-        "description": "Creates one dataset per excel sheet",
+        "description": "Create one dataset per excel sheet",
         "icon": "icon-table"
     },
     "macroRoles": [
