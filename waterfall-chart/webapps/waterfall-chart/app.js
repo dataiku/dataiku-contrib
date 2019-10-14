@@ -2,15 +2,13 @@ let allRows;
 let webAppConfig = dataiku.getWebAppConfig()['webAppConfig'];
 
 function draw() {
-
-    console.warn('DRAWING ', allRows);
     let data = new google.visualization.DataTable();
     data.addColumn('string', 'label');
     data.addColumn('number', 'min_threshold');
     data.addColumn('number', 'min_value');
     data.addColumn('number', 'max_value');
     data.addColumn('number', 'max_threshold');
-    
+
     for (var i = 0; i < allRows.length; i++) {
         arr = allRows[i];
         data.addRow([arr[0], parseInt(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4])]);
@@ -28,10 +26,10 @@ function draw() {
     let chart = new google.visualization.CandlestickChart(document.getElementById('waterfall-chart'));
     chart.draw(data, options);
 }
-    
+
 initWaterfall( webAppConfig, (data) => {
     allRows = data;
-    draw(); 
+    draw();
 });
 
 window.addEventListener('message', function(event) {

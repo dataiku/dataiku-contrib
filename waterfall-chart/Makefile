@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.1.0
+PLUGIN_VERSION=1.0.0
 PLUGIN_ID=waterfall-chart
 
 plugin:

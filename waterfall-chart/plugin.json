@@ -1,6 +1,6 @@
 {
     "id": "waterfall-chart",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "meta": {
         "label": "Waterfall chart",
         "description": "Use waterfall chart to visualize the evolution of a value.",
