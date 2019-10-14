@@ -1,6 +1,6 @@
 {
   "id": "time-series-forecast",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "meta": {
     "label": "Forecast including Prophet",
     "description": "This plugin offers a set of visual recipes to forecast yearly to hourly multivariate time series. It covers the full cycle of data cleaning, model training, evaluation and prediction.",
@@ -8,6 +8,6 @@
     "icon": "icon-calendar",
     "licenseInfo": "MIT License",
     "url": "https://www.dataiku.com/dss/plugins/info/forecast.html",
-    "tags": ["time-series", "forecast"]
+    "tags": ["Time Series", "Machine Learning"]
   }
 }
