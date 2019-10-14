@@ -1,14 +1,14 @@
 {
-    "id" : "spss-format",
-    "version" : "0.9.7",
+    "id": "spss-format",
+    "version": "0.9.9",
 
-    "meta" : {
-        "label" : "SPSS format",
-        "description" : "Format supporting .sav files from IBM SPSS",
-        "author" : "Dataiku (Thomas Labadie)",
-        "icon" : "icon-gears",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins/info/spss-format.html",
-        "tags" : ["Format", "Productivity"]
+    "meta": {
+        "label": "SPSS format",
+        "description": "Format supporting .sav files from IBM SPSS",
+        "author": "Dataiku (Thomas Labadie)",
+        "icon": "icon-gears",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/spss-format.html",
+        "tags": ["Format"]
     }
 }

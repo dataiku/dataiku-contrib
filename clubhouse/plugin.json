@@ -8,7 +8,7 @@
         "icon": "icon-flag-alt",
         "licenseInfo" : "Apache Software License version 2",
         "url": "https://www.dataiku.com/community/plugins/info/clubhouse.html",
-        "tags": ["Productivity", "Productivity", "SaaS"]
+        "tags": ["Connector"]
     },
     "params": [
         {

@@ -8,6 +8,6 @@
 		"icon": "icon-file-text",
 		"licenseInfo": "Apache Software License version 2",
 		"url": "https://www.dataiku.com/dss/plugins/info/googlesheets.html",
-		"tags": ["Google", "Productivity", "SaaS", "Connector"]
+		"tags": ["Google", "Connector"]
 	}
 }
