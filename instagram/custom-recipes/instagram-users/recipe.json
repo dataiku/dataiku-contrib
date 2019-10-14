@@ -2,7 +2,7 @@
     "meta" : {
         "label" : "Get data for Instagram accounts",
         "author" : "Dataiku (Thomas Cabrol)",
-        "tags" : ["instagram", "social-media", "api"]
+        "tags" : []
     },
 
     "kind" : "PYTHON",

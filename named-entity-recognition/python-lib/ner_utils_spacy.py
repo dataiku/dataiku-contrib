@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
-import spacy
 import logging
-import pandas as pd
-
 from collections import defaultdict
+import pandas as pd
+import spacy
 from dataiku.customrecipe import *
 
-
-#############################
-# Logging Settings
-#############################
-
-FORMAT = '[NER RECIPE] %(asctime)s - %(name)s - %(levelname)s - %(message)s'
-logging.basicConfig(format=FORMAT)
+logging.basicConfig(format='[NER RECIPE] %(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -50,8 +43,7 @@ except IOError:
         nlp = spacy.load(LANGUAGE)
         logger.info("Successfully installed SpaCy's {} model.".format(LANGUAGE))
     except:
-        raise Exception(
-            "Could not download SpaCy's model, probably because you don't have admin rights over the plugin code environment.")
+        raise Exception("Could not download SpaCy's model, probably because you don't have admin rights over the plugin code environment.")
 
 
 #############################
@@ -59,7 +51,6 @@ except IOError:
 #############################
 
 def extract_entities(text_column, format):
-
     # Tag sentences
     docs = nlp.pipe(text_column.values)
 

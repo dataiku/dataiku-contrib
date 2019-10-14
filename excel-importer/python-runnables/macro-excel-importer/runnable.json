@@ -2,7 +2,7 @@
     "meta": {
         "label": "Excel xlsx sheets importer",
         "description": "Creates one dataset per excel sheet",
-        "icon": "icon-puzzle-piece"
+        "icon": "icon-table"
     },
     "macroRoles": [
        {
@@ -10,8 +10,7 @@
            "targetParamsKey": "model_folder_id"
        },
        {
-           "type": "PROJECT_MACROS",
-           "targetParamsKey": "model_folder_id"
+           "type": "PROJECT_MACROS"
        }
    ],
    "params": [
@@ -26,6 +25,7 @@
           "type": "BOOLEAN",
           "label": "Overwrite if exist",
           "default": false
-       }],
+       }
+    ],
     "resultType" : "RESULT_TABLE"
 }

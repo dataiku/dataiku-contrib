@@ -1,6 +1,6 @@
 {
     "id": "azure-cognitive-services",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "meta": {
         "label": "Azure Cognitive Services",
         "description": "Apply natural language processing and computer vision leveraging Azure Cognitive Services APIs",
@@ -8,6 +8,6 @@
         "icon": "icon-cloud",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/azure-cognitive-services.html",
-        "tags": ["Microsoft Azure", "Cloud", "Machine Learning", "NLP", "Images", "Sentiment Analysis"]
+        "tags": ["Microsoft Azure", "Cloud", "Machine Learning", "NLP", "Images"]
     }
 }

@@ -5,6 +5,7 @@ from __future__ import division, print_function, unicode_literals
 
 import dataiku
 from dataiku.customrecipe import *
+import numpy as np
 
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
@@ -54,19 +55,39 @@ elif method == "LSA":
 
 LANGUAGE = "english"
 
+def isvalid(text):
+    if text is not None and text == text and text != '':
+        return True
+    else:
+        return False
 
 def summarize(text):
+    if isvalid(text): 
+        all_capital = False
+        # to avoid that all capital letter sentence gives empty output: we lower all and the upper all later on
+        if text.upper() == text:
+            text = text.lower()
+            all_capital = True
+        
+        parser = PlaintextParser.from_string(text.decode(
+            'ascii', errors='ignore'), Tokenizer(LANGUAGE))
+        stemmer = Stemmer(LANGUAGE)
 
-    parser = PlaintextParser.from_string(text.decode(
-        'ascii', errors='ignore'), Tokenizer(LANGUAGE))
-    stemmer = Stemmer(LANGUAGE)
+        summarizer = Summarizer(stemmer)
+        summarizer.stop_words = get_stop_words(LANGUAGE)
 
-    summarizer = Summarizer(stemmer)
-    summarizer.stop_words = get_stop_words(LANGUAGE)
+        sentences = [str(s) for s in summarizer(
+            parser.document, sentences_count=n_sentences)]
+        
+        if all_capital:
+            output_sentences = ' '.join(sentences).upper()
+            all_capital = False
+        else:
+            output_sentences = ' '.join(sentences)
 
-    sentences = [str(s) for s in summarizer(
-        parser.document, sentences_count=n_sentences)]
-    return ' '.join(sentences)
+        return output_sentences
+    else:
+        return ''
 
 
 # Checking for existing columns with same name

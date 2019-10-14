@@ -34,12 +34,18 @@ class GutenbergConnector(Connector):
 
         url_book = self.mirror
         lid = len(str(self.book_id))
-        bid = str(self.book_id)
+        fullbid = str(self.book_id)
+        rootbid = fullbid # sometimes the id to access a file has a variation, ex fullbid=14285-8 for the book 14285
         print type(lid)
 
+        stopit = 0
         for i in range(lid-1):
-            url_book += '/'+bid[i]
-        url_book += '/'+ bid  + '/'+ bid + '.txt'
+            if (fullbid[i+1] != "-") and (stopit==0):
+                url_book += '/'+fullbid[i]
+            else:
+                stopit=1
+                rootbid=fullbid[0:i]
+        url_book += '/'+ rootbid  + '/'+ fullbid + '.txt'
 
         print url_book
         response = url2.urlopen(url_book)

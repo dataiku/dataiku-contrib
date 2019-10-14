@@ -1,13 +1,13 @@
 {
-    "id" : "excel-sheet-importer",
-    "version" : "1.0.0",
-    "meta" : {
-        "label" : "Excel-sheet-importer",
-        "description" : "Creates one dataset per sheet contained in an Excel folder",
-        "author" : "Dataiku (Paul HERVET)",
-        "icon" : "icon-puzzle-piece",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/community/plugins/info/excel-sheet-importer.html",
-        "tags" : ["excel"]
+    "id": "excel-sheet-importer",
+    "version": "1.0.0",
+    "meta": {
+        "label": "Excel sheet importer",
+        "description": "Create one dataset per sheet from an Excel file",
+        "author": "Dataiku (Paul HERVET)",
+        "icon": "icon-table",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/community/plugins/info/excel-sheet-importer.html",
+        "tags": []
     }
 }

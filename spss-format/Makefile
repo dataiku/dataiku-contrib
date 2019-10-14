@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.9.7
+PLUGIN_VERSION=0.9.9
 PLUGIN_ID=spss-format
 
 plugin:

@@ -1,4 +1,4 @@
-PLUGIN_VERSION=1.1.1
+PLUGIN_VERSION=1.1.3
 PLUGIN_ID=salesforce
 
 plugin:

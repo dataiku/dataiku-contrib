@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import dataiku
 from dataiku.customrecipe import *
-
-from commons import EmbeddingModel, clean_text, preprocess_and_compute_sentence_embedding
+from commons import load_pretrained_model
 
 import os
 import json
@@ -71,7 +70,7 @@ elif aggregation_method == 'SIF':
 ##################################
 
 logger.info("Loading word embeddings from the input folder...")
-embedding_model = EmbeddingModel(folder_path, embedding_is_custom)
+model = load_pretrained_model(folder_path, embedding_is_custom)
 
 
 ##################################
@@ -83,14 +82,14 @@ logger.info("Computing sentence embeddings...")
 embeddings_list = []
 for name in text_column_names:
 
-    sentence_embeddings = preprocess_and_compute_sentence_embedding(
-        texts=df[name].values,
-        embedding_model=embedding_model,
-        method=aggregation_method,
-        smoothing_parameter=smoothing_parameter,
-        npc=npc)
+    texts = df[name].values.tolist()
+    if aggregation_method == 'simple_average':
+        embedded_texts = model.get_sentence_embedding(texts)
+    else:
+        embedded_texts = model.get_weighted_sentence_embedding(texts, smoothing_parameter, npc)
 
-    embeddings_list.append(sentence_embeddings)
+
+    embeddings_list.append(embedded_texts)
     
         
 logger.info("Computed sentence embeddings.")

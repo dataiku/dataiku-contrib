@@ -1,7 +1,6 @@
 {
     "id": "mapbox-maps-backgrounds",
-    "version": "0.0.2",
-
+    "version": "0.0.4",
     "meta": {
         "label": "Mapbox map backgrounds",
         "description": "Use map backgrounds from Mapbox",
@@ -9,9 +8,8 @@
         "icon": "icon-globe",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/mapbox-maps-backgrounds.html",
-        "tags": ["Geospatial", "Maps", "Visualization"]
+        "tags": ["Geospatial", "Visualization"]
     },
-
     "params": [
          {
             "name": "accessToken",

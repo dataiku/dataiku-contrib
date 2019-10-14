@@ -1,23 +1,13 @@
 {
     "id": "wms-maps-backgrounds",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "meta": {
         "label": "WMS maps backgrounds",
-        "description": "Use map backgrounds from any Web Map Service server",
+        "description": "Use map backgrounds from a WMS (Web Map Service) server",
         "author": "Dataiku",
         "icon": "icon-globe",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/wms-maps-backgrounds.html",
-        "tags": ["Geospatial", "Maps", "Visualization"]
-    },
-    "params": [
-        {
-            "name": "wmsResources",
-            "type": "TEXTAREA",
-            "label": "WMS resources",
-            "description": "List of WMS resources to add. Add one resource per line, defined as follow: 'URL LayerId Name'. Note the spaces between the different fields.",
-            "mandatory": true
-        }
-    ],
-    "publicParams": true
+        "tags": ["Geospacial", "Visualization"]
+    }
 }

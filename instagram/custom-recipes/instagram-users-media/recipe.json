@@ -2,7 +2,7 @@
     "meta" : {
         "label" : "Get data for recent media of Instagram accounts",
         "author" : "Dataiku (Thomas Cabrol)",
-        "tags" : ["instagram", "social-media", "api"]
+        "tags" : []
     },
 
     "kind" : "PYTHON",

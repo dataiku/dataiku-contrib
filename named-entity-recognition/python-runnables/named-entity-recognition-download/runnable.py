@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import os
+import gzip
+import zipfile
+import requests
 
 from flair.file_utils import *
 from flair.embeddings import *
@@ -7,15 +11,8 @@ from flair.models.sequence_tagger_model import *
 import dataiku
 from dataiku.runnables import Runnable
 
-import os
-import gzip
-import zipfile
-import requests
-
 
 class MyRunnable(Runnable):
-    """The base interface for a Python runnable"""
-
     def __init__(self, project_key, config, plugin_config):
         """
         :param project_key: the project in which the runnable executes
@@ -29,7 +26,7 @@ class MyRunnable(Runnable):
 
     def get_progress_target(self):
         """
-        If the runnable will return some progress info, have this function return a tuple of 
+        If the runnable will return some progress info, have this function return a tuple of
         (target, unit) where unit is one of: SIZE, FILES, RECORDS, NONE
         """
         return (100, 'NONE')
@@ -52,8 +49,7 @@ class MyRunnable(Runnable):
         if not output_folder_found:
             output_folder = project.create_managed_folder(output_folder_name)
 
-        output_folder = dataiku.Folder(output_folder.get_definition()[
-                                       "id"], project_key=self.project_key)
+        output_folder = dataiku.Folder(output_folder.get_definition()["id"], project_key=self.project_key)
         output_folder_path = output_folder.get_path()
 
         #######################################

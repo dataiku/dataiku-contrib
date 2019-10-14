@@ -1,6 +1,6 @@
 {
     "id": "airtable",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "meta": {
         "label": "Airtable",
         "description": "Fetch data from Airtable, a tool that provides speadsheets with database-like features",
@@ -8,6 +8,6 @@
         "icon": "icon-th-large",
         "licenseInfo": "Apache Software License version 2",
         "url": "https://www.dataiku.com/dss/plugins/info/airtable.html",
-        "tags": ["Productivity", "SaaS", "Connector"]
+        "tags": ["Connector"]
     }
 }

@@ -1,6 +1,6 @@
 {
     "id": "freshdesk",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "meta": {
         "label": "Freshdesk",
         "description": "Fetch data from Freshdesk (a customer support SaaS)",
@@ -8,7 +8,7 @@
         "icon": "icon-headphones",
         "licenseInfo": "Apache Software License version 2",
         "url": "https://www.dataiku.com/dss/plugins/info/freshdesk.html",
-        "tags": ["SaaS", "Connector", "CRM"]
+        "tags": ["Connector", "CRM"]
     },
     "params": [
         {

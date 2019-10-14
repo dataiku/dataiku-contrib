@@ -1,6 +1,6 @@
 {
 	"id": "intercom2",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"meta": {
 		"label": "Intercom",
 		"description": "Fetch data from Intercom (a customer messaging platform)",
@@ -8,6 +8,6 @@
 		"icon": "icon-envelope",
 		"licenseInfo": "Apache Software License version 2",
 		"url": "https://www.dataiku.com/dss/plugins/info/intercom2.html",
-		"tags": ["CRM", "SaaS", "Connector"]
+		"tags": ["Connector", "CRM"]
 	}
 }

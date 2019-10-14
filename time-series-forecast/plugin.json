@@ -1,6 +1,6 @@
 {
     "id": "time-series-forecast",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "meta": {
         "label": "Forecast",
         "description": "Forecast univariate time series. This plugin covers the full cycle of data cleaning, model training, evaluation and prediction.",
@@ -8,6 +8,6 @@
         "icon": "icon-calendar",
         "licenseInfo": "MIT License",
         "url": "https://www.dataiku.com/dss/plugins/info/time-series-forecast.html",
-        "tags": ["Time Series", "Forecasting", "Machine Learning"]
+        "tags": ["Time Series", "Machine Learning"]
     }
 }

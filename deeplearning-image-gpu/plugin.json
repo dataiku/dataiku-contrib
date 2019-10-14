@@ -1,6 +1,6 @@
 {
     "id": "deeplearning-image-gpu",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "meta": {
         "label": "Deep learning on images (GPU)",
         "description": "Use a pre-trained model to score images or extract features. You can retrain generic models to specialize them on a particular set of images. <p>This GPU version requires an NVIDIA GPU with CUDA 8.0 and cudNN 6.0 installed</p>",
@@ -8,6 +8,6 @@
         "icon": "icon-picture",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/deeplearning-image.html",
-        "tags": ["Images", "Machine learning", "Deep Learning"]
+        "tags": ["Images", "Machine Learning", "Deep Learning"]
     }
 }
