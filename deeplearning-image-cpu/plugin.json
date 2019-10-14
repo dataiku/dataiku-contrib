@@ -1,6 +1,6 @@
 {
     "id": "deeplearning-image-cpu",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "meta": {
         "label": "Deep learning on images (CPU)",
         "description": "Use a pre-trained model to score images or extract features. You can retrain generic models to specialize them on a particular set of images.",
@@ -8,6 +8,6 @@
         "icon": "icon-picture",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/deeplearning-image.html",
-        "tags": ["Images", "Machine Learning", "Deep Learning", "Feature generation"]
+        "tags": ["Images", "Machine Learning", "Deep Learning", "Feature Generation"]
     }
 }

@@ -1,18 +1,13 @@
-// This file is the descriptor for the DSS Plugin census-us
 {
-
-    "id" : "census-us",
-
-    "version" : "0.3.0",
-
-    "meta" : {
-
-        "label" : "Census USA",
-        "description" : "Build the US Census data",
-        "author" : "Dataiku (Nicolas GAKRELIDZ)",
-        "icon" : "icon-book",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins/info/us-census.html",
-        "tags" : ["census","usa","enrichment","geocoding","feature selection"]
+    "id": "census-us",
+    "version": "0.3.1",
+    "meta": {
+        "label": "Census USA",
+        "description": "Build the US Census data",
+        "author": "Dataiku (Nicolas GAKRELIDZ)",
+        "icon": "icon-book",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/us-census.html",
+        "tags": ["Enrichment", "Open Data", "Geospacial"]
     }
 }
