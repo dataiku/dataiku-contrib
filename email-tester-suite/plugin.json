@@ -8,6 +8,6 @@
 		"icon": "icon-envelope",
 		"licenseInfo": "Apache Software License version 2",
 		"url": "https://www.dataiku.com/dss/plugins/info/email-tester-suite.html",
-		"tags": ["Data Quality", "Marketing"]
+		"tags": ["Data Preparation", "Marketing"]
 	}
 }

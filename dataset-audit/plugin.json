@@ -1,6 +1,6 @@
 {
 	"id": "dataset-audit",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"meta": {
 		"label": "Audits a dataset",
 		"description": "Audit data in a dataset (SQL or HDFS). The report contains basic info about each column and basic descriptive statistics",
@@ -8,6 +8,6 @@
 		"icon": "icon-search",
 		"licenseInfo": "Apache Software License",
 		"url": "https://www.dataiku.com/dss/plugins/info/dataset-audit.html",
-		"tags": ["Data Quality", "Statistics", "Admin"]
+		"tags": ["Admin", "Governance"]
 	}
 }

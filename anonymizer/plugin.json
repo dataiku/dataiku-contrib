@@ -1,6 +1,6 @@
 {
     "id": "anonymizer",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "meta": {
         "label": "Data anonymizer",
         "description": "Preparation processor for anonymizing data",
@@ -8,7 +8,7 @@
         "licenseInfo": "Apache Software License",
         "icon": "icon-globe",
         "url": "https://www.dataiku.com/dss/plugins/info/anonymizer.html",
-        "tags": ["Data Preparation", "Personal Data"]
+        "tags": ["Governance", "Data Preparation"]
     },
     "javaPreparationProcessors": [
         {

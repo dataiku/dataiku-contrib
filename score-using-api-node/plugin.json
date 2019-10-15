@@ -1,6 +1,6 @@
 {
     "id": "score-using-api-node",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "meta": {
         "label": "Score a dataset using an API node",
         "description": "Send the content of a datset to an API node",
@@ -8,6 +8,6 @@
         "icon": "icon-cloud-upload",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/score-using-api-node.html",
-        "tags": ["API Node", "Testing"]
+        "tags": ["Testing"]
     }
 }
