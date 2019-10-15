@@ -8,6 +8,6 @@
 		"icon": "icon-puzzle-piece",
 		"licenseInfo": "Apache Software License",
 		"url": "https://www.dataiku.com/dss/plugins/info/wikipedia-pageviews.html",
-		"tags": ["Open Data", "Connector"]
+		"tags": ["Open Data", "Enrichment"]
 	}
 }

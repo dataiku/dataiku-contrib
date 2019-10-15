@@ -8,6 +8,6 @@
 		"icon": "icon-umbrella",
 		"licenseInfo": "Apache Software License version 2",
 		"url": "https://www.dataiku.com/dss/plugins/info/wunderground.html",
-		"tags": ["Enrichment", "Connector", "Forecasting"]
+		"tags": ["Enrichment"]
 	}
 }
