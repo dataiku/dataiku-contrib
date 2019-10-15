@@ -93,43 +93,30 @@ class MyRunnable(Runnable):
         #######################################
 
         if source == 'word2vec':
-
-            ############
-            # Word2vec
-            ############
-
             if text_language == 'english':
                 file_id = '0B7XkCwpI5KDYNlNUTTlSS21pQmM'
             else:
-                raise NotImplementedError(
-                    "Word2vec vectors are only available for English. Use fastText for other languages.")
+                raise NotImplementedError("Word2vec vectors are only available for English. Use fastText for other languages.")
 
             # Download from Google Drive
-            archive_fname = os.path.join(
-                output_folder_path, "GoogleNews-vectors-negative300.bin.gz")
+            archive_fname = os.path.join(output_folder_path, "GoogleNews-vectors-negative300.bin.gz")
             download_file_from_google_drive(file_id, archive_fname)
 
             # Decompress in managed folder and rename
-            """ 
+            """
             decompressed_file = gzip.GzipFile(archive_fname)
             with open(os.path.join(output_folder_path, "Word2vec_embeddings"), 'wb') as outfile:
                 print('))))))))))) WRITING FILE')
                 outfile.write(decompressed_file.read())
             """
-
             outfile_path = os.path.join(output_folder_path, "Word2vec_embeddings")
             with open(outfile_path, 'wb') as f_out, gzip.open(archive_fname, 'rb') as f_in:
                 shutil.copyfileobj(f_in, f_out)
 
-            # Remove archive
             os.remove(archive_fname)
 
+
         elif source == 'fasttext':
-
-            ############
-            # FastText
-            ############
-
             if text_language == 'english':
                 url = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.en.vec'
             elif text_language == 'french':
@@ -139,24 +126,18 @@ class MyRunnable(Runnable):
             else:
                 raise NotImplementedError(
                     "Only English, French and German languages are supported.")
-
             r = requests.get(url, stream=True)
             with output_folder.get_writer("fastText_embeddings") as w:
                 for chunk in r.iter_content(chunk_size=100000):
                     if chunk:
                         w.write(chunk)
 
+
         elif source == 'glove':
-
-            ############
-            # GloVe
-            ############
-
             if text_language == 'english':
                 url = 'http://nlp.stanford.edu/data/glove.42B.300d.zip'
             else:
-                raise NotImplementedError(
-                    "GloVe vectors are only available for English. Use fastText for other languages.")
+                raise NotImplementedError("GloVe vectors are only available for English. Use fastText for other languages.")
 
             archive_name = os.path.basename(url)
 
@@ -179,19 +160,12 @@ class MyRunnable(Runnable):
 
             # remove archive
             os.remove(os.path.join(output_folder_path, archive_name))
-
             # rename embedding file
-            os.rename(os.path.join(output_folder_path, file_name),
-                      os.path.join(output_folder_path, file_rename))
+            os.rename(os.path.join(output_folder_path, file_name), os.path.join(output_folder_path, file_rename))
+
 
         elif source == 'elmo':
-
-            ############
-            # ELMo
-            ############
-
             if text_language == 'english':
-
                 import tensorflow as tf
                 import tensorflow_hub as hub
 
@@ -206,13 +180,10 @@ class MyRunnable(Runnable):
                 # Download ELMo
                 elmo_model = hub.Module(
                     "https://tfhub.dev/google/elmo/2", trainable=False)
-
             else:
                 raise NotImplementedError(
                     "ELMo is only available for English. Use fastText for other languages.")
-
         else:
             raise NotImplementedError(
                 "Only Word2vec, GloVe and FastText embeddings are supported.")
-
         return "<br><span>The model was downloaded successfuly !</span>"

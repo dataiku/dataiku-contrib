@@ -3,7 +3,7 @@
     "version": "1.1.0",
     "meta": {
         "label": "Named Entity Recognition",
-        "description": "Perform named entity recognition on English texts (i.e. identify people names, dates, places, etc)",
+        "description": "Identify “real-world objects” (i.e. People names, Dates, Places, etc) in texts",
         "author": "Dataiku (Hicham El Boukkouri)",
         "icon": "icon-tag",
         "licenseInfo": "Apache Software License",

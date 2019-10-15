@@ -3,7 +3,7 @@
     "version": "1.2.0",
     "meta": {
         "label": "Sentence Embedding",
-        "description": "Compute embeddings (numerical representations) to represent sentences. To use this plugin you should start by downloading pre-trained word embeddings using the provided macro. Then, you can use the recipe below to score your texts using one of the available aggregation methods.",
+        "description": "Compute numerical representations for sentences so that they can be fed to ML algorithms.",
         "author": "Dataiku (Hicham El Boukkouri)",
         "icon": "icon-table",
         "licenseInfo": "Apache Software License",

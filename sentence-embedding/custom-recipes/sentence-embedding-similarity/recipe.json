@@ -1,15 +1,12 @@
 {
-    "meta" : {
-        "label" : "Compute sentence similarity",
-        "description" : "This recipe takes two text columns and computes the similarity (distance) of each couple of sentences. The similarity is based on sentence vectors computed using pre-trained word embeddings as well as one of three available metrics: cosine distance (default), euclidian distance (L2), absolute distance (L1) or earth-mover distance.",
-        "icon" : "icon-columns"
+    "meta": {
+        "label": "Compute sentence similarity",
+        "description": "Compute the similarity of two colums of text using sentence embeddings.",
+        "icon": "icon-columns"
     },
-
-    "kind" : "PYTHON",
-    
+    "kind": "PYTHON",
     "selectableFromDataset": "input_dataset",
-    
-    "inputRoles" : [
+    "inputRoles": [
         {
             "name": "input_dataset",
             "label": "Input dataset",
@@ -28,8 +25,7 @@
             "acceptsDataset": false
         }
     ],
-
-    "outputRoles" : [
+    "outputRoles": [
         {
             "name": "output_dataset",
             "label": "Output dataset",
@@ -39,29 +35,28 @@
             "acceptsDataset": true
         }
     ],
-
     "params": [
         {
             "name": "text_column_1",
-            "label" : "Text column 1",
+            "label": "Text column 1",
             "type": "COLUMN",
             "description": "",
-            "mandatory" : true,
-            "columnRole":"input_dataset"
+            "mandatory": true,
+            "columnRole": "input_dataset"
         },
         {
             "name": "text_column_2",
-            "label" : "Text column 2",
+            "label": "Text column 2",
             "type": "COLUMN",
             "description": "",
-            "mandatory" : true,
-            "columnRole":"input_dataset"
+            "mandatory": true,
+            "columnRole": "input_dataset"
         },
         {
             "name": "distance",
-            "label" : "Distance",
+            "label": "Distance",
             "type": "SELECT",
-            "mandatory" : true,
+            "mandatory": true,
             "selectChoices": [
                 {
                     "value": "cosine",
@@ -80,13 +75,13 @@
                     "label": "Earth-Mover Distance"
                 }
             ],
-            "defaultValue" : "cosine"
+            "defaultValue": "cosine"
         },
         {
             "name": "aggregation_method",
-            "label" : "Aggregation method",
+            "label": "Aggregation method",
             "type": "SELECT",
-            "mandatory" : true,
+            "mandatory": true,
             "selectChoices": [
                 {
                     "value": "simple_average",
@@ -97,38 +92,38 @@
                     "label": "SIF Embedding"
                 }
             ],
-            "defaultValue" : "simple_average"
+            "defaultValue": "simple_average"
         },
         {
             "name": "embedding_is_custom",
-            "label" : "Use custom embedding",
+            "label": "Use custom embedding",
             "description": "Tick this box if you are using a custom embedding.",
             "type": "BOOLEAN",
-            "defaultValue" : false
+            "defaultValue": false
         },
         {
             "visibilityCondition": "model.aggregation_method=='SIF'",
             "name": "advanced_settings",
-            "label" : "Advanced Settings",
+            "label": "Advanced Settings",
             "description": "To set SIF smoothing parameters and number of components.",
             "type": "BOOLEAN",
-            "defaultValue" : false
+            "defaultValue": false
         },
         {
             "visibilityCondition": "model.advanced_settings && model.aggregation_method=='SIF'",
             "name": "smoothing_parameter",
-            "label" : "[SIF] Smoothing Parameter",
+            "label": "[SIF] Smoothing Parameter",
             "description": "Used for computing SIF weights.",
             "type": "DOUBLE",
-            "defaultValue" : 0.001
+            "defaultValue": 0.001
         },
         {
             "visibilityCondition": "model.advanced_settings && model.aggregation_method=='SIF'",
             "name": "n_principal_components",
-            "label" : "[SIF] Principal Components",
+            "label": "[SIF] Principal Components",
             "description": "Number of components to remove in SIF computation.",
             "type": "INT",
-            "defaultValue" : 1
+            "defaultValue": 1
         }
     ]
 }

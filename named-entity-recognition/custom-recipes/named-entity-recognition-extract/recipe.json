@@ -1,7 +1,7 @@
 {
     "meta": {
         "label": "Extract Named Entities",
-        "description": "Perform named entity recognition on English texts (i.e. identify people names, dates, places, etc) using SpaCy or Flair.",
+        "description": "Identify “real-world objects” (i.e. People names, Dates, Places, etc) in a text column.",
         "icon": "icon-tag"
     },
 

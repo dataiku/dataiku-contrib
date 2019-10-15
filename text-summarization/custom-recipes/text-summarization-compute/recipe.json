@@ -1,15 +1,12 @@
 {
-    "meta" : {
-        "label" : "Summarize Texts",
-        "description" : "Use this recipe to summarize your texts using one of three available techniques: TextRank (default), KL-Sum or LSA.",
+    "meta": {
+        "label": "Summarize Texts",
+        "description": "Summarize texts using extractive summarization methods (which means that the summary will be a number of extracted sentences from the original text).",
         "icon": "icon-file-text"
     },
-
-    "kind" : "PYTHON",
-
+    "kind": "PYTHON",
     "selectableFromDataset": "input_dataset",
-    
-    "inputRoles" : [
+    "inputRoles": [
         {
             "name": "input_dataset",
             "label": "Input dataset",
@@ -19,8 +16,7 @@
             "acceptsDataset": true
         }
     ],
-
-    "outputRoles" : [
+    "outputRoles": [
         {
             "name": "output_dataset",
             "label": "Output dataset",
@@ -30,20 +26,17 @@
             "acceptsDataset": true
         }
     ],
-
-    
-    
     "params": [
         {
             "name": "text_column_name",
-            "label" : "Text column",
+            "label": "Text column",
             "type": "COLUMN",
-            "mandatory" : true,
-            "columnRole":"input_dataset"
+            "mandatory": true,
+            "columnRole": "input_dataset"
         },
         {
             "name": "method",
-            "label" : "Summarization Method",
+            "label": "Summarization Method",
             "type": "SELECT",
             "selectChoices": [
                 {
@@ -56,16 +49,17 @@
                 },
                 {
                     "value": "LSA",
-                    "label": "LSA"
+                    "label": "Latent Semantic Allocation (LSA)"
                 }
-            ], 
-            "defaultValue" : "textrank"
+            ],
+            "defaultValue": "textrank"
         },
         {
             "name": "n_sentences",
-            "label" : "Number of Sentences",
+            "label": "Number of Sentences",
+            "description": "Number of sentence in the summary",
             "type": "INT",
-            "defaultValue" : 1
+            "defaultValue": 1
         }
     ]
 }
