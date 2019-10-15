@@ -8,6 +8,6 @@
         "icon": "icon-globe",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/wms-maps-backgrounds.html",
-        "tags": ["Geospacial", "Visualization"]
+        "tags": ["Geospatial", "Visualization"]
     }
 }

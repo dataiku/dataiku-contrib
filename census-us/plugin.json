@@ -8,6 +8,6 @@
         "icon": "icon-book",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/us-census.html",
-        "tags": ["Enrichment", "Open Data", "Geospacial"]
+        "tags": ["Enrichment", "Open Data", "Geospatial"]
     }
 }
