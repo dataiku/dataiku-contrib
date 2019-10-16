@@ -1,14 +1,11 @@
 {
-    "meta" : {
-        "label" : "Compute sentiment polarity",
-        "description" : "Classify your texts into two categories : \"positive\" when the text is positive (e.g. \"This movie is good\") and \"negative\" otherwise."
+    "meta": {
+        "label": "Sentiment analysis",
+        "description": "Estimate the sentiment polarity (positive/negative) of a text"
     },
-
-    "kind" : "PYTHON",
-
+    "kind": "PYTHON",
     "selectableFromDataset": "input_dataset",
-    
-    "inputRoles" : [
+    "inputRoles": [
         {
             "name": "input_dataset",
             "label": "Input dataset",
@@ -18,8 +15,7 @@
             "acceptsDataset": true
         }
     ],
-
-    "outputRoles" : [
+    "outputRoles": [
         {
             "name": "output_dataset",
             "label": "Output dataset",
@@ -29,31 +25,38 @@
             "acceptsDataset": true
         }
     ],
-
-    
-    
     "params": [
         {
             "name": "text_column_name",
-            "label" : "Text column",
+            "label": "Text column",
             "type": "COLUMN",
-            "description": "Select the column to perform sentiment analysis on",
-            "mandatory" : true,
-            "columnRole":"input_dataset"
+            "description": "",
+            "mandatory": true,
+            "columnRole": "input_dataset"
         },
         {
-            "name": "predict_polarity",
-            "type": "BOOLEAN",
-            "label" : "Predict polarity",
-            "description": "Untick to predict a sentiment value in {1, ..., 5} instead of a polarity in {0, 1}.",
-            "defaultValue" : true
+            "name": "sentiment_scale",
+            "label": "Sentiment scale",
+            "type": "SELECT",
+            "mandatory": true,
+            "selectChoices": [
+                {
+                    "value": "binary",
+                    "label": "Binary (0 = negative, 1 = positive)"
+                },
+                {
+                    "value": "1to5",
+                    "label": "1 to 5 (1 = highly negative, 5 = highly positive)"
+                }
+            ],
+            "defaultValue": "binary"
         },
         {
             "name": "output_confidence",
             "type": "BOOLEAN",
-            "label" : "Output confidence scores",
+            "label": "Output confidence scores",
             "description": "Output the model's confidence for each prediction",
-            "defaultValue" : false
+            "defaultValue": false
         }
     ]
 }
