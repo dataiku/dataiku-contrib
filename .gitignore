@@ -6,3 +6,4 @@ state.json
 *.RData
 .Rproj.user/
 .idea/
+.wlock

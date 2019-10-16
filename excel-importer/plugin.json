@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "meta": {
         "label": "Excel sheet importer",
-        "description": "Create one dataset per sheet from an Excel file",
+        "description": "Create one dataset per sheet from an Excel file stored in a folder",
         "author": "Dataiku (Paul HERVET)",
         "icon": "icon-table",
         "licenseInfo": "Apache Software License",

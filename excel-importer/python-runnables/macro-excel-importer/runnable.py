@@ -45,6 +45,8 @@ class MyRunnable(Runnable):
         folder_path = folder.get_path()
         files_list = os.listdir(folder_path)
 
+        macro_creates_dataset = False # A boolean used to provide an informative message to the user when the macro creates a dataset
+
         # List the datasets in the project
         datasets_in_project = []
         for i in range(len(project.list_datasets())):
@@ -86,6 +88,7 @@ class MyRunnable(Runnable):
                         actions_performed[title] = "skipped (already exists)"
                 else:
                     actions_performed[title] = "created"
+                    macro_creates_dataset = True
 
                 if create_dataset:
                     project.create_dataset(title,
@@ -106,5 +109,8 @@ class MyRunnable(Runnable):
             record = []
             record.append(list(actions_performed.keys())[i] + " has been " + list(actions_performed.values())[i])
             rt.add_record(record)
+
+        if macro_creates_dataset:
+            rt.add_record(["Please refresh this page to see new datasets."])
 
         return rt

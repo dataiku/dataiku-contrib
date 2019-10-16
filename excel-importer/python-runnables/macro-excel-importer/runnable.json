@@ -8,9 +8,6 @@
        {
            "type": "MANAGED_FOLDER",
            "targetParamsKey": "model_folder_id"
-       },
-       {
-           "type": "PROJECT_MACROS"
        }
    ],
    "params": [
