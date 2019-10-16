@@ -52,10 +52,21 @@
             "defaultValue": "binary"
         },
         {
+            "name": "output_score",
+            "type": "BOOLEAN",
+            "label": "Output predictions as numbers",
+            "defaultValue": true
+        },
+        {
+            "name": "output_sentiment",
+            "type": "BOOLEAN",
+            "label": "Output predictions as categories",
+            "defaultValue": true
+        },
+        {
             "name": "output_confidence",
             "type": "BOOLEAN",
             "label": "Output confidence scores",
-            "description": "Output the model's confidence for each prediction",
             "defaultValue": false
         }
     ]
