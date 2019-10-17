@@ -95,7 +95,7 @@ class MyRunnable(Runnable):
                                            'FilesInFolder',
                                            params={'folderSmartId': folder_id, 'path': my_file},
                                            formatType='excel',
-                                           formatParams={"xlsx": True, "sheets": "*" + title, 'parseHeaderRow': True})
+                                           formatParams={"xlsx": True, "sheets": "*" + ss_sheet.title, 'parseHeaderRow': True})
 
                 percent = 100 * float(file_index + 1) / num_files
                 update_time = update_percent(percent, update_time)
