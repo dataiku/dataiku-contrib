@@ -1,6 +1,6 @@
-numpy==1.16.4
+numpy==1.16.5
 scipy==1.2.2
-gensim==3.8.0
-sklearn
-tensorflow==1.14.0
-tensorflow-hub==0.5.0
+gensim==3.8.1
+scikit-learn==0.20.4
+tensorflow==2.0.0
+tensorflow-hub==0.6.0
