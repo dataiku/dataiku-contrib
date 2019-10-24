@@ -53,6 +53,24 @@
             "type": "BOOLEAN",
             "default": false,
             "description": "If selected, ignores SSL certificates on remote instance."
+        },
+        {
+            "name": "remote_design_instance",
+            "label" : "Remote Design Instance",
+            "type": "BOOLEAN",
+            "visibilityCondition" : "model.advanced",
+            "mandatory" : false,
+            "default": false,
+            "description": "Are you pushing the project to another design instance?"
+        },
+        {
+            "name": "create_bundle_on_remote_design_instance",
+            "label" : "Create Bundle on Remote Design Instance",
+            "type": "BOOLEAN",
+            "visibilityCondition" : "model.remote_design_instance",
+            "mandatory" : false,
+            "default": false,
+            "description": "If remote instance is a design instance, create a bundle on it?"
         }
     ]
 }

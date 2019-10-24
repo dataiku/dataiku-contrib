@@ -162,6 +162,15 @@ class MyRunnable(Runnable):
                 scenario_def['active'] = True
                 scenario.set_definition(scenario_def)
         
+        # check if remote instance is a design instance, and create a bundle on it if so
+        remote_design_instance = self.config.get("remote_design_instance")
+        
+        if remote_design_instance:
+            create_bundle_on_remote_design_instance = self.config.get("create_bundle_on_remote_design_instance")
+            if create_bundle_on_remote_design_instance:
+                remote_project.export_bundle(bundle_id)
+                html += '<div> Bundle Created on Remote Design Instance </div>'
+
         html += '</div>'
         return html
     
