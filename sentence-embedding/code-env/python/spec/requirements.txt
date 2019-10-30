@@ -1,6 +1,6 @@
-numpy
-scipy
-gensim
+numpy==1.16.4
+scipy==1.2.2
+gensim==3.8.0
 sklearn
-tensorflow
-tensorflow-hub
+tensorflow==1.14.0
+tensorflow-hub==0.5.0
