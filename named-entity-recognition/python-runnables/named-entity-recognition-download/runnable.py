@@ -140,7 +140,7 @@ class MyRunnable(Runnable):
                     model_file = cached_path(base_path, cache_dir='models')
 
                 if model_file is not None:
-                    tagger: SequenceTagger = SequenceTagger.load_from_file(model_file)
+                    tagger: SequenceTagger = SequenceTagger.load(model_file)
                     return tagger
 
         tagger = CustomSequenceTagger.load('ner-ontonotes')
