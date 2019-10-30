@@ -52,3 +52,7 @@ class ElmoModel(ContextualLanguageModel):
             embeddings = self.sess.run(tensors)
             embedded_sentences.extend(embeddings.tolist())
         return embedded_sentences
+
+    def get_weighted_sentence_embedding(self, texts, smoothing_parameter, npc):
+        # for contextual embedding, weights are already integrated in the computation
+        return self.get_sentence_embedding(texts)
