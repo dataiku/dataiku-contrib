@@ -16,6 +16,7 @@ class MyRunnable(Runnable):
         self.replace_project = None
         self.ignore_ssl_certs = None
         self.activate_scenarios = None
+        self.automatically_create_code_env = None
         self.local_client = None
         self.remote_client = None
         self.project = None
@@ -31,7 +32,8 @@ class MyRunnable(Runnable):
             self.remote_client._session.verify = False
         self.check_remote_project()
         self.check_remote_connection()
-        self.update_remote_code_env()
+        if self.automatically_create_code_env:
+            self.update_remote_code_env()
         self.import_project()
         self.check_remote_plugin()
         if self.activate_scenarios:
@@ -51,6 +53,7 @@ class MyRunnable(Runnable):
         self.replace_project = self.config.get("replace_project", False)
         self.ignore_ssl_certs = self.config.get("ignore_ssl_certs", False)
         self.activate_scenarios = self.config.get("activate_scenarios", False)
+        self.automatically_create_code_env = self.config.get('automatically_create_code_env', False)
         self.local_client = dataiku.api_client()
         self.remote_client = dataikuapi.DSSClient(self.remote_host, api_key)
         self.project = self.local_client.get_project(self.project_key)
