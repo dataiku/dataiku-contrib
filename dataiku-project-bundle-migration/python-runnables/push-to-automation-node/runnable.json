@@ -1,0 +1,67 @@
+{
+    "meta": {
+        "label": "Push project to Automation Node",
+        "description": "Bundle a Dataiku project and migrate it from a Design instance to a remote Automation instance.",
+        "icon": "icon-share-alt"
+    },
+    "impersonate": false,
+    "permissions": ['ADMIN'],
+    "resultType": "HTML",
+    "resultLabel": "Migration",
+    "extension": "txt",
+    "mimeType": "text/plain",
+    "macroRoles": [],
+    "params": [
+        {
+            "name": "previous_bundles",
+            "label" : "Previously Used Bundle IDs",
+            "type": "BUNDLE",
+            "description": "No selection required. Just showing you the previously used Bundle IDs for this project",
+            "mandatory" : false
+        },
+        {
+            "name": "bundle_id",
+            "label": "Bundle id",
+            "type": "STRING",
+            "description": "Unique New Bundle ID (Cannot be one of the above)",
+            "mandatory": true
+        },
+        {
+            "name": "remote_host",
+            "label": "Destination Instance Address",
+            "type": "STRING",
+            "description": "Specify the location (URL) of the instance to copy the project to. (Required)",
+            "mandatory": true
+        },
+        {
+            "name": "api_key",
+            "label": "Remote API key",
+            "type": "STRING",
+            "description": "Specify the API key of the destination instance. (Required)",
+            "mandatory": true
+        },
+        {
+            "name": "activate_scenarios",
+            "label" : "Activate Scenarios",
+            "type": "BOOLEAN",
+            "default": true,
+            "description": "If selected, all active scenarios on the initial project will be activated in the remote project."
+        },
+        {
+            "name": "ignore_ssl_certs",
+            "label" : "Ignore SSL Certificates",
+            "type": "BOOLEAN",
+            "default": false,
+            "description": "If selected, ignores SSL certificates on remote instance."
+        },
+        {
+            "name": "remote_design_instance",
+            "label" : "Remote Design Instance",
+            "type": "BOOLEAN",
+            "visibilityCondition" : "model.advanced",
+            "mandatory" : false,
+            "default": false,
+            "description": "Are you pushing the project to another design instance?"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+    "meta": {
+        "label": "Push project to Design node",
+        "description": "Export a Dataiku project and migrate it from a Design instance to another remote Design instance.",
+        "icon": "icon-share-alt"
+    },
+    "impersonate": false,
+    "permissions": ['ADMIN'],
+    "resultType": "HTML",
+    "resultLabel": "Migration",
+    "extension": "txt",
+    "mimeType": "text/plain",
+    "macroRoles": [],
+    "params": [
+        {
+            "name": "remote_host",
+            "label": "Destination Instance Address",
+            "type": "STRING",
+            "description": "Specify the location (URL) of the instance to copy the project to. (Required)",
+            "mandatory": true
+        },
+        {
+            "name": "api_key",
+            "label": "Remote API key",
+            "type": "STRING",
+            "description": "Specify the API key of the destination instance. (Required)",
+            "mandatory": true
+        },
+        {
+            "name": "new_project_key",
+            "label" : "New project key",
+            "type": "STRING",
+            "description": "Empty if you want to keep the same project key",
+            "mandatory" : false
+        },
+        {
+            "name": "replace_project",
+            "label" : "Replace if exists",
+            "type": "BOOLEAN",
+            "default": false,
+            "description": "If selected, the macro will replace the project if it already exists on the remote instance."
+        },
+        {
+            "name": "activate_scenarios",
+            "label" : "Activate Scenarios",
+            "type": "BOOLEAN",
+            "default": true,
+            "description": "If selected, all active scenarios on the initial project will be activated in the remote project."
+        },
+        {
+            "name": "ignore_ssl_certs",
+            "label" : "Ignore SSL Certificates",
+            "type": "BOOLEAN",
+            "default": false,
+            "description": "If selected, ignores SSL certificates on remote instance."
+        }
+    ]
+}
