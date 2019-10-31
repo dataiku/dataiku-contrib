@@ -2,8 +2,8 @@
     "id": "dataiku-project-bundle-migration",
     "version": "1.0.0",
     "meta": {
-        "label": "Push projects to automation",
-        "description": "Bundle projects and push them to an automation node (or another Design node).",
+        "label": "Project migration",
+        "description": "Push project in Design node to an Automation/Design node",
         "author": "Dataiku (Guilherme De Oliveira & Patrick Masi-Phelps)",
         "icon": "icon-upload-alt",
         "licenseInfo": "Apache Software License",
