@@ -8,7 +8,8 @@
         "icon": "icon-globe",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/mapbox-maps-backgrounds.html",
-        "tags": ["Geospatial", "Visualization"]
+        "tags": ["Geospatial", "Visualization"],
+        "supportLevel": "NOT_SUPPORTED"
     },
     "params": [
          {

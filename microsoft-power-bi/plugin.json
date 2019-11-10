@@ -1,13 +1,14 @@
 {
-    "id" : "microsoft-power-bi",
-    "version" : "1.1.2",
-    "meta" : {
-        "label" : "Microsoft Power BI",
-        "description" : "Toolbox for Microsoft Power BI (online version)",
-        "author" : "Dataiku",
-        "icon" : "icon-cloud",
-        "licenseInfo" : "Apache Software License",
-        "url" : "https://www.dataiku.com/dss/plugins/info/microsoft-power-bi.html",
-        "tags" : ["Visualization", "Connector"]
+    "id": "microsoft-power-bi",
+    "version": "1.1.2",
+    "meta": {
+        "label": "Microsoft Power BI",
+        "description": "Toolbox for Microsoft Power BI (online version)",
+        "author": "Dataiku",
+        "icon": "icon-cloud",
+        "licenseInfo": "Apache Software License",
+        "url": "https://www.dataiku.com/dss/plugins/info/microsoft-power-bi.html",
+        "tags": ["Visualization", "Connector"],
+        "supportLevel": "NOT_SUPPORTED"
     }
 }

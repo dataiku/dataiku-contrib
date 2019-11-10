@@ -8,6 +8,7 @@
         "icon": "icon-upload-alt",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/push-project-to-automation.html",
-        "tags": ["Automation", "Admin"]
+        "tags": ["Automation", "Admin"],
+        "supportLevel": "NOT_SUPPORTED"
     }
 }

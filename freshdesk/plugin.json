@@ -8,7 +8,8 @@
         "icon": "icon-headphones",
         "licenseInfo": "Apache Software License version 2",
         "url": "https://www.dataiku.com/dss/plugins/info/freshdesk.html",
-        "tags": ["Connector", "CRM"]
+        "tags": ["Connector", "CRM"],
+        "supportLevel": "NOT_SUPPORTED"
     },
     "params": [
         {

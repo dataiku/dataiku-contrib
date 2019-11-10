@@ -8,6 +8,7 @@
         "icon": "icon-rocket",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/libsvm-format.html",
-        "tags": ["Format", "Machine Learning"]
+        "tags": ["Format", "Machine Learning"],
+        "supportLevel": "NOT_SUPPORTED"
     }
 }

@@ -8,6 +8,7 @@
         "icon": "icon-search",
         "tags": ["Connector"],
         "licenseInfo": "Apache Software License version 2",
-        "url": "https://www.dataiku.com/dss/plugins/info/algoliasearch.html"
+        "url": "https://www.dataiku.com/dss/plugins/info/algoliasearch.html",
+        "supportLevel": "NOT_SUPPORTED"
     }
 }

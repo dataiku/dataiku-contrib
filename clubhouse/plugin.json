@@ -7,8 +7,9 @@
         "author": "Dataiku (Arnaud PICHERY)",
         "icon": "icon-flag-alt",
         "licenseInfo" : "Apache Software License version 2",
-        "url": "https://www.dataiku.com/community/plugins/info/clubhouse.html",
-        "tags": ["Connector"]
+        "url": "https://www.dataiku.com/dss/plugins/info/clubhouse.html",
+        "tags": ["Connector"],
+        "supportLevel": "NOT_SUPPORTED"
     },
     "params": [
         {

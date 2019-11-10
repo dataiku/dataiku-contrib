@@ -8,17 +8,18 @@
         "icon": "icon-tags",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/ip-range-matcher.html",
-        "tags": ["Data Preparation", "Data Preparation"]
+        "tags": ["Data Preparation", "Data Preparation"],
+        "supportLevel": "NOT_SUPPORTED"
     },
     "javaPreparationProcessors":[
-      {
-        "id":"iprange",
-        "meta":{
-          "label":"IP range matcher",
-          "description":"This processor checks whether IP addresses belong to given network ranges",
-          "icon":"icon-tags"
+        {
+            "id":"iprange",
+            "meta":{
+                "label":"IP range matcher",
+                "description":"This processor checks whether IP addresses belong to given network ranges",
+                "icon":"icon-tags"
+            }
         }
-      }
     ],
     "entryPoint":"com.dataiku.dip.plugins.iprangematcher.Plugin"
 }

@@ -8,7 +8,8 @@
         "licenseInfo": "Apache Software License",
         "icon": "icon-globe",
         "url": "https://www.dataiku.com/dss/plugins/info/anonymizer.html",
-        "tags": ["Governance", "Data Preparation"]
+        "tags": ["Governance", "Data Preparation"],
+        "supportLevel": "NOT_SUPPORTED"
     },
     "javaPreparationProcessors": [
         {

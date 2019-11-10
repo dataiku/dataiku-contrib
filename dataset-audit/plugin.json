@@ -8,6 +8,7 @@
 		"icon": "icon-search",
 		"licenseInfo": "Apache Software License",
 		"url": "https://www.dataiku.com/dss/plugins/info/dataset-audit.html",
-		"tags": ["Governance"]
+		"tags": ["Governance"],
+        "supportLevel": "NOT_SUPPORTED"
 	}
 }

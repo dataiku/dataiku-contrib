@@ -8,6 +8,7 @@
         "icon": "icon-gears",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/sas-format.html",
-        "tags": ["Format"]
+        "tags": ["Format"],
+        "supportLevel": "NOT_SUPPORTED"
     }
 }
