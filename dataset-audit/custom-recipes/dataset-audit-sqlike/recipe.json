@@ -1,46 +1,41 @@
 {
-    "meta" : {
-        "label" : "Audit the content of a dataset",
-        "description" :"This recipe performs an audit of data in a dataset and outputs a summary dataset. This is able to perform audits on SQL or HDFS datasets. The summary contains basic info about each column and basic descriptive statistics"
+    "meta": {
+        "label": "Audit the content of a dataset",
+        "description": "Audit an SQL or HDFS dataset and output a summary dataset containing basic info about each column and basic descriptive statistics"
     },
-
-    "kind" : "PYTHON",
-
-    "selectableFromDataset" : "main",
-
-    "inputRoles" : [
+    "kind": "PYTHON",
+    "selectableFromDataset": "main",
+    "inputRoles": [
         {
             "name": "main",
             "arity": "UNARY",
             "required": true
         }
     ],
-
-    "outputRoles" : [
+    "outputRoles": [
         {
             "name": "main",
             "arity": "UNARY",
             "required": true
         }
     ],
-
     "params": [
         {
             "name": "compute_most_frequent",
-            "label" : "Compute most frequent values",
+            "label": "Compute most frequent values",
             "type": "BOOLEAN"
         },
         {
             "name": "compute_distinct",
-            "label" : "Compute number of distinct values",
+            "label": "Compute number of distinct values",
             "type": "BOOLEAN",
-            "defaultValue"  : true
+            "defaultValue": true
         },
         {
-            "name" :"use_impala",
-            "label" : "Use Impala if possible",
+            "name": "use_impala",
+            "label": "Use Impala if possible",
             "description": "Faster but does not support counting distinct values",
-            "type" : "BOOLEAN"
+            "type": "BOOLEAN"
         }
     ]
 }

@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 import dataiku
+import logging
 from dataiku.customrecipe import *
 import pandas as pd, numpy as np
 from dataiku import pandasutils as pdu
 from dataiku.core.sql import SQLExecutor2, HiveExecutor, ImpalaExecutor
 
-# Configure all
+#==============================================================================
+# SETUP
+#==============================================================================
+
+logging.basicConfig(level=logging.INFO, format='[audit plugin] %(levelname)s - %(message)s')
+
+SUPPORTED_DB  = ["MySQL", "PostgreSQL", "Vertica", "Greenplum", "Redshift", "Oracle", "SQLServer", "Teradata"]
+
 input_name = get_input_names_for_role('main')[0]
 output_name = get_output_names_for_role('main')[0]
 
@@ -16,7 +24,7 @@ dataset_config = dataset.get_config()
 dss_settings = dataiku.get_dss_settings()
 recipe_config = get_recipe_config()
 
-print "Recipe config is %s" % recipe_config
+logging.info("Recipe config is %s" % recipe_config)
 
 
 compute_most_frequent = recipe_config.get("compute_most_frequent", False)
@@ -44,24 +52,22 @@ dispatch= {
 for col in dataset.read_schema():
     dispatch.get(col["type"], str_columns).append(col["name"])
 
-supported_db  = ["MySQL", "PostgreSQL", "Vertica", "Greenplum", "Redshift", "Oracle", "SQLServer", "Teradata"]
+#==============================================================================
+# RUN
+#==============================================================================
 
-print "DSS features: %s" % dss_settings["features"]
+logging.info("DSS features: %s" % dss_settings["features"])
 
-# Prepare the executors
 is_hivelike = False
-if dataset_config["type"] in supported_db:
+if dataset_config["type"] in SUPPORTED_DB:
     q = '"'
     sqlexec = SQLExecutor2(dataset=dataset)
-    print "Dataset config: %s" % dataset_config
+    logging.info("Dataset config: %s" % dataset_config)
     table = dataset_config["params"].get("table", dataset.short_name)
-
 elif dataset_config["type"] == "HDFS":
     q = '`'
-
     if use_impala and compute_distinct:
         raise ValueError("Cannot compute distinct values on Impala")
-
     if "IMPALA" in dss_settings["features"] and use_impala:
         sqlexec = ImpalaExecutor(dataset=dataset)
     else:
@@ -71,7 +77,7 @@ elif dataset_config["type"] == "HDFS":
 else:
     raise Exception("Unsupported input dataset type: %s" % dataset_config["type"])
 
-print "Using executor of kind : %s" % sqlexec
+logging.info("Using executor of kind : %s" % sqlexec)
 
 # Generate a single query for all numerical columns
 # And also in same query: string + num columns: one pass for cardinality and nmissing
@@ -97,29 +103,28 @@ for col in bool_columns:
 
 if len(chunks) > 0:
     query = "SELECT COUNT(*) AS global_count, %s FROM %s%s%s" % (",".join(chunks), q, table, q)
-    print "Executing master data query : %s" % query
+    logging.info("Executing master data query : %s" % query)
     df = sqlexec.query_to_df(query)
     master_data = df.iloc[0]
-    print "Got master data: %s" % master_data
+    logging.info("Got master data: %s" % master_data)
 else:
     master_data = {}
 
 
 # Most frequent on all columns must be handled one at a time for the moment
 if compute_most_frequent:
-    print "Handling most frequent values ..."
+    logging.info("Handling most frequent values ...")
     most_frequent = {}
     for col in str_columns + num_columns + date_columns + bool_columns:
         query = "select %s%s%s as val, COUNT(*) as count FROM %s%s%s GROUP BY %s%s%s ORDER BY count DESC LIMIT 1" % (q,col,q, q, dataset.short_name, q, q,col, q)
-        print "Executing : %s" % query
+        logging.info("Executing : %s" % query)
         df = sqlexec.query_to_df(query)
         if df.shape[0] > 0:
             most_frequent[col] = (df.iloc[0]["val"], df.iloc[0]["count"])
         else:
             most_frequent[col] = ("", 0)
 
-
-print "Done, writing the output"
+logging.info("Done, writing the output")
 
 # Prepare the output
 out = []
@@ -160,7 +165,6 @@ if compute_most_frequent:
 columns.extend(["num_min", "num_max", "num_avg"])
 
 df = pd.DataFrame(out, columns = columns)
-
 
 if compute_distinct:
     try:
