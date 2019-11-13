@@ -177,9 +177,9 @@ class MyRunnable(Runnable):
                 raise_(Exception, "Fail to import project.", sys.exc_info()[2])
 
         if success:
-            self.html += '<div>Migration succeeded.</div>'.format(success)
+            self.html += '<div><b>Migration succeeded.</b></div>'.format(success)
         else:
-            self.html += '<div>Migration failed: </div>'
+            self.html += '<div><b>ERROR: MIGRATION FAILED</b>: </div>'
             for message in res.get('messages'):
                 if message.get('severity') == 'ERROR':
                     self.html += '<div> &nbsp; {}</div>'.format(message.get('details'))
