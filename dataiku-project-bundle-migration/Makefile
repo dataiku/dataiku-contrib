@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.4
+PLUGIN_VERSION=1.0.0
 PLUGIN_ID=dataiku-project-bundle-migration
 
 plugin:
