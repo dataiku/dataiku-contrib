@@ -59,7 +59,7 @@
             "label" : "Create code-env",
             "type": "BOOLEAN",
             "default": true,
-            "description": "If selected, code-env used in the initial project will be created/updated in the remote instance."
+            "description": "If selected, code-env used by recipes in the initial project will be created/updated in the remote instance."
         }
     ]
 }
