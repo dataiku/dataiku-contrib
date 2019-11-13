@@ -1,10 +1,10 @@
-import time
-import os.path
-import datetime
+import sys
 import dataiku
 import dataikuapi
 from dataiku.runnables import Runnable
-from dataikuapi.utils import DataikuException
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MyRunnable(Runnable):
@@ -59,6 +59,7 @@ class MyRunnable(Runnable):
         self.project = self.local_client.get_project(self.project_key)
 
         self.html += '<div> Successfully connected to remote host: {0}</div>'.format(self.remote_client.host)
+        logger.info('Successfully connected to remote host: {0}'.format(self.remote_client.host))
 
     def check_remote_project(self):
         # check if there are any projects in remote instance
@@ -69,9 +70,11 @@ class MyRunnable(Runnable):
 
         if not self.project_key in remote_projects:
             self.remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
-            self.html += '<div> Project {0} does not exist on instance {1}.  Creating it.</div>'.format(self.project_key, self.remote_host)
+            self.html += '<div> Project {0} does not exist on instance {1}. Creating it.</div>'.format(self.project_key, self.remote_host)
+            logger.info('Project {0} does not exist on instance {1}. Creating it.'.format(self.project_key, self.remote_host))
         else:
             self.html += '<div> Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id)
+            logger.info('Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id))
 
     def check_remote_connection(self):
         # get list of connections used in the initial project
@@ -91,9 +94,10 @@ class MyRunnable(Runnable):
         # check if connections used in the initial project also exist on the remote instance
         for connection in connections_used:
             if connection not in remote_connections_names:
-                error_msg = 'Failed - Connection {} used in initial project does not exist on instance {}.'.format(self.connection, self.remote_host)
+                error_msg = 'Failed - Connection {0} used in initial project does not exist on instance {1}.'.format(self.connection, self.remote_host)
                 raise Exception(error_msg)
         self.html += '<div><div>All connections exist on both instances.</div>'
+        logger.info('All connections exist on both instances.')
 
     def check_remote_plugin(self):
         original_plugin_names = {}
@@ -131,9 +135,10 @@ class MyRunnable(Runnable):
         try:
             self.project.export_bundle(self.bundle_id)
             self.html += '<div><div>Successfully created bundle: {0}</div>'.format(self.bundle_id)
-        except DataikuException as de:
-            error_msg = 'Failed - Bundle {0} already exists for project {1}'.format(self.bundle_id, self.project_key)
-            raise Exception(error_msg)
+            logger.info('Successfully created bunde: {0}'.format(self.bundle_id))
+        except Exception as e:
+            from future.utils import raise_
+            raise_(Exception, "Fail to create bundle: {}".format(str(e)), sys.exc_info()[2])
 
         # check if there are any projects in remote instance
         try:
@@ -143,22 +148,29 @@ class MyRunnable(Runnable):
 
         if self.project_key in remote_projects:
             self.html += '<div> Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id)
+            logger.info('Project {0} already exists on instance {1}.  Updating with new bundle version {2}.'.format(self.project_key, self.remote_host, self.bundle_id))
         else:
             self.remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
-            self.html += '<div> Project {0} does not exist on instance {1}.  Creating it.</div>'.format(self.project_key,
-                                                                                                      self.remote_host)
+            self.html += '<div> Project {0} does not exist on instance {1}. Creating it.</div>'.format(self.project_key, self.remote_host)
+            logger.info('Project {0} does not exist on instance {1}. Creating it.'.format(self.project_key, self.remote_host))
+
         # connect to remote project
         remote_project = self.remote_client.get_project(self.project_key)
 
         with self.project.get_exported_bundle_archive_stream(self.bundle_id) as fp:
-            remote_project.import_bundle_from_stream(fp.content)
+            try:
+                remote_project.import_bundle_from_stream(fp.content)
+            except Exception as e:
+                from future.utils import raise_
+                raise_(Exception, "Fail to import bundle: {}".format(str(e)), sys.exc_info()[2])
 
         # "preload bundle" to create/update custom code environments used throughout the project
         _ = remote_project.preload_bundle(self.bundle_id)
 
         # activate bundle
         remote_project.activate_bundle(self.bundle_id)
-        self.html += '<div> Bundle activated </div>'
+        self.html += '<div><vr>Bundle activated</br></div>'
+        self.info('Bundle activated.')
 
     def activate_remote_scenario(self):
         # activate scenarios that were active on design instance

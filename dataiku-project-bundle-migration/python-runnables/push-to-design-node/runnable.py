@@ -2,7 +2,9 @@ import sys
 import dataiku
 import dataikuapi
 from dataiku.runnables import Runnable
+import logging
 
+logger = logging.getLogger(__name__)
 
 class MyRunnable(Runnable):
 
@@ -43,7 +45,7 @@ class MyRunnable(Runnable):
     def set_params(self):
         self.remote_host = self.config.get("remote_host", "")
         if self.remote_host == "":
-            raise Exception("destination is required")
+            raise Exception("Destination is required")
 
         api_key = self.config.get("api_key", "")
         if api_key == "":
@@ -57,7 +59,8 @@ class MyRunnable(Runnable):
         self.local_client = dataiku.api_client()
         self.remote_client = dataikuapi.DSSClient(self.remote_host, api_key)
         self.project = self.local_client.get_project(self.project_key)
-        self.html += '<div> Successfully connected to remote host: {0}</div>'.format(self.remote_client.host)
+        self.html += '<div>Successfully connected to remote host: {0}</div>'.format(self.remote_client.host)
+        logger.info('Successfully connected to remote host: {0}'.format(self.remote_client.host))
 
     def check_remote_project(self):
         try:
@@ -65,15 +68,17 @@ class MyRunnable(Runnable):
         except:
             remote_projects = []
 
-        if self.project_key in remote_projects:
+        if self.new_project_key in remote_projects:
             if not self.replace_project:
-                self.html += '<div> Project {0} already exists on instance {1}.  Nothing to do.</div>'.format(self.new_project_key, self.remote_host)
+                self.html += '<div>Project {0} already exists on instance {1}.  Nothing to do.</div>'.format(self.new_project_key, self.remote_host)
                 return self.html
             else:
-                self.html += '<div> Project {0} already exists on instance {1}.  Overwriting it ...</div>'.format(self.new_project_key, self.remote_host)
+                self.html += '<div>Project {0} already exists on instance {1}.  Overwriting it ...</div>'.format(self.new_project_key, self.remote_host)
+                logger.info('Project {0} already exists on instance {1}.  Overwriting it ...'.format(self.new_project_key, self.remote_host))
                 self.delete_project_first = True
         else:
-            self.html += '<div> Project {0} does not exist on instance {1}. Creating it ...</div>'.format(self.project_key, self.remote_host)
+            self.html += '<div>Project {0} does not exist on instance {1}. Creating it ...</div>'.format(self.new_project_key, self.remote_host)
+            logger.info('Project {0} does not exist on instance {1}. Creating it ...'.format(self.new_project_key, self.remote_host))
 
     def check_remote_connection(self):
         # get list of connections used in the initial project
@@ -95,7 +100,8 @@ class MyRunnable(Runnable):
             if connection not in remote_connections_names:
                 error_msg = 'Failed - Connection {0} used in initial project does not exist on instance {1}.'.format(connection, self.remote_host)
                 raise Exception(error_msg)
-        self.html += '<div><div>All connections exist on both instances.</div>'
+        self.html += '<div>All connections exist on both instances.</div>'
+        logger.info('All connections exist on both instances.')
 
     def update_remote_code_env(self):
         # check for code-env, create if not exist
@@ -123,6 +129,7 @@ class MyRunnable(Runnable):
                 else:  # R
                     _ = self.remote_client.create_code_env(env_lang=env_lang, env_name=env_name, deployment_mode='DESIGN_MANAGED')
                 self.html += '<div>Code env "{0}" is created.</div>'.format(env_name)
+                logger.info('Code env "{0}" is created.'.format(env_name))
 
             remote_code_env = self.remote_client.get_code_env(env_lang, env_name)
             env_def = remote_code_env.get_definition()
@@ -130,6 +137,8 @@ class MyRunnable(Runnable):
             env_def['desc']['installCorePackages'] = True
             remote_code_env.set_definition(env_def)
             remote_code_env.update_packages()
+            self.html += '<div>Code env "{0}" is updated with required packages.</div>'.format(env_name)
+            logger.info('Code env "{0}" is updated with required packages.'.format(env_name))
 
     def check_remote_plugin(self):
         original_plugin_names = {}
@@ -170,16 +179,18 @@ class MyRunnable(Runnable):
         with self.project.get_export_stream() as s:
             import_handler = self.remote_client.prepare_project_import(s)
             try:
-                res = import_handler.execute(settings={})
+                res = import_handler.execute(settings={"targetProjectKey": self.new_project_key})
                 success = res.get('success')
             except Exception as e:
                 from future.utils import raise_
-                raise_(Exception, "Fail to import project.", sys.exc_info()[2])
+                raise_(Exception, "Fail to import project: {}".format(str(e)), sys.exc_info()[2])
 
         if success:
             self.html += '<div><b>Migration succeeded.</b></div>'.format(success)
+            logger.info('Migration succeeded')
         else:
             self.html += '<div><b>ERROR: MIGRATION FAILED</b>: </div>'
+            logger.error('Migration failed.')
             for message in res.get('messages'):
                 if message.get('severity') == 'ERROR':
                     self.html += '<div> &nbsp; {0}</div>'.format(message.get('details'))
