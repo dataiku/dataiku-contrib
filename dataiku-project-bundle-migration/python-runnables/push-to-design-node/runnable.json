@@ -44,7 +44,7 @@
             "name": "activate_scenarios",
             "label" : "Activate Scenarios",
             "type": "BOOLEAN",
-            "default": true,
+            "default": false,
             "description": "If selected, all active scenarios on the initial project will be activated in the remote project."
         },
         {
@@ -58,7 +58,7 @@
             "name": "automatically_create_code_env",
             "label" : "Create code-env",
             "type": "BOOLEAN",
-            "default": true,
+            "default": false,
             "description": "If selected, code-env used by recipes in the initial project will be created/updated in the remote instance."
         }
     ]
