@@ -33,7 +33,6 @@ class MyRunnable(Runnable):
             self.remote_client._session.verify = False
         self.check_remote_project()
         self.check_remote_connection()
-        self.update_remote_code_env()
         self.import_project()
         self.check_remote_plugin()
         if self.activate_scenarios:
@@ -59,7 +58,7 @@ class MyRunnable(Runnable):
         self.remote_client = dataikuapi.DSSClient(self.remote_host, api_key)
         self.project = self.local_client.get_project(self.project_key)
 
-        self.html += '<div> Successfully connected to remote host: {}</div>'.format(self.remote_client.host)
+        self.html += '<div> Successfully connected to remote host: {0}</div>'.format(self.remote_client.host)
 
     def check_remote_project(self):
         # check if there are any projects in remote instance
@@ -70,9 +69,9 @@ class MyRunnable(Runnable):
 
         if not self.project_key in remote_projects:
             self.remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
-            self.html += '<div> Project {} does not exist on instance {}.  Creating it.</div>'.format(self.project_key, self.remote_host)
+            self.html += '<div> Project {0} does not exist on instance {1}.  Creating it.</div>'.format(self.project_key, self.remote_host)
         else:
-            self.html += '<div> Project {} already exists on instance %s.  Updating with new bundle version {}.</div>'.format(self.project_key, self.remote_host, self.bundle_id)
+            self.html += '<div> Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id)
 
     def check_remote_connection(self):
         # get list of connections used in the initial project
@@ -119,8 +118,8 @@ class MyRunnable(Runnable):
 
         for plugin in missing_plugins:
             self.html += '<tr>'
-            self.html += '<td> {} </td>'.format(plugin)
-            self.html += '<td> {} </td>'.format(missing_plugins[plugin])
+            self.html += '<td> {0} </td>'.format(plugin)
+            self.html += '<td> {0} </td>'.format(missing_plugins[plugin])
             self.html += '</tr>'
 
         if len(missing_plugins) > 0:
@@ -131,9 +130,9 @@ class MyRunnable(Runnable):
         # create the bundle (verify that the bundle_id does not exist)
         try:
             self.project.export_bundle(self.bundle_id)
-            self.html += '<div><div>Successfully created bundle: {}</div>'.format(self.bundle_id)
+            self.html += '<div><div>Successfully created bundle: {0}</div>'.format(self.bundle_id)
         except DataikuException as de:
-            error_msg = 'Failed - Bundle {} already exists for project {}'.format(self.bundle_id, self.project_key)
+            error_msg = 'Failed - Bundle {0} already exists for project {1}'.format(self.bundle_id, self.project_key)
             raise Exception(error_msg)
 
         # check if there are any projects in remote instance
@@ -143,10 +142,10 @@ class MyRunnable(Runnable):
             remote_projects = []
 
         if self.project_key in remote_projects:
-            self.html += '<div> Project {} already exists on instance {}.  Updating with new bundle version {}.</div>' % (self.project_key, self.remote_host, self.bundle_id)
+            self.html += '<div> Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id)
         else:
             self.remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
-            self.html += '<div> Project {} does not exist on instance {}.  Creating it.</div>'.format(self.project_key,
+            self.html += '<div> Project {0} does not exist on instance {1}.  Creating it.</div>'.format(self.project_key,
                                                                                                       self.remote_host)
         # connect to remote project
         remote_project = self.remote_client.get_project(self.project_key)

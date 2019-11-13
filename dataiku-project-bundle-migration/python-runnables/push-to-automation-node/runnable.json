@@ -53,15 +53,6 @@
             "type": "BOOLEAN",
             "default": false,
             "description": "If selected, ignores SSL certificates on remote instance."
-        },
-        {
-            "name": "remote_design_instance",
-            "label" : "Remote Design Instance",
-            "type": "BOOLEAN",
-            "visibilityCondition" : "model.advanced",
-            "mandatory" : false,
-            "default": false,
-            "description": "Are you pushing the project to another design instance?"
         }
     ]
 }
