@@ -7,7 +7,7 @@
         "author": "Dataiku (Guilherme De Oliveira & Patrick Masi-Phelps)",
         "icon": "icon-upload-alt",
         "licenseInfo": "Apache Software License",
-        "url": "https://www.dataiku.com/dss/plugins/info/push-project-to-automation.html",
+        "url": "https://www.dataiku.com/dss/plugins/info/project-migration.html",
         "tags": ["Automation", "Admin"]
     }
 }
