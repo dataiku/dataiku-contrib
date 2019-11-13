@@ -37,7 +37,7 @@
             "name": "replace_project",
             "label" : "Replace if exists",
             "type": "BOOLEAN",
-            "default": false,
+            "default": true,
             "description": "If selected, the macro will replace the project if it already exists on the remote instance."
         },
         {
@@ -58,7 +58,7 @@
             "name": "automatically_create_code_env",
             "label" : "Create code-env",
             "type": "BOOLEAN",
-            "default": false,
+            "default": true,
             "description": "If selected, code-env used in the initial project will be created/updated in the remote instance."
         }
     ]

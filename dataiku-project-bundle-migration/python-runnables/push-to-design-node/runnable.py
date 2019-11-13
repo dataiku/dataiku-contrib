@@ -57,7 +57,7 @@ class MyRunnable(Runnable):
         self.local_client = dataiku.api_client()
         self.remote_client = dataikuapi.DSSClient(self.remote_host, api_key)
         self.project = self.local_client.get_project(self.project_key)
-        self.html += '<div> Successfully connected to remote host: {}</div>'.format(self.remote_client.host)
+        self.html += '<div> Successfully connected to remote host: {0}</div>'.format(self.remote_client.host)
 
     def check_remote_project(self):
         try:
@@ -67,13 +67,13 @@ class MyRunnable(Runnable):
 
         if self.project_key in remote_projects:
             if not self.replace_project:
-                self.html += '<div> Project {} already exists on instance {}.  Nothing to do.</div>'.format(self.new_project_key, self.remote_host)
+                self.html += '<div> Project {0} already exists on instance {1}.  Nothing to do.</div>'.format(self.new_project_key, self.remote_host)
                 return self.html
             else:
-                self.html += '<div> Project {} already exists on instance {}.  Overwriting it ...</div>'.format(self.new_project_key, self.remote_host)
+                self.html += '<div> Project {0} already exists on instance {1}.  Overwriting it ...</div>'.format(self.new_project_key, self.remote_host)
                 self.delete_project_first = True
         else:
-            self.html += '<div> Project {} does not exist on instance {}. Creating it ...</div>'.format(self.project_key, self.remote_host)
+            self.html += '<div> Project {0} does not exist on instance {1}. Creating it ...</div>'.format(self.project_key, self.remote_host)
 
     def check_remote_connection(self):
         # get list of connections used in the initial project
@@ -93,7 +93,7 @@ class MyRunnable(Runnable):
         # check if connections used in the initial project also exist on the remote instance
         for connection in connections_used:
             if connection not in remote_connections_names:
-                error_msg = 'Failed - Connection {} used in initial project does not exist on instance {}.'.format(self.connection, self.remote_host)
+                error_msg = 'Failed - Connection {0} used in initial project does not exist on instance {1}.'.format(connection, self.remote_host)
                 raise Exception(error_msg)
         self.html += '<div><div>All connections exist on both instances.</div>'
 
@@ -118,11 +118,11 @@ class MyRunnable(Runnable):
                 if env_lang == 'python':
                     python_interpreter = local_code_env.get_definition().get('desc').get('pythonInterpreter')
                     if python_interpreter == 'CUSTOM':
-                        raise ValueError('Code-env {} uses a custom interpreter, can not recreate it automatically on the remote instance.'.format(env_name))
+                        raise ValueError('Code-env {0} uses a custom interpreter, can not recreate it automatically on the remote instance.'.format(env_name))
                     _ = self.remote_client.create_code_env(env_lang=env_lang, env_name=env_name, deployment_mode='DESIGN_MANAGED', params={'pythonInterpreter': python_interpreter})
                 else:  # R
                     _ = self.remote_client.create_code_env(env_lang=env_lang, env_name=env_name, deployment_mode='DESIGN_MANAGED')
-                self.html += '<div>Code env "{}" is created.</div>'.format(env_name)
+                self.html += '<div>Code env "{0}" is created.</div>'.format(env_name)
 
             remote_code_env = self.remote_client.get_code_env(env_lang, env_name)
             env_def = remote_code_env.get_definition()
@@ -182,7 +182,7 @@ class MyRunnable(Runnable):
             self.html += '<div>Migration failed: </div>'
             for message in res.get('messages'):
                 if message.get('severity') == 'ERROR':
-                    self.html += '<div> &nbsp; {}</div>'.format(message.get('details'))
+                    self.html += '<div> &nbsp; {0}</div>'.format(message.get('details'))
         self.html += '</div>'
 
     def activate_remote_scenario(self):
