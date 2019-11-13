@@ -40,16 +40,15 @@ class MyRunnable(Runnable):
         return self.html
 
     def set_params(self):
-
-        self.bundle_id = self.config.get("bundle_id", "")
-        if self.bundle_id == "":
+        self.bundle_id = self.config.get("bundle_id", None)
+        if self.bundle_id is None:
             raise Exception("Bundle id is required")
-        self.remote_host = self.config.get("remote_host", "")
-        if self.remote_host == "":
+        self.remote_host = self.config.get("remote_host", None)
+        if self.remote_host is None:
             raise Exception("destination is required")
 
-        api_key = self.config.get("api_key", "")
-        if api_key == "":
+        api_key = self.config.get("api_key")
+        if api_key is None:
             raise Exception("API key is required")
 
         self.ignore_ssl_certs = self.config.get("ignore_ssl_certs", False)
@@ -68,13 +67,13 @@ class MyRunnable(Runnable):
         except:
             remote_projects = []
 
-        if not self.project_key in remote_projects:
-            self.remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
-            self.html += '<div> Project {0} does not exist on instance {1}. Creating it.</div>'.format(self.project_key, self.remote_host)
-            logger.info('Project {0} does not exist on instance {1}. Creating it.'.format(self.project_key, self.remote_host))
-        else:
+        if self.project_key in remote_projects:
             self.html += '<div> Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id)
             logger.info('Project {0} already exists on instance {1}.  Updating with new bundle version {2}.</div>'.format(self.project_key, self.remote_host, self.bundle_id))
+        else:
+            self.html += '<div> Project {0} does not exist on instance {1}. Creating it.</div>'.format(self.project_key, self.remote_host)
+            logger.info('Project {0} does not exist on instance {1}. Creating it.'.format(self.project_key, self.remote_host))
+            self.remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
 
     def check_remote_connection(self):
         # get list of connections used in the initial project

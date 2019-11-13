@@ -43,12 +43,12 @@ class MyRunnable(Runnable):
         return self.html
 
     def set_params(self):
-        self.remote_host = self.config.get("remote_host", "")
-        if self.remote_host == "":
+        self.remote_host = self.config.get("remote_host")
+        if self.remote_host is None:
             raise Exception("Destination is required")
 
-        api_key = self.config.get("api_key", "")
-        if api_key == "":
+        api_key = self.config.get("api_key")
+        if api_key is None:
             raise Exception("API key is required")
 
         self.new_project_key = self.config.get("new_project_key", self.project_key)
@@ -83,20 +83,20 @@ class MyRunnable(Runnable):
     def check_remote_connection(self):
         # get list of connections used in the initial project
         datasets = self.project.list_datasets()
-        connections_used = []
+        local_connections_used = []
         for dataset in datasets:
             connection = dataset.get('params', {}).get('connection')
             if connection is not None:
-                connections_used.append(dataset['params']['connection'])
+                local_connections_used.append(dataset['params']['connection'])
 
-        connections_used = list(set(connections_used))
+        local_connections_used = list(set(local_connections_used))
 
-        # get list of connections in remote project
+        # get list of connections in remote instance
         remote_connections_list = self.remote_client.list_connections()
         remote_connections_names = remote_connections_list.keys()
 
         # check if connections used in the initial project also exist on the remote instance
-        for connection in connections_used:
+        for connection in local_connections_used:
             if connection not in remote_connections_names:
                 error_msg = 'Failed - Connection {0} used in initial project does not exist on instance {1}.'.format(connection, self.remote_host)
                 raise Exception(error_msg)
@@ -104,17 +104,18 @@ class MyRunnable(Runnable):
         logger.info('All connections exist on both instances.')
 
     def update_remote_code_env(self):
-        # check for code-env, create if not exist
-        code_envs_used = []
+        # Check for code-envs that are used in the recipes of the local project, create if not exist
+        # Beware that code-envs inside notebook are not retrieved, we don't know how to do it
+        local_code_envs_used = []
         already_noted_list = [None]
         for recipe in self.project.list_recipes():
             env_name = recipe.get('params', {}).get('envSelection', {}).get('envName', None)
             env_type = recipe.get('type')
             if env_name not in already_noted_list:
-                code_envs_used.append({'env_name': env_name, 'env_lang': env_type})
+                local_code_envs_used.append({'env_name': env_name, 'env_lang': env_type})
                 already_noted_list.append(env_name)
 
-        for code_env_detail in code_envs_used:
+        for code_env_detail in local_code_envs_used:
             env_lang = code_env_detail.get('env_lang')
             env_name = code_env_detail.get('env_name')
             local_code_env = self.local_client.get_code_env(env_lang, env_name)
@@ -142,13 +143,13 @@ class MyRunnable(Runnable):
 
     def check_remote_plugin(self):
         original_plugin_names = {}
-        for plugin in self.local_client.list_plugins():
-            original_plugin_names[plugin['meta']['label']] = plugin['version']
+        for local_plugin in self.local_client.list_plugins():
+            original_plugin_names[local_plugin['meta']['label']] = local_plugin['version']
 
         # compare to list of plugins in remote instance
         remote_plugin_names = {}
-        for plugin in self.remote_client.list_plugins():
-            remote_plugin_names[plugin['meta']['label']] = plugin['version']
+        for remote_plugin in self.remote_client.list_plugins():
+            remote_plugin_names[remote_plugin['meta']['label']] = remote_plugin['version']
 
         missing_plugins = {k: original_plugin_names[k] for k in original_plugin_names if
                            k not in remote_plugin_names or original_plugin_names[k] == remote_plugin_names[k]}
