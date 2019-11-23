@@ -1,0 +1,37 @@
+{
+    "meta": {
+        "label": "Waterfall chart",
+        "description": "",
+        "icon": "icon-bar-chart"
+    },
+
+    "baseType": "STANDARD",
+    "hasBackend": "false",
+
+    "chart" : {
+        "datasetParamName": "dataset",
+        "leftBarLabel": "Chart parameters",
+        "leftBarParams": [],
+        "topBar": "STD_FORM",
+        "topBarParams": [
+            {
+                "name": "unit",
+                "type": "DATASET_COLUMN",
+                "datasetParamName": "dataset",
+                "label": "Unit column",
+                "description": "",
+                "mandatory": true
+            },
+            {
+                "name": "value",
+                "type": "DATASET_COLUMN",
+                "datasetParamName": "dataset",
+                "label": "Value column",
+                "description": "",
+                "mandatory": true
+            }
+        ],
+        "canFilter": false,
+        "canFacet": false
+    }
+}
