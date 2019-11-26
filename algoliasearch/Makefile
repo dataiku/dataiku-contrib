@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.7
+PLUGIN_VERSION=0.0.8
 PLUGIN_ID=algoliasearch
 
 all:
