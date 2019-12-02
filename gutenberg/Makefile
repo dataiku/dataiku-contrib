@@ -5,4 +5,4 @@ all:
 	cat plugin.json|json_pp > /dev/null
 	rm -rf dist
 	mkdir dist
-	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json python-connectors requirements.json
+	zip -r dist/dss-plugin-${PLUGIN_ID}-${PLUGIN_VERSION}.zip plugin.json python-connectors code-env
