@@ -54,6 +54,8 @@ Please see [plugin page](https://www.dataiku.com/dss/plugins/info/forecast.html)
 
 Note that the plugin uses an R code environment so R must be installed and integrated with Dataiku on your machine (version 3.5.0 or above). Anaconda R is not supported.
 
+The plugin relies on a recent Dataiku DSS version, at least 5.0.5.
+
 ## Changelog
 
 **Version 0.3.0 "beta 3" (2019-05)**
