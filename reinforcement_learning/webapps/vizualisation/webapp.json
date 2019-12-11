@@ -1,0 +1,49 @@
+// This file is the descriptor for webapp vizualisation
+{
+    "meta": {
+        "label": "vizualisation",
+        "description": "Vizualize your agent playing",
+        "icon": "icon-gamepad"
+    },
+
+    "baseType": "STANDARD", // WARNING: once set, do not change
+    "hasBackend": "true",
+    "standardWebAppLibraries": ["jquery","dataiku","bootstrap"],
+
+    /* The field "params" holds a list of all the params
+       for wich the user will be prompted for values:
+
+       The available parameter types are:
+       STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA,
+       DATASET, DATASETS, SAVED_MODEL, MANAGED_FOLDER,
+       API_SERVICE, API_SERVICE_VERSION, BUNDLE, VISUAL_ANALYSIS
+       DATASET_COLUMN, DATASET_COLUMNS
+       
+       
+        roles define where this webapp will appear in DSS GUI. They are used to pre-fill a macro parameter with context.
+
+       Each role consists of:
+        - type: where the macro will be shown
+            * DATASET, DATASETS, SAVED_MODEL, MANAGED_FOLDER (a button to create webapps will be shown in the corresponding "action" menu)
+        - targetParamsKey(s): name of the parameter(s) that will be filled with the selected object
+    
+    "roles": [
+        {"type": "MANAGED_FOLDER", "targetParamsKey": "replay_folder"}
+    ]
+    
+    */
+    "params": [
+        {
+            "name": "replay_folder",
+            "type": "FOLDER",
+            "label": "Replay Folder",
+            "description": "Select the folder containing the training json file and the video replay",
+            "mandatory": true
+          
+            
+        }
+        ]
+
+}
+
+    
