@@ -1,0 +1,58 @@
+/*
+    This imports default colors, you can use them with the syntax `var(--variable-name)`.
+    Example:
+        border: 3px solid var(--border-color);
+*/
+@import '/static/public/styles/1.0.0/variables.css';
+
+.fetch-dataset-container {
+    display: flex;
+    width: 100%;
+}
+
+.fetch-dataset-container section, .fetch-dataset-container form {
+    height: 100%;
+    overflow: auto;
+}
+
+.error-message {
+    color: var(--error-red);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.fetch-dataset-form {
+    min-width: 300px;
+}
+
+.fetch-dataset-results {
+    margin-top: 20px;
+    border: 3px solid var(--border-color);
+    width: 100%;
+    font-size: 16px;
+    background-color: var(--grey-background);
+    color: var(--grey);
+    min-height: 300px;
+}
+
+#message{
+    white-space: pre-wrap;
+}
+
+
+
+
+
+.algorithmBanner{
+    text-align: center!important;
+    background-color: #4285F4;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 18px;
+    color:white;
+    
+}
+.center{
+    text-align: center!important;
+}
