@@ -63,7 +63,8 @@ if dataset_config["type"] in SUPPORTED_DB:
     q = '"'
     sqlexec = SQLExecutor2(dataset=dataset)
     logging.info("Dataset config: %s" % dataset_config)
-    table = dataset_config["params"].get("table", dataset.short_name)
+    #table = dataset_config["params"].get("table", dataset.short_name)
+    table = '_'.join(dataset.name.split('.'))
 elif dataset_config["type"] == "HDFS":
     q = '`'
     if use_impala and compute_distinct:
@@ -116,7 +117,7 @@ if compute_most_frequent:
     logging.info("Handling most frequent values ...")
     most_frequent = {}
     for col in str_columns + num_columns + date_columns + bool_columns:
-        query = "select %s%s%s as val, COUNT(*) as count FROM %s%s%s GROUP BY %s%s%s ORDER BY count DESC LIMIT 1" % (q,col,q, q, dataset.short_name, q, q,col, q)
+        query = "select %s%s%s as val, COUNT(*) as count FROM %s%s%s GROUP BY %s%s%s ORDER BY count DESC LIMIT 1" % (q,col,q, q, table, q, q,col, q)
         logging.info("Executing : %s" % query)
         df = sqlexec.query_to_df(query)
         if df.shape[0] > 0:
@@ -169,12 +170,12 @@ df = pd.DataFrame(out, columns = columns)
 if compute_distinct:
     try:
         df["cardinality"] = df["cardinality"].astype("int64")
-    except Exception,e:
+    except Exception as e:
         pass
 
 try:
     df["nb_missing"] = df["nb_missing"].astype("int64")
-except Exception, e:
+except Exception as e:
     pass
 
 output.write_with_schema(df)
