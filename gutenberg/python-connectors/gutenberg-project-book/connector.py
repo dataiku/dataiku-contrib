@@ -1,6 +1,17 @@
 from dataiku.connector import Connector
-import urllib2 as url2
-from BeautifulSoup import UnicodeDammit
+import sys
+from bs4 import UnicodeDammit
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+if (sys.version_info > (3, 0)):
+    from urllib.request import urlopen
+else:
+    from urllib2 import urlopen
+
+
 
 class GutenbergConnector(Connector):
 
@@ -36,7 +47,6 @@ class GutenbergConnector(Connector):
         lid = len(str(self.book_id))
         fullbid = str(self.book_id)
         rootbid = fullbid # sometimes the id to access a file has a variation, ex fullbid=14285-8 for the book 14285
-        print type(lid)
 
         stopit = 0
         for i in range(lid-1):
@@ -47,11 +57,10 @@ class GutenbergConnector(Connector):
                 rootbid=fullbid[0:i]
         url_book += '/'+ rootbid  + '/'+ fullbid + '.txt'
 
-        print url_book
-        response = url2.urlopen(url_book)
+        response = urlopen(url_book)
         raw = response.read()   #.decode('utf8')
         converted = UnicodeDammit(raw)
-        raw = converted.unicode
+        raw = converted.unicode_markup
         start_book = raw.find("START OF")
         end_book = raw.rfind('END OF')
         preamb = raw[:start_book]
@@ -61,8 +70,8 @@ class GutenbergConnector(Connector):
         date = [ i.split(':')[1].strip() for i in preamb.split("\r\n\r\n") if i.find('Release Date') != -1][0]
         book_paraph =  raw[start_book:end_book].split("\r\n\r\n")
 
-        print "Book length %s" % len(raw)
-        print "N paragraphs:", len(book_paraph)
+        logger.info("Book length %s" % len(raw))
+        logger.info("N paragraphs:", len(book_paraph))
 
         for id_p, p in enumerate(book_paraph):
             yield {'id':id_p, 'author': author, 'title': title, 'text': p}
