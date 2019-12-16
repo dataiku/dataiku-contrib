@@ -1,6 +1,6 @@
 {
     "meta" : {
-        "label" : "Pageviews of selected pages over time (recipe)"
+        "label" : "Pageviews of selected pages over time"
     },
 
     "kind" : "PYTHON",
