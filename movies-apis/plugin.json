@@ -1,6 +1,6 @@
 {
   "id": "movies-apis",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "meta": {
     "label": "Enrich from Movies APIs",
     "description": "Fetch data from Open Movie Database and The Movie DB (ratings, runlength, IMDb id, etc)",
@@ -11,12 +11,19 @@
     "tags": ["Enrichment", "Open Data"]
   },
   "params":  [
+        {
+          "name": "omdb_api_key",
+          "label": "OMDb API key",
+          "type":  "STRING",
+          "mandatory": false,
+          "description": "API key for the OMDb recipe"
+      },
       {
           "name": "tmdb_api_key",
           "label": "TMDb API key",
           "type":  "STRING",
           "mandatory": false,
-          "description": "API key for The Movies DB - only required for TMDb recipes"
+          "description": "API key for the TMDb recipe"
       }
   ]
 }
