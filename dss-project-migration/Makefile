@@ -1,5 +1,5 @@
-PLUGIN_VERSION=0.0.4
-PLUGIN_ID=dataiku-project-bundle-migration
+PLUGIN_VERSION=1.0.0
+PLUGIN_ID=dss-project-migration
 
 plugin:
 	cat plugin.json|json_pp > /dev/null

@@ -1,5 +1,5 @@
 {
-    "id": "dataiku-project-bundle-migration",
+    "id": "dss-project-migration",
     "version": "1.0.0",
     "meta": {
         "label": "Push projects to automation",
