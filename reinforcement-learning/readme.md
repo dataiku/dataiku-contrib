@@ -4,7 +4,7 @@ Create agents that learn to interact with environments using Reinforcement Learn
 
 This plugin provides tools to rapidly train, test and visualize reinforcement learning agents, on different video game environments.
 
-This plugin relies on (Stable Baselines Library)[https://stable-baselines.readthedocs.io/en/master/]. Stable Baselines is an open-source library written in Python. We use it to run Reinforcement Learning agents and enable fast experimentation.
+This plugin relies on [Stable Baselines Library](https://stable-baselines.readthedocs.io/en/master/). Stable Baselines is an open-source library written in Python. We use it to run Reinforcement Learning agents and enable fast experimentation.
 
 This plugin comes with 2 recipes and one webapp template:
 
@@ -18,8 +18,8 @@ Author Dataiku Labs (Thomas Simonini)
 Released
 Last updated
 License : 
-Source Code: (Github)[]
-Reporting issues: (Github)[https://github.com/dataiku/dataiku-contrib/issues]
+Source Code: [Github]()
+Reporting issues: [Github](https://github.com/dataiku/dataiku-contrib/issues)
 
 ## How to Use
 ### Recipes
