@@ -264,7 +264,7 @@
         },
         {
             "name": "q_min_epsilon",
-            "label": "Max Epsilon",
+            "label": "Min Epsilon",
             "type": "DOUBLE",
             "defaultValue" : 0.05,
             "visibilityCondition": "model.agent == 'q'"
