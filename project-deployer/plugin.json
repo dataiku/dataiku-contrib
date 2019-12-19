@@ -1,5 +1,5 @@
 {
-    "id": "dss-project-migration",
+    "id": "project-deployer",
     "version": "1.0.0",
     "meta": {
         "label": "Push projects to automation",

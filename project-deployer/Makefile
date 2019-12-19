@@ -1,5 +1,5 @@
 PLUGIN_VERSION=1.0.0
-PLUGIN_ID=dss-project-migration
+PLUGIN_ID=project-deployer
 
 plugin:
 	cat plugin.json|json_pp > /dev/null
