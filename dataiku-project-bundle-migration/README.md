@@ -1,6 +1,6 @@
 # Dataiku Bundle Project and Push to Automation Node Plugin
 
-Current Version: 0.0.4
+Current Version: 1.0.0
 
 Status:  **experimental**  
 
