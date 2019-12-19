@@ -71,11 +71,11 @@ input_ = get_input_names_for_role('input')[0]
 output_folder = dataiku.Folder(get_output_names_for_role('censusdata')[0])
 path_ = output_folder.get_path() + '/'
 
-print 'Checking if previous files exist...'
+logging.info('Checking if previous files exist...')
 if len(os.listdir(path_))>0:
     for fz in os.listdir(path_):
         cmd = "rm %s" % (path_ + fz)
-        print 'removing: %s' % (fz)
+        logging.info('removing: %s' % (fz))
         os.system(cmd)
 
 
@@ -109,14 +109,14 @@ df_log_ = common.log__step('0',params,process_date,'',0,'','init')
 
 #----------------------------------------- INPUT DATASET
 
-print '0/6 Processing input dataset...'
+logging.info('0/6 Processing input dataset...')
 
 df  = dataiku.Dataset(input_).get_dataframe(columns=columns)
 if P_COLUMN_STATES_LOWER is True:
     df[P_COLUMN_STATES] = df[P_COLUMN_STATES].map(lambda x: x.lower())
     
     
-print 'Creating States list...'
+logging.info('Creating States list...')
 state_list_  = list(np.unique(df[P_COLUMN_STATES]))
 
 
@@ -129,9 +129,9 @@ dict_states = state_conversion[2]
 s_found = len(state_list)
 s_rejected = len(state_list_rejected)
 
-print '----------------------------------------'
-print 'First diagnostic on input dataset'
-print '----------------------------------------'
+logging.info('----------------------------------------')
+logging.info('First diagnostic on input dataset')
+logging.info('----------------------------------------')
 
 
 
@@ -145,14 +145,14 @@ if seq_folder_name=='':
 
     
 if s_found >0:
-    print 'States expected to be processed if enough records for feature selection:'
-    print state_list
+    logging.info('States expected to be processed if enough records for feature selection:')
+    logging.info(state_list)
     df_log_ = common.make__log(df_log_,'1',state_list,process_date,'OK',len(state_list),'','States in Feature selection')
-    print 'States rejected (state does not exist):'
+    logging.info('States rejected (state does not exist):')
     if s_rejected < 60:
-        print state_list_rejected
+        logging.info(state_list_rejected)
     else:
-        print '...too many elements rejected for displaying it in the log...'
+        logging.info('...too many elements rejected for displaying it in the log...')
     
     
 
@@ -170,7 +170,7 @@ if s_found >0:
     
     #----------------------------------------- BASE FOLDER
 
-    print '1/6 Creating base folders...' 
+    logging.info('1/6 Creating base folders...' )
 
     common.create_folder(path_datadir_tmp,FOLDER_NAME,False)  
 
@@ -181,10 +181,10 @@ if s_found >0:
     #----------------------------------------- SOURCE HARVESTER
 
     if P_USE_PREVIOUS_SOURCES is False:
-        print '2/6 Collecting US Census Data...' 
+        logging.info('2/6 Collecting US Census Data...' )
 
     else:
-        print '2/6 Re using US Census Data if available...'
+        logging.info('2/6 Re using US Census Data if available...')
 
     sources_collector = common.us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CONTENT,P_CENSUS_LEVEL,path_datadir_tmp,FOLDER_NAME,state_list,dict_states)
 
@@ -197,20 +197,15 @@ if s_found >0:
     geo_header_file_dir = fdef_dir + '/' + geo_header_file 
     
     
-    ##debug
-    #print '-------------- GEO HEADER -----------------'
-    print geo_header_file_dir
-    #print '=='
-    #print fdef_dir
-    #print geo_header_file
+    logging.info(geo_header_file_dir)
     
-    geo_header = pd.read_excel(geo_header_file_dir, sheetname=0, header=0)
+    geo_header = pd.read_excel(geo_header_file_dir, sheet_name=0, header=0) #sheetname
 
 
     
     #----------------------------------------- FEATURE SELECTION
 
-    print '3/6 Feature selection...'
+    logging.info('3/6 Feature selection...')
 
     census_level_code_len = census_resources.dict_level_corresp['v1'][P_CENSUS_LEVEL]['code_len']
 
@@ -232,7 +227,7 @@ if s_found >0:
         
     for state in state_list:
 
-        print 'Processing this state: %s' % (state)
+        logging.info('Processing this state: %s' % (state))
 
         state_dir = path_datadir_tmp + FOLDER_NAME+'/'+ state 
 
@@ -245,7 +240,7 @@ if s_found >0:
             state_dir_level = state_dir +'/'+ 'NO_TRACT_BG_SEG'
 
 
-        print 'Starting feature selection...'
+        logging.info('Starting feature selection...')
         if state in n_state_list:
 
             ustate = state.upper()
@@ -253,31 +248,28 @@ if s_found >0:
             state_name = dict_states[state]['attributes']['state_fullname_w1']
             state_number = dict_states[state]['attributes']['state_2digits']
 
-            print 'Feature selection for state = %s' % state_name
+            logging.info('Feature selection for state = %s' % state_name)
 
             vint = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]
             master_segment_file = state_dir_level + '/'  + vint['master_segment_file_pattern']+ vint['vintage_pattern']+state+'.csv'
 
             geo_source_df = pd.read_csv(master_segment_file, sep =',', header = None, names = geo_header.columns)
             
-            ## debug
+            ## debug - to help users
             NNN = geo_source_df.shape
             
-            print '---------------------------------'
-            print master_segment_file
-            print geo_header_file_dir
+            logging.info('---------------------------------')
+            logging.info(master_segment_file)
+            logging.info(geo_header_file_dir)
             
-            print '---------------------------------'
-            print geo_header.columns
+            logging.info('---------------------------------')
+            logging.info(geo_header.columns)
+                        
+            logging.info('---------------------------------')
+            logging.info(NNN)
             
-            print '---------------------------------'
-            print sumlevel_val
-            
-            print '---------------------------------'
-            print NNN
-            
-            print '---------------------------------'
-            print geo_source_df.head(2)
+            logging.info('---------------------------------')
+            logging.info(geo_source_df.head(2))
             
             geo_level_df = geo_source_df[geo_source_df['SUMLEVEL'].isin(sumlevel_val)].copy()
             geo_level_df['GEOID_DKU'] = geo_level_df['GEOID'].map(lambda x: x.split('US')[1])
@@ -309,12 +301,17 @@ if s_found >0:
             
             for i,segment_number in enumerate(segment_list):
 
-                print 'Processing segment %s/%s' % (i+1,ns)
+                logging.info('Processing segment %s/%s' % (i+1,ns))
 
 
-                #seq_folder_name = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['fields_definition']['folder_name']
-                HEADER_PATH_FILE = fdef_dir + '/'+ seq_folder_name +'/Seq' + str(int(segment_number)) + '.xls'
-                header_df = pd.read_excel(HEADER_PATH_FILE,sheetname=0) ### 0 = 'E'
+                try:
+                    HEADER_PATH_FILE = fdef_dir + '/'+ seq_folder_name +'/Seq' + str(int(segment_number)) + template_fields_def['seq_files_extension']
+                    header_df = pd.read_excel(HEADER_PATH_FILE,sheet_name=0) ### 0 = 'E' #sheetname
+                    
+                except:
+                    HEADER_PATH_FILE = fdef_dir + '/'+ seq_folder_name +'/seq' + str(int(segment_number)) + template_fields_def['seq_files_extension']
+                    header_df = pd.read_excel(HEADER_PATH_FILE,sheet_name=0) ### 0 = 'E' #sheetname
+                
 
                 ### Adjust the header to fit what we need.
                 kh_list = ['FILEID', 'FILETYPE', 'STUSAB', 'CHARITER', 'SEQUENCE', 'LOGRECNO']
@@ -387,12 +384,12 @@ if s_found >0:
                                 #dict_features['feature_catalog'].append('') ## future usage
                                 dict_features['nrows'].append(nrows)
                         except:
-                            print 'Warning - Feature selection issue for this segment, you should consider another imputation strategy'
+                            logging.info('Warning - Feature selection issue for this segment, you should consider another imputation strategy')
                             params={'segment_number':segment_number, 'columns':data_cols2}
                             df_log_ = common.make__log(df_log_,'fs issue',params,process_date,'Warning',-1,state,'segments')
                             
         else:
-            print 'For state = %s, too few values for performing the feature selection' % (state)
+            logging.info('For state = %s, too few values for performing the feature selection' % (state))
             params={'reason':'state <30 rows'}
             df_log_ = common.make__log(df_log_,'too few values for feature selection',params,process_date,'KO',-1,state,'requirements')
 
@@ -412,17 +409,17 @@ if s_found >0:
     features_list = pd.unique(features_kept_df['predictor'])
     n_features = len(features_list)
 
-    print 'Nb features selected: %s' % (n_features)
+    logging.info('Nb features selected: %s' % (n_features))
 
     dico_features_kept = {k: list(v) for k,v in features_kept_df.groupby("segment_number")["predictor"]}
     nb_segments = len(dico_features_kept)
 
-    print 'Nb corresponding segments: %s' % (nb_segments)
+    logging.info('Nb corresponding segments: %s' % (nb_segments))
 
 
     #----------------------------------------- GENERATE FILES
 
-    print '4/6 Generating census...' 
+    logging.info('4/6 Generating census...' )
 
     if P_GEN_UNIQUE_FILE is True:
         final_output_df = pd.DataFrame() 
@@ -431,7 +428,7 @@ if s_found >0:
     for state in state_list:
         
 
-        print 'Processing this state: %s' % (state)
+        logging.info('Processing this state: %s' % (state))
 
         state_dir = path_datadir_tmp + FOLDER_NAME+'/'+ state 
 
@@ -468,11 +465,16 @@ if s_found >0:
         for i,segment_number in enumerate(dico_features_kept.keys()):
             selected_feature_list = dico_features_kept[segment_number]
 
-            print 'Processing segment: %s/%s' % (i+1,nb_segments)
+            logging.info('Processing segment: %s/%s' % (i+1,nb_segments))
 
 
-            HEADER_PATH_FILE = fdef_dir + '/'+ seq_folder_name +'/Seq' + str(int(segment_number)) + '.xls'
-            header_df = pd.read_excel(HEADER_PATH_FILE,sheetname=0) ### 0 = 'E'
+            try:
+                HEADER_PATH_FILE = fdef_dir + '/'+ seq_folder_name +'/Seq' + str(int(segment_number)) + template_fields_def['seq_files_extension']
+                header_df = pd.read_excel(HEADER_PATH_FILE,sheet_name=0) ### 0 = 'E' #sheetname
+                    
+            except:
+                HEADER_PATH_FILE = fdef_dir + '/'+ seq_folder_name +'/seq' + str(int(segment_number)) + template_fields_def['seq_files_extension']
+                header_df = pd.read_excel(HEADER_PATH_FILE,sheet_name=0) ### 0 = 'E' #sheetname
 
             ### Adjust the header to fit what we need.
             kh_list = ['FILEID', 'FILETYPE', 'STUSAB', 'CHARITER', 'SEQUENCE', 'LOGRECNO']
@@ -521,10 +523,10 @@ if s_found >0:
             d_out = output_batch[0]
             dlast = output_batch[1]
 
-            print '5/6 Output files ...' 
+            logging.info('5/6 Output files ...' )
 
             for b in d_out.keys():
-                print 'Exporting part #%s on %s' % (b,dlast)
+                logging.info('Exporting part #%s on %s' % (b,dlast))
                 fields_out = d_out[b]
                 final_output_df_batch = geo_level_df[fields_out]
 
@@ -543,7 +545,7 @@ if s_found >0:
         dlast = output_batch[1]
             
         for b in d_out.keys():
-            print 'Exporting part #%s / %s' % (b,dlast)
+            logging.info('Exporting part #%s / %s' % (b,dlast))
             fields_out = d_out[b]
             final_output_df_batch = final_output_df[fields_out]
 
@@ -551,16 +553,16 @@ if s_found >0:
             final_output_df_batch.to_csv(filefullpath,sep=',',index=None) #, header=True)
 
                        
-    print 'All files generated'
+    logging.info('All files generated')
 
     if P_DELETE_US_CENSUS_SOURCES is True:
 
-        print '6/6 Removing US Census temp data from: %s' % (path_datadir_tmp + FOLDER_NAME)
+        logging.info('6/6 Removing US Census temp data from: %s' % (path_datadir_tmp + FOLDER_NAME))
         cmd = "rm -rf %s" % (path_datadir_tmp + FOLDER_NAME)
         os.system(cmd)
 
     else:
-        print '6/6 Keeping US Census data sources in: %s' % (path_datadir_tmp + FOLDER_NAME)
+        logging.info('6/6 Keeping US Census data sources in: %s' % (path_datadir_tmp + FOLDER_NAME))
         for f in os.listdir(path_datadir_tmp + FOLDER_NAME):
             if not f.endswith('.zip'):
                 cmd = "rm -rf %s" % (path_datadir_tmp + FOLDER_NAME + '/' + f)
@@ -596,18 +598,18 @@ if s_found >0:
             #del df_metadata
             
         else:
-            print metadata_status
+            logging.info(metadata_status)
             df_log_ = common.make__log(df_log_,'',metadata_status,process_date,'KO',0,'','failed metadata')
         
         features_kept_df['census']=P_CENSUS_CONTENT
         
-        print 'Exporting feature selection report...' 
+        logging.info('Exporting feature selection report...')
         feature_selection_dataset.write_with_schema(features_kept_df)
     
     #--------------------------------------------------
     
                 
-    print 'Flushing pandas dataframes...'
+    logging.info('Flushing pandas dataframes...')
     del df
     del df2
     del df2_unique
@@ -627,19 +629,19 @@ if s_found >0:
 
     
     df_log_ = common.make__log(df_log_,'999','',process_date,'OK',0,'','end')
-    print '----------------------------------------'
-    print 'US Census with feature selection created'
-    print '----------------------------------------'
+    logging.info('----------------------------------------')
+    logging.info('US Census with feature selection created')
+    logging.info('----------------------------------------')
     
     
     
 else:
-    print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    print 'US Census CANNOT be built, no States available in your dataset...'
-    print 'Check the following settings :'
-    print '-> are the states in the right format regarding the plugin set by the user ?'
-    print '-> is the column really containing states ?'
-    print '----------------------------------------'
+    logging.info('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    logging.info('US Census CANNOT be built, no States available in your dataset...')
+    logging.info('Check the following settings :')
+    logging.info('-> are the states in the right format regarding the plugin set by the user ?')
+    logging.info('-> is the column really containing states ?')
+    logging.info('----------------------------------------')
     df_log_ = common.make__log(df_log_,'999','',process_date,'KO',0,'','end with no states')
     
 

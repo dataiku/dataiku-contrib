@@ -8,7 +8,9 @@ import os
 import census_resources
 import common
 import census_metadata
+import logging
 
+logger = logging.getLogger(__name__)
 
 class USCensusConnector(Connector):
 
@@ -32,8 +34,7 @@ class USCensusConnector(Connector):
             l.append(d)
 
         d_={"columns": l} 
- 
-
+        
         return d_
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
@@ -59,13 +60,13 @@ class USCensusConnector(Connector):
         if status=='ok':
             metadata_full_df = m[1]
             
-            print 'Total number of variables: %s' % (metadata_full_df.shape[0])
+            logger.info('Total number of variables: %s' % (metadata_full_df.shape[0]))
             
             for i, line in metadata_full_df.iterrows():
                 yield line.to_dict()
         
         else:
-            print status
+            logger.info(status)
 
         
             

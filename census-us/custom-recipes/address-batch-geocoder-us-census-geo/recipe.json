@@ -1,0 +1,158 @@
+{
+
+    "meta" : {
+        "label" : "US Census addresses batch geocoding",
+        "author" : "Dataiku (Nicolas GAKRELIDZ)",
+        "description":"From an address get lat, lon and US Census levels. This is using a free API from US Census",
+        "tags" : ["us census", "gecoding", "API","enrichment"]
+    },
+
+    "kind" : "PYTHON",
+    "selectableFromDataset" : "input",
+
+     
+    "inputRoles" : [
+        {
+            "label": "Addresses Dataset",
+            "name": "input",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+ 
+    
+    "outputRoles" : [
+        {
+            "label": "output dataset",
+            "name": "output",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    
+
+    "params": [
+
+        {
+           "name": "p_col_id_column",
+           "label" : "Unique ID:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to a unique ID in your input dataset",
+           "mandatory" : true
+        }
+     
+      ,
+        {
+           "name": "p_col_street",
+           "label" : "Street:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to street including number in your input dataset",
+           "mandatory" : true
+        },
+        {
+           "name": "p_col_city",
+           "label" : "City:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to City in your input dataset",
+           "mandatory" : true
+        },
+        {
+           "name": "p_col_state",
+           "label" : "State:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to US State as the Census definition (2 letters like: CA, TX, NY, DC...)",
+           "mandatory" : true
+        },
+        {
+           "name": "p_col_zipcode",
+           "label" : "Zipcode:",
+           "type": "COLUMN",
+           "columnRole": "input",
+           "description":"Column corresponding to Zipcode",
+           "mandatory" : true
+        },
+        {
+            "name" : "_census",
+            "label" : "Census",
+            "type" : "SEPARATOR"
+        },
+        {
+            "name": "p_benchmark",
+            "label" : "Benchmark:",
+            "type": "SELECT",
+            "defaultValue": "4",
+            "description":"",
+            "selectChoices": [
+                {
+                    "value": "9",
+                    "label": "Public_AR_Census2010"
+                },
+                {
+                    "value": "4",
+                    "label": "Public_AR_Current"
+                }
+            ]
+        },
+        {
+            "name": "p_vintage",
+            "label" : "Vintage:",
+            "type": "SELECT",
+            "defaultValue": "4",
+            "description":"",
+            "selectChoices": [
+                {
+                    "value": "910",
+                    "label": "Census2010_Census2010"
+                },
+                {
+                    "value": "416",
+                    "label": "ACS2016_Current"
+                },
+                {
+                    "value": "4",
+                    "label": "Current_Current"
+                }
+            ]
+        },
+        {
+            "name" : "_options",
+            "label" : "Options",
+            "type" : "SEPARATOR"
+        },
+        {
+           "name": "param_batch_size",
+           "label" : "Batch size:",
+           "type": "INT",
+           "defaultValue": 5000,
+           "description":"Max = 10000 per batch",
+           "mandatory" : true
+        },
+        {
+           "name": "param_id_as_int",
+           "label" : "ID as INT:",
+           "type": "BOOLEAN",
+           "defaultValue": false,
+           "description":"Consider the ID values as integer",
+           "mandatory" : false
+        },
+        {
+           "name": "param_keep_non_matching",
+           "label" : "Keep non matching:",
+           "type": "BOOLEAN",
+           "defaultValue": true,
+           "description":"Output address even if non matched in the US Census API",
+           "mandatory" : false
+        } 
+        
+        
+              
+    ]
+
+}

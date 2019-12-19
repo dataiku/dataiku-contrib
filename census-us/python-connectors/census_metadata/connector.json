@@ -23,9 +23,13 @@
            "mandatory" : true,
            "selectChoices": [
                {
+                    "value": "ACS5Y2017",
+                    "label": "ACS5Y2017"
+               },
+               {
                     "value": "ACS5Y2016",
                     "label": "ACS5Y2016"
-                },
+               },
                {
                     "value": "ACS5Y2015",
                     "label": "ACS5Y2015"
