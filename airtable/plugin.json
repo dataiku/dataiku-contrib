@@ -1,6 +1,6 @@
 {
     "id": "airtable",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "meta": {
         "label": "Airtable",
         "description": "Fetch data from Airtable, a tool that provides speadsheets with database-like features",
