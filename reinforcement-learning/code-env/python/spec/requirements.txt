@@ -5,6 +5,4 @@ gym
 stable-baselines
 Flask
 simplejson
-pyvirtualdisplay
-gym-retro
-pyglet
+
