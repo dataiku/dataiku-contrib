@@ -14,6 +14,15 @@
             "arity": "UNARY",
             "required": true,
             "acceptsDataset": true
+        },
+        {
+            "name": "input_folder",
+            "label": "Input folder",
+            "description": "The folder to store NLTK sentence token data (if they don't exist yet).",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": false,
+            "acceptsManagedFolder": true
         }
     ],
     "outputRoles": [
