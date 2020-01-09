@@ -7,7 +7,7 @@
 		"author": "Dataiku (Jérémy Grèze)",
 		"icon": "icon-envelope",
 		"licenseInfo": "Apache Software License version 2",
-		"url": "https://www.dataiku.com/dss/plugins/info/intercom2.html",
+		"url": "https://www.dataiku.com/product/plugins/intercom/",
 		"tags": ["Connector", "CRM"],
         "supportLevel": "NOT_SUPPORTED"
 	}
