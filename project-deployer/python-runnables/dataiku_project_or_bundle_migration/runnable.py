@@ -134,17 +134,17 @@ class MyRunnable(Runnable):
         except:
             remote_projects = []
         
-        if not self.project_key in remote_projects:
-            remote_client.create_project(self.project_key, self.project_key, 'admin', 'placeholder description')
-            html += '<div> Project %s does not exist on instance %s.  Creating it.</div>' %(self.project_key, remote_host)
-        else:
-            html += '<div> Project %s already exists on instance %s.  Updating with new bundle version %s.</div>' %(self.project_key, remote_host, bundle_id)
-        
+        # if the project doesnt exist, create it. Otherwise update with the new bundle
+        with project.get_exported_bundle_archive_stream(bundle_id) as fp:
+            if not self.project_key in remote_projects:
+                remote_client.create_project_from_bundle_archive(fp.content)
+
+            else:
+                remote_project = remote_client.get_project(self.project_key)
+                remote_project.import_bundle_from_stream(fp.content)
+
         # connect to remote project
         remote_project = remote_client.get_project(self.project_key)
-        
-        with project.get_exported_bundle_archive_stream(bundle_id) as fp:
-            remote_project.import_bundle_from_stream(fp.content)
         
         # "preload bundle" to create/update custom code environments used throughout the project
         preload = remote_project.preload_bundle(bundle_id)
