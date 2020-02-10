@@ -1,6 +1,6 @@
 {
     "id": "project-deployer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "meta": {
         "label": "Push projects to automation",
         "description": "Bundle projects and push them to an automation node (or another Design node).",
