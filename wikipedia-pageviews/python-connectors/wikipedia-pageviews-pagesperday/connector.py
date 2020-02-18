@@ -1,6 +1,9 @@
 from dataiku.connector import Connector
 import datetime
 import dkuwikipedia
+import logging
+
+logger = logging.getLogger(__name__)
 
 class PagePerDayConnector(Connector):
 
@@ -27,7 +30,7 @@ class PagePerDayConnector(Connector):
 
             project = project.strip()
 
-            print "Query for %s : %s" % (project, page)
+            logger.info("Query for %s : %s" % (project, page))
             resp = dkuwikipedia.query_page(project, page, beg_date, end_date)
             dic = resp.json()
             for item in dic.get("items", []):

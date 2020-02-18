@@ -1,6 +1,10 @@
 import dataiku
 from dataiku.customrecipe import *
 import dkuwikipedia
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 config = get_recipe_config()
 (beg_date, end_date) = dkuwikipedia.get_daterange(config)
@@ -12,7 +16,7 @@ def get_rows():
         project = item["project"]
         page = item["page"]
 
-        print "Query for %s : %s" % (project, page)
+        logger.info("Query for %s : %s" % (project, page))
         resp = dkuwikipedia.query_page(project, page, beg_date, end_date)
         dic = resp.json()
         for item in dic.get("items", []):
