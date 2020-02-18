@@ -6,6 +6,8 @@ from __future__ import division, print_function, unicode_literals
 import dataiku
 from dataiku.customrecipe import *
 import numpy as np
+import os
+import sys
 
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
@@ -13,15 +15,19 @@ from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 
 import nltk
-nltk.download('punkt')
+#nltk.download('punkt')
 
 ##################################
 # Input data
 ##################################
 
 input_dataset = get_input_names_for_role('input_dataset')[0]
+input_folder = get_input_names_for_role('input_folder')[0]
 df = dataiku.Dataset(input_dataset).get_dataframe()
+folder = dataiku.Folder(input_folder)
 
+nltk.download('punkt', download_dir=folder.get_path())
+nltk.data.path.append(folder.get_path())
 
 ##################################
 # Parameters
@@ -69,8 +75,11 @@ def summarize(text):
             text = text.lower()
             all_capital = True
         
-        parser = PlaintextParser.from_string(text.decode(
-            'ascii', errors='ignore'), Tokenizer(LANGUAGE))
+        if (sys.version_info > (3,0)):
+            parser = PlaintextParser.from_string(text, Tokenizer(LANGUAGE))
+        else:
+            parser = PlaintextParser.from_string(text.decode('ascii', errors='ignore'), Tokenizer(LANGUAGE))
+
         stemmer = Stemmer(LANGUAGE)
 
         summarizer = Summarizer(stemmer)

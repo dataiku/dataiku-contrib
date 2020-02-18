@@ -1,6 +1,6 @@
 {
     "id": "text-summarization",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "meta": {
         "label": "Text Summarization",
         "description": "Summarize texts using extractive summarization methods (which means that the summary will be a number of extracted sentences from the original text).",
