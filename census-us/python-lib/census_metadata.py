@@ -5,10 +5,13 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dataiku.customrecipe import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 def get_metadata_sources(url):
 
-    print ('Calling US Census metadata HTML page...')
+    logger.info('Calling US Census metadata HTML page...')
     
     string_to_find = '.'
     metadata_d = {'name':[],'label':[],'concept':[],'type':[] }
@@ -18,7 +21,7 @@ def get_metadata_sources(url):
     
     except:
         status = 'The US Census metadata page is not available: %s' % (url)
-        print status
+        logger.info(status)
         
     if status == 'ok':
         datav = rv.text
@@ -29,7 +32,6 @@ def get_metadata_sources(url):
 
         for row in rowsv:
             cols = row.find_all('td')
-            #print cols
             concept = cols[2].get_text(strip=True)
             is_found = concept.find(string_to_find)
             ctype = concept[:is_found] 
@@ -50,7 +52,7 @@ def get_metadata_sources(url):
 
 def get_metadata_sources_from_api(url):
 
-    print ('Calling US Census metadata API...')
+    logger.info('Calling US Census metadata API...')
     
     try:
         r = requests.get(url)
@@ -58,7 +60,7 @@ def get_metadata_sources_from_api(url):
     
     except:
         status = 'The US Census metadata API is not available: %s' % (url)
-        print status
+        logger.info(status)
     
     rr= r.json()
     v=rr['variables'].keys()

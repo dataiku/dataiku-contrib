@@ -19,10 +19,13 @@ For keeping the sources and reuse it (beware of any US Census update...):
 2> At the next build (of the same or another task) , check: "use previous sources".
 
 ## 1/ US CENSUS CUSTOM DATASET:
-Enter your states in lower case separated by a comma with no space.
+Enter your states in lower case separated by a comma with no space. Need help on that? Please have a look at the custom dataset: US Census states resources dataset
 Define the level required (TRACT, COUNTY, BLOCK_GROUP)
-Enter manually the Census fields you would get (ex: B00001_001E,B08534_001E). Here is the total catalog : http://api.census.gov/data/2014/acs5/variables.html 
+Enter manually the Census fields you would get (ex: B00001_001E,B08534_001E). Here is the total catalog : https://api.census.gov/data/2014/acs/acs5/variables.html 
 - For a more agnostic selection, please us the "US Census feature selection recipe".
+Click test.
+- It is expected that the dataset may take a while to build, this is because the US Census files are built in background. Don't close the test window. When done, click create dataset. It's highly recommended to sync this dataset into another one, data won't change regularly.
+- As usual, check the number of rows returned in the final dataset broken down by state before using the dataset created in your work.
 
 
 ## 2/ BUILD CENSUS WITH FEATURE SELECTION:
@@ -85,14 +88,6 @@ REVERSE GEOGRAPHY CODER:
 => This plugin might not work in Multi User Security environment since it requires the Plugin to access the data_dir and uses Python system libraries.
 
 Please create the code-env according to the definition provided with the plugin
-
-Otherwise, without code-envs:
-This plugin is using the Requests python Lib. For accessing the US Census servers Requests need some security addons that can be found in the request[security] lib. Since Requests is used by DSS, it's proposed to install the following dependencies separately:
-
-- idna<2.6,>=2.5
-- cryptography>=1.3.4
-- pyopenssl>=0.14
-=> These dependencies can be tricky to install on Mac OS and only due to pip, not the plugin. Mind: Mac OS not officially supported by Dataiku : https://doc.dataiku.com/dss/latest/installation/index.html
 
 => Please check your the results generated with the resources provided or by yourself. The plugin is delivered as-is and usage and outputs under your responsability.
 

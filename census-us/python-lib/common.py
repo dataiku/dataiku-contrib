@@ -11,7 +11,9 @@ import zipfile
 import os
 import shutil
 import sys
+import logging
 
+logger = logging.getLogger(__name__)
 
 
 def get_date():
@@ -74,19 +76,18 @@ def create_folder(path_,FOLDER_NAME,replace): #=True
     
     if not os.path.exists(p_):
         os.makedirs(p_)
-        print '> Created folder: %s' % (p_)
+        logger.info('> Created folder: %s' % (p_))
     
     else:
         if replace is True:
             cmd = "rm -rf %s" % (p_)
             os.system(cmd)
             os.makedirs(p_)
-            print '> Replaced folder: %s' % (p_)
+            logger.info('> Replaced folder: %s' % (p_))
                         
         else:
-            print '> Will re use folder: %s' % (p_)
+            logger.info('> Will re use folder: %s' % (p_))
             
-  
             
 def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CONTENT,P_CENSUS_LEVEL,path_datadir_tmp,FOLDER_NAME,state_list,dict_states):
     
@@ -105,7 +106,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:]) , 'wb') as f:
 
             f.write(response.content)
-        print '[+] downloaded: %s' % fields_definition_url_file
+        logger.info('[+] downloaded: %s' % fields_definition_url_file)
 
     base_fdir = path_datadir_tmp + FOLDER_NAME
     fdef_dir = path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:][:-4]
@@ -115,7 +116,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         
     with zipfile.ZipFile(os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file[-lim:])  , 'r') as zf:
         zf.extractall( fdef_dir )
-        print 'Fields definition extracted'
+        logger.info('Fields definition extracted')
 
     
     geo_header_file_found=0
@@ -133,7 +134,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         response = requests.get(fields_definition_url_file_template, stream=True)
         with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file_template[-lim_t:]) , 'wb') as f:
             f.write(response.content)
-        print '[+] downloaded: %s' % fields_definition_url_file_template
+        logger.info('[+] downloaded: %s' % fields_definition_url_file_template)
         
         
         fdef_t_dir = path_datadir_tmp + FOLDER_NAME+ '/' + fields_definition_url_file_template[-lim_t:][:-4]
@@ -179,12 +180,12 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
             with open(path_datadir_tmp + FOLDER_NAME+ '/' + crosswalk_zcta_url_file[-lim:], 'wb') as fc:
 
                 fc.write(response.content)
-            print '[+] ZCTA to ZIPCODE crosswalk downloaded'
+            logger.info('[+] ZCTA to ZIPCODE crosswalk downloaded')
         
     
     
     #### collect the geo referential from US Census API for finding the Level.
-    print 'Calling Census API...'
+    logger.info('Calling Census API...')
     api_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels']['levels_code']
     api_level_name = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['levels']['levels_name']
         
@@ -198,7 +199,7 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
     for state in state_list:
         ustate = state.upper()
 
-        print 'Doing state: %s' % state
+        logger.info('Doing state: %s' % state)
         
 
         state_name = dict_states[state]['attributes']['state_fullname_w1']
@@ -234,33 +235,37 @@ def us_census_source_collector(P_USE_PREVIOUS_SOURCES,P_CENSUS_TYPE,P_CENSUS_CON
         if P_USE_PREVIOUS_SOURCES is False or os.path.exists(path_datadir_tmp + FOLDER_NAME+ '/' + filename) is False:
             data_url = census_resources.dict_vintage_[P_CENSUS_TYPE][P_CENSUS_CONTENT]['data_by_state'] + filename
 
-            print '[+] downloading: %s' % filename
-            print '--> from this url: %s' % (data_url)
+            logger.info('[+] downloading: %s' % filename)
+            logger.info('--> from this url: %s' % (data_url))
 
             try:
                 response = requests.get( data_url )
                 with open( os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + filename) , 'wb') as f:
                     f.write(response.content)
-                print '[+] downloaded: %s' % filename
+                logger.info('[+] downloaded: %s' % filename)
             except:
-                print 'Process failed to download: %s' % filename
-                print 'Check if the Census server is available'
-   
+                logger.info('Process failed to download: %s' % filename)
+                logger.info('Check if the Census server is available')
+                
         with zipfile.ZipFile(os.path.join(path_datadir_tmp + FOLDER_NAME+ '/' + filename)  , 'r') as zf:
             zf.extractall( state_dir_level )
-            print 'All segment files extracted from %s' % (filename)
+            logger.info('All segment files extracted from %s' % (filename))
 
 
 
     ### header for master segment file and level
     
-    dico_sumlevel = {}
-    for i in xrange(1,len(data_d[u'fips'])):
-        dico_sumlevel[data_d['fips'][i]['name']] =  data_d['fips'][i][api_level_name] #geoLevelDisplay #geoLevelId #api_level_name
+    #dico_sumlevel = {}
+    #for i in xrange(1,len(data_d[u'fips'])):
+        #dico_sumlevel[data_d['fips'][i]['name']] =  data_d['fips'][i][api_level_name] #geoLevelDisplay #geoLevelId #api_level_name
 
     level_api_name = census_resources.dict_level_corresp['v1'][P_CENSUS_LEVEL]['census_name']
-    sumlevel_val = [int(dico_sumlevel[level_api_name])]  #EXAMPLE : sumlevel_val=[150]
+    parent_level_api_name = census_resources.dict_level_corresp['v1'][P_CENSUS_LEVEL]['parent']
     
+    sumlevel_val = [int(geo_ref[(geo_ref['name']==level_api_name) & (geo_ref['optionalWithWCFor']==parent_level_api_name)].geoLevelDisplay.values[0])]  #EXAMPLE : sumlevel_val=[150]
+    
+    
+    logger.info('--- Caught level from API:{} for: {} with parent: {}'.format(sumlevel_val,level_api_name,parent_level_api_name))
     
     
     return sumlevel_val,fdef_dir,geo_header_file,dict_pattern_files #,status
@@ -333,15 +338,15 @@ def rescaling(df,data_columns):
 
 
 def volumes_tallies_printer(df,P_GENERATE_ALL_THE_CENSUS_LEVEL,P_CENSUS_LEVEL):
-    print '-------------- volumes check------------------'
-    print 'Number of %s:' % (P_CENSUS_LEVEL)
-    print df.groupby('STUSAB').size()
+    logger.info('-------------- volumes check------------------')
+    logger.info('Number of %s:' % (P_CENSUS_LEVEL))
+    logger.info(df.groupby('STUSAB').size())
     if P_GENERATE_ALL_THE_CENSUS_LEVEL is True:
-        print 'According to input data (user settings)'
+        logger.info('According to input data (user settings)')
     else:     
-        print 'Check Tallies here :'
-        print 'https://www.census.gov/geo/maps-data/data/tallies/tractblock.html'
-    print '----------------------------------------------'
+        logger.info('Check Tallies here :')
+        logger.info('https://www2.census.gov/geo/docs/maps-data/data/geo_tallies/')
+    logger.info('----------------------------------------------')
     
 
 
@@ -386,11 +391,11 @@ def create_output_batch(outcolz_list,P_FEATURE_SELECTION_NB_FIELD_PER_OUTPUT,out
         Nd_df = d_df.shape[0]
     except:
         Nd_df=0
-        print '########### No Feature fitting with this target ! ###############'
+        logger.info('########### No Feature fitting with this target ! ###############')
         sys.exit(1)
     
     if Nd_df==0:
-        print '########### No Feature fitting with this target ! ###############'
+        logger.info('########### No Feature fitting with this target ! ###############')
 
     d_out = dict()
     for ei in np.unique(d['i']):

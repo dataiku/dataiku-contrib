@@ -10,12 +10,12 @@ dict_level_corresp ={'v1':
                         ,'american indian area (off-reservation trust land only)/hawaiian home land':'american indian area (off-reservation trust land only)/hawaiian home land'
                         ,'american indian area/alaska native area (reservation or statistical entity only)':'american indian area/alaska native area (reservation or statistical entity only)'
                         ,'american indian area/alaska native area/hawaiian home land':'american indian area/alaska native area/hawaiian home land'
-                        ,'BLOCK_GROUP':{'census_name':'block group','code_len':12}
+                        ,'BLOCK_GROUP':{'census_name':'block group','code_len':12,'enforce_geo_level_code':150,'parent':'tract'}
                         ,'combined new england city and town area':'combined new england city and town area'
                         ,'combined statistical area':'combined statistical area'
                         ,'congressional district':'congressional district'
                         ,'consolidated city':'consolidated city'
-                        ,'COUNTY':{'census_name':'county','code_len':5}
+                        ,'COUNTY':{'census_name':'county','code_len':5,'enforce_geo_level_code':50,'parent':'state'}
                         ,'county subdivision':'county subdivision'
                         ,'DIVISION':'division'
                         ,'metropolitan division':'metropolitan division'
@@ -37,7 +37,7 @@ dict_level_corresp ={'v1':
                         ,'state legislative district (lower chamber)':'state legislative district (lower chamber)'
                         ,'state legislative district (upper chamber)':'state legislative district (upper chamber)'
                         ,'subminor civil division':'subminor civil division'
-                        ,'TRACT':{'census_name':'tract','code_len':10}
+                        ,'TRACT':{'census_name':'tract','code_len':10,'enforce_geo_level_code':140,'parent':'county'}
                         ,'tribal block group':'tribal block group'
                         ,'tribal block group (or part) within tribal census tract within aia (reservation only)':'tribal block group (or part) within tribal census tract within aia (reservation only)'
                         ,'tribal block group (or part) within tribal census tract within aia (trust land only)':'tribal block group (or part) within tribal census tract within aia (trust land only)'
@@ -65,11 +65,58 @@ dict_pattern_files_ ={'ACS':{'v1':
 
 
 dict_vintage_ = {'ACS':{
+
+    'ACS5Y2018':
+     {
+        'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2018/data/2018_5yr_Summary_FileTemplates.zip'
+
+                             ,'folder_name':'templates'
+                             , 'seq_files_extension':'.xlsx'
+                             ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2018/data/2018_5yr_Summary_FileTemplates.zip'
+                             ,'geo_header_template_folder_name':''
+                             ,'geo_header_filename':'2018_SFGeoFileTemplate.xls'
+                            }
+         ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2018.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
+         ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2018/data/5_year_by_state/'
+         ,'variables_definitions':'https://api.census.gov/data/2018/acs/acs5/variables.json'
+         , 'levels':{'levels_code': 'https://api.census.gov/data/2018/acs/acs5/geography.json','levels_name':'geoLevelDisplay'}
+         
+         , 'vintage_pattern':'20185'
+         , 'master_segment_file_pattern':'g'
+         , 'segments_estimations_files_pattern':'e'
+         , 'segments_margins_files_pattern':'m'
+     }
+    ,
+
+     'ACS5Y2017':
+     {
+        'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2017/data/2017_5yr_Summary_FileTemplates.zip'
+
+                             ,'folder_name':'xls_temp'
+                             , 'seq_files_extension':'.xlsx'
+                             ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2017/data/2017_5yr_Summary_FileTemplates.zip'
+                             ,'geo_header_template_folder_name':'xls_temp'
+                             ,'geo_header_filename':'2017_SFGeoFileTemplate.xls'
+                            }
+         ,'ZCTA_TO_ZIPCODE':{'url':'http://udsmapper.org/docs/zip_to_zcta_2017.xlsx','columns_name':['zipcode','po_name','state','zip_type','key']}
+         ,'data_by_state':'https://www2.census.gov/programs-surveys/acs/summary_file/2017/data/5_year_by_state/'
+         ,'variables_definitions':'https://api.census.gov/data/2017/acs/acs5/variables.json'
+         , 'levels':{'levels_code': 'https://api.census.gov/data/2017/acs/acs5/geography.json','levels_name':'geoLevelDisplay'}
+         
+         , 'vintage_pattern':'20175'
+         , 'master_segment_file_pattern':'g'
+         , 'segments_estimations_files_pattern':'e'
+         , 'segments_margins_files_pattern':'m'
+     }
+    ,
+
+
     'ACS5Y2016':
      {
         'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2016/data/2016_5yr_Summary_FileTemplates.zip'
 
                              ,'folder_name':'templates'
+                             , 'seq_files_extension':'.xls'
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2016/data/2016_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':''
                              ,'geo_header_filename':'2016_SFGeoFileTemplate.xls'
@@ -91,6 +138,7 @@ dict_vintage_ = {'ACS':{
         'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
                              #,'folder_name':'2015_5yr_Templates' ### This changed somewhere in 2017Q4
                              ,'folder_name':''
+                             , 'seq_files_extension':'.xls'
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2015/data/2015_5yr_Summary_FileTemplates.zip'
                              #,'geo_header_template_folder_name':'2015_5yr_Templates' ### This changed somewhere in 2017Q4
                              ,'geo_header_template_folder_name':''
@@ -112,6 +160,7 @@ dict_vintage_ = {'ACS':{
      {
         'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'folder_name':'seq'
+                             , 'seq_files_extension':'.xls'
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'seq'
                              ,'geo_header_filename':'2014_SFGeoFileTemplate.xls'
@@ -130,7 +179,8 @@ dict_vintage_ = {'ACS':{
     , 'ACS5Y2013':
      {
         'fields_definition':{'url':'https://www2.census.gov/programs-surveys/acs/summary_file/2013/data/2013_5yr_Summary_FileTemplates.zip'
-                             ,'folder_name':''  
+                             ,'folder_name':''
+                             , 'seq_files_extension':'.xls'
                              ,'geo_header_template_url':'https://www2.census.gov/programs-surveys/acs/summary_file/2014/data/2014_5yr_Summary_FileTemplates.zip'
                              ,'geo_header_template_folder_name':'seq'
                              ,'geo_header_filename':'2014_SFGeoFileTemplate.xls'
