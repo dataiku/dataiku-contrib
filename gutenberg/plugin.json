@@ -1,6 +1,6 @@
 {
     "id": "gutenberg",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "meta": {
         "label": "Project Gutenberg",
         "description": "Download books from Project Gutenberg (https://www.gutenberg.org)",
