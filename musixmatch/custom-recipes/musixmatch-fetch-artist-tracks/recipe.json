@@ -38,7 +38,7 @@
         {
             "name": "artist_ids",
             "label": "Artists ids column",
-            "description" : "Column in source dataset",
+            "description" : "",
             "type": "COLUMN",
             "columnRole":"artist_list"
         }
