@@ -1,10 +1,7 @@
 from dataiku.customformat import Formatter, OutputFormatter, FormatExtractor
 from dataiku.base.java_link import LinkedInputStream
 from collections import OrderedDict
-
 import pandas as pd
-import json, base64
-import types
 import os
 import time
 
