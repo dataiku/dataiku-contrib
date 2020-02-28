@@ -108,6 +108,39 @@ class Word2vecModel(ContextIndependentLanguageModel):
         self.embedding_matrix = model.vectors
 
 
+def _load_embeddings_from_file(filename, ignore_first_line=False):
+    word2idx = {}
+
+    logger.info('Precomputing the size of the embeddings.')
+    vector_size = None
+    word_count = None
+    offset = 1 if ignore_first_line else 0
+    with open(filename, 'r') as f:
+        for i, line in enumerate(f):
+            if i == 0:
+                split = line.strip().split(' ')
+                word, vector = split[0], split[1:]
+                vector_size = len(vector)
+        else:
+            word_count = i + 1 - offset
+
+    logger.info('Loading the embeddings.')
+    embedding_matrix = np.zeros((word_count, vector_size), dtype=float)
+    with open(filename, 'r') as f:
+        for i, line in enumerate(f):
+            if i < offset and ignore_first_line:
+                continue
+            if i != 0 and i % 100000 == 0:
+                logger.info("Loaded {} word embeddings".format(i))
+            split = line.strip().split(' ')
+            word, vector = split[0], split[1:]
+            word2idx[word] = i
+            embedding_matrix[i - offset, :] = np.array(vector).astype(float)
+        logger.info("Successfully loaded {} word embeddings!".format(i))
+
+    return word2idx, embedding_matrix
+
+
 class FasttextModel(ContextIndependentLanguageModel):
     
     @staticmethod
@@ -116,22 +149,9 @@ class FasttextModel(ContextIndependentLanguageModel):
         
     def load_model(self):
         logger.info('Loading fastText model...')
-        word2idx = {}
-        embedding_matrix = []
-        with open(self.model_path, 'r') as f:
-            for i, line in enumerate(f):
-                if i == 0:
-                    continue
-                if i != 0 and i % 100000 == 0:
-                    logger.info("Loaded {} word embeddings".format(i))
-                split = line.strip().split(' ')
-                word, vector = split[0], split[1:]
-                word2idx[word] = i
+        word2idx, embedding_matrix = _load_embeddings_from_file(self.model_path, ignore_first_line=True)
 
-                embedding = np.array(vector).astype(float)
-                embedding_matrix.append(embedding)
-        logger.info('Done')
-        self.embedding_matrix = np.array(embedding_matrix)
+        self.embedding_matrix = embedding_matrix
         self.word2idx = word2idx
 
 
@@ -143,19 +163,9 @@ class GloveModel(ContextIndependentLanguageModel):
         
     def load_model(self):
         logger.info('Loading GloVe model...')
-        word2idx = {}
-        embedding_matrix = []
-        with open(self.model_path, 'r') as f:
-            for i, line in enumerate(f):
-                if i != 0 and i % 100000 == 0:
-                    logger.info("Loaded {} word embeddings".format(i))
-                split = line.strip().split(' ')
-                word, vector = split[0], split[1:]
-                word2idx[word] = i
-                embedding = np.array(vector).astype(float)
-                embedding_matrix.append(embedding)
-            logger.info("Successfully loaded {} word embeddings!".format(i))
-        self.embedding_matrix = np.array(embedding_matrix)
+        word2idx, embedding_matrix = _load_embeddings_from_file(self.model_path)
+
+        self.embedding_matrix = embedding_matrix
         self.word2idx = word2idx
 
 
@@ -167,17 +177,7 @@ class CustomModel(ContextIndependentLanguageModel):
             
     def load_model(self):
         logger.info('Loading custom model...')
-        word2idx = {}
-        embedding_matrix = []
-        with open(self.model_path, 'r') as f:
-            for i, line in enumerate(f):
-                if i != 0 and i % 100000 == 0:
-                    logger.info("Loaded {} word embeddings".format(i))
-                split = line.strip().split(' ')
-                word, vector = split[0], split[1:]
-                word2idx[word] = i
-                embedding = np.array(vector).astype(float)
-                embedding_matrix.append(embedding)
-            logger.info("Successfully loaded {} word embeddings!".format(i))
-        self.embedding_matrix = np.array(embedding_matrix)
+        word2idx, embedding_matrix = _load_embeddings_from_file(self.model_path, ignore_first_line=True)
+
+        self.embedding_matrix = embedding_matrix
         self.word2idx = word2idx
