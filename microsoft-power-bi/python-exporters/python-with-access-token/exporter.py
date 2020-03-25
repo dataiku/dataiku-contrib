@@ -80,7 +80,10 @@ class PowerBIExporter(Exporter):
     def write_row(self, row):
         row_obj = {}
         for (col, val) in zip(self.schema["columns"], row):
-            row_obj[col["name"]] = val
+            if col['type'] in ['int', 'bigint', 'tinyint', 'smallint']:
+                row_obj[col["name"]] = int(val)
+            else:
+                row_obj[col["name"]] = val
         self.row_buffer["rows"].append(row_obj)
         if len(self.row_buffer["rows"]) > self.pbi_buffer_size:
             response = requests.post(
