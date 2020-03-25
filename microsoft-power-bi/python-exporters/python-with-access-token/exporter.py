@@ -6,6 +6,7 @@ import requests
 from powerbi import *
 from dataiku.exporter import Exporter
 from dataiku.exporter import SchemaHelper
+from math import isnan
 
 
 class PowerBIExporter(Exporter):
@@ -81,7 +82,7 @@ class PowerBIExporter(Exporter):
         row_obj = {}
         for (col, val) in zip(self.schema["columns"], row):
             if col['type'] in ['int', 'bigint', 'tinyint', 'smallint']:
-                row_obj[col["name"]] = int(val)
+                row_obj[col["name"]] = int(val) if val is not None and not isnan(val) else None
             else:
                 row_obj[col["name"]] = val
         self.row_buffer["rows"].append(row_obj)
