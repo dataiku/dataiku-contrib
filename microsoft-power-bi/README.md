@@ -1,7 +1,7 @@
 # Microsoft Power BI
 
 
-Current version: 1.1.2
+Current version: 1.1.3
 
 Compatibility: DSS 5.1 and higher
 
