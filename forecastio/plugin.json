@@ -3,7 +3,7 @@
 	"version": "0.4.0",
 	"meta": {
 		"label": "Dark Sky Weather Forecast (previously Forecast.io)",
-		"description": "Fetch data from Dark Sky API",
+		"description": "DEPRECATED - Fetch data from Dark Sky API",
 		"author": "Dataiku (Jérémy Grèze)",
 		"icon": "icon-cloud",
 		"licenseInfo": "Apache Software License version 2",
