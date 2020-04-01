@@ -10,6 +10,10 @@ Times are UNIX timestamps (signed integers), local time is assumed.
 
 ## Changelog
 
+**Version 0.4.0 (2020-04-01)**
+
+* Plugin is now deprecated since Dark Sky announced their [end of service](https://blog.darksky.net/dark-sky-has-a-new-home/)
+
 **Version 0.2.0 (2018-09-07)**
 
 * Plugin renamed because `Forecast.io` became `Dark Sky`

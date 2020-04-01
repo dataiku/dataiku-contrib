@@ -1,6 +1,6 @@
 {
 	"id": "forecastio",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"meta": {
 		"label": "Dark Sky Weather Forecast (previously Forecast.io)",
 		"description": "Fetch data from Dark Sky API",
