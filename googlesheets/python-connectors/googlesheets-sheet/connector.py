@@ -94,7 +94,7 @@ class MyConnector(Connector):
         ws = self.get_spreadsheet()
         rows = ws.get_all_values()
         columns = rows[0]
-        columns_slug = map(self.get_unique_slug, columns)
+        columns_slug = list(map(self.get_unique_slug, columns))
 
         if self.result_format == 'first-row-header':
 
