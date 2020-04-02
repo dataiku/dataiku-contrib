@@ -1,7 +1,7 @@
 {
     "meta" : {
         "label" : "Google Sheets document",
-        "description" : "A simple read/write connector to a sheet from a Google Sheets document"
+        "description" : "A simple read/write connector for a Google Sheets document"
     },
 
     "readable" : true,
@@ -11,8 +11,8 @@
     "params": [
         {
             "name": "credentials",
-            "label": "JSON Service Account",
-            "description": "Copy/paste the JSON provided by Google, or a path to a file containing the JSON. Click on the 'Learn more' above to read how to get this JSON.",
+            "label": "Service Account credentials",
+            "description": "Copy/paste the JSON private key provided by Google, or a path to a file containing the key. Click on the link above above to read how to get it.",
             "type": "TEXTAREA",
             "mandatory" : true
         },
@@ -31,7 +31,7 @@
         },
         {
             "name": "result_format",
-            "label": "Format of the sheet",
+            "label": "Format",
             "type": "SELECT",
             "selectChoices": [
                 {
