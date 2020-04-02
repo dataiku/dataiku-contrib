@@ -41,6 +41,10 @@
                 {
                     "value": "no-header",
                     "label": "First row contains data (not recommended)"
+                },
+                {
+                    "value": "json",
+                    "label": "JSON (read mode only)"
                 }
             ],
             "mandatory": true,

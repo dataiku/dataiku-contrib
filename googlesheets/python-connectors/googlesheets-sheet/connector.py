@@ -106,6 +106,11 @@ class MyConnector(Connector):
             for row in rows:
                 yield OrderedDict(zip(range(1, len(columns) + 1), row))
 
+        elif self.result_format == 'json':
+
+            for row in rows:
+                yield {"json": json.dumps(row)}
+
         else:
 
             raise Exception("Unimplemented")
@@ -113,6 +118,10 @@ class MyConnector(Connector):
 
     def get_writer(self, dataset_schema=None, dataset_partitioning=None,
                          partition_id=None):
+
+        if self.result_format == 'json':
+
+            raise Exception('JSON format not supported in write mode')
 
         return MyCustomDatasetWriter(self.config, self, dataset_schema, dataset_partitioning, partition_id)
 
@@ -127,7 +136,7 @@ class MyConnector(Connector):
 
             return ws.row_count - 1
 
-        elif self.result_format == 'no-header':
+        elif self.result_format in ['no-header', 'json']:
 
             return ws.row_count
 
