@@ -61,7 +61,7 @@ class MyConnector(Connector):
 
 
     def get_unique_slug(self, string):
-        string = slugify(string, to_lower=False, max_length=25, separator="_", capitalize=False)
+        string = slugify(string, max_length=25, separator="_", lowercase=False)
         if string == '':
             string = 'none'
         test_string = string
