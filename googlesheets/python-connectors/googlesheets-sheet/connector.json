@@ -49,6 +49,24 @@
             ],
             "mandatory": true,
             "defaultValue": "first-row-header"
+        },
+        {
+            "name": "write_format",
+            "label": "Values interpretation (write mode)",
+            "description": "In write mode, how data is interpretated by the spreadsheet",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "RAW",
+                    "label": "RAW: not parsed, stored as-is (default)"
+                },
+                {
+                    "value": "USER_ENTERED",
+                    "label": "USER_ENTERED: as if the user typed them into the UI"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "RAW"
         }
     ]
 }

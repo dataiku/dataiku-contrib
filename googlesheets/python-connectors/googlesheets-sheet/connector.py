@@ -13,6 +13,7 @@ class MyConnector(Connector):
         self.doc_id = self.config.get("doc_id")
         self.tab_id = self.config.get("tab_id")
         self.result_format = self.config.get("result_format")
+        self.write_format = self.config.get("write_format")
         self.list_unique_slugs = []
 
 
@@ -119,10 +120,6 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
         if parent.result_format == 'first-row-header':
             self.buffer.append(columns)
 
-        # TODO:
-        # - Implement the flush
-        # - Handle types?
-
 
     def write_row(self, row):
 
@@ -144,13 +141,8 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
 
         ws.resize(rows=num_lines, cols=num_columns)
 
-        cell_list = ws.range( 'A1:%s' % rowcol_to_a1(num_lines, num_columns) )
-        for cell in cell_list:
-            val = self.buffer[cell.row-1][cell.col-1]
-            # if type(val) is str:
-            #     val = val.decode('utf-8')
-            cell.value = val
-        ws.update_cells(cell_list)
+        range = 'A1:%s' % rowcol_to_a1(num_lines, num_columns)
+        ws.update(range, self.buffer, value_input_option=self.parent.write_format)
 
         self.buffer = []
 
