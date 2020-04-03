@@ -1,0 +1,71 @@
+{
+    "meta": {
+        "label": "Google Sheets - append recipe",
+        "description": "Appends the rows of the input dataset to a Google Sheets document"
+    },
+
+    "kind": "PYTHON",
+
+    "inputRoles": [
+        {
+            "name": "input_role",
+            "label": "Dataset containing rows to append to the spreadsheet",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles": [
+        {
+            "name": "output_role",
+            "label": "Dataset with a copy of the appended rows",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "credentials",
+            "label": "Service Account credentials",
+            "description": "Copy/paste the JSON private key provided by Google, or a path to a file containing the key. Click on the link above above to read how to get it.",
+            "type": "TEXTAREA",
+            "mandatory" : true
+        },
+        {
+            "name": "doc_id",
+            "label": "Document id",
+            "description": "Can be extracted from the spreadsheet's URL",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "tab_id",
+            "label": "Sheet name",
+            "type": "STRING",
+            "mandatory" : true
+        },
+        {
+            "name": "insert_format",
+            "label": "Determines how the spreadsheet interprets the received data",
+            "type": "SELECT",
+            "selectChoices": [
+                {
+                    "value": "RAW",
+                    "label": "RAW: not parsed, stored as-is (default)"
+                },
+                {
+                    "value": "USER_ENTERED",
+                    "label": "USER_ENTERED: as if the user typed them into the UI"
+                }
+            ],
+            "mandatory": true,
+            "defaultValue": "RAW"
+        }
+    ],
+
+    "resourceKeys": []
+
+}
