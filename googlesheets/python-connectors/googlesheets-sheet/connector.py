@@ -50,7 +50,10 @@ class MyConnector(Connector):
         """
         ws = get_spreadsheet(self.credentials, self.doc_id, self.tab_id)
         rows = ws.get_all_values()
-        columns = rows[0]
+        try:
+            columns = rows[0]
+        except IndexError as e:
+            columns = []
         columns_slug = list(map(self.get_unique_slug, columns))
 
         if self.result_format == 'first-row-header':
