@@ -37,7 +37,7 @@ Ask your question on [community.dataiku.com](https://community.dataiku.com). Or,
 
 ## Changelog
 
-* 1.1.0 - In progress
+* 1.1.0 - April 7, 2020
     
     - [New] A recipe is now available to append rows to a sheet (it does not modify the preexisting values)
     - [New] When writing data to a spreadsheet, two modes to interpret values format: RAW and USER_ENTERED
