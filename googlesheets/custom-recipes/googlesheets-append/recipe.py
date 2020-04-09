@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import dataiku
-from dataiku.customrecipe import *
+from dataiku.customrecipe import get_input_names_for_role, get_output_names_for_role, get_recipe_config
 from googlesheets import get_spreadsheet
 from gspread.utils import rowcol_to_a1
 
