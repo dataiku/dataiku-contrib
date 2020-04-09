@@ -51,7 +51,8 @@ def get_spreadsheet(credentials, doc_id, tab_id):
             error_status = error_json.get("error", {}).get("status")
             email = credentials.get("client_email", "(email missing)")
             if error_status == 'PERMISSION_DENIED':
-                raise Exception("The Service Account does not have permission to read or write on the spreadsheet document. Have you shared the spreadsheet with %s?" % email)
+                error_message = error_json.get("error", {}).get("message", "")
+                raise Exception("Access was denied with the following error: %s. Have you enabled the Sheets API? Have you shared the spreadsheet with %s?" % (error_message, email))
             if error_status == 'NOT_FOUND':
                 raise Exception("Trying to open non-existent spreadsheet document. Verify the document id exists (%s)." % doc_id)
         raise Exception("The Google API returned an error: %s" % e)
