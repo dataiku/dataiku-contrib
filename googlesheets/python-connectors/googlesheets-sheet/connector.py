@@ -1,11 +1,9 @@
 from dataiku.connector import Connector, CustomDatasetWriter
 import json
-import os.path
 from collections import OrderedDict
-import gspread
 from gspread.utils import rowcol_to_a1
-from oauth2client.service_account import ServiceAccountCredentials
 from slugify import slugify
+from googlesheets import get_spreadsheet
 
 class MyConnector(Connector):
 
@@ -15,53 +13,12 @@ class MyConnector(Connector):
         self.doc_id = self.config.get("doc_id")
         self.tab_id = self.config.get("tab_id")
         self.result_format = self.config.get("result_format")
+        self.write_format = self.config.get("write_format")
         self.list_unique_slugs = []
-
-        file = self.credentials.splitlines()[0]
-        if os.path.isfile(file):
-            try:
-                with open(file, 'r') as f:
-                    self.credentials  = json.load(f)
-                    f.close()
-            except Exception as e:
-                raise ValueError("Unable to read the JSON Service Account from file '%s'.\n%s" % (file, e))
-        else:
-            try:
-                self.credentials  = json.loads(self.credentials)
-            except Exception as e:
-                raise Exception("Unable to read the JSON Service Account.\n%s" % e)
-
-        scope = [
-            'https://www.googleapis.com/auth/spreadsheets',
-            #'https://www.googleapis.com/auth/drive'
-        ]
-        credentials = ServiceAccountCredentials.from_json_keyfile_dict(self.credentials, scope)
-        self.gspread_client = gspread.authorize(credentials)
-
-
-    def get_spreadsheet(self):
-
-        try:
-            return self.gspread_client.open_by_key(self.doc_id).worksheet(self.tab_id)
-        except gspread.exceptions.SpreadsheetNotFound as e:
-            raise Exception("Trying to open non-existent or inaccessible spreadsheet document.")
-        except gspread.exceptions.WorksheetNotFound as e:
-            raise Exception("Trying to open non-existent sheet. Verify that the sheet name exists (%s)." % self.tab_id)
-        except gspread.exceptions.APIError as e:
-            if hasattr(e, 'response'):
-                error_json = e.response.json()
-                print(error_json)
-                error_status = error_json.get("error", {}).get("status")
-                email = self.credentials.get("client_email", "(email missing)")
-                if error_status == 'PERMISSION_DENIED':
-                    raise Exception("The Service Account does not have permission to read or write on the spreadsheet document. Have you shared the spreadsheet with %s?" % email)
-                if error_status == 'NOT_FOUND':
-                    raise Exception("Trying to open non-existent spreadsheet document. Verify the document id exists (%s)." % self.doc_id)
-            raise Exception("The Google API returned an error: %s" % e)
 
 
     def get_unique_slug(self, string):
-        string = slugify(string, to_lower=False, max_length=25, separator="_", capitalize=False)
+        string = slugify(string, max_length=25, separator="_", lowercase=False)
         if string == '':
             string = 'none'
         test_string = string
@@ -91,10 +48,13 @@ class MyConnector(Connector):
 
         The dataset schema and partitioning are given for information purpose.
         """
-        ws = self.get_spreadsheet()
+        ws = get_spreadsheet(self.credentials, self.doc_id, self.tab_id)
         rows = ws.get_all_values()
-        columns = rows[0]
-        columns_slug = map(self.get_unique_slug, columns)
+        try:
+            columns = rows[0]
+        except IndexError as e:
+            columns = []
+        columns_slug = list(map(self.get_unique_slug, columns))
 
         if self.result_format == 'first-row-header':
 
@@ -106,6 +66,11 @@ class MyConnector(Connector):
             for row in rows:
                 yield OrderedDict(zip(range(1, len(columns) + 1), row))
 
+        elif self.result_format == 'json':
+
+            for row in rows:
+                yield {"json": json.dumps(row)}
+
         else:
 
             raise Exception("Unimplemented")
@@ -113,6 +78,10 @@ class MyConnector(Connector):
 
     def get_writer(self, dataset_schema=None, dataset_partitioning=None,
                          partition_id=None):
+
+        if self.result_format == 'json':
+
+            raise Exception('JSON format not supported in write mode')
 
         return MyCustomDatasetWriter(self.config, self, dataset_schema, dataset_partitioning, partition_id)
 
@@ -127,7 +96,7 @@ class MyConnector(Connector):
 
             return ws.row_count - 1
 
-        elif self.result_format == 'no-header':
+        elif self.result_format in ['no-header', 'json']:
 
             return ws.row_count
 
@@ -154,10 +123,6 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
         if parent.result_format == 'first-row-header':
             self.buffer.append(columns)
 
-        # TODO:
-        # - Implement the flush
-        # - Handle types?
-
 
     def write_row(self, row):
 
@@ -172,20 +137,15 @@ class MyCustomDatasetWriter(CustomDatasetWriter):
 
 
     def flush(self):
-        ws = self.parent.get_spreadsheet()
+        ws = get_spreadsheet(self.parent.credentials, self.parent.doc_id, self.parent.tab_id)
 
         num_columns = len(self.buffer[0])
         num_lines = len(self.buffer)
 
         ws.resize(rows=num_lines, cols=num_columns)
 
-        cell_list = ws.range( 'A1:%s' % rowcol_to_a1(num_lines, num_columns) )
-        for cell in cell_list:
-            val = self.buffer[cell.row-1][cell.col-1]
-            # if type(val) is str:
-            #     val = val.decode('utf-8')
-            cell.value = val
-        ws.update_cells(cell_list)
+        range = 'A1:%s' % rowcol_to_a1(num_lines, num_columns)
+        ws.update(range, self.buffer, value_input_option=self.parent.write_format)
 
         self.buffer = []
 

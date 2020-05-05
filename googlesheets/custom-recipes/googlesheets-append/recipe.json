@@ -1,12 +1,30 @@
 {
-    "meta" : {
-        "label" : "Google Sheets document",
-        "description" : "A simple read/write connector for a Google Sheets document"
+    "meta": {
+        "label": "Google Sheets - append recipe",
+        "description": "Appends the rows of the input dataset to a Google Sheets document"
     },
 
-    "readable" : true,
-    "writable" : true,
-    "canCountRecords" : true,
+    "kind": "PYTHON",
+
+    "inputRoles": [
+        {
+            "name": "input_role",
+            "label": "Dataset containing rows to append to the spreadsheet",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles": [
+        {
+            "name": "output_role",
+            "label": "Dataset with a copy of the appended rows",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": true
+        }
+    ],
 
     "params": [
         {
@@ -30,30 +48,9 @@
             "mandatory" : true
         },
         {
-            "name": "result_format",
-            "label": "Format",
-            "type": "SELECT",
-            "selectChoices": [
-                {
-                    "value": "first-row-header",
-                    "label": "First row contains column headers"
-                },
-                {
-                    "value": "no-header",
-                    "label": "First row contains data (not recommended)"
-                },
-                {
-                    "value": "json",
-                    "label": "JSON (read mode only)"
-                }
-            ],
-            "mandatory": true,
-            "defaultValue": "first-row-header"
-        },
-        {
-            "name": "write_format",
-            "label": "Values interpretation (write mode)",
-            "description": "In write mode, how data is interpretated by the spreadsheet",
+            "name": "insert_format",
+            "label": "Values interpretation",
+            "description": "How data is interpretated by the spreadsheet",
             "type": "SELECT",
             "selectChoices": [
                 {
@@ -68,5 +65,8 @@
             "mandatory": true,
             "defaultValue": "RAW"
         }
-    ]
+    ],
+
+    "resourceKeys": []
+
 }
