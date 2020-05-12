@@ -13,7 +13,7 @@
             <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/backend-run" />
             <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/common-run" />
             <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-core.jar" />
-            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dctc.jar" />
+            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dss-core.jar" />
             <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dip.jar" />
 	    <pathelement location="${env.DKUINSTALLDIR}/bin" />
         </path>
