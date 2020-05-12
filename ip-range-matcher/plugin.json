@@ -8,7 +8,7 @@
         "icon": "icon-tags",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/ip-range-matcher.html",
-        "tags": ["Data Preparation", "Data Preparation"],
+        "tags": ["Data Preparation"],
         "supportLevel": "NOT_SUPPORTED"
     },
     "javaPreparationProcessors":[
