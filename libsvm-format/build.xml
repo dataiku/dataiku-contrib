@@ -15,8 +15,6 @@
         <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/backend-run" />
         <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/common-run" />
         <pathelement location="${env.DKUINSTALLDIR}/dist/dataiku-core.jar"/>
-        <pathelement location="${env.DKUINSTALLDIR}/dist/dataiku-scoring.jar"/>
-        <pathelement location="${env.DKUINSTALLDIR}/dist/dataiku-dip.jar"/>
         <pathelement location="${build.dir}"/>
     </path>
 
@@ -24,10 +22,8 @@
         <path id="lib.path.id">
             <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/backend-run" />
             <fileset dir="${env.DKUINSTALLDIR}/lib/ivy/common-run" />
-            <fileset dir="${env.DKUINSTALLDIR}/lib/shadelib" />
             <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-core.jar" />
-            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-scoring.jar" />
-            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dip.jar" />
+            <fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dss-core.jar" />
         </path>
         <mkdir dir="${build.dir}" />
         <mkdir dir="${dist.dir}" />
