@@ -21,7 +21,7 @@ import com.dataiku.dip.plugin.CustomFormat;
 import com.dataiku.dip.plugin.CustomFormatInput;
 import com.dataiku.dip.plugin.CustomFormatOutput;
 import com.dataiku.dip.plugin.CustomFormatSchemaDetector;
-import com.dataiku.dip.plugin.InputStreamWithFilename;
+import com.dataiku.dip.plugin.InputStreamWithContextInfo;
 import com.dataiku.dip.shaker.types.GeoPoint.Coords;
 import com.dataiku.dip.util.XMLUtils;
 import com.dataiku.dip.warnings.WarningsContext;
@@ -134,7 +134,7 @@ public class KMLFormat implements CustomFormat {
 
         {
             Element extendedDataElt = getFirstNodeByTagName(e, "ExtendedData");
-            if (extendedDataElt != null) {          
+            if (extendedDataElt != null) {
                 NodeList nl = extendedDataElt.getElementsByTagName("Data");
                 for (int i = 0; i < nl.getLength(); i++) {
                     Element dataElt = (Element)nl.item(i);
@@ -191,11 +191,11 @@ public class KMLFormat implements CustomFormat {
         }
 
         /**
-         * extract data from the input stream. The emitRow() on the out will throw exceptions to 
+         * extract data from the input stream. The emitRow() on the out will throw exceptions to
          * enforce limits set to number of rows read, so these should not be caught and hidden.
          */
         @Override
-        public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
+        public void run(InputStreamWithContextInfo in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
             if (in.getFilename() != null && in.getFilename().endsWith(".kmz")) {
                 throw new IllegalArgumentException("KMZ not supported yet");
             } else {
@@ -257,4 +257,3 @@ public class KMLFormat implements CustomFormat {
 
     private static Logger logger = Logger.getLogger("dku");
 }
-

@@ -22,7 +22,7 @@ import com.dataiku.dip.plugin.CustomFormatSchemaDetector;
 import com.dataiku.dip.plugin.CustomFormatInput;
 import com.dataiku.dip.plugin.CustomFormatOutput;
 import com.dataiku.dip.warnings.WarningsContext;
-import com.dataiku.dip.plugin.InputStreamWithFilename;
+import com.dataiku.dip.plugin.InputStreamWithContextInfo;
 import com.dataiku.dip.logging.LimitedLogContext;
 import com.dataiku.dip.logging.LimitedLogFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -61,11 +61,11 @@ public class LIBSVMFormat implements CustomFormat {
             throw new IllegalArgumentException("Unsupported extraction mode: " + rep);
         }
     }
-    
+
     private int maxFeatures;
     private ExtractionMode outputType;
     private WarningsContext warnContext;
-    
+
     /**
      * Create a new instance of the format
      */
@@ -73,7 +73,7 @@ public class LIBSVMFormat implements CustomFormat {
         maxFeatures = 2000;
         outputType = ExtractionMode.MULTI_COLUMN;
     }
-    
+
     /**
      * Create a reader for a stream in the format
      */
@@ -90,7 +90,7 @@ public class LIBSVMFormat implements CustomFormat {
                 outputType = ExtractionMode.forName(tmpElt.getAsString());
             }
         }
-        
+
         return new LIBSVMFormatInput();
     }
 
@@ -101,7 +101,7 @@ public class LIBSVMFormat implements CustomFormat {
     public CustomFormatOutput getWriter(JsonObject config, JsonObject pluginConfig) {
         throw new UnsupportedOperationException("No output for this format.");
     }
-    
+
     /**
      * Create a schema detector for a stream in the format (used if canReadSchema=true in the json)
      */
@@ -126,7 +126,7 @@ public class LIBSVMFormat implements CustomFormat {
         private void addWarning(WarningsContext.WarningType type, String message, Object... format) {
             warnContext.addWarning(type, String.format(message, format), logger);
         }
-        
+
         private void parseIntoMultiColumn(ProcessorOutput out, ColumnFactory cf, RowFactory rf,
                                           BufferedReader bf) throws Exception {
             HashMap<String, Column> columns = new HashMap<>();
@@ -253,11 +253,11 @@ public class LIBSVMFormat implements CustomFormat {
         }
 
         /**
-         * extract data from the input stream. The emitRow() on the out will throw exceptions to 
+         * extract data from the input stream. The emitRow() on the out will throw exceptions to
          * enforce limits set to number of rows read, so these should not be caught and hidden.
          */
         @Override
-        public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
+        public void run(InputStreamWithContextInfo in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
             try (BufferedReader bf = new BufferedReader(new InputStreamReader(in.getInputStream()))) {
                 switch (outputType) {
                     case SINGLE_COLUMN_JSON:
@@ -277,4 +277,3 @@ public class LIBSVMFormat implements CustomFormat {
     }
 
 }
-

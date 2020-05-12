@@ -15,7 +15,7 @@ import com.dataiku.dip.plugin.CustomFormat;
 import com.dataiku.dip.plugin.CustomFormatSchemaDetector;
 import com.dataiku.dip.plugin.CustomFormatInput;
 import com.dataiku.dip.plugin.CustomFormatOutput;
-import com.dataiku.dip.plugin.InputStreamWithFilename;
+import com.dataiku.dip.plugin.InputStreamWithContextInfo;
 import com.dataiku.dip.warnings.WarningsContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,7 +26,7 @@ public class SPSSFormat implements CustomFormat {
      */
     public SPSSFormat() {
     }
-    
+
     /**
      * Create a reader for a stream in the format
      */
@@ -57,7 +57,7 @@ public class SPSSFormat implements CustomFormat {
     public CustomFormatOutput getWriter(JsonObject config, JsonObject pluginConfig) {
         throw new UnsupportedOperationException("No output for this format.");
     }
-    
+
     /**
      * Create a schema detector for a stream in the format (used if canReadSchema=true in the json)
      */
@@ -89,11 +89,11 @@ public class SPSSFormat implements CustomFormat {
         }
 
         /**
-         * extract data from the input stream. The emitRow() on the out will throw exceptions to 
+         * extract data from the input stream. The emitRow() on the out will throw exceptions to
          * enforce limits set to number of rows read, so these should not be caught and hidden.
          */
         @Override
-        public void run(InputStreamWithFilename in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
+        public void run(InputStreamWithContextInfo in, ProcessorOutput out, ColumnFactory cf, RowFactory rf) throws Exception {
             SPSSStreamReader reader = new SPSSStreamReader(in.getInputStream(), cf, wc, this.useVarLabels, this.useValueLabels);
             reader.readData(out, rf);
         }
@@ -104,4 +104,3 @@ public class SPSSFormat implements CustomFormat {
     }
 
 }
-
