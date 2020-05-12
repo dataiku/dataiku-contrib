@@ -1,6 +1,6 @@
 {
     "id": "ip-range-matcher",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "meta": {
         "label": "IP range matcher",
         "description": "Check whether IP addresses belong to specific network ranges.",
