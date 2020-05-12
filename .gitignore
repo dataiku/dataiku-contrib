@@ -7,3 +7,7 @@ state.json
 .Rproj.user/
 .idea/
 .wlock
+build
+lib
+java-lib
+java-build
