@@ -28,7 +28,7 @@ class MyRunnable(Runnable):
 
     def get_progress_target(self):
         """
-        If the runnable will return some progress info, have this function return a tuple of 
+        If the runnable will return some progress info, have this function return a tuple of
         (target, unit) where unit is one of: SIZE, FILES, RECORDS, NONE
         """
 
@@ -50,7 +50,11 @@ class MyRunnable(Runnable):
         result_table.add_column("status", "status", "STRING")
 
         client = dataiku.api_client()
-        project = client.get_project(self.project_key)
+        if self.config.get("project_key", None):
+            project = client.get_project(self.config.get("project_key"))
+        else:
+            project = client.get_project(self.project_key)
+
         all_datasets = project.list_datasets()
         all_recipes = project.list_recipes()
 
@@ -122,12 +126,3 @@ class MyRunnable(Runnable):
                     dataset.clear()
 
         return result_table
-
-
-
-
-
-
-
-
-
