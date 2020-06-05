@@ -1,0 +1,142 @@
+<link href="/plugins/oncrawl/resource/styles.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src='/plugins/oncrawl/resource/behave.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" type="text/javascript" charset="utf-8"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js'></script>
+<script type="text/javascript" src='/plugins/oncrawl/resource/functions.js'></script>
+
+<div ng-controller="oncrawl_data_queries" class="my_container">
+    <div class="alert alert-error"  ng-if="api_error">
+        {{api_error}}
+    </div>
+
+    <section class="authentication">
+        <legend class="settings-section-title">Authentication</legend>
+        <div class="control-group" >
+            <label class="control-label">Api key</label>
+            <div class="controls" >
+                <input type="text" ng-model="config.api_key" required/>
+                <button ng-click="get_projects()" class='btn btn-success' ng-disabled="!config.api_key">{{num_projects > 0 ? 'Reload' : 'Load'}} projects</button>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+    </section>
+
+    <section data-ng-show="config.list_projects_id_name">
+        <legend class="settings-section-title">Data</legend>
+        
+        <div class="control-group" >
+            <label class="control-label">Projects</label>
+            <div class="controls" >
+                <select ng-model="config.projects_id" data-ng-change="get_crawls();" required>
+                    <option value="all" selected="selected">All projects</option>
+                    <option ng-repeat="(key, value) in config.list_projects_id_name" value="{{key}},{{value}}">{{value}}</option>
+                </select>
+                <span class="counter">{{num_projects}}</span>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Index</label>
+            <div class="controls" >
+                <select ng-model="config.index" data-ng-change="build_oql(reset=true); get_crawls();" required>
+                    <option value="pages">Pages</option>
+                    <option value="links">Links</option>
+                    <option value="logs">Logs</option>
+                </select>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Date range</label>
+            <div class="controls">
+                <label class="switch">
+                    <input ng-model="toggle_date" type="checkbox" data-ng-change="build_date_range();">
+                    <span>
+                        <strong data-unchecked="Absolute" data-checked="Relative" ></strong>
+                    </span>
+                </label>
+                <span class="help-inline"></span>
+            </div>
+        </div>  
+
+        <div class="control-group" ng-if="!toggle_date">
+            <label class="control-label">Relative date</label>
+            <div class="controls">
+                <select ng-model="config.date_filter_time_cursor" data-ng-change="build_date_range();" style="width: 80px;">
+                    <option value="previous">Last</option>
+                    <option value="current">Current</option>
+                </select>
+
+                <input type="number" min="1" ng-model="config.date_filter_num_unit" ng-if="config.date_filter_time_cursor == 'previous'" data-ng-change="build_date_range();" style="width: 41px;"/>
+                <select ng-model="config.date_filter_unit"  data-ng-change="build_date_range();" style="width: 80px;">
+                    <option value="day">day{{config.date_filter_num_unit > 1 ? 's' : ''}}</option>
+                    <option value="month">month{{config.date_filter_num_unit > 1 ? 's' : ''}}</option>
+                </select>
+                <label for="date_filter_include_today" ng-if="config.date_filter_time_cursor != 'current'" style="display:inline-block;">
+                    <input id="date_filter_include_today" ng-model="config.date_filter_include_today" type="checkbox" data-ng-change="build_date_range();">+ add current {{config.date_filter_unit}}
+                </label>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group" ng-if="toggle_date">
+            <label class="control-label">From - To</label>
+            <div class="controls">
+                <input ng-model="config.override_date_start_yyyy_mm_dd" type="text" ng-blur="build_date_range();" pattern="\d\d\d\d-\d\d-\d\d" placeholder="YYYY-MM-DD" style="width: 102px;">
+                <input ng-model="config.override_date_end_yyyy_mm_dd" type="text" ng-blur="build_date_range();" pattern="\d\d\d\d-\d\d-\d\d" placeholder="YYYY-MM-DD" style="width: 102px;">
+                <span class="help-inline"></span>  
+            </div>
+        </div>
+        
+        <div class="control-group" ng-if="config.index != 'logs'">
+            <label class="control-label">Crawl config{{num_configs > 1 ? 's' : ''}}</label>
+            <div class="controls" >
+                <select ng-model="config.crawl_config" data-ng-change="selectDefaultCrawls()" required>
+                    <option ng-repeat="(key, value) in config.list_configs_crawls" value="{{key}}">{{key}}</option>
+                </select>
+                <span class="counter">{{num_configs}}</span>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group" ng-if="config.crawl_config && config.index != 'logs'">
+            <label class="control-label">Crawl{{config.config_crawl_list[config.crawl_config].length > 1 ? 's' : ''}}</label>
+            <div class="controls" >
+                <select ng-model="config.crawls_id" required>
+                    <option value="all" ng-if="config.list_configs_crawls[config.crawl_config].length > 1">All crawls</option>
+                    <option ng-repeat="(key, value) in config.list_configs_crawls[config.crawl_config]" value="{{value}}">{{value}}</option>
+                </select>
+                <span class="counter">{{config.list_configs_crawls[config.crawl_config].length}}</span>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+    </section>
+    
+    <section ng-show="(config.crawls_id && config.crawl_config) || config.index == 'logs'">
+        <legend class="settings-section-title">Output</legend>
+        
+        <div class="control-group">
+            <label class="control-label">Output kind</label>
+            <div class="controls">
+                <label class="switch">
+                    <input ng-model="toggle_action" type="checkbox" data-ng-change="build_oql(reset=true);">
+                    <span>
+                        <strong data-unchecked="Url export" data-checked="Aggregations" ></strong>
+                    </span>
+                </label>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">{{!toggle_action ? 'Aggregate queries' : 'Export queries'}}</label>
+            <div class="controls">
+                    
+                <div class="alert alert-error"  ng-if="oql_error">
+                    {{oql_error}}
+                </div>
+                <textarea ng-model="config.oql" id="oql" rows="20" cols="35" spellcheck="false" required ng-blur="check_oql();" style="width:75%;"></textarea>
+                <span class="help-inline"><span class="counter"><b>!</b> </span> <a href="http://developer.oncrawl.com/#OnCrawl-Query-Language" target="_blank">How to write OQL</a></span>
+                <span style="font-size: 12px;">Clear the field to reset</span>
+            </div>
+        </div>  
+        
+    </section>
+</div>

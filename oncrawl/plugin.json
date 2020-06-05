@@ -1,0 +1,15 @@
+{
+    "id": "oncrawl",
+    "version": "1.0.0",
+
+    "meta": {
+
+        "label": "Oncrawl",
+        "description": "Export URLs or aggregations from crawls or log monitoring events",
+        "author": "Cogniteev",
+        "icon": "icon-globe",
+        "tags": ["SEO", "Logs", "Crawler"],
+        "url": "https://www.oncrawl.com",
+        "licenseInfo": "Apache 2"
+    }
+}
