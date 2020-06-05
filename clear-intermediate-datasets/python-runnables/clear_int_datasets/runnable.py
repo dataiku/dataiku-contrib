@@ -28,7 +28,7 @@ class MyRunnable(Runnable):
 
     def get_progress_target(self):
         """
-        If the runnable will return some progress info, have this function return a tuple of 
+        If the runnable will return some progress info, have this function return a tuple of
         (target, unit) where unit is one of: SIZE, FILES, RECORDS, NONE
         """
 
@@ -122,12 +122,3 @@ class MyRunnable(Runnable):
                     dataset.clear()
 
         return result_table
-
-
-
-
-
-
-
-
-
