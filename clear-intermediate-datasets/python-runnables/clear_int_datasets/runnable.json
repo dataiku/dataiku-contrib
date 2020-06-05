@@ -32,8 +32,15 @@
        The available parameter types are:
        STRING, INT, DOUBLE, BOOLEAN, PASSWORD, SELECT, MAP, TEXTAREA
     */
-
+    "paramsPythonSetup": "get_projects.py",
     "params": [
+        {
+            "type": "SELECT",
+            "name": "project_key",
+            "label": "Project to delete datasets from",
+            "description":"If empty, defaults to current project.",
+            "getChoicesFromPython": true
+        },
         {
             "name": "is_dry_run",
             "label" : "Dry run",
