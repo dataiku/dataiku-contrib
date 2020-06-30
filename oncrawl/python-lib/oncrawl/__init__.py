@@ -53,3 +53,17 @@ def build_date_range(config):
     
     return {'start': date_start_yyyy_mm_dd, 'end': date_end_yyyy_mm_dd}
 
+
+def datestring_to_miltimestamp_with_tz(date):
+    
+    user_tz = pendulum.now().timezone.name        
+    
+    d = pendulum.parse(date, tz=user_tz).timestamp() * 1000
+    
+    return d
+    
+    
+    
+    
+
+

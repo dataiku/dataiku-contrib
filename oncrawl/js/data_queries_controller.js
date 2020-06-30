@@ -211,13 +211,16 @@ app.controller('oncrawl_data_queries', function($scope) {
             {
 
                 $scope.config.list_configs_crawls = response.configs;
+                //list_crawls_project to allow recipe to build crawls metadata (project_id, start_date...)
                 $scope.config.list_crawls_project = response.crawls;
                 $scope.num_configs = Object.keys($scope.config.list_configs_crawls).length;
+                
+                //by default take first crawl config...
                 if(!$scope.config.crawl_config)
                 {
                     $scope.config.crawl_config = Object.keys(response.configs)[0];
                 }
-
+                //... and return 'all' or a crawl id if there is only 1 crawl fr the choosen config
                 $scope.selectDefaultCrawls();
                                 
             }
@@ -226,7 +229,7 @@ app.controller('oncrawl_data_queries', function($scope) {
             }
 
         }, function(response) {
-            $scope.api_error = "Unexpected error occurred "+response
+            $scope.api_error = "Unexpected error occurred "
         });
         
     }

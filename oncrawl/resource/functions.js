@@ -143,13 +143,16 @@ function add_logsdate_field(oql, scope)
     return oql
 }
 
+// return all except if there is only one crawl ==> return its ids
 function selectDefaultCrawls(scope)
 {
     let list = null
     if(scope.config.list_configs_crawls[scope.config.crawl_config])
     {
         list = 'all'
-        if(scope.config.list_configs_crawls[scope.config.crawl_config].length == 1)
+        if(scope.config.crawls_id)
+            list = scope.config.crawls_id
+        if(scope.config.list_configs_crawls[scope.config.crawl_config].length == 1 && list != 'last')
         {
             list = scope.config.list_configs_crawls[scope.config.crawl_config][0];
         }

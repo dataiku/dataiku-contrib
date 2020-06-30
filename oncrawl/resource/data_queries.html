@@ -26,9 +26,9 @@
         
         <div class="control-group" >
             <label class="control-label">Projects</label>
-            <div class="controls" >
+            <div class="controls">
                 <select ng-model="config.projects_id" data-ng-change="get_crawls();" required>
-                    <option value="all" selected="selected">All projects</option>
+                    <option value="all" selected="selected" ng-if="num_projects > 0">All projects</option>
                     <option ng-repeat="(key, value) in config.list_projects_id_name" value="{{key}},{{value}}">{{value}}</option>
                 </select>
                 <span class="counter">{{num_projects}}</span>
@@ -102,6 +102,7 @@
             <div class="controls" >
                 <select ng-model="config.crawls_id" required>
                     <option value="all" ng-if="config.list_configs_crawls[config.crawl_config].length > 1">All crawls</option>
+                    <option value="last">Last crawl{{(config.projects_id == 'all' ? 's' : '')}}</option>
                     <option ng-repeat="(key, value) in config.list_configs_crawls[config.crawl_config]" value="{{value}}">{{value}}</option>
                 </select>
                 <span class="counter">{{config.list_configs_crawls[config.crawl_config].length}}</span>
