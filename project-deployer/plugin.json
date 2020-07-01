@@ -1,13 +1,13 @@
 {
     "id": "project-deployer",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "meta": {
         "label": "Push projects to automation",
         "description": "Bundle projects and push them to an automation node (or another Design node).",
         "author": "Dataiku (Guilherme De Oliveira & Patrick Masi-Phelps)",
         "icon": "icon-upload-alt",
         "licenseInfo": "Apache Software License",
-        "url": "https://www.dataiku.com/dss/plugins/info/push-project-to-automation.html",
+        "url": "https://www.dataiku.com/product/plugins/project-deployment",
         "tags": ["Automation", "Admin"],
         "supportLevel": "NOT_SUPPORTED"
     }
