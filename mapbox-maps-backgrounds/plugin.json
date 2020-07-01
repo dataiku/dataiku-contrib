@@ -1,6 +1,6 @@
 {
     "id": "mapbox-maps-backgrounds",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "meta": {
         "label": "Mapbox map backgrounds",
         "description": "Use map backgrounds from Mapbox",

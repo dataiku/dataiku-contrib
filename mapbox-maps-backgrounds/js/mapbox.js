@@ -20,20 +20,13 @@
 
         if (pluginSettings.addDefaultStyles) {
             var defaultStyles =  [
-                ['mapbox.streets', "Mapbox streets"],
-                ['mapbox.light', "Mapbox Light"],
-                ['mapbox.dark', "Mapbox Dark"],
                 ['mapbox.satellite', "Mapbox Satellite"],
-                ['mapbox.streets-satellite', "Mapbox Satellite+Streets"],
-                ['mapbox.wheatpaste', "Mapbox Wheatpaste"],
-                ['mapbox.streets-basic', "Mapbox Streets Basic"],
-                ['mapbox.comic', "Mapbox Comic"],
-                ['mapbox.outdoors', "Mapbox Outdoors"],
-                ['mapbox.run-bike-hike', "Mapbox Run/Bike/Hike"],
-                ['mapbox.pencil', "Mapbox Pencil"],
-                ['mapbox.pirates', "Mapbox Pirates"],
-                ['mapbox.emerald', "Mapbox Emerald"],
-                ['mapbox.high-contrast', "Mapbox High Contrast"]
+                ['mapbox.mapbox-streets-v8', "Mapbox Streets v8"],
+                ['mapbox.mapbox-streets-v7', "Mapbox Streets v7"],
+                ['mapbox.mapbox-streets-v6', "Mapbox Streets v6"],
+                ['mapbox.mapbox-streets-v5', "Mapbox Streets v5"],
+                ['mapbox.mapbox-terrain-v2', "Mapbox Terrain v2"],
+                ['mapbox.mapbox-traffic-v1', "Mapbox Traffic v1"]
             ]
             allStyles = allStyles.concat(defaultStyles)
         }
