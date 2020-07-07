@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.5
+PLUGIN_VERSION=0.0.6
 PLUGIN_ID=mapbox-maps-backgrounds
 
 plugin:
