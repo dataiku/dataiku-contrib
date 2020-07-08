@@ -8,7 +8,7 @@
         "description": "Export URLs or aggregations from crawls or log monitoring events",
         "author": "Cogniteev",
         "icon": "icon-globe",
-        "tags": ["SEO", "Logs", "Crawler"],
+        "tags": ["API", "Cloud", "Logs"],
         "url": "https://www.dataiku.com/product/plugins/oncrawl/",
         "licenseInfo": "Apache 2"
     }
