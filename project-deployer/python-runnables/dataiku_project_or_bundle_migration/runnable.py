@@ -42,8 +42,8 @@ class MyRunnable(Runnable):
         ignore_proxy_conf = self.config.get("ignore_proxy_env_settings")
 
         if ignore_proxy_conf:
-            os.environ["http_proxy"] = ""
-            os.environ["https_proxy"] = ""
+            os.environ.pop('http_proxy', None)
+            os.environ.pop('https_proxy', None)
 
         # get client and connect to project
         client = dataiku.api_client()
