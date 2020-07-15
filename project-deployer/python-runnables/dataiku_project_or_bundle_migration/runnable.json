@@ -55,6 +55,14 @@
             "description": "If selected, ignores SSL certificates on remote instance."
         },
         {
+            "name": "ignore_proxy_env_settings",
+            "label" : "Ignore Proxy settings",
+            "type": "BOOLEAN",
+            "mandatory" : false,
+            "default": false,
+            "description": "If you want to bypass your local proxy configuration"
+        },
+        {
             "name": "remote_design_instance",
             "label" : "Remote Design Instance",
             "type": "BOOLEAN",
