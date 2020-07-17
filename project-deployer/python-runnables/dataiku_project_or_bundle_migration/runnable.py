@@ -38,7 +38,13 @@ class MyRunnable(Runnable):
             raise Exception("API key is required")
 
         activate_scenarios = self.config.get("activate_scenarios")
-        
+
+        ignore_proxy_conf = self.config.get("ignore_proxy_env_settings")
+
+        if ignore_proxy_conf:
+            os.environ.pop('http_proxy', None)
+            os.environ.pop('https_proxy', None)
+
         # get client and connect to project
         client = dataiku.api_client()
         project = client.get_project(self.project_key)
