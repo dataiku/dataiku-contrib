@@ -37,6 +37,10 @@ Ask your question on [community.dataiku.com](https://community.dataiku.com). Or,
 
 ## Changelog
 
+* 1.1.1 - July 30, 2020
+    
+    - [Fix] Append recipe - serialization error with datetime value
+
 * 1.1.0 - April 7, 2020
     
     - [New] A recipe is now available to append rows to a sheet (it does not modify the preexisting values)

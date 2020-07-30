@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import dataiku
 from dataiku.customrecipe import get_input_names_for_role, get_output_names_for_role, get_recipe_config
 from googlesheets import get_spreadsheet
@@ -53,6 +54,12 @@ def append_rows(self, values, value_input_option='RAW'):
 
 ws.append_rows = append_rows.__get__(ws, ws.__class__)
 
+# Handle datetimes serialization
+def serializer(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    return obj
+
 
 # Open writer
 writer = output_dataset.get_writer()        
@@ -63,7 +70,7 @@ batch = []
 for row in input_dataset.iter_rows():
 
     # write to spreadsheet by batch
-    batch.append([v for k,v in list(row.items())])
+    batch.append([serializer(v) for k,v in list(row.items())])
 
     if len(batch) >= 50:
         ws.append_rows(batch, insert_format)
