@@ -1,2 +1,0 @@
-geocoder==1.38.1
-diskcache~=4.0

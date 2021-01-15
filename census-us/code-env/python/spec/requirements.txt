@@ -1,5 +1,0 @@
-bs4
-requests[security]
-xlrd
-scikit-learn>=0.20,<0.21
-scipy
