@@ -1,4 +1,4 @@
-# Tableau export (v2) plugin
+# Tableau TDE Export (deprecated)
 
 This plugin supersedes and deprecates the older "Tableau Export" plugin.
 

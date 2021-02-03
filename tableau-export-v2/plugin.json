@@ -1,9 +1,9 @@
 {
     "id": "tableau-export-v2",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "meta": {
-        "label": "Tableau export (v2)",
-        "description": "Export datasets to Tableau formats (TDE and Server)",
+        "label": "Tableau TDE Export (deprecated)",
+        "description": "Export datasets to TDE files and Tableau Server (deprecated, and superseded by “Tableau Hyper”)",
         "author": "Dataiku",
         "icon": "icon-tableau",
         "licenseInfo": "Apache Software License",
