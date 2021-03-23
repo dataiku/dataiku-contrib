@@ -28,7 +28,36 @@ class SASFormatExtractor(FormatExtractor):
         dump_to_file = config.get("dump_to_file", False)
 
         self.hasSchema = schema != None
-        read_from = stream
+
+        try:
+            # Pre DSS 9.0.1 solution, keep here for backward compatibility. In the future the "try" part can be removed and only the "except" part remain
+
+            from dataiku.base.java_link import LinkedInputStream
+            # Fix for the stream class provided by DSS
+            # Seek could be disabled by a one-liner like the following one but read_sas may seek forward
+            # self.stream.seek = types.MethodType(lambda self, _: False, self.stream)
+            class ForwardSeekStream(LinkedInputStream):
+                def __init__(self, stream):
+                    LinkedInputStream.__init__(self, stream.link)
+                    self.stream = stream
+                    self.size_read = 0
+
+                def readinto(self, b):
+                    res = LinkedInputStream.readinto(self, b)
+                    self.size_read += res
+                    return res
+
+                def seek(self, seek, whence=0):
+                    to_read = seek if whence == 1 else seek - self.size_read
+
+                    if to_read < 0:
+                        raise IOError("Only forward seeking is supported")
+                    elif to_read > 0:
+                        self.read(to_read)
+
+            read_from = ForwardSeekStream(stream)
+        except ModuleNotFoundError:
+            read_from = stream
 
         if dump_to_file:
             dirname, _ = os.path.split(os.path.abspath(__file__))
