@@ -56,7 +56,7 @@ class SASFormatExtractor(FormatExtractor):
                         self.read(to_read)
 
             read_from = ForwardSeekStream(stream)
-        except ModuleNotFoundError:
+        except ImportError:
             read_from = stream
 
         if dump_to_file:
