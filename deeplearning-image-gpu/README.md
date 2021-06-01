@@ -1,6 +1,6 @@
 ## Plugin information
 
-⚠️  Starting with version 8.0.0, this plugin is considered as "Legacy" and will be maintained only to fix bugs.
+⚠️  Starting with version 0.1.7, this plugin is considered as "Legacy" and will be maintained only to fix bugs.
 For the latest features, we recommend using the [new Deep Learning plugin](https://www.dataiku.com/product/plugins/deeplearning-image/)
 
 This plugin provides several tools to use images in machine learning applications. You can use a pre trained model to score images and obtain classes, or for feature extraction (obtaining the values taken by a layer for each image). You can also retrain a model to specialize it on a particular set of images, this process is known as transfer learning.
