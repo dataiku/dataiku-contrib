@@ -4,7 +4,8 @@
         "author" : "Dataiku Labs",
         "description": "Use this recipe to score (classify) a set of images contained in a folder. This recipe takes as input a folder of images and a folder containing a pre-trained model. It ouputs the labels for each image, as scored by the model.",
         "tags" : ["transfer_learning", "deep_learning","feature_extractor","images"],
-        "icon" : "icon-trophy"
+        "icon" : "icon-trophy",
+        "iconColor": "gray"
     },
 
     "kind" : "PYTHON",
