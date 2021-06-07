@@ -1,13 +1,13 @@
 {
     "id": "deeplearning-image-cpu",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "meta": {
-        "label": "Deep learning on images (CPU)",
-        "description": "Use a pre-trained model to score images or extract features. You can retrain generic models to specialize them on a particular set of images.",
+        "label": "Deep learning on images (CPU) - Legacy",
+        "description": "Use a pre-trained model to score images or extract features. You can retrain generic models to specialize them on a particular set of images. <p>⚠️ This plugin is now \"legacy\". For the latest features, we recommend using the <a href=\"https://www.dataiku.com/product/plugins/deeplearning-image/\">new Deeplearning Image plugin</a></p>",
         "author": "Dataiku (Nicolas Servel)",
         "icon": "icon-picture",
         "licenseInfo": "Apache Software License",
-        "url": "https://www.dataiku.com/dss/plugins/info/deeplearning-image.html",
+        "url": "https://www.dataiku.com/dss/plugins/info/deeplearning-image-legacy.html",
         "tags": ["Images", "Machine Learning", "Deep Learning", "AutoML"]
     }
 }
