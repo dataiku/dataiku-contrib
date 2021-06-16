@@ -55,7 +55,7 @@ class GutenbergConnector(Connector):
             else:
                 stopit=1
                 rootbid=fullbid[0:i]
-        url_book += '/'+ rootbid  + '/'+ fullbid + '.txt'
+        url_book += '/'+ rootbid  + '/'+ fullbid + '-0.txt'
 
         response = urlopen(url_book)
         raw = response.read()   #.decode('utf8')
