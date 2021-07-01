@@ -3,6 +3,7 @@
     "version": "1.1.1",
     "meta": {
         "label": "Project Gutenberg",
+        "category": "Natural Language Processing",
         "description": "Download books from Project Gutenberg (https://www.gutenberg.org)",
         "author": "Dataiku (Hanna Julienne)",
         "icon": "icon-book",
