@@ -1,12 +1,12 @@
 {
     "meta": {
         "label": "Project Gutenberg Book",
+        "category": "Natural Language Processing",
         "description": "Downloads books from the Gutenberg Project. \nEach row of the dataset is a line of the book. \n\n Mirror list available at https://www.gutenberg.org/MIRRORS.ALL"
     },
 
     "readable": true,
     "writable": false,
-
       "params": [
         {
             "name": "mirror",
