@@ -61,20 +61,20 @@ class MyRunnable(Runnable):
         # Build deduplicated lists of input/output datasets:
         input_datasets = []
         output_datasets = []
-        for rcp in all_recipes:
-            rcp_inputs_dict = rcp["inputs"]
-            rcp_outputs_dict = rcp["outputs"]
+        for recipe in all_recipes:
+            recipe_inputs_dict = recipe["inputs"]
+            recipe_outputs_dict = recipe["outputs"]
             # CASE: no input dataset
-            if rcp_inputs_dict:
-                input_keys = list(rcp_inputs_dict.keys())
+            if recipe_inputs_dict:
+                input_keys = list(recipe_inputs_dict.keys())
                 for input_key in input_keys:
-                    rcp_inputs_list = [x["ref"] for x in rcp_inputs_dict[input_key]["items"]]
-                    input_datasets += rcp_inputs_list
-            output_keys = list(rcp_outputs_dict.keys())
+                    recipe_inputs_list = [x["ref"] for x in recipe_inputs_dict[input_key]["items"]]
+                    input_datasets += recipe_inputs_list
+            output_keys = list(recipe_outputs_dict.keys())
             for output_key in output_keys:
-                rcp_outputs_list = [x["ref"] for x in rcp_outputs_dict[output_key]["items"]]
+                recipe_outputs_list = [x["ref"] for x in recipe_outputs_dict[output_key]["items"]]
                 # Append them to the overall input list:
-                output_datasets += rcp_outputs_list
+                output_datasets += recipe_outputs_list
         # Deduplicate input/output lists:
         input_datasets = list(set(input_datasets))
         output_datasets = list(set(output_datasets))
