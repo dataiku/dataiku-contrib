@@ -68,7 +68,6 @@ class MyRunnable(Runnable):
             if recipe_inputs_dict:
                 for input_key in recipe_inputs_dict:
                     input_datasets += [x["ref"] for x in recipe_inputs_dict[input_key]["items"]]
-            output_keys = list(recipe_outputs_dict.keys())
             for output_key in recipe_outputs_dict:
                 output_datasets += [x["ref"] for x in recipe_outputs_dict[output_key]["items"]]
         # Deduplicate input/output lists:
