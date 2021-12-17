@@ -66,15 +66,11 @@ class MyRunnable(Runnable):
             recipe_outputs_dict = recipe["outputs"]
             # CASE: no input dataset
             if recipe_inputs_dict:
-                input_keys = list(recipe_inputs_dict.keys())
-                for input_key in input_keys:
-                    recipe_inputs_list = [x["ref"] for x in recipe_inputs_dict[input_key]["items"]]
-                    input_datasets += recipe_inputs_list
+                for input_key in recipe_inputs_dict:
+                    input_datasets += [x["ref"] for x in recipe_inputs_dict[input_key]["items"]]
             output_keys = list(recipe_outputs_dict.keys())
-            for output_key in output_keys:
-                recipe_outputs_list = [x["ref"] for x in recipe_outputs_dict[output_key]["items"]]
-                # Append them to the overall input list:
-                output_datasets += recipe_outputs_list
+            for output_key in recipe_outputs_dict:
+                output_datasets += [x["ref"] for x in recipe_outputs_dict[output_key]["items"]]
         # Deduplicate input/output lists:
         input_datasets = list(set(input_datasets))
         output_datasets = list(set(output_datasets))
