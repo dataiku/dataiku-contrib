@@ -11,7 +11,7 @@ def populate_result_table_with_list():
     # Populate result table from list with arbitrary table size
     return NotImplementedError()
 
-def append_datasets_in_dict_to_list(recipe_dict, list_to_append):
+def append_datasets_to_list(recipe_dict, list_to_append):
     # Append datasets' names from recipe's input or output dictionaries to an input or output list respectively
     for key in recipe_dict:
         list_to_append += [x["ref"] for x in recipe_dict[key]["items"]]
@@ -70,8 +70,8 @@ class MyRunnable(Runnable):
             recipe_outputs_dict = recipe["outputs"]
             # CASE: no input dataset
             if recipe_inputs_dict:
-                append_datasets_in_dict_to_list(recipe_inputs_dict, input_datasets)
-            append_datasets_in_dict_to_list(recipe_outputs_dict, output_datasets)
+                append_datasets_to_list(recipe_inputs_dict, input_datasets)
+            append_datasets_to_list(recipe_outputs_dict, output_datasets)
         # Deduplicate input/output lists:
         input_datasets = list(set(input_datasets))
         output_datasets = list(set(output_datasets))
