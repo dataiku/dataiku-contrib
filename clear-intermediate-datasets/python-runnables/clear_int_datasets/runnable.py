@@ -63,9 +63,6 @@ class MyRunnable(Runnable):
             if recipe_inputs_dict:
                 append_datasets_to_list(recipe_inputs_dict, input_datasets)
             append_datasets_to_list(recipe_outputs_dict, output_datasets)
-        # Deduplicate input/output lists:
-        input_datasets = list(set(input_datasets))
-        output_datasets = list(set(output_datasets))
 
         # Identify Flow input/outputs & add them to result table:
         flow_inputs = [x for x in input_datasets if x not in output_datasets]
