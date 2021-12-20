@@ -2,19 +2,10 @@ import dataiku
 import logging
 
 from dataiku.runnables import Runnable, ResultTable
+from utils import populate_result_table_with_list, append_datasets_to_list
 
 logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level=logging.INFO)
 logging.getLogger().setLevel(logging.INFO)
-
-def populate_result_table_with_list():
-    # TODO
-    # Populate result table from list with arbitrary table size
-    return NotImplementedError()
-
-def append_datasets_to_list(recipe_dict, list_to_append):
-    # Append datasets' names from recipe's input or output dictionaries to an input or output list respectively
-    for key in recipe_dict:
-        list_to_append += [x["ref"] for x in recipe_dict[key]["items"]]
 
 class MyRunnable(Runnable):
     """The base interface for a Python runnable."""
