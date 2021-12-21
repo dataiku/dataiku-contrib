@@ -2,15 +2,10 @@ import dataiku
 import logging
 
 from dataiku.runnables import Runnable, ResultTable
+from utils import populate_result_table_with_list, append_datasets_to_list
 
 logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level=logging.INFO)
 logging.getLogger().setLevel(logging.INFO)
-
-def populate_result_table_with_list():
-    # TODO
-    # Populate result table from list with arbitrary table size
-    return NotImplementedError()
-
 
 class MyRunnable(Runnable):
     """The base interface for a Python runnable."""
@@ -61,21 +56,13 @@ class MyRunnable(Runnable):
         # Build deduplicated lists of input/output datasets:
         input_datasets = []
         output_datasets = []
-        for rcp in all_recipes:
-            rcp_inputs_dict = rcp["inputs"]
-            rcp_outputs_dict = rcp["outputs"]
+        for recipe in all_recipes:
+            recipe_inputs_dict = recipe["inputs"]
+            recipe_outputs_dict = recipe["outputs"]
             # CASE: no input dataset
-            if rcp_inputs_dict:
-                input_key = list(rcp_inputs_dict.keys())[0]
-                rcp_inputs_list = [x["ref"] for x in rcp_inputs_dict[input_key]["items"]]
-                input_datasets += rcp_inputs_list
-            output_key = list(rcp_outputs_dict.keys())[0]
-            rcp_outputs_list = [x["ref"] for x in rcp_outputs_dict[output_key]["items"]]
-            # Append them to the overall input list:
-            output_datasets += rcp_outputs_list
-        # Deduplicate input/output lists:
-        input_datasets = list(set(input_datasets))
-        output_datasets = list(set(output_datasets))
+            if recipe_inputs_dict:
+                append_datasets_to_list(recipe_inputs_dict, input_datasets)
+            append_datasets_to_list(recipe_outputs_dict, output_datasets)
 
         # Identify Flow input/outputs & add them to result table:
         flow_inputs = [x for x in input_datasets if x not in output_datasets]
