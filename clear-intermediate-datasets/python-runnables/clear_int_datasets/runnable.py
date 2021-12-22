@@ -6,8 +6,6 @@ from dataiku.runnables import Runnable, ResultTable
 logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level=logging.INFO)
 logging.getLogger().setLevel(logging.INFO)
 
-
-
 def populate_result_table_with_list():
     # TODO
     # Populate result table from list with arbitrary table size
