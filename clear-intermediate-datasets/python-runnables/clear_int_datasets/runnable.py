@@ -41,9 +41,13 @@ class MyRunnable(Runnable):
 
         # Initialize macro result table:
         result_table = ResultTable()
-        result_table.add_column("dataset", "dataset", "STRING")
-        result_table.add_column("status", "status", "STRING")
+        result_table.add_column("dataset", "Dataset", "STRING")
+        result_table.add_column("type", "Type", "STRING")
+        result_table.add_column("action", "Action", "STRING")
+        result_table.add_column("action_status", "Action Status", "STRING")
 
+        action_status = "Not done (Dry run)" if is_dry_run else "Done"
+        
         client = dataiku.api_client()
         if self.config.get("project_key", None):
             project = client.get_project(self.config.get("project_key"))
@@ -64,13 +68,9 @@ class MyRunnable(Runnable):
                 append_datasets_to_list(recipe_inputs_dict, input_datasets)
             append_datasets_to_list(recipe_outputs_dict, output_datasets)
 
-        # Identify Flow input/outputs & add them to result table:
+        # Identify Flow input/outputs:
         flow_inputs = [x for x in input_datasets if x not in output_datasets]
-        for obj in flow_inputs:
-            result_table.add_record([obj, "KEEP(INPUT)"])
         flow_outputs = [x for x in output_datasets if x not in input_datasets]
-        for obj in flow_outputs:
-            result_table.add_record([obj, "KEEP(OUTPUT)"])
         logging.info("Found {} FLOW INPUT datasets: {}".format(str(len(flow_inputs)),
                                                                str(flow_inputs)))
         logging.info("Found {} FLOW OUTPUT datasets: {}".format(str(len(flow_outputs)),
@@ -92,24 +92,34 @@ class MyRunnable(Runnable):
         to_keep = flow_inputs + flow_outputs
         if keep_partitioned:
             to_keep += partd_datasets
-            # Add them to result table:
-            for obj in partd_datasets:
-                result_table.add_record([obj, "KEEP(PARTITIONED)"])
         if keep_shared:
             to_keep += shared_datasets
-            # Add them to result table:
-            for obj in shared_datasets:
-                result_table.add_record([obj, "KEEP(SHARED)"])
         logging.info("Total of {} datasets to KEEP: {}".format(str(len(to_keep)),
                                                                str(to_keep)))
 
         # Perform cleanup or simulate it (dry run):
+        to_clear = []
+        for ds in all_datasets:
+            if ds["name"] not in to_keep:
+                result_table.add_record([ds["name"], "INTERMEDIATE", "CLEAR", action_status])
+                to_clear.append(ds["name"])
+        logging.info("Total of {} datasets to CLEAR: {}".format(str(len(to_clear)),
+                                                               str(to_clear)))
         if not is_dry_run:
-            for ds in all_datasets:
-                ds_name = ds["name"]
-                if ds_name not in to_keep:
-                    dataset = project.get_dataset(ds_name)
-                    logging.info("Clearing {}...".format(ds_name))
-                    dataset.clear()
+            for ds in to_clear:
+                dataset = project.get_dataset(ds)
+                logging.info("Clearing {}...".format(ds))
+                dataset.clear()
+            logging.info("Clearing {} datasets: done.".format(str(len(to_clear))))
+                
+        # Add Inputs, Outputs, Partitioned, and Shared datasets to result table
+        for obj in flow_inputs:
+            result_table.add_record([obj, "INPUT", "KEEP", action_status])
+        for obj in flow_outputs:
+            result_table.add_record([obj, "OUTPUT", "KEEP", action_status])
+        for obj in partd_datasets:
+            result_table.add_record([obj, "PARTITIONED", "KEEP", action_status])
+        for obj in shared_datasets:
+            result_table.add_record([obj, "SHARED", "KEEP", action_status])
 
         return result_table
