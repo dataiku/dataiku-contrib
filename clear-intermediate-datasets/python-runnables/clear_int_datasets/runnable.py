@@ -117,9 +117,11 @@ class MyRunnable(Runnable):
             result_table.add_record([obj, "INPUT", "KEEP", action_status])
         for obj in flow_outputs:
             result_table.add_record([obj, "OUTPUT", "KEEP", action_status])
-        for obj in partd_datasets:
-            result_table.add_record([obj, "PARTITIONED", "KEEP", action_status])
-        for obj in shared_datasets:
-            result_table.add_record([obj, "SHARED", "KEEP", action_status])
+        if keep_partitioned:
+            for obj in partd_datasets:
+                result_table.add_record([obj, "PARTITIONED", "KEEP", action_status])
+        if keep_shared:
+            for obj in shared_datasets:
+                result_table.add_record([obj, "SHARED", "KEEP", action_status])
 
         return result_table
