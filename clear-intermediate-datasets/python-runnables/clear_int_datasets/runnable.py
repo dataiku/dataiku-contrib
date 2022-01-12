@@ -1,5 +1,6 @@
 import dataiku
 import logging
+import pandas as pd
 
 from dataiku.runnables import Runnable, ResultTable
 from utils import populate_result_table_with_list, append_datasets_to_list
@@ -97,14 +98,16 @@ class MyRunnable(Runnable):
         logging.info("Total of {} datasets to KEEP: {}".format(str(len(to_keep)),
                                                                str(to_keep)))
 
-        # Perform cleanup or simulate it (dry run):
+        # Find intermediate datasets and add to results list
+        results = []
         to_clear = []
         for ds in all_datasets:
             if ds["name"] not in to_keep:
-                result_table.add_record([ds["name"], "INTERMEDIATE", "CLEAR", action_status])
+                results.append([ds["name"], "INTERMEDIATE", "CLEAR", action_status])
                 to_clear.append(ds["name"])
         logging.info("Total of {} datasets to CLEAR: {}".format(str(len(to_clear)),
                                                                str(to_clear)))
+        # Perform cleanup
         if not is_dry_run:
             for ds in to_clear:
                 dataset = project.get_dataset(ds)
@@ -112,16 +115,29 @@ class MyRunnable(Runnable):
                 dataset.clear()
             logging.info("Clearing {} datasets: done.".format(str(len(to_clear))))
                 
-        # Add Inputs, Outputs, Partitioned, and Shared datasets to result table
+        # Add Inputs, Outputs, Partitioned, and Shared datasets to results list
         for obj in flow_inputs:
-            result_table.add_record([obj, "INPUT", "KEEP", action_status])
+            results.append([obj, "INPUT", "KEEP", action_status])
         for obj in flow_outputs:
-            result_table.add_record([obj, "OUTPUT", "KEEP", action_status])
+            results.append([obj, "OUTPUT", "KEEP", action_status])
         if keep_partitioned:
             for obj in partd_datasets:
-                result_table.add_record([obj, "PARTITIONED", "KEEP", action_status])
+                results.append([obj, "PARTITIONED", "KEEP", action_status])
         if keep_shared:
             for obj in shared_datasets:
-                result_table.add_record([obj, "SHARED", "KEEP", action_status])
-
+                results.append([obj, "SHARED", "KEEP", action_status])
+        
+        # Create df with all results
+        columns = ["Dataset", "Type", "Action", "Action Status"]
+        results_df = pd.DataFrame(results, columns=columns)
+        
+        # Group datasets that might belong to more than one type
+        results_grouped = results_df.groupby(["Dataset", "Action", "Action Status"])['Type'].apply(lambda x: ', '.join(x)).reset_index()
+        results_grouped = results_grouped.sort_values(by=['Action', 'Type'])
+        results_grouped = results_grouped.reindex(columns=columns)
+        
+        # Pass results to result table
+        for index, row in results_grouped.iterrows():
+            result_table.add_record(list(row))
+        
         return result_table
