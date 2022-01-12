@@ -1,5 +1,0 @@
-{
-    "libraries" : [],
-    "label" : "Tensorboard: monitor the re-training of deep learning models",
-    "backendEnabled": true
-}
