@@ -1,8 +1,0 @@
-{
-	"meta" : {
-		"label" : "Random data",
-		"description" : "A connector that generates random data"
-	},
-	"params" : [
-	]
-}
