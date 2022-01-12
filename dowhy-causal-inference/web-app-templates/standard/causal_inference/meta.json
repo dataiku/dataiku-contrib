@@ -1,5 +1,0 @@
-{
-    "libraries" : ["dowhy"],
-    "label" : "Web app to design causal models and estimate causal effects"
-}
-
