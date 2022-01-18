@@ -53,14 +53,14 @@
             "name": "keep_partitioned",
             "label" : "Keep partitioned datasets",
             "type": "BOOLEAN",
-            "default": false,
+            "default": true,
             "mandatory" : true
         },
         {
             "name": "keep_shared",
             "label": "Keep shared datasets",
             "type": "BOOLEAN",
-            "default": false,
+            "default": true,
             "mandatory": true
         }
     ]
