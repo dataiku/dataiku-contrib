@@ -77,6 +77,11 @@ class MyRunnable(Runnable):
         logging.info("Found {} FLOW OUTPUT datasets: {}".format(str(len(flow_outputs)),
                                                                 str(flow_outputs)))
 
+        # Identify Intermediate datasets:
+        intermediate_datasets = [x["name"] for x in all_datasets if x["name"] not in flow_inputs + flow_outputs]
+        logging.info("Found {} INTERMEDIATE datasets: {}".format(str(len(intermediate_datasets)),
+                                                                str(intermediate_datasets)))
+
         # Identify shared datasets:
         shared_objs = project.get_settings().settings["exposedObjects"]["objects"]
         shared_datasets = [x["localName"] for x in shared_objs if x["type"]=="DATASET"]
@@ -89,7 +94,25 @@ class MyRunnable(Runnable):
         logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partd_datasets)),
                                                                 str(partd_datasets)))
 
-        # List all datasets to keep, potentially including shared & partd ones:
+        # Add dataset types to results list
+        results = []
+
+        for obj in flow_inputs:
+            results.append([obj, "INPUT"])
+
+        for obj in flow_outputs:
+            results.append([obj, "OUTPUT"])
+
+        for obj in intermediate_datasets:
+            results.append([obj, "INTERMEDIATE"])
+
+        for obj in partd_datasets:
+            results.append([obj, "PARTITIONED"])
+
+        for obj in shared_datasets:
+            results.append([obj, "SHARED"])
+
+        # Identify which datasets should be kept
         to_keep = flow_inputs + flow_outputs
         if keep_partitioned:
             to_keep += partd_datasets
@@ -98,44 +121,25 @@ class MyRunnable(Runnable):
         logging.info("Total of {} datasets to KEEP: {}".format(str(len(to_keep)),
                                                                str(to_keep)))
 
-        # Find intermediate datasets and add to results list
-        results = []
-        to_clear = []
-        for ds in all_datasets:
-            if ds["name"] not in to_keep:
-                results.append([ds["name"], "INTERMEDIATE", "CLEAR", action_status])
-                to_clear.append(ds["name"])
+        # Create df with all results
+        results_df = pd.DataFrame(results, columns=["Dataset", "Type"])
+        results_grouped = results_df.groupby(["Dataset"])['Type'].apply(lambda x: ', '.join(x)).reset_index()
+        results_grouped["Action"] = results_grouped["Dataset"].apply(lambda x: "KEEP" if x in to_keep else "CLEAR")
+        results_grouped["Status"] = action_status
+        results_grouped = results_grouped.sort_values(by=['Action', 'Type'])
+
+        # Perform cleanup
+        to_clear = list(results_grouped["Dataset"][results_grouped['Action']=="CLEAR"])
         logging.info("Total of {} datasets to CLEAR: {}".format(str(len(to_clear)),
                                                                str(to_clear)))
-        # Perform cleanup
+
         if not is_dry_run:
             for ds in to_clear:
                 dataset = project.get_dataset(ds)
                 logging.info("Clearing {}...".format(ds))
                 dataset.clear()
             logging.info("Clearing {} datasets: done.".format(str(len(to_clear))))
-                
-        # Add Inputs, Outputs, Partitioned, and Shared datasets to results list
-        for obj in flow_inputs:
-            results.append([obj, "INPUT", "KEEP", action_status])
-        for obj in flow_outputs:
-            results.append([obj, "OUTPUT", "KEEP", action_status])
-        if keep_partitioned:
-            for obj in partd_datasets:
-                results.append([obj, "PARTITIONED", "KEEP", action_status])
-        if keep_shared:
-            for obj in shared_datasets:
-                results.append([obj, "SHARED", "KEEP", action_status])
-        
-        # Create df with all results
-        columns = ["Dataset", "Type", "Action", "Action Status"]
-        results_df = pd.DataFrame(results, columns=columns)
-        
-        # Group datasets that might belong to more than one type
-        results_grouped = results_df.groupby(["Dataset", "Action", "Action Status"])['Type'].apply(lambda x: ', '.join(x)).reset_index()
-        results_grouped = results_grouped.sort_values(by=['Action', 'Type'])
-        results_grouped = results_grouped.reindex(columns=columns)
-        
+
         # Pass results to result table
         for index, row in results_grouped.iterrows():
             result_table.add_record(list(row))
