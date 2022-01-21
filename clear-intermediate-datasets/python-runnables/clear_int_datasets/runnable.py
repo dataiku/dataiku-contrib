@@ -70,27 +70,27 @@ class MyRunnable(Runnable):
             append_datasets_to_list(recipe_outputs_dict, output_datasets)
 
         # Identify Flow input/outputs:
-        flow_inputs = [x for x in input_datasets if x not in output_datasets]
-        flow_outputs = [x for x in output_datasets if x not in input_datasets]
+        flow_inputs = [dataset for dataset in input_datasets if dataset not in output_datasets]
+        flow_outputs = [dataset for dataset in output_datasets if dataset not in input_datasets]
         logging.info("Found {} FLOW INPUT datasets: {}".format(str(len(flow_inputs)),
                                                                str(flow_inputs)))
         logging.info("Found {} FLOW OUTPUT datasets: {}".format(str(len(flow_outputs)),
                                                                 str(flow_outputs)))
 
         # Identify Intermediate datasets:
-        intermediate_datasets = [x["name"] for x in all_datasets if x["name"] not in flow_inputs + flow_outputs]
+        intermediate_datasets = [dataset["name"] for dataset in all_datasets if dataset["name"] not in flow_inputs + flow_outputs]
         logging.info("Found {} INTERMEDIATE datasets: {}".format(str(len(intermediate_datasets)),
                                                                 str(intermediate_datasets)))
 
         # Identify shared datasets:
         shared_objs = project.get_settings().settings["exposedObjects"]["objects"]
-        shared_datasets = [x["localName"] for x in shared_objs if x["type"]=="DATASET"]
+        shared_datasets = [dataset["localName"] for dataset in shared_objs if dataset["type"]=="DATASET"]
         logging.info("Found {} SHARED datasets: {}".format(str(len(shared_datasets)),
                                                            str(shared_datasets)))
 
         # Identify partitioned datasets:
-        is_partitioned = lambda x: len(x["partitioning"]["dimensions"]) > 0
-        partitioned_datasets = [x["name"] for x in all_datasets if is_partitioned(x)]
+        is_partitioned = lambda x: len(dataset["partitioning"]["dimensions"]) > 0
+        partitioned_datasets = [dataset["name"] for dataset in all_datasets if is_partitioned(dataset)]
         logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partitioned_datasets)),
                                                                 str(partitioned_datasets)))
 
