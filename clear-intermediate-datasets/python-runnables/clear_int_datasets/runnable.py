@@ -88,34 +88,34 @@ class MyRunnable(Runnable):
         logging.info("Found {} SHARED datasets: {}".format(str(len(shared_datasets)),
                                                            str(shared_datasets)))
 
-        # Identify partitioned (partd) datasets:
-        is_partd = lambda x: len(x["partitioning"]["dimensions"]) > 0
-        partd_datasets = [x["name"] for x in all_datasets if is_partd(x)]
-        logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partd_datasets)),
-                                                                str(partd_datasets)))
+        # Identify partitioned datasets:
+        is_partitioned = lambda x: len(x["partitioning"]["dimensions"]) > 0
+        partitioned_datasets = [x["name"] for x in all_datasets if is_partitioned(x)]
+        logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partitioned_datasets)),
+                                                                str(partitioned_datasets)))
 
         # Add dataset types to results list
         results = []
 
-        for obj in flow_inputs:
-            results.append([obj, "INPUT"])
+        for dataset in flow_inputs:
+            results.append([dataset, "INPUT"])
 
-        for obj in flow_outputs:
-            results.append([obj, "OUTPUT"])
+        for dataset in flow_outputs:
+            results.append([dataset, "OUTPUT"])
 
-        for obj in intermediate_datasets:
-            results.append([obj, "INTERMEDIATE"])
+        for dataset in intermediate_datasets:
+            results.append([dataset, "INTERMEDIATE"])
 
-        for obj in partd_datasets:
-            results.append([obj, "PARTITIONED"])
+        for dataset in partitioned_datasets:
+            results.append([dataset, "PARTITIONED"])
 
-        for obj in shared_datasets:
-            results.append([obj, "SHARED"])
+        for dataset in shared_datasets:
+            results.append([dataset, "SHARED"])
 
         # Identify which datasets should be kept
         to_keep = flow_inputs + flow_outputs
         if keep_partitioned:
-            to_keep += partd_datasets
+            to_keep += partitioned_datasets
         if keep_shared:
             to_keep += shared_datasets
         logging.info("Total of {} datasets to KEEP: {}".format(str(len(to_keep)),
