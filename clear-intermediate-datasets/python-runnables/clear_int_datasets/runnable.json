@@ -45,7 +45,7 @@
             "name": "is_dry_run",
             "label" : "Dry run",
             "type": "BOOLEAN",
-            "default": true,
+            "defaultValue": true,
             "description":"Only lists the datasets to clear without performing data deletion.",
             "mandatory" : true
         },
@@ -53,14 +53,14 @@
             "name": "keep_partitioned",
             "label" : "Keep partitioned datasets",
             "type": "BOOLEAN",
-            "default": true,
+            "defaultValue": true,
             "mandatory" : true
         },
         {
             "name": "keep_shared",
             "label": "Keep shared datasets",
             "type": "BOOLEAN",
-            "default": true,
+            "defaultValue": true,
             "mandatory": true
         }
     ]
