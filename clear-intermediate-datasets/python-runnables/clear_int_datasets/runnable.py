@@ -96,21 +96,16 @@ class MyRunnable(Runnable):
 
         # Add dataset types to results list
         results = []
-
-        for dataset in flow_inputs:
-            results.append([dataset, "INPUT"])
-
-        for dataset in flow_outputs:
-            results.append([dataset, "OUTPUT"])
-
-        for dataset in intermediate_datasets:
-            results.append([dataset, "INTERMEDIATE"])
-
-        for dataset in partitioned_datasets:
-            results.append([dataset, "PARTITIONED"])
-
-        for dataset in shared_datasets:
-            results.append([dataset, "SHARED"])
+        
+        datasets = {"INPUT":flow_inputs,
+            "OUTPUT":flow_outputs,
+            "INTERMEDIATE": intermediate_datasets,
+            "SHARED": shared_datasets
+           }
+        
+        for dataset_type, dataset_type_list in datasets.items():
+            for dataset in dataset_type_list:
+                results.append([dataset, dataset_type])
 
         # Identify which datasets should be kept
         to_keep = flow_inputs + flow_outputs
