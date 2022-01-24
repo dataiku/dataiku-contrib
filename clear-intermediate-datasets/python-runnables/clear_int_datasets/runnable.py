@@ -83,8 +83,8 @@ class MyRunnable(Runnable):
                                                                 str(intermediate_datasets)))
 
         # Identify shared datasets:
-        shared_objs = project.get_settings().settings["exposedObjects"]["objects"]
-        shared_datasets = [dataset["localName"] for dataset in shared_objs if dataset["type"]=="DATASET"]
+        shared_objects = project.get_settings().settings["exposedObjects"]["objects"]
+        shared_datasets = [dataset["localName"] for dataset in shared_objects if dataset["type"]=="DATASET"]
         logging.info("Found {} SHARED datasets: {}".format(str(len(shared_datasets)),
                                                            str(shared_datasets)))
 
