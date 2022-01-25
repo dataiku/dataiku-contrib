@@ -100,7 +100,8 @@ class MyRunnable(Runnable):
         datasets = {"INPUT":flow_inputs,
             "OUTPUT":flow_outputs,
             "INTERMEDIATE": intermediate_datasets,
-            "SHARED": shared_datasets
+            "SHARED": shared_datasets,
+            "PARTITIONED": partitioned_datasets
            }
         
         for dataset_type, dataset_type_list in datasets.items():
