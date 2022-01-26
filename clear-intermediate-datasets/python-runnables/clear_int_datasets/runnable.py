@@ -89,7 +89,7 @@ class MyRunnable(Runnable):
                                                            str(shared_datasets)))
 
         # Identify partitioned datasets:
-        is_partitioned = lambda x: len(dataset["partitioning"]["dimensions"]) > 0
+        is_partitioned = lambda dataset: len(dataset["partitioning"]["dimensions"]) > 0
         partitioned_datasets = [dataset["name"] for dataset in all_datasets if is_partitioned(dataset)]
         logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partitioned_datasets)),
                                                                 str(partitioned_datasets)))
