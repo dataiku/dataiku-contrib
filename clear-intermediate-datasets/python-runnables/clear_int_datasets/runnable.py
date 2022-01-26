@@ -1,5 +1,6 @@
 import dataiku
 import logging
+import pandas as pd
 
 from dataiku.runnables import Runnable, ResultTable
 from utils import populate_result_table_with_list, append_datasets_to_list
@@ -69,57 +70,74 @@ class MyRunnable(Runnable):
             append_datasets_to_list(recipe_outputs_dict, output_datasets)
 
         # Identify Flow input/outputs:
-        flow_inputs = [x for x in input_datasets if x not in output_datasets]
-        flow_outputs = [x for x in output_datasets if x not in input_datasets]
+        flow_inputs = [dataset for dataset in input_datasets if dataset not in output_datasets]
+        flow_outputs = [dataset for dataset in output_datasets if dataset not in input_datasets]
         logging.info("Found {} FLOW INPUT datasets: {}".format(str(len(flow_inputs)),
                                                                str(flow_inputs)))
         logging.info("Found {} FLOW OUTPUT datasets: {}".format(str(len(flow_outputs)),
                                                                 str(flow_outputs)))
 
+        # Identify Intermediate datasets:
+        intermediate_datasets = [dataset["name"] for dataset in all_datasets if dataset["name"] not in flow_inputs + flow_outputs]
+        logging.info("Found {} INTERMEDIATE datasets: {}".format(str(len(intermediate_datasets)),
+                                                                str(intermediate_datasets)))
+
         # Identify shared datasets:
-        shared_objs = project.get_settings().settings["exposedObjects"]["objects"]
-        shared_datasets = [x["localName"] for x in shared_objs if x["type"]=="DATASET"]
+        shared_objects = project.get_settings().settings["exposedObjects"]["objects"]
+        shared_datasets = [object["localName"] for object in shared_objects if object["type"]=="DATASET"]
         logging.info("Found {} SHARED datasets: {}".format(str(len(shared_datasets)),
                                                            str(shared_datasets)))
 
-        # Identify partitioned (partd) datasets:
-        is_partd = lambda x: len(x["partitioning"]["dimensions"]) > 0
-        partd_datasets = [x["name"] for x in all_datasets if is_partd(x)]
-        logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partd_datasets)),
-                                                                str(partd_datasets)))
+        # Identify partitioned datasets:
+        is_partitioned = lambda dataset: len(dataset["partitioning"]["dimensions"]) > 0
+        partitioned_datasets = [dataset["name"] for dataset in all_datasets if is_partitioned(dataset)]
+        logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partitioned_datasets)),
+                                                                str(partitioned_datasets)))
 
-        # List all datasets to keep, potentially including shared & partd ones:
+        # Add dataset types to results list
+        results = []
+        
+        datasets = {"INPUT":flow_inputs,
+            "OUTPUT":flow_outputs,
+            "INTERMEDIATE": intermediate_datasets,
+            "SHARED": shared_datasets,
+            "PARTITIONED": partitioned_datasets
+           }
+        
+        for dataset_type, dataset_type_list in datasets.items():
+            for dataset in dataset_type_list:
+                results.append([dataset, dataset_type])
+
+        # Identify which datasets should be kept
         to_keep = flow_inputs + flow_outputs
         if keep_partitioned:
-            to_keep += partd_datasets
+            to_keep += partitioned_datasets
         if keep_shared:
             to_keep += shared_datasets
         logging.info("Total of {} datasets to KEEP: {}".format(str(len(to_keep)),
                                                                str(to_keep)))
 
-        # Perform cleanup or simulate it (dry run):
-        to_clear = []
-        for ds in all_datasets:
-            if ds["name"] not in to_keep:
-                result_table.add_record([ds["name"], "INTERMEDIATE", "CLEAR", action_status])
-                to_clear.append(ds["name"])
+        # Create df with all results
+        results_df = pd.DataFrame(results, columns=["Dataset", "Type"])
+        results_grouped = results_df.groupby(["Dataset"])['Type'].apply(lambda x: ', '.join(x)).reset_index()
+        results_grouped["Action"] = results_grouped["Dataset"].apply(lambda x: "KEEP" if x in to_keep else "CLEAR")
+        results_grouped["Status"] = action_status
+        results_grouped = results_grouped.sort_values(by=['Action', 'Type'])
+
+        # Perform cleanup
+        to_clear = list(results_grouped["Dataset"][results_grouped['Action']=="CLEAR"])
         logging.info("Total of {} datasets to CLEAR: {}".format(str(len(to_clear)),
                                                                str(to_clear)))
+
         if not is_dry_run:
             for ds in to_clear:
                 dataset = project.get_dataset(ds)
                 logging.info("Clearing {}...".format(ds))
                 dataset.clear()
             logging.info("Clearing {} datasets: done.".format(str(len(to_clear))))
-                
-        # Add Inputs, Outputs, Partitioned, and Shared datasets to result table
-        for obj in flow_inputs:
-            result_table.add_record([obj, "INPUT", "KEEP", action_status])
-        for obj in flow_outputs:
-            result_table.add_record([obj, "OUTPUT", "KEEP", action_status])
-        for obj in partd_datasets:
-            result_table.add_record([obj, "PARTITIONED", "KEEP", action_status])
-        for obj in shared_datasets:
-            result_table.add_record([obj, "SHARED", "KEEP", action_status])
 
+        # Pass results to result table
+        for index, row in results_grouped.iterrows():
+            result_table.add_record(list(row))
+        
         return result_table
