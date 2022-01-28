@@ -76,16 +76,27 @@ class MyRunnable(Runnable):
                                                                str(flow_inputs)))
         logging.info("Found {} FLOW OUTPUT datasets: {}".format(str(len(flow_outputs)),
                                                                 str(flow_outputs)))
+        
+        # Identify standalone, intermediate, and partitioned datasets
+        standalone_datasets = []
+        intermediate_datasets = []
+        partitioned_datasets = []
 
-        #Identify Standaone datasets (not connected to another object)
-        standalone_datasets = [dataset["name"] for dataset in all_datasets if dataset["name"] not in input_datasets + output_datasets]
+        for dataset in all_datasets:
+            if dataset["name"] not in input_datasets + output_datasets:
+                standalone_datasets.append(dataset["name"])
+            if dataset["name"] not in flow_inputs + flow_outputs + standalone_datasets:
+                intermediate_datasets.append(dataset["name"])
+            is_partitioned = lambda dataset: len(dataset["partitioning"]["dimensions"]) > 0
+            if is_partitioned(dataset):
+                partitioned_datasets.append(dataset["name"])
+
         logging.info("Found {} STANDALONE datasets: {}".format(str(len(standalone_datasets)),
                                                                 str(standalone_datasets)))
-        
-        # Identify Intermediate datasets:
-        intermediate_datasets = [dataset["name"] for dataset in all_datasets if dataset["name"] not in flow_inputs + flow_outputs + standalone_datasets]
         logging.info("Found {} INTERMEDIATE datasets: {}".format(str(len(intermediate_datasets)),
-                                                                str(intermediate_datasets)))
+                                                                str(intermediate_datasets)))       
+        logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partitioned_datasets)),
+                                                                str(partitioned_datasets)))
 
         # Identify shared datasets:
         shared_objects = project.get_settings().settings["exposedObjects"]["objects"]
@@ -93,11 +104,6 @@ class MyRunnable(Runnable):
         logging.info("Found {} SHARED datasets: {}".format(str(len(shared_datasets)),
                                                            str(shared_datasets)))
 
-        # Identify partitioned datasets:
-        is_partitioned = lambda dataset: len(dataset["partitioning"]["dimensions"]) > 0
-        partitioned_datasets = [dataset["name"] for dataset in all_datasets if is_partitioned(dataset)]
-        logging.info("Found {} PARTITIONED datasets: {}".format(str(len(partitioned_datasets)),
-                                                                str(partitioned_datasets)))
 
         # Add dataset types to results list
         results = []
