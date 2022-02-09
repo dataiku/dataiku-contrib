@@ -3,7 +3,7 @@
 ## Description
 Save disk space by clearing intermediate datasets in the flow.
 
-## CAUTION
+## CAUTION!
 The following macro clears intermediate datasets, which can result in the irreversible loss of data.
 Always run this macro in dry-run mode first (as enabled by default) and check in the output list to 
 confirm that no dataset is unintendedly cleared.
