@@ -9,8 +9,9 @@ confirm that no dataset is unintendedly cleared.
 Partitioned and shared datasets are particularly sensitive. You can select the available options to keep your partitioned and shared datasets in the flow. 
 them from the list of datasets to be cleared, if desired so.
 
-Be mindful of dependencies as well. Any of the follwing can be affected when clearing a dataset that contains:
-- Charts
-- Insights published in a dashboard
-- Insights shared in a workspace,
-- It's explicitily linked to an scenario step
+### Dependencies
+Any of the following datas associated to a dataset can be affected when clearing it:
+- Charts will be cleared
+- Insights published in a dashboard will be cleared
+- Insights shared in a workspace will be cleared
+-  Scenario with the dataset as input of a scenario step will break 
