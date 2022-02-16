@@ -13,8 +13,14 @@ Partitioned and shared datasets are particularly sensitive. You can select the a
 them from the list of datasets to be cleared, if desired so.
 
 ### Dependencies
-Any of the following datas associated to a dataset can be affected when clearing it:
-- Charts will be cleared
-- Insights published in a dashboard will be cleared
-- Insights shared in a workspace will be cleared
-- Scenario with the dataset as input of a scenario step will break 
+Any of the following assets associated to a dataset can be affected when clearing it:
+**Visualizations**
+These won't be available or appeared broken until the source dataset is rebuilt again:
+- Charts
+- Insights published in a dashboard
+- Insights shared in a workspace
+**Scenarios**
+Scenario with the dataset as input of a scenario step can break. E.g:
+- Usign a custom python step that reads the cleared dataset as input
+- Usign a schema propagation step that starts from a cleared dataset
+- etc.
