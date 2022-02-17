@@ -23,4 +23,3 @@ These won't be available or appeared broken until the source dataset is rebuilt 
 Scenario with the dataset as input of a scenario step can break. E.g:
 - Usign a custom python step that reads the cleared dataset as input
 - Usign a schema propagation step that starts from a cleared dataset
-- etc.
