@@ -14,12 +14,12 @@ them from the list of datasets to be cleared, if desired so.
 
 ### Dependencies
 Any of the following assets associated to a dataset can be affected when clearing it:
-**Visualizations**
+#### Visualizations
 These won't be available or appeared broken until the source dataset is rebuilt again:
 - Charts
 - Insights published in a dashboard
-- Insights shared in a workspace
-**Scenarios**
+- Insights shared to a workspace
+#### Scenarios
 Scenario with the dataset as input of a scenario step can break. E.g:
 - Usign a custom python step that reads the cleared dataset as input
 - Usign a schema propagation step that starts from a cleared dataset
