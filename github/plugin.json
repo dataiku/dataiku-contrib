@@ -1,0 +1,15 @@
+{
+    "id": "github",
+    "version": "1.0.0",
+    "meta": {
+        "label": "Github",
+        "description": "Retrieve data from github.com",
+        "author": "Dataiku (Mickaël HOARAU)",
+        "icon": "icon-github",
+        "licenseInfo" : "Apache Software License version 2",
+        "tags": ["Connector"],
+        "url": "https://github.com/dataiku/dataiku-contrib/tree/master/github",
+        "supportLevel": "NOT_SUPPORTED"
+    },
+    "params": []
+}

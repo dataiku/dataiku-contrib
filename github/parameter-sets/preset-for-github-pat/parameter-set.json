@@ -1,0 +1,20 @@
+{
+    "meta" : {
+        "label": "Parameter set preset-for-github-pat",
+        "description": "",
+        "icon": "icon-puzzle-piece"
+    },
+    "defaultDefinableInline": false,
+    "defaultDefinableAtProjectLevel": false,
+    "pluginParams": [],
+    "params": [
+        {
+            "name": "personal_access_token_credentials",
+            "type": "CREDENTIAL_REQUEST",
+            "label": "Personal Access Token",
+            "credentialRequestSettings": {
+                "type": "SINGLE_FIELD"
+            }
+        }
+    ]
+}
