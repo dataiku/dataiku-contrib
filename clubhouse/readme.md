@@ -1,7 +1,7 @@
-# Dataiku DSS Clubhouse plugin
+# Dataiku DSS Shortcut plugin
 
-[Clubhouse.io](https://clubhouse.io/) is a project management tool for software development.
-This DSS plugin helps you retrieve data from your Clubhouse account for custom analytics and reporting.
+[app.shortcut.com](https://app.shortcut.com/) is a project management tool for software development.
+This DSS plugin helps you retrieve data from your Shortcut account for custom analytics and reporting.
 
 ## License
 Apache Software License version 2

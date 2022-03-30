@@ -1,0 +1,19 @@
+{
+    "meta" : {
+        "label": "Enrich Shortcut records with related Pull Requests",
+        "description": "This processor will add a new column with related PRs",
+        "icon": "icon-github"
+    },
+    "mode": "CELL",
+    "useKernel": true,
+    "params": [
+        {
+            "name": "sc_card_id_column",
+            "label": "Shortcut card Id column",
+            "description": "Select the column containing the Id of the Shortcut card",
+            "type": "COLUMN",
+            "columnRole": "main",
+            "mandatory": true
+        }
+    ]
+}

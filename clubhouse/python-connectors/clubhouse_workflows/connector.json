@@ -1,7 +1,7 @@
 {
     "meta": {
-        "label": "Clubhouse Workflows",
-        "description": "List workflows from Clubhouse.io",
+        "label": "Shortcut Workflows",
+        "description": "List workflows from app.shortcut.com",
         "icon": "icon-flag-alt"
     },
     "readable": true,

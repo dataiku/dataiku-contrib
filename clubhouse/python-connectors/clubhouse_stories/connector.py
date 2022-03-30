@@ -21,13 +21,13 @@ def _byteify(data, ignore_dicts = False):
             for key, value in data.iteritems()
         }
     # if it's anything else, return it in its original form
-    return data                
-    
+    return data
+
 class StoriesConnector(Connector):
 
     def __init__(self, config, plugin_config):
         Connector.__init__(self, config, plugin_config)  # pass the parameters to the base class
-        self.endpoint = "https://api.clubhouse.io/api/beta/"
+        self.endpoint = "https://api.app.shortcut.com/api/v3/"
         self.key = plugin_config["api_token"]
 
     def list_projects(self):
@@ -54,7 +54,7 @@ class StoriesConnector(Connector):
         return None
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
-                            partition_id=None, records_limit = -1):
+                      partition_id=None, records_limit = -1):
         query_date = datetime.datetime.now()
 
         nb = 0

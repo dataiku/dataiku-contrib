@@ -2,20 +2,20 @@
     "id": "clubhouse",
     "version": "1.0.0",
     "meta": {
-        "label": "Clubhouse",
-        "description": "Retrieve data from Clubhouse.io, a project management tool for software development",
+        "label": "Shortcut",
+        "description": "Retrieve data from Shortcut.io, a project management tool for software development",
         "author": "Dataiku (Arnaud PICHERY)",
         "icon": "icon-flag-alt",
         "licenseInfo" : "Apache Software License version 2",
-        "url": "https://www.dataiku.com/dss/plugins/info/clubhouse.html",
+        "url": "https://github.com/dataiku/dataiku-contrib/tree/master/clubhouse",
         "tags": ["Connector"],
         "supportLevel": "NOT_SUPPORTED"
     },
     "params": [
         {
             "name": "api_token",
-            "label": "clubhouse.io API Token",
-            "description": "Create one from your profile settings in clubhouse.io",
+            "label": "app.shortcut.com API Token",
+            "description": "Create one from your profile settings in app.shortcut.com",
             "type": "STRING",
             "mandatory": true
         }

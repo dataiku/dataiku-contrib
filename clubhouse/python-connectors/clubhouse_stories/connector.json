@@ -1,7 +1,7 @@
 {
     "meta" : {
-        "label": "Clubhouse Stories",
-        "description": "List stories from Clubhouse.io",
+        "label": "Shortcut Stories",
+        "description": "List stories from app.shortcut.com",
         "icon": "icon-flag-alt"
     },
     "readable": true,

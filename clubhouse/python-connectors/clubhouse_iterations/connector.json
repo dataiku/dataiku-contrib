@@ -1,7 +1,7 @@
 {
     "meta": {
-        "label": "Shortcut Milestones",
-        "description": "List milestones from app.shortcut.com",
+        "label": "Shortcut Iterations",
+        "description": "List iterations from app.shortcut.com",
         "icon": "icon-flag-alt"
     },
     "readable": true,

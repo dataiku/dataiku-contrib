@@ -1,0 +1,19 @@
+{
+    "meta" : {
+        "label": "Shortcut Stories from search query",
+        "description": "List stories from app.shortcut.com through the search query syntax",
+        "icon": "icon-flag-checkered"
+    },
+    "readable": true,
+    "writable": false,
+    "params": [
+        {
+            "name": "search_query",
+            "label": "Search query",
+            "type":"STRING",
+            "description": "Enter a search query as documented in https://help.shortcut.com/hc/en-us/articles/360000046646",
+            "defaultValue": "!has:project"
+        }
+    ],
+    "partitioningMode": "NOT_PARTITIONABLE"
+}
