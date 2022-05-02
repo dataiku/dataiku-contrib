@@ -2,7 +2,7 @@ from dataiku.connector import Connector
 import datetime
 import json
 import logging
-import unicodedata
+from utils import byteify
 import requests
 
 class EpicsConnector(Connector):
@@ -29,7 +29,7 @@ class EpicsConnector(Connector):
         return None
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None,
-                            partition_id=None, records_limit = -1):
+                      partition_id=None, records_limit = -1):
         query_date = datetime.datetime.now()
 
         rows = self.list_epics()
@@ -41,15 +41,12 @@ class EpicsConnector(Connector):
                 if 0 <= records_limit <= nb:
                     logging.info("Reached records_limit (%i), stopping." % records_limit)
                     return
-                
+
                 encoded_row = {}
                 encoded_row["query_date"] = query_date
                 for key in row:
-                    val = row[key]
-                    if isinstance(val, unicode):
-                        val = unicodedata.normalize('NFKD', val).encode('ascii','ignore')                                             
-                    encoded_row[str(key)] = val
-                    
+                    encoded_row[str(key)] = byteify(row[key])
+
                 yield encoded_row
                 nb += 1
 

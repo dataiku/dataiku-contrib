@@ -6,6 +6,7 @@
     - Stories from a query
 - Rename Clubhouse to Shortcut
 - Add a new processor to enrich a story with the linked Pull Requests
+- Implement python 3 compatibility
 
 ## Version 1.0.0 - Initial release - 2019-04-08
 - Initial release

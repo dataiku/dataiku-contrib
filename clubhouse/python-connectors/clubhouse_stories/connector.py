@@ -2,26 +2,10 @@ from dataiku.connector import Connector
 import datetime
 import json
 import logging
-import unicodedata
+from utils import byteify
 
 import requests
 
-def _byteify(data, ignore_dicts = False):
-    # if this is a unicode string, return its string representation
-    if isinstance(data, unicode):
-        return unicodedata.normalize('NFKD', data).encode('ascii','ignore')
-    # if this is a list of values, return list of byteified values
-    if isinstance(data, list):
-        return [ _byteify(item, ignore_dicts=True) for item in data ]
-    # if this is a dictionary, return dictionary of byteified keys and values
-    # but only if we haven't already byteified it
-    if isinstance(data, dict) and not ignore_dicts:
-        return {
-            _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
-            for key, value in data.iteritems()
-        }
-    # if it's anything else, return it in its original form
-    return data
 
 class StoriesConnector(Connector):
 
@@ -44,7 +28,7 @@ class StoriesConnector(Connector):
         r = requests.get(self.endpoint + query + "?token=" + self.key, headers=headers)
         r.raise_for_status()
         try:
-            return _byteify(json.loads(r.content, object_hook=_byteify), ignore_dicts=True)
+            return byteify(json.loads(r.content, object_hook=byteify), ignore_dicts=True)
         except Exception:
             logging.info("Could not parse json from request content:\n" + r.content)
             raise
