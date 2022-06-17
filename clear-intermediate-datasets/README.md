@@ -3,14 +3,13 @@
 ## Description
 Save disk space by clearing intermediate datasets in the flow.
 
-## CAUTION!
+## CAUTION
 The following macro clears intermediate datasets, which can result in the irreversible loss of data.
 Always run this macro in dry-run mode first (as enabled by default) and check in the output list to 
 confirm that no dataset is unintendedly cleared.
 
 ### Partitioned and shared datasets
-Partitioned and shared datasets are particularly sensitive. You can select the available options to keep your partitioned and shared datasets in the flow. 
-them from the list of datasets to be cleared, if desired so.
+Partitioned and shared datasets are particularly sensitive. Selecting the available options _Keep partitioned datasets_ and _Keep shared datasets_ will ensured that they are not cleared. 
 
 ### Dependencies
 Any of the following assets associated to a dataset can be affected when clearing it:
