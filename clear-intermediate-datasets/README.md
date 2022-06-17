@@ -14,11 +14,11 @@ Partitioned and shared datasets are particularly sensitive. Selecting the availa
 ### Dependencies
 Any of the following assets associated to a dataset can be affected when clearing it:
 #### Visualizations
-These won't be available or appeared broken until the source dataset is rebuilt again:
+The following won't be available or will appear broken until the source dataset is rebuilt again:
 - Charts
 - Insights published in a dashboard
 - Insights shared to a workspace
 #### Scenarios
 Scenario with the dataset as input of a scenario step can break. E.g:
-- Usign a custom python step that reads the cleared dataset as input
-- Usign a schema propagation step that starts from a cleared dataset
+- Using a custom python step that reads the cleared dataset as input
+- Using a schema propagation step that starts from a cleared dataset
