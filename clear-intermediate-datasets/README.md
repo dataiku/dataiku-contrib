@@ -9,7 +9,7 @@ Always run this macro in dry-run mode first (as enabled by default) and check in
 confirm that no dataset is unintendedly cleared.
 
 ### Partitioned and shared datasets
-Partitioned and shared datasets are particularly sensitive. Selecting the available options _Keep partitioned datasets_ and _Keep shared datasets_ will ensured that they are not cleared. 
+Partitioned and shared datasets are particularly sensitive. Selecting the available options _Keep partitioned datasets_ and _Keep shared datasets_ will ensure that they are not cleared. 
 
 ### Dependencies
 Any of the following assets associated to a dataset can be affected when clearing it:
