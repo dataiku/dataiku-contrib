@@ -1,6 +1,6 @@
 {
     "id": "clear-intermediate-datasets",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "meta": {
         "label": "Clear intermediate datasets",
         "description": "Save disk space by clearing intermediate datasets in the flow.",
@@ -11,3 +11,4 @@
         "tags": ["Admin"]
     }
 }
+
