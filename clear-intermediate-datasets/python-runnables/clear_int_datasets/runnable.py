@@ -54,8 +54,6 @@ class MyRunnable(Runnable):
             project = client.get_project(self.config.get("project_key"))
         else:
             project = client.get_project(self.project_key)
-        print self.config.get("project_key")    
-        print self.project_key
         
         manually_selected_datasets = self.config.get("datasets_to_exclude")
         all_datasets = project.list_datasets()
