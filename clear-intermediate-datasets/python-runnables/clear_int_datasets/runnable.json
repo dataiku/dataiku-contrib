@@ -21,7 +21,7 @@
             "type": "MULTISELECT",
             "name": "datasets_to_exclude",
             "label": "Datasets to exclude",
-            "description":"Allows to manually select datasets that shouldn't be cleared regardless of their type",
+            "description":"Select datasets that shouldn't be cleared regardless of their type",
             "getChoicesFromPython": true
         },
         {
