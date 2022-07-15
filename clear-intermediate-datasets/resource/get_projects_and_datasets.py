@@ -8,12 +8,13 @@ def do(payload, config, plugin_config, inputs):
     client = dataiku.api_client()
     
     # Set project dropdown
-    if payload.get('parameterName') == "project_key":
+    parameter_name = payload.get('parameterName')
+    if parameter_name == "project_key":
         projects = client.list_projects()
         return {"choices": append_dropdown_choices(projects, 'projectKey')}
     
     # Set dataset multiselect box
-    elif payload.get('parameterName') == "datasets_to_exclude":
+    elif parameter_name == "datasets_to_exclude":
         if config.get("project_key", None) == None:
             project = client.get_default_project()
         else:
