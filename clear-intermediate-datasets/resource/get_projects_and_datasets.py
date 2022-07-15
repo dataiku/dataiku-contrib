@@ -15,9 +15,10 @@ def do(payload, config, plugin_config, inputs):
     
     # Set dataset multiselect box
     elif parameter_name == "datasets_to_exclude":
-        if config.get("project_key", None) == None:
+        project_key = config.get("project_key", None)
+        if project_key == None:
             project = client.get_default_project()
         else:
-            project = client.get_project(config.get("project_key"))
+            project = client.get_project(project_key)
         datasets = project.list_datasets()
         return {"choices": append_dropdown_choices(datasets, 'name')}
