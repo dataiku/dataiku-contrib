@@ -17,5 +17,6 @@ def append_dropdown_choices(list_to_parse, key_to_use):
     """
     choices = []
     for item in list_to_parse:
-        choices.append({"value": item.get(key_to_use), "label": item.get(key_to_use)})
+        value = item.get(key_to_use)
+        choices.append({"value": value, "label": value})
     return choices
