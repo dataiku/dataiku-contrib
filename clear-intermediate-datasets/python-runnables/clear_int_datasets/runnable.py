@@ -54,7 +54,8 @@ class MyRunnable(Runnable):
             project = client.get_project(self.config.get("project_key"))
         else:
             project = client.get_project(self.project_key)
-
+        
+        manually_selected_datasets = self.config.get("datasets_to_exclude")
         all_datasets = project.list_datasets()
         all_recipes = project.list_recipes()
 
@@ -78,11 +79,14 @@ class MyRunnable(Runnable):
                                                                 str(flow_outputs)))
         
         # Identify standalone, intermediate, and partitioned datasets
+        excluded_datasets = []
         standalone_datasets = []
         intermediate_datasets = []
         partitioned_datasets = []
 
         for dataset in all_datasets:
+            if dataset["name"] in manually_selected_datasets:
+                excluded_datasets.append(dataset["name"])
             if dataset["name"] not in input_datasets + output_datasets:
                 standalone_datasets.append(dataset["name"])
             if dataset["name"] not in flow_inputs + flow_outputs + standalone_datasets:
@@ -91,6 +95,8 @@ class MyRunnable(Runnable):
             if is_partitioned(dataset):
                 partitioned_datasets.append(dataset["name"])
 
+        logging.info("Found {} EXCLUDED datasets: {}".format(str(len(excluded_datasets)),
+                                                                str(excluded_datasets)))
         logging.info("Found {} STANDALONE datasets: {}".format(str(len(standalone_datasets)),
                                                                 str(standalone_datasets)))
         logging.info("Found {} INTERMEDIATE datasets: {}".format(str(len(intermediate_datasets)),
@@ -108,7 +114,9 @@ class MyRunnable(Runnable):
         # Add dataset types to results list
         results = []
         
-        datasets = {"STANDALONE":standalone_datasets,
+        datasets = {
+            "EXCLUDED":excluded_datasets,
+            "STANDALONE":standalone_datasets,
             "INPUT":flow_inputs,
             "OUTPUT":flow_outputs,
             "INTERMEDIATE": intermediate_datasets,
@@ -121,7 +129,7 @@ class MyRunnable(Runnable):
                 results.append([dataset, dataset_type])
 
         # Identify which datasets should be kept
-        to_keep = standalone_datasets + flow_inputs + flow_outputs
+        to_keep = excluded_datasets + standalone_datasets + flow_inputs + flow_outputs
         if keep_partitioned:
             to_keep += partitioned_datasets
         if keep_shared:

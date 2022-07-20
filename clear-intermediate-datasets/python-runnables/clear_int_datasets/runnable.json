@@ -8,13 +8,20 @@
     "permissions" : [],
     "resultType" : "RESULT_TABLE",
     "resultLabel" : "my production",
-    "paramsPythonSetup": "get_projects.py",
+    "paramsPythonSetup": "get_projects_and_datasets.py",
     "params": [
         {
             "type": "SELECT",
             "name": "project_key",
             "label": "Project to delete datasets from",
             "description":"If empty, defaults to current project.",
+            "getChoicesFromPython": true
+        },
+        {
+            "type": "MULTISELECT",
+            "name": "datasets_to_exclude",
+            "label": "Datasets to exclude",
+            "description":"Select datasets that shouldn't be cleared regardless of their type",
             "getChoicesFromPython": true
         },
         {
