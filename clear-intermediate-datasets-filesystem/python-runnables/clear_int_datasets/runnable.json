@@ -1,0 +1,50 @@
+{
+    "meta" : {
+        "label" : "Clear intermediate datasets",
+        "description" : "Drop data from intermediate datasets of a Flow.",
+        "icon" : "icon-trash"
+    },
+    "impersonate" : false,
+    "permissions" : [],
+    "resultType" : "RESULT_TABLE",
+    "resultLabel" : "my production",
+    "paramsPythonSetup": "get_projects_and_datasets.py",
+    "params": [
+        {
+            "type": "SELECT",
+            "name": "project_key",
+            "label": "Project to delete datasets from",
+            "description":"If empty, defaults to current project.",
+            "getChoicesFromPython": true
+        },
+        {
+            "type": "MULTISELECT",
+            "name": "datasets_to_exclude",
+            "label": "Datasets to exclude",
+            "description":"Select datasets that shouldn't be cleared regardless of their type",
+            "getChoicesFromPython": true
+        },
+        {
+            "name": "is_dry_run",
+            "label" : "Dry run",
+            "type": "BOOLEAN",
+            "defaultValue": true,
+            "description":"Only lists the datasets to clear without performing data deletion.",
+            "mandatory" : true
+        },
+        {
+            "name": "keep_partitioned",
+            "label" : "Keep partitioned datasets",
+            "type": "BOOLEAN",
+            "defaultValue": true,
+            "mandatory" : true
+        },
+        {
+            "name": "keep_shared",
+            "label": "Keep shared datasets",
+            "type": "BOOLEAN",
+            "defaultValue": true,
+            "mandatory": true
+        }
+    ]
+}
