@@ -1,10 +1,10 @@
 {
-    "id": "clear-intermediate-datasets",
-    "version": "1.0.1",
+    "id": "clear-intermediate-datasets-filesystem",
+    "version": "0.0.1",
     "meta": {
-        "label": "Clear intermediate datasets",
+        "label": "Clear intermediate datasets of filesystem type",
         "description": "Save disk space by clearing intermediate datasets in the flow.",
-        "author": "Dataiku (Pierre Pfennig, Harizo Rajaona & Gonzalo Betegon)",
+        "author": "Dataiku (Arjun Srivatsa)",
         "icon": "icon-trash",
         "licenseInfo": "Apache Software License",
         "url": "https://www.dataiku.com/dss/plugins/info/clear-intermediate-datasets.html",
