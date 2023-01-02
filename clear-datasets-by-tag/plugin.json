@@ -1,0 +1,29 @@
+{
+    // Plugin identifiers are globally unique and only contain A-Za-z0-9_-
+    "id": "clear-datasets-by-tag",
+
+    // It is highly recommended to use Semantic Versioning
+    "version": "0.0.1",
+
+    // Meta data for display purposes:
+    "meta": {
+        // label: name of the plugin as displayed, should be short
+        "label": "Clear datasets by tag",
+
+        // description: longer string to help end users understand what this plugin does
+        "description": "Save disk space by clearing datasets containing certain tags.",
+
+        "author": "amello",
+
+        // icon: must be one of the FontAwesome 3.2.1 icons, complete list here at https://fontawesome.com/v3.2.1/icons/
+        "icon": "icon-trash",
+
+        // List of tags for filtering the list of plugins
+        "tags": ["Admin"], //for example: ["Machine Learning", "NLP"]
+
+        // URL where the user can learn more about the plugin
+        "url": "",
+
+        "licenseInfo": "Apache Software License"
+    }
+}
