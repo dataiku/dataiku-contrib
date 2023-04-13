@@ -1,9 +1,9 @@
 {
     "id": "anonymizer",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "meta": {
-        "label": "Data anonymizer",
-        "description": "Preparation processor for anonymizing data",
+        "label": "Data anonymizer (deprecated)",
+        "description": "Preparation processor for anonymizing data. ⚠️ This plugin is now \"deprecated\", we recommend using the native processor [pseudonymize text](https://doc.dataiku.com/dss/latest/preparation/processors/column-pseudonymization.html) instead.",
         "author": "Dataiku (Clément Stenac)",
         "licenseInfo": "Apache Software License",
         "icon": "icon-globe",

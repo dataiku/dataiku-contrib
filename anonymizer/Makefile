@@ -1,4 +1,4 @@
-PLUGIN_VERSION=0.0.4
+PLUGIN_VERSION=0.0.5
 PLUGIN_ID=anonymizer
 
 plugin:
