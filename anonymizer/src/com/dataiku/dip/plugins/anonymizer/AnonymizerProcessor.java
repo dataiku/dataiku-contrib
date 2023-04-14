@@ -127,7 +127,10 @@ public class AnonymizerProcessor extends SingleRowProcessor implements Processor
                                                     new String[]{
                                                     "Regular", "E-mail (keep domain)", "Array (each element)"}).withDefaultValue("REGULAR"))
                                             .withBool("strictMode", "No collisions", "Uses more memory")
-                                            .withBool("slugOutput", "Slug-like output", "(like_that)");
+                                            .withBool("slugOutput", "Slug-like output", "(like_that)")
+                                            .deprecate()
+                    .withReplacementDocLink("preparation/processors/column-pseudonymization")
+                    .withReplacementName("Pseudonymize text");
 
         }
         @Override
