@@ -16,6 +16,7 @@
 			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-core.jar" />
 			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dss-core.jar" />
 			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-dip.jar" />
+			<fileset file="${env.DKUINSTALLDIR}/dist/dataiku-prepare-core.jar" />
 		</path>
 		<mkdir dir="${build.dir}" />
 		<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.path.id" encoding="utf-8" includeantruntime="false">
