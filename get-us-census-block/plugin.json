@@ -1,9 +1,9 @@
 {
 	"id" : "get-us-census-block",
-	"version" : "0.4.0",
+	"version" : "0.4.1",
 	"meta" : {
-		"label" : "Get US census block",
-		"description" : "Get an US Census block group from the US Census API",
+		"label" : "Get US census block (deprecated)",
+		"description" : "Get an US Census block group from the US Census API. ⚠️ This plugin is now \\\"deprecated\\\", we recommend using the [US Census plugin](https://www.dataiku.com/product/plugins/census-us/) instead.",
 		"author" : "Dataiku (Nicolas GAKRELIDZ)",
 		"icon" : "icon-location-arrow",
 		"licenseInfo" : "Apache Software License",
