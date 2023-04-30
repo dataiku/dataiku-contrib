@@ -1,0 +1,29 @@
+// This file is the descriptor for the DSS Plugin geocoding_BAN
+{
+    // The identifier of the plugin.
+    // This must be globally unique, and only contain A-Za-z0-9_-
+    "id" : "geocoding-ban",
+
+    // Version. It is highly recommended to use Semantic Versioning
+    "version" : "0.0.2",
+
+    // Meta data for display purposes
+    "meta" : {
+        // Name of this plugin that appears in the interface.
+        "label": "French geocoding (BAN)",
+
+        "description": "Uses the French BAN database to geocode addresses",
+        "author": "Ministère de l’Intérieur — EIG 2017",
+
+        // The icon of a plugin must be one of the FontAwesome 3.1 icons
+        "icon": "icon-map-marker",
+
+        "licenseInfo" : "Apache Software License",
+
+        // URL where the user can learn more about the plugin
+        "url": "https://adresse.data.gouv.fr",
+
+        // List of tags for filtering the list of plugins
+        "tags": ["geocoding", "ban"]
+    }
+}
