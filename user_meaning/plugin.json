@@ -1,0 +1,26 @@
+// This file is the descriptor for the DSS Plugin geocoding_BAN
+{
+    // The identifier of the plugin.
+    // This must be globally unique, and only contain A-Za-z0-9_-
+    "id" : "user_meaning",
+
+    // Version. It is highly recommended to use Semantic Versioning
+    "version" : "0.0.1",
+
+    // Meta data for display purposes
+    "meta" : {
+        // Name of this plugin that appears in the interface.
+        "label": "Map constants to user meaning",
+
+        "description": "Transform multiple column values constants to more meaningful values",
+        "author": "Ministère de l’Intérieur — EIG 2017",
+
+        // The icon of a plugin must be one of the FontAwesome 3.1 icons
+        "icon": "icon-list-ul",
+
+        "licenseInfo" : "Apache Software License",
+
+        // List of tags for filtering the list of plugins
+        "tags": []
+    }
+}
