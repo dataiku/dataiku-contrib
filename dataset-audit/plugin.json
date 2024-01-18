@@ -1,6 +1,6 @@
 {
 	"id": "dataset-audit",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"meta": {
 		"label": "Audits a dataset",
 		"description": "Audit data in a dataset (SQL or HDFS). The report contains basic info about each column and basic descriptive statistics",
