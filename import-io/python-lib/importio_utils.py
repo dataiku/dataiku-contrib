@@ -1,6 +1,13 @@
 # coding: UTF8
-import urlparse, requests, sys, dataiku, time
+import urlparse
+import requests
+import sys
+import dataiku
+import time
 from dataiku.customrecipe import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 # See http://api.docs.import.io/#DataTypes
 importIO_subfields = {
@@ -24,9 +31,7 @@ def convert_type(importIO_type):
 def convert_schema(import_io_schema):
     result = []
     for col in import_io_schema:
-        result.append({
-            'name':col['name'],
-            'type':convert_type(col['type'])})
+        result.append({'name':col['name'],'type':convert_type(col['type'])})
         for subfield in importIO_subfields[col['type']]:
             result.append({'name':col['name']+'/'+subfield, 'type':'string'})
     return result
@@ -54,21 +59,24 @@ def run(build_query):
             response = requests.get(request_url)
             json = response.json()
         except Exception as e:
-            print 'request to import.io failed'
-            print e
-            print 'response was:\n',response
-            raise
+            logger.error('request to import.io failed')
+            logger.error(e)
+            logger.error('response was: {}'.format(response))
+            raise ValueError
         if 'error' in json:
-            print "response: ", json
+            logger.error("response: {}".format(json))
             raise Exception(json['error'])
         for result_line in json['results']:
             if not output_schema:
-                print "Setting schema"
+                logger.error("Setting schema")
                 input_schema_names = frozenset([e['name'] for e in input.read_schema()])
                 output_schema = input.read_schema()
+                print(')))))))))')
+                print(json)
+                print(json.keys())
                 for col in convert_schema(json['outputProperties']):
                     if col['name'] in input_schema_names:
-                        print "Warning: input col "+col['name']+" will be overwritten by output col with same name."
+                        logger.error("Warning: input col "+col['name']+" will be overwritten by output col with same name.")
                         input_cols_to_drop.append(col['name'])
                     else:
                         output_schema.append(col)
