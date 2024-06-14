@@ -1,0 +1,35 @@
+{
+    // Meta data for display purposes
+    "meta" : {
+        "label" : "User meaning",
+        "author" : "Ministère de l’Intérieur — EIG 2017",
+        "tags" : []
+    },
+
+    "kind" : "PYTHON",
+
+    "inputRoles" : [{
+        "name": "input",
+        "label": "Input datasset",
+        "arity": "UNARY",
+        "required": true,
+        "acceptsDataset": true
+    }],
+    "outputRoles" : [{
+        "name": "output",
+        "label": "Output dataset",
+        "arity": "UNARY",
+        "required": true,
+        "acceptsDataset": true
+    }],
+
+    "params": [
+        {
+            "name": "meanings",
+            "label" : "Meaning to map",
+            "type": "TEXTAREA",
+            "description": "A json document: each entry is the name of a column. For entry is a dictionnary mapping from a constant to an user meaning",
+            "mandatory" : true
+        }
+    ]
+}
