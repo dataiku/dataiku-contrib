@@ -6,31 +6,31 @@ BigQuery DataFrames provides a Pythonic DataFrame and machine learning (ML) API 
 
 1. Install the Plugin in Dataiku by either cloing from Git or by uploading the plugin zip
 2. Add Below packages to your Dataiku Python code env
-    ''' bash
+    ``` bash
     google
     bigframes
-    '''
+    ```
 
 2. Select a BQ Dataset and open a Python recipe
 4. Add below code to create a bigframe object -
-    ''' python
+    ``` python
     #Load Plugin Library
     dataiku.use_plugin_libs('google-bigframes')
     #Import Dataiku Bigframe wrapper
     from dkubigframes import DkuBigframes
     #Create a bigframe object
     dku_bigframe = DkuBigframes()   
-    '''
+    ```
 5. Create a Bigquery Dataframe object of a BQ Table (sample code) -
-    ''' python
+    ``` python
     input_dataset = dataiku.Dataset("<input_dataset_name>")
     bq_df = dku_bigframe.get_dataframe(input_dataset)
-    '''
+    ```
 6. To write a Bigquery Dataframe to a BQ Table (sample code) - 
-    ''' python
+    ``` python
     output_dataset = dataiku.Dataset("<output_dataset_name>")
     dku_bigframe.write_with_schema(output_dataset,df)
-    '''
+    ```
 
 ## Known Limitations-
 
