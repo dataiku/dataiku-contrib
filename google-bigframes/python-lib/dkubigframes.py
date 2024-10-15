@@ -10,7 +10,7 @@ import base64
 from urllib.parse import urlparse, parse_qsl
 
 try:
-    from google.oauth2 import service_account
+    from google.oauth2 import service_account, credentials
 except ImportError as e:
     raise Exception("Unable to import google libraries. Make sure you are using a code-env where google is installed. Cause: " + str(e))
 
@@ -227,8 +227,8 @@ class DkuBigframes(SparkLike):
 
     def _create_session(self, connection_name, connection_info, project_key=None):
 
+        credentials = self._get_credentials(connection_name, connection_info)
         connection_params = connection_info.get_resolved_params()
-        credentials = self._get_credentials(connection_params)
         
         bq_client_provider = ClientsProvider(project=connection_params["projectId"],credentials=credentials)
         
@@ -246,8 +246,10 @@ class DkuBigframes(SparkLike):
         session.dss_connection_name = connection_name  # Add a dynamic attribute to the session to recognize its DSS connection later on
         return session
         
-    def _get_credentials(self, connection_params):
+    def _get_credentials(self, connection_name, connection_info):
         """Check if the dataframe is of the correct type"""
+        
+        connection_params = connection_info.get_resolved_params()
         
         if connection_params['authType'] == "KEYPAIR":
             keyPath = connection_params['keyPath']
@@ -256,13 +258,19 @@ class DkuBigframes(SparkLike):
                 with open(keyPath, 'r') as file:
                     key = json.load(file)                            
             else:
-                key = json.loads(keyPath)      
+                key = json.loads(keyPath)
+            bq_credentials = service_account.Credentials.from_service_account_info(key)
+            
+        elif connection_params['authType'] == "OAUTH":
+            if 'accessToken' not in connection_info['resolvedOAuth2Credential']:
+                raise ValueError("No accessToken found in %s connection. Please refer to DSS OAuth2 credentials documentation.".format(connection_name))
+            accessToken = connection_info['resolvedOAuth2Credential']['accessToken']
+            bq_credentials = credentials.Credentials(accessToken)
+    
         else:
             raise ValueError("Unsupported authentication type '%s'.".format(connection_params['authType']))
         
-        credentials = service_account.Credentials.from_service_account_info(key)
-        
-        return credentials
+        return bq_credentials
 
     def _check_private_key_file_ext(self, file_path):
         """Check if the file is a JSON file"""
