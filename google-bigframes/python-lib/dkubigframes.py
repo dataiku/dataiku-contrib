@@ -230,7 +230,7 @@ class DkuBigframes(SparkLike):
         credentials = self._get_credentials(connection_name, connection_info)
         connection_params = connection_info.get_resolved_params()
         
-        bq_client_provider = ClientsProvider(project=connection_params["projectId"],credentials=credentials)
+        bq_client_provider = ClientsProvider(project=connection_info.get_params()["projectId"],credentials=credentials)
         
         logging.info("Establishing BigQuery session")
         session = Session(clients_provider=bq_client_provider)
@@ -252,13 +252,13 @@ class DkuBigframes(SparkLike):
         connection_params = connection_info.get_resolved_params()
         
         if connection_params['authType'] == "KEYPAIR":
-            keyPath = connection_params['keyPath']
-            if os.path.isfile(keyPath):
-                self._check_private_key_file_ext(keyPath)
-                with open(keyPath, 'r') as file:
-                    key = json.load(file)                            
+            if 'appSecretContent' in connection_params:
+                keyRaw = connection_params['appSecretContent']
+            elif 'keyPath' in connection_params:
+                keyRaw = connection_params['keyPath']
             else:
-                key = json.loads(keyPath)
+                raise ValueError("No keypair found in %s connection. Please refer to DSS Service Account Auth documentation.".format(connection_name))
+            key = json.loads(keyRaw)
             bq_credentials = service_account.Credentials.from_service_account_info(key)
             
         elif connection_params['authType'] == "OAUTH":
