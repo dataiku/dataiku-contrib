@@ -48,14 +48,14 @@ def run_geocoding_recipe(is_detailed):
     }
 
     for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_BATCH_SIZE_UNIT )):
-        print 'Processing batch #%s' % (i)
+        print('Processing batch #%s' % (i))
         if P_SAMPLE > 0:
             df = df.head(P_SAMPLE)
 
         #'https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm#ESRI_SECTION1_42D7D3D0231241E9B656C01438209440'
 
         def return_geocoder_results(params_dict):
-            print "Requesting data as %s" % params_dict
+            print("Requesting data as %s" % params_dict)
             return requests.post('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses', data = params_dict)
 
         def get_params_dict(attributes_dict_list, **kwargs):
@@ -98,14 +98,14 @@ def run_geocoding_recipe(is_detailed):
                 output_df["value"] = pd.concat((output_df["value"], df_value_tmp), axis=0)
 
         if P_COLUMN_COUNTRY is not None:
-            print "Using per-country mode"
+            print("Using per-country mode")
             # Case 1: country is in the data
             # We'll make a query for each country + a generic query for lines without country data
 
             # Build a dataframe of the rows where country is filled
             df_nn = df[df[P_COLUMN_COUNTRY].notnull()]
             nb_records_df_nn = df_nn.shape[0]
-            print 'Processing data to geocode: %s adresses in this batch with a country value...' % (nb_records_df_nn)
+            print('Processing data to geocode: %s adresses in this batch with a country value...' % (nb_records_df_nn))
 
             df_nn = df_nn.sort_values([P_COLUMN_COUNTRY],ascending=[1])
 
@@ -134,7 +134,7 @@ def run_geocoding_recipe(is_detailed):
             # Make a final query with the lines without country specified
             df_null = df[-df[P_COLUMN_COUNTRY].notnull()]
             nb_records_df_null = df_null.shape[0]
-            print 'Processing data to geocode: %s adresses in this batch without a country value...' % (nb_records_df_null)
+            print('Processing data to geocode: %s adresses in this batch without a country value...' % (nb_records_df_null))
 
             if nb_records_df_null > 0:
                 df_null = df_null.sort_values([P_COLUMN_COUNTRY],ascending=[1])
@@ -155,7 +155,7 @@ def run_geocoding_recipe(is_detailed):
                          "country-col-no-country")
 
         else:
-            print "Using auto-country mode"
+            print("Using auto-country mode")
             # Case 2: the country must be guessed
 
             attributes_dict_list = []

@@ -42,17 +42,17 @@ input_catalog_names =  get_input_names_for_role('datacollections')
 df_datacollections = None
 if len(input_catalog_names)> 0:
     df_datacollections = dataiku.Dataset(input_catalog_names[0]).get_dataframe()
-    print "Input catalog enabled total_coll=%s specific=%s search=%s" % (df_datacollections.shape[0], P_SPECIFIC_DATACOLLECTION_ID, P_DATACOLLECTIONS_SEARCH)
+    print("Input catalog enabled total_coll=%s specific=%s search=%s" % (df_datacollections.shape[0], P_SPECIFIC_DATACOLLECTION_ID, P_DATACOLLECTIONS_SEARCH))
 
     if P_SPECIFIC_DATACOLLECTION_ID is not None:
         df_datacollections1 = df_datacollections[df_datacollections['collection_id']==P_SPECIFIC_DATACOLLECTION_ID]
         nb_records_df_datacollections1 = df_datacollections1.shape[0]
-        print 'info :  Before country filtering nb records in data collections dataset (specific collection) : %s' % (nb_records_df_datacollections1)
+        print("info :  Before country filtering nb records in data collections dataset (specific collection) : %s" % (nb_records_df_datacollections1))
 
     if P_DATACOLLECTIONS_SEARCH is not None:
         df_datacollections2 = df_datacollections[df_datacollections['collection_long_description'].str.contains(P_DATACOLLECTIONS_SEARCH, case=C_DATACOLLECTIONS_SEARCH_ISCASE, regex=C_DATACOLLECTIONS_SEARCH_ISREGEX)]       
         nb_records_df_datacollections2 = df_datacollections2.shape[0]
-        print 'info :  Before country filtering nb records in data collections dataset (search collection) : %s' % (nb_records_df_datacollections2)
+        print("info :  Before country filtering nb records in data collections dataset (search collection) : %s" % (nb_records_df_datacollections2))
 
     if P_SPECIFIC_DATACOLLECTION_ID is not None and  P_DATACOLLECTIONS_SEARCH is not None:
         df_datacollections = pd.concat((df_datacollections1, df_datacollections2), axis=0)
@@ -96,11 +96,11 @@ studyareas_options_dict = {
 }
 
 for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_BATCH_SIZE_UNIT )):
-    print 'Processing this batch id = %s df_shape=%s' % (i, df.shape[0]) 
+    print('Processing this batch id = %s df_shape=%s' % (i, df.shape[0])) 
 
     df = df[(df[P_COLUMN_LAT].notnull() | df[P_COLUMN_LON].notnull())]
     df = df[-((df[P_COLUMN_LON]==0) & (df[P_COLUMN_LAT]==0))]
-    print "After removal of null lat/lon: %s rows remain for this batch" % (df.shape[0])
+    print("After removal of null lat/lon: %s rows remain for this batch" % (df.shape[0]))
 
     if P_SAMPLE >0:
       df = df.head(P_SAMPLE)
@@ -110,7 +110,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
     # Make a separate query for each country in the chunk
     # defining the country is mandatory to match the right datacollections. Each country has a specific set of datacollections and fields
     for c in {k: list(v) for k,v in df.sort_values([P_COLUMN_COUNTRY],ascending=[1]).groupby(P_COLUMN_COUNTRY)[P_COLUMN_OBJECT_ID]}:
-        print 'Processing this country: %s' % (c)
+        print('Processing this country: %s' % (c))
         try:
             isocode2 = dict_esri_coverage_structure[c]['attributes'][u'isocode2']
             is_country_ok = True
@@ -128,7 +128,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
             if df_datacollections is not None:
                 remaining_collections = np.unique(df_datacollections[df_datacollections['country']==isocode2]['collection_id']).tolist()
                 datacollection_list.extend(remaining_collections)
-                print 'info: number of datacollections for enrichment: %s' % (len(datacollection_list))
+                print('info: number of datacollections for enrichment: %s' % (len(datacollection_list)))
 
             # If we have 0 collection or required by user, add the per-country or global key facts
             if len(datacollection_list) == 0 or P_KEY_COLLECTIONS is True:
@@ -145,7 +145,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
             df_collections_tmp = df_collections_tmp.drop_duplicates()
             datacollection_list = str(df_collections_tmp['datacol'].tolist())
 
-            print "Requesting data collections: %s" % (datacollection_list)
+            print("Requesting data collections: %s" % (datacollection_list))
 
             # Build the dict of records to submit to the API
             studyareas_list = []
@@ -195,7 +195,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
                         results_values = api_result['results'][0][u'value']
                         n_result = len(results_values[u'FeatureSet'][0][u'features'])
 
-                        print "Have %s results in the batch" % (n_result)
+                        print("Have %s results in the batch" % (n_result))
 
                         for ii in range(0,n_result):
                             df_values = enrichment.append_item_features(df_values, results_values, ii, P_OPTION_DATA_AS_TRANSACTIONS)
@@ -222,7 +222,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
                         
                 except:
                     message = api_result['messages'][0]['description']
-                    print message
+                    print(message)
                     df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date,
                             "Esri Datacollection changed",
                             datacollections = datacollection_list,
@@ -230,7 +230,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
                     
         
             else:
-                print "ESRI API failure"
+                print("ESRI API failure")
                 df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date,
                             "ESRI API failure",
                             datacollections = datacollection_list,

@@ -83,7 +83,7 @@ df_main = pd.DataFrame()
 
 # Main work loop
 for c in country_list:
-    print 'Processing this country: %s' % (c)
+    print('Processing this country: %s' % (c))
     api_result = get_datacollections(c,app_token)
 
     if not "DataCollections" in api_result:

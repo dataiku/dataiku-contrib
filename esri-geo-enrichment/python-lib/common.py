@@ -41,7 +41,7 @@ def make_api_log_message(request_resp, batch_id, input_dict, query_at, dku_messa
 
 def log_api_message(df_api_log, request_resp, batch_id, input_dict, query_at, dku_message, **kwargs):
     api_failure = make_api_log_message(request_resp, batch_id, input_dict, query_at, dku_message, **kwargs)
-    print "API message: %s" % api_failure
+    print("API message: %s" % api_failure)
     df_api_log_tmp = pd.DataFrame([api_failure])
     return df_api_log.append(df_api_log_tmp)
 
@@ -56,6 +56,6 @@ def make_log_message(batch_id, dku_message, **kwargs):
 
 def log_message(df_api_log, batch_id, dku_message, **kwargs):
     api_failure = make_log_message(batch_id, dku_message, **kwargs)
-    print "Generic message: %s" % api_failure
+    print("Generic message: %s" % api_failure)
     df_api_log_tmp = pd.DataFrame([api_failure])
     return df_api_log.append(df_api_log_tmp)

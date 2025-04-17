@@ -48,14 +48,14 @@ def write_outputs(
         backup_path = dataiku.get_custom_variables()["dip.home"] + '/tmp/'
         filename = 'dataiku_plugin_esri_' + backup_basename + '_data_backup_' + date + '.csv' 
         f = backup_path + filename
-        print 'Exporting backup of your data with (key,value) format: %s' % (P_OPTION_DATA_AS_TRANSACTIONS) 
+        print('Exporting backup of your data with (key,value) format: %s' % (P_OPTION_DATA_AS_TRANSACTIONS))
         df_values.to_csv(f,sep='|',index='none')
-        print 'Backup stored into: %s ' % (f)
+        print('Backup stored into: %s ' % (f))
 
     result_dataset.write_with_schema(df_values)
 
     if metadata_dataset is not None and df_metadata.shape[0] > 0:
-        print "Writing metdata: %s" % df_metadata
+        print("Writing metadata: %s" % df_metadata)
         df_metadata = df_metadata.reset_index()
         df_metadata = df_metadata.drop('index',axis=1)
         df_metadata = df_metadata.drop_duplicates(keep='last') ###Old : take_last=True)

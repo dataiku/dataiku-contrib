@@ -36,17 +36,17 @@ class MyConnector(Connector):
 
         #Example:
         return {"columns" : [ 
-                                 {"name": "comment", "type" : "string"}
-                                 , {"name" :"country", "type" : "string"}
-                                 , {"name" :"esri_content_as_of", "type" : "string"}
-                                 , {"name" :"isocode3", "type" : "string"}
-                                 , {"name" :"isocode2", "type" : "string"}
-                                 , {"name" :"generic_datacollections", "type" : "string"}
-                                 #, {"name" :"local_datacollections", "type" : "string"}
-                                 #, {"name" :"landscape_datacollections", "type" : "string"}
+                                {"name": "comment", "type" : "string"}
+                                , {"name" :"country", "type" : "string"}
+                                , {"name" :"esri_content_as_of", "type" : "string"}
+                                , {"name" :"isocode3", "type" : "string"}
+                                , {"name" :"isocode2", "type" : "string"}
+                                , {"name" :"generic_datacollections", "type" : "string"}
+                                #, {"name" :"local_datacollections", "type" : "string"}
+                                #, {"name" :"landscape_datacollections", "type" : "string"}
 
-                                 
-                                 ]}
+                                
+                                ]}
 
         #comment
         #country
@@ -69,11 +69,11 @@ class MyConnector(Connector):
         df['dataset_created_by_user_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         for rec in df.to_dict('records'):
-    		yield rec
-       
+            yield rec
+
 
     #def get_writer(self, dataset_schema=None, dataset_partitioning=None,
-                         #partition_id=None):
+                        #partition_id=None):
         #"""
         #Returns a writer object to write in the dataset (or in a partition).
 

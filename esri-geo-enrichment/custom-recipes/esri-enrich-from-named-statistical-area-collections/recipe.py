@@ -62,11 +62,11 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
 
     if P_SAMPLE>0:
         df = df.head(P_SAMPLE)
-    print 'Processing batch id = %s (nb_rows=%s)' % (i , df.shape[0])
+    print('Processing batch id = %s (nb_rows=%s)' % (i , df.shape[0]))
 
     df = df[df[P_AREA_NAME_IN_USER_DATA].notnull()]
     nullnb = df[-df[P_AREA_NAME_IN_USER_DATA].notnull()].shape[0]
-    print '%s Null rows removed from this batch regarding column = %s' % (nullnb,P_AREA_NAME_IN_USER_DATA)
+    print('%s Null rows removed from this batch regarding column = %s' % (nullnb,P_AREA_NAME_IN_USER_DATA))
 
     date = datetime.now().isoformat()
 
@@ -75,7 +75,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
     
     # Make a separate query for each country in the chunk
     for c in {k: list(v) for k,v in df.groupby(P_COLUMN_COUNTRY)[P_COLUMN_OBJECT_ID]}:
-        print 'Processing this country: %s' % (c)
+        print('Processing this country: %s' % (c))
         try:
             isocode2 = dict_esri_coverage_structure[c]['attributes'][u'isocode2']
             is_country_ok = True
@@ -140,7 +140,7 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
             df_collections_tmp = df_collections_tmp.drop_duplicates()
             datacollection_list = str(df_collections_tmp['datacol'].tolist())
 
-            print "Querying these data collections : %s" % (datacollection_list)
+            print("Querying these data collections : %s" % (datacollection_list))
 
             custom_params = {
                  'StudyAreas': studyareas_list  
@@ -200,15 +200,15 @@ for i,df in enumerate(dataiku.Dataset(input_name).iter_dataframes(chunksize= P_B
                     try:
                         error_desc = api_result['messages'][0]['description']
                         df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, error_desc)
-                        print 'esriJobMessageTypeWarning'
+                        print('esriJobMessageTypeWarning')
 
                     except:
                         df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, 'Unknown Error')
-                        print 'Unknown Error'
+                        print('Unknown Error')
 
 
             else:
-                print "ESRI API failure"
+                print("ESRI API failure")
                 df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "ESRI API failure")
         else:
             df_api_log = common.log_api_message(df_api_log, r, i, custom_params, date, "Country not supported by the API: %s") % (c)

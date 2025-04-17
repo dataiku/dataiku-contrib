@@ -10,7 +10,7 @@ def recipe_config_get_str_or_none(param_name):
     return v
 
 def get_token_from_login_password(P_USERNAME,P_PASSWORD,P_TOKEN_EXPIRATION):
-    print "Authorizing ..."
+    print("Authorizing ...")
     URL = 'https://www.arcgis.com/sharing/rest/generateToken'
     resp = requests.post(URL, data= {
         'username':P_USERNAME,
@@ -32,7 +32,7 @@ def get_token_from_login_password(P_USERNAME,P_PASSWORD,P_TOKEN_EXPIRATION):
     expires = resp_json["expires"]
     tokenExpiresReadable = time.strftime('%Y-%m-%d %I:%M:%S %p (%Z)', time.localtime(expires/1000))
 
-    print "Authorized, Token expires on %s" % tokenExpiresReadable
+    print("Authorized, Token expires on %s" % tokenExpiresReadable)
     return token,tokenExpiresReadable
 
 def get_coverage_dict(P_COUNTRY_MODE):
