@@ -34,11 +34,12 @@ for row in input_dataset.iter_rows(log_every=10):
             continue
         movies = pd.DataFrame(response)
         # choose best match
-        id_tmdb = movies.sort_index(by="popularity", ascending=0).ix[0,"id"]
+        #id_tmdb = movies.sort_index(by="popularity", ascending=0).ix[0,"id"]
+        id_tmdb = movies.sort_values(by=['popularity'], ascending=False).iloc[0]["id"]
         if release_date_col and row[release_date_col]: # choose rather based on date diff
             movies['date_diff'] = abs(pd.to_datetime(movies['release_date']) - pd.to_datetime(row[release_date_col]))
             if movies["date_diff"].min().days <= 365 *2:
-                id_tmdb = movies.sort_index(by="date_diff").ix[0,"id"]
+                id_tmdb = movies.sort_values(by=["date_diff"], ascending=True).iloc[0]["id"]
         try:
             movie = tmdb.Movies(id_tmdb).info()
         except requests.exceptions.HTTPError as e:
