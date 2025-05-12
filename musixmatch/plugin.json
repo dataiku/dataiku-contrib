@@ -1,6 +1,6 @@
 {
     "id": "musixmatch",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "meta": {
         "label": "Musixmatch",
         "description": "Given a list of Musixmatch Artists IDs, retrieves every single track for each artist, with additional details for every track",
