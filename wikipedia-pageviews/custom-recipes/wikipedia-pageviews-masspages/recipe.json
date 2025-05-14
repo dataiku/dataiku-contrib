@@ -29,7 +29,7 @@
             "type": "STRING",
             "label": "Begin date",
             "description" : "In the form YYYYMMDD",
-            "defaultValue" : "20150801",
+            "defaultValue" : "20240801",
             "mandatory" : true
         },
         {
@@ -37,7 +37,7 @@
             "type": "STRING",
             "label": "End date",
             "description" : "In the form YYYYMMDD",
-            "defaultValue" : "20160104",
+            "defaultValue" : "20250104",
             "mandatory" : true
         }
     ]

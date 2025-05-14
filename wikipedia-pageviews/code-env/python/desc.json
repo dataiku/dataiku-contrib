@@ -1,6 +1,7 @@
 {
-  "acceptedPythonInterpreters": ["PYTHON27", "PYTHON35", "PYTHON36", "PYTHON37"],
+  "acceptedPythonInterpreters": ["PYTHON36", "PYTHON37", "PYTHON39", "PYTHON310", "PYTHON311", "PYTHON312"],
   "forceConda": false,
   "installCorePackages": true,
-  "installJupyterSupport": false
+  "installJupyterSupport": false,
+  "corePackagesSet": "AUTO"
 }
