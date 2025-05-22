@@ -2,6 +2,7 @@ from dataiku.connector import Connector
 import sys
 from bs4 import UnicodeDammit
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
