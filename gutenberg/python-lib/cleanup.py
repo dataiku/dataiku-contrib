@@ -18,7 +18,6 @@ def extract_headers(paragraphs):
 
             for metadata_category, metadata_markers in METADATA_MARKERS.items():
                 if metadata_category not in metadata:
-                    reset = True
                     for marker in metadata_markers:
                         if paragraph.startswith(marker):
                             metadata[metadata_category] = paragraph.removeprefix(marker)
