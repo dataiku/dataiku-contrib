@@ -2,6 +2,8 @@ from dataiku.connector import Connector
 import sys
 from bs4 import UnicodeDammit
 import logging
+import re
+from cleanup import extract_headers
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +27,7 @@ class GutenbergConnector(Connector):
         # Fetch configuration
         self.mirror = self.config['mirror']
         self.book_id= self.config['book_id']
+        self.extract_metadata= self.config['extract_metadata']
 
     def get_read_schema(self):
         """
@@ -61,17 +64,14 @@ class GutenbergConnector(Connector):
         raw = response.read()   #.decode('utf8')
         converted = UnicodeDammit(raw)
         raw = converted.unicode_markup
-        start_book = raw.find("START OF")
-        end_book = raw.rfind('END OF')
-        preamb = raw[:start_book]
 
-        author = [ i.split(':')[1].strip() for i in preamb.split("\r\n\r\n") if i.find('Author') != -1][0]
-        title = [ i.split(':')[1].strip() for i in preamb.split("\r\n\r\n") if i.find('Title') != -1][0]
-        date = [ i.split(':')[1].strip() for i in preamb.split("\r\n\r\n") if i.find('Release Date') != -1][0]
-        book_paraph =  raw[start_book:end_book].split("\r\n\r\n")
+        paragraphs = [p for p in re.split(r'[\n\r]', raw) if len(p) > 0];
+        metadata = {}
+        if self.extract_metadata:
+            paragraphs, metadata = extract_headers(paragraphs)
 
         logger.info("Book length %s" % len(raw))
-        logger.info("N paragraphs:", len(book_paraph))
+        logger.info("N paragraphs:", len(paragraphs))
 
-        for id_p, p in enumerate(book_paraph):
-            yield {'id':id_p, 'author': author, 'title': title, 'text': p}
+        for id_p, p in enumerate(paragraphs):
+            yield {'id':id_p, 'text': p} | metadata
