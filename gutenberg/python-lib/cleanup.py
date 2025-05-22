@@ -22,7 +22,6 @@ def extract_headers(paragraphs):
                     for marker in metadata_markers:
                         if paragraph.startswith(marker):
                             metadata[metadata_category] = paragraph.removeprefix(marker)
-                            break
             # If it's the end of the header, delete the output produced so far.
             # May be done several times, if multiple lines occur indicating the
             # end of the header
