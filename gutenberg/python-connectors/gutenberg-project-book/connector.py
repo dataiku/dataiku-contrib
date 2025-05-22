@@ -27,6 +27,7 @@ class GutenbergConnector(Connector):
         # Fetch configuration
         self.mirror = self.config['mirror']
         self.book_id= self.config['book_id']
+        self.extract_metadata= self.config['extract_metadata']
 
     def get_read_schema(self):
         """
@@ -65,7 +66,9 @@ class GutenbergConnector(Connector):
         raw = converted.unicode_markup
 
         paragraphs = [p for p in re.split(r'[\n\r]', raw) if len(p) > 0];
-        paragraphs, metadata = extract_headers(paragraphs)
+        metadata = {}
+        if self.extract_metadata:
+            paragraphs, metadata = extract_headers(paragraphs)
 
         logger.info("Book length %s" % len(raw))
         logger.info("N paragraphs:", len(paragraphs))
