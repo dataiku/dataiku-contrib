@@ -3,6 +3,7 @@ import sys
 from bs4 import UnicodeDammit
 import logging
 import re
+from cleanup import extract_headers
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +65,10 @@ class GutenbergConnector(Connector):
         raw = converted.unicode_markup
 
         paragraphs = [p for p in re.split(r'[\n\r]', raw) if len(p) > 0];
+        paragraphs, metadata = extract_headers(paragraphs)
 
         logger.info("Book length %s" % len(raw))
         logger.info("N paragraphs:", len(paragraphs))
 
         for id_p, p in enumerate(paragraphs):
-            yield {'id':id_p, 'text': p}
+            yield {'id':id_p, 'text': p} | metadata
