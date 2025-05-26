@@ -19,6 +19,13 @@
             "label": "Book identifier",
             "type": "STRING",
             "defaultValue": "11"
+        },
+        {
+            "name": "extract_metadata",
+            "label": "Extract metadata and clean headers",
+            "description": "This functionnality is experimental, it could give wrong metadata and remove text. Use caution.",
+            "type": "BOOLEAN",
+            "defaultValue": false
         }
     ],
     "partitioningMode": "NOT_PARTITIONABLE"
