@@ -19,6 +19,7 @@ from common import get_client, calc_interval, get_userinfo
 output_dataset_name = get_output_names_for_role('main')[0]
 client = get_client()
 DEFAULT_INTERVAL=int(get_recipe_config()['default_interval'])
+SCREEN_NAME=get_recipe_config()['screen_name']
 
 def get_followers():
     # get followers
@@ -29,7 +30,7 @@ def get_followers():
         try:
             # get followers
             print "Get followers list: "+str(cursor)
-            response = client.api.followers.ids.get()
+            response = client.api.followers.ids.get(screen_name = SCREEN_NAME, cursor = cursor)
 
             # update cursor
             cursor = response.data.next_cursor
