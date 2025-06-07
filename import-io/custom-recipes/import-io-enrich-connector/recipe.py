@@ -1,4 +1,5 @@
-import urllib, json
+import urllib
+import json
 from dataiku.customrecipe import *
 import importio_utils
 

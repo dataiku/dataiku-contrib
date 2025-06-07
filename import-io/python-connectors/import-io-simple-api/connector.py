@@ -1,7 +1,12 @@
-import requests, json
+import requests
+import json
 import pandas as pd
 from dataiku.connector import Connector
 import importio_utils
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class ImportIOConnector(Connector):
 
@@ -13,24 +18,23 @@ class ImportIOConnector(Connector):
         elif self.config['api_url'].startswith('https://extraction.import.io/'):
             self.api_version = 'extraction'
         else:
-            raise Exception(
-                'It looks like this URL is not an API URL. URLs to call the API (and get a json response) start with "https://api.import.io" .')
-        print '[import.io connector] calling API...'
+            raise Exception('It looks like this URL is not an API URL. URLs to call the API (and get a json response) start with "https://api.import.io" .')
+        logger.info('[import.io connector] calling API...')
         response = requests.get(self.config['api_url'])
-        print '[import.io connector] got response'
+        logger.info('[import.io connector] got response')
         try:
             self.json = response.json()
         except Exception as e:
-            print e
-            print 'response was:\n', response.text
-            raise
+            logger.error(e)
+            logger.error('response was:{}'.format(response.text))
+            raise ValueError
 
     def get_read_schema(self):
         if self.api_version == 'api':
             columns = importio_utils.convert_schema(self.json['outputProperties'])
-            return {"columns":columns}
+            return {"columns": columns}
         else:
-             return None
+            return None
 
     def generate_rows(self, dataset_schema=None, dataset_partitioning=None, partition_id=None, records_limit = -1):
         if self.api_version == 'api':
