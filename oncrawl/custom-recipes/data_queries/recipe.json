@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "label": "OnCrawl data queries",
+        "description": "<p>Export URLs or aggregations from crawls or log monitoring events.</p><p><a href='mailto:sales@oncrawl.com'>Contact us to get your API key</a></p>",        
+        "icon": "icon-globe",
+        "iconColor": "sky"
+    },
+
+    "kind": "PYTHON",
+    
+    "inputRoles": [],
+    
+    "outputRoles": [
+        {
+            "name": "output",
+            "label": "output",
+            "description": "output",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+    
+    "paramsModule" : "oncrawl-data_queries.module",
+    "paramsPythonSetup" : "data_queries.py",
+    "paramsTemplate" : "data_queries.html",
+    
+    "params": []
+    
+}
