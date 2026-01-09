@@ -4,7 +4,7 @@ IP addresses are identifiers used for almost all network connections.
 
 This plugin provides preparation processors for checking whether IPv4 addresses belong to specific network ranges.
 
-You need to install the plugin and then restart DSS.
+You need to install the plugin and then restart Dataiku.
 
 You will then be able to filter and flag IPv4 addresses based on the ranges you entered. These can be either:
 
