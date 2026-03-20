@@ -6,7 +6,7 @@ This plugin lets you retrieve the complete content of books directly as Dataiku 
 
 ## How to set up
 
-Right after installing the plugin, you will need to build its code environment. This plugin supports Python 2.7, 3.5, 3.6, and 3.7.
+Please see https://doc.dataiku.com/dss/latest/plugins/installing.html
 
 ## How to use
 
