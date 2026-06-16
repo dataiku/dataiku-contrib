@@ -31,6 +31,14 @@
             "type": "STRING",
             "mandatory" : true
         },
+        {
+            "name": "screen_name",
+            "label" : "Twitter Screen Name",
+            "description" : "Name of the Twitter User",
+            "type": "STRING",
+            "mandatory" : true
+        },
+
         //{ "type" : "SEPARATOR", "label" : "Advanced" },
         {
             "name": "dataiku_url",
