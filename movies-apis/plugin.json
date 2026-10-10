@@ -1,6 +1,6 @@
 {
   "id": "movies-apis",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "meta": {
     "label": "Enrich from Movies APIs",
     "description": "Fetch data from Open Movie Database and The Movie DB (ratings, runlength, IMDb id, etc)",
@@ -8,22 +8,25 @@
     "icon": "icon-film",
     "licenseInfo": "Apache Software License",
     "url": "https://www.dataiku.com/dss/plugins/info/movies-apis.html",
-    "tags": ["Enrichment", "Open Data"]
+    "tags": [
+      "Enrichment",
+      "Open Data"
+    ]
   },
-  "params":  [
-        {
-          "name": "omdb_api_key",
-          "label": "OMDb API key",
-          "type":  "PASSWORD",
-          "mandatory": false,
-          "description": "API key for the OMDb recipe"
-      },
-      {
-          "name": "tmdb_api_key",
-          "label": "TMDb API key",
-          "type":  "PASSWORD",
-          "mandatory": false,
-          "description": "API key for the TMDb recipe"
-      }
+  "params": [
+    {
+      "name": "omdb_api_key",
+      "label": "OMDb API key",
+      "type": "PASSWORD",
+      "mandatory": false,
+      "description": "API key for the OMDb recipe"
+    },
+    {
+      "name": "tmdb_api_key",
+      "label": "TMDb API key",
+      "type": "PASSWORD",
+      "mandatory": false,
+      "description": "API key for the TMDb recipe"
+    }
   ]
 }
