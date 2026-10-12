@@ -1,3 +1,7 @@
+## Version 1.2.0 - Enhancement release - 2026-10-12
+
+- Added supported Python versions: 3.13, 3.14
+
 ## Version 1.1.2 - Feature release - 2025-05-26
 
 - Removed Python2.7 support
