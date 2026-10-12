@@ -1,5 +1,15 @@
 {
-  "acceptedPythonInterpreters": ["PYTHON36", "PYTHON37", "PYTHON38", "PYTHON39", "PYTHON310", "PYTHON311", "PYTHON312"],
+  "acceptedPythonInterpreters": [
+    "PYTHON36",
+    "PYTHON37",
+    "PYTHON38",
+    "PYTHON39",
+    "PYTHON310",
+    "PYTHON311",
+    "PYTHON312",
+    "PYTHON313",
+    "PYTHON314"
+  ],
   "corePackagesSet": "AUTO",
   "forceConda": false,
   "installCorePackages": true,
