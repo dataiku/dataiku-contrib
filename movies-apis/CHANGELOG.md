@@ -1,7 +1,8 @@
-## Version 0.3.0 - Enhancement release - 2026-10-12
+## Version 0.3.0 - Enhancement release - 2026-10-26
 
 - Added supported Python versions: 3.12, 3.13, 3.14
 - Makefile cleanup: release_info.json lines removed
+- Updated tags
 
 ## Version 0.2.0 - Feature release - 2025-04-17
 
