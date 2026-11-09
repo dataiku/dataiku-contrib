@@ -1,0 +1,91 @@
+{
+  "id": "data-contract-generator",
+  "version": "0.8.20",
+  "meta": {
+    "label": "Data Contract Generator",
+    "description": "Generate JSON data contracts from a Dataiku dataset schema and write them to a project managed folder.",
+    "author": "Julia Hofmeister",
+    "provider": "Data Contract Generator Contributors",
+    "icon": "fas fa-file-code",
+    "recipesCategory": "visual",
+    "tags": [
+      "Data Contracts",
+      "Governance",
+      "JSON",
+      "Schema"
+    ],
+    "url": "",
+    "licenseInfo": "Apache Software License"
+  },
+  "params": [
+    {
+      "type": "SEPARATOR",
+      "description": "<h4>Output folder</h4>Configure where generated data contracts are stored. The macro writes to a project managed folder named <code>data_contracts</code>. If the folder does not already exist, it is created on the selected storage connection. An administrator may still need to enable managed folder usage on the selected connection."
+    },
+    {
+      "name": "folder_connection_name",
+      "label": "Managed folder storage connection",
+      "type": "CONNECTION",
+      "mandatory": false,
+      "searchable": true,
+      "description": "Connection used when creating the data_contracts managed folder. Choose a storage or warehouse storage connection. API/LLM connections will not work even if they appear in this selector."
+    },
+    {
+      "type": "SEPARATOR",
+      "description": "<h4>Metadata fields</h4>Choose which optional metadata fields this plugin should write into generated data contracts. Disable a field to omit it from generated JSON."
+    },
+    {
+      "name": "include_tag_field",
+      "label": "Include tag field",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "description": "When enabled, users can select one or more tags per column and the contract will write a JSON array named tag."
+    },
+    {
+      "name": "allow_custom_tag_values",
+      "label": "Allow custom tag values",
+      "type": "BOOLEAN",
+      "defaultValue": false,
+      "description": "When enabled, users can type additional tag values per column in the macro. When disabled, users must choose from the configured tag choices."
+    },
+    {
+      "name": "include_classification_field",
+      "label": "Include classification field",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "description": "When enabled, users can select one classification per column and the contract will write a JSON string named classification."
+    },
+    {
+      "name": "include_category_field",
+      "label": "Include category field",
+      "type": "BOOLEAN",
+      "defaultValue": true,
+      "description": "When enabled, users can select one category per column and the contract will write a JSON string named category."
+    },
+    {
+      "type": "SEPARATOR",
+      "description": "<h4>Metadata choices</h4>Configure the allowed values that appear in the macro for tags, classifications, and categories. Add one value per entry."
+    },
+    {
+      "name": "tag_choices",
+      "label": "Tag choices",
+      "type": "STRINGS",
+      "description": "Allowed values for the JSON property named tag. Users can select multiple tags for a single column.",
+      "defaultValue": []
+    },
+    {
+      "name": "classification_choices",
+      "label": "Classification choices",
+      "type": "STRINGS",
+      "description": "Allowed values for the JSON property named classification. Values are organization-specific.",
+      "defaultValue": []
+    },
+    {
+      "name": "category_choices",
+      "label": "Category choices",
+      "type": "STRINGS",
+      "description": "Allowed values for the JSON property named category. Values are organization-specific.",
+      "defaultValue": []
+    }
+  ]
+}

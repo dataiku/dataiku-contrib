@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "label": "Generate data contract",
+    "description": "Generate a JSON data contract from the selected dataset schema.",
+    "icon": "fas fa-file-code",
+    "iconColor": "blue"
+  },
+  "impersonate": true,
+  "permissions": [
+    "READ_CONF",
+    "WRITE_CONF"
+  ],
+  "resultType": "HTML",
+  "resultLabel": "Generated data contract",
+  "macroRoles": [
+    {
+      "type": "DATASET",
+      "targetParamsKey": "input_dataset",
+      "applicableToForeign": false
+    }
+  ],
+  "paramsPythonSetup": "data_contract_params.py",
+  "params": [
+    {
+      "name": "input_dataset",
+      "label": "Input dataset",
+      "type": "DATASET",
+      "mandatory": true,
+      "description": "Select the dataset that should be described by the generated contract."
+    },
+    {
+      "name": "column_metadata_rows",
+      "label": "Column metadata",
+      "type": "OBJECT_LIST",
+      "mandatory": false,
+      "subParams": [
+        {
+          "name": "column",
+          "label": "Column",
+          "type": "DATASET_COLUMN",
+          "datasetParamName": "input_dataset",
+          "description": "Start typing to filter columns from the selected dataset.",
+          "mandatory": true,
+          "searchable": true,
+          "defaultValue": ""
+        },
+        {
+          "name": "tag",
+          "label": "Tags",
+          "type": "MULTISELECT",
+          "mandatory": false,
+          "getChoicesFromPython": true,
+          "searchable": true,
+          "description": "Select one or more tags. Values are managed in plugin settings.",
+          "defaultValue": []
+        },
+        {
+          "name": "use_custom_tags",
+          "label": "Use custom tags",
+          "type": "BOOLEAN",
+          "mandatory": false,
+          "defaultValue": false,
+          "description": "Add tags that are not in the configured dropdown."
+        },
+        {
+          "name": "custom_tags",
+          "label": "Custom tags",
+          "type": "STRINGS",
+          "mandatory": false,
+          "allowDuplicates": false,
+          "description": "Add one custom tag per entry.",
+          "defaultValue": [],
+          "visibilityCondition": "model.use_custom_tags == true"
+        },
+        {
+          "name": "classification",
+          "label": "Classification",
+          "type": "SELECT",
+          "mandatory": false,
+          "getChoicesFromPython": true,
+          "searchable": true,
+          "description": "Optional. Values are managed in plugin settings. Select - None - to clear a previous selection.",
+          "defaultValue": ""
+        },
+        {
+          "name": "category",
+          "label": "Category",
+          "type": "SELECT",
+          "mandatory": false,
+          "getChoicesFromPython": true,
+          "searchable": true,
+          "description": "Optional. Values are managed in plugin settings. Select - None - to clear a previous selection.",
+          "defaultValue": ""
+        }
+      ],
+      "description": "Add one row for each column that needs optional metadata. Select a column, choose one or more tags from the dropdown, optionally enable custom tags, and choose a classification or category if needed.",
+      "defaultValue": []
+    }
+  ]
+}
