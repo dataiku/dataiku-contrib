@@ -1,6 +1,6 @@
 {
     "id": "wms-maps-backgrounds",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "meta": {
         "label": "WMS maps backgrounds",
         "description": "Use map backgrounds from a WMS (Web Map Service) server",
@@ -10,5 +10,26 @@
         "url": "https://www.dataiku.com/dss/plugins/info/wms-maps-backgrounds.html",
         "tags": ["Geospatial", "Visualization"],
         "supportLevel": "NOT_SUPPORTED"
-    }
+    },
+    "publicParams": true,
+    "params": [
+        {
+            "name": "backgrounds",
+            "label": "WMS backgrounds",
+            "description": "These backgrounds are shared with all signed-in DSS users. Use service URLs that can be shared with those users.",
+            "type": "OBJECT_LIST",
+            "subParams": [
+                {
+                    "name": "id",
+                    "label": "Background ID",
+                    "description": "Choose a unique ID and keep it unchanged once a chart uses this background.",
+                    "type": "STRING",
+                    "mandatory": true
+                },
+                { "name": "label", "label": "Display name", "type": "STRING", "mandatory": true },
+                { "name": "url", "label": "WMS service URL", "type": "STRING", "mandatory": true },
+                { "name": "layerId", "label": "WMS layer identifier", "type": "STRING", "mandatory": true }
+            ]
+        }
+    ]
 }
